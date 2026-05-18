@@ -9,8 +9,6 @@ type Props = {
   avatar: ReactNode;
 };
 
-const INITIAL = { error: null as string | null };
-
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
@@ -45,3 +43,5 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
     </form>
   );
 }
+
+const INITIAL = { error: null as string | null };

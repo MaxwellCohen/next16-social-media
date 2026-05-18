@@ -1,61 +1,22 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { TagPill } from '@/components/ui/TagPill';
 import { getDropUserState } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
+import { DropBody } from '@/features/drop/components/DropBody';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
-
 import type { Drop as DropT } from '@/types/drop';
 
 type Props = {
   drop: DropT;
   compact?: boolean;
-  detail?: boolean;
   repostedBy?: string;
 };
 
-export function Drop({ drop, compact = false, detail = false, repostedBy }: Props) {
-  if (detail) {
-    return (
-      <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
-        <header className="flex items-center gap-3">
-          <Link href={`/u/${drop.authorHandle}`} className="shrink-0">
-            <Suspense fallback={<UserAvatarSkeleton size="lg" />}>
-              <UserAvatar handle={drop.authorHandle} size="lg" />
-            </Suspense>
-          </Link>
-          <div className="flex min-w-0 flex-col">
-            <Suspense fallback={<AuthorNameSkeleton />}>
-              <AuthorName handle={drop.authorHandle} layout="stacked" />
-            </Suspense>
-          </div>
-        </header>
-        <div className="mt-3 flex flex-col gap-3">
-          <DropBody body={drop.body} compact={false} detail />
-          {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
-          {drop.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {drop.tags.map(t => {
-                return <TagPill key={t} tag={t} />;
-              })}
-            </div>
-          ) : null}
-        </div>
-        <div className="text-gray border-divider/70 dark:border-divider-dark/70 mt-3 border-b pb-3 font-mono text-[12px]">
-          <RelativeTime date={drop.createdAt} verbose />
-        </div>
-        <div className="pt-2">
-          <Suspense fallback={<DropActionsSkeleton />}>
-            <DropActions drop={drop} userStatePromise={getDropUserState(drop.id)} />
-          </Suspense>
-        </div>
-      </article>
-    );
-  }
+export function Drop({ drop, compact = false, repostedBy }: Props) {
   return (
     <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
       <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
@@ -73,7 +34,7 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <header className="flex flex-wrap items-baseline gap-x-1.5 text-sm">
             <Suspense fallback={<AuthorNameSkeleton />}>
-              <AuthorName handle={drop.authorHandle} layout="inline" />
+              <AuthorName handle={drop.authorHandle} />
             </Suspense>
             <span className="text-gray font-mono text-[12px]">·</span>
             <span className="text-gray font-mono text-[12px]">
@@ -81,11 +42,6 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
             </span>
           </header>
           <DropBody body={drop.body} compact={compact} />
-          {drop.embeddedCode && !compact ? (
-            <div className="relative z-20">
-              <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
-            </div>
-          ) : null}
           {drop.tags.length > 0 ? (
             <div className="relative z-20 flex flex-wrap gap-1.5">
               {drop.tags.map(t => {
@@ -104,23 +60,23 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
   );
 }
 
-async function AuthorName({ handle, layout }: { handle: string; layout: 'inline' | 'stacked' }) {
+export function DropSkeleton() {
+  return (
+    <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
+      <div className="flex gap-3">
+        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
+        <div className="flex flex-1 flex-col gap-2">
+          <div className="skeleton-animation h-3 w-40" />
+          <div className="skeleton-animation h-4 w-full" />
+          <div className="skeleton-animation h-4 w-3/4" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function AuthorName({ handle }: { handle: string }) {
   const author = await getUserByHandle(handle);
-  if (layout === 'stacked') {
-    return (
-      <>
-        <Link
-          href={`/u/${author.handle}`}
-          className="font-semibold tracking-tight text-black hover:underline dark:text-white"
-        >
-          {author.displayName}
-        </Link>
-        <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
-          @{author.handle}
-        </Link>
-      </>
-    );
-  }
   return (
     <>
       <Link
@@ -155,127 +111,5 @@ async function Reposter({ handle }: { handle: string }) {
       <Repeat2 className="h-3 w-3" />
       <span>{reposter.handle === current.handle ? 'You' : reposter.displayName} reposted</span>
     </Link>
-  );
-}
-
-function renderBody(body: string) {
-  const parts = body.split(/(#\w+)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith('#')) {
-      const tag = part.slice(1);
-      return (
-        <Link key={i} href={`/tag/${tag}`} className="text-accent relative z-20 hover:underline">
-          {part}
-        </Link>
-      );
-    }
-    return <span key={i}>{part}</span>;
-  });
-}
-
-function DropBody({ body, compact, detail = false }: { body: string; compact: boolean; detail?: boolean }) {
-  const segments = splitCode(body);
-  return (
-    <div className="flex flex-col gap-2">
-      {segments.map((segment, i) => {
-        if (segment.type === 'code') {
-          if (compact) return null;
-          return (
-            <div key={i} className="relative z-20">
-              <CodeBlock lang={segment.lang} code={segment.code} />
-            </div>
-          );
-        }
-        return (
-          <p
-            key={i}
-            className={
-              detail
-                ? 'text-[17px] leading-relaxed text-black dark:text-white'
-                : 'text-[15px] leading-snug text-black dark:text-white'
-            }
-          >
-            {renderBody(segment.text)}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
-
-type Segment = { type: 'text'; text: string } | { type: 'code'; lang: string; code: string };
-
-const FENCE = /```(\w*)\n([\s\S]*?)\n?```/g;
-
-function splitCode(body: string): Segment[] {
-  const segments: Segment[] = [];
-  let lastIndex = 0;
-  for (const match of body.matchAll(FENCE)) {
-    const start = match.index ?? 0;
-    if (start > lastIndex) {
-      const text = body.slice(lastIndex, start).trim();
-      if (text) segments.push({ text, type: 'text' });
-    }
-    segments.push({
-      code: match[2],
-      lang: match[1] || 'bash',
-      type: 'code',
-    });
-    lastIndex = start + match[0].length;
-  }
-  if (lastIndex < body.length) {
-    const text = body.slice(lastIndex).trim();
-    if (text) segments.push({ text, type: 'text' });
-  }
-  if (segments.length === 0) {
-    segments.push({ text: body, type: 'text' });
-  }
-  return segments;
-}
-
-export function DropSkeleton() {
-  return (
-    <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
-      <div className="flex gap-3">
-        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2">
-          <div className="skeleton-animation h-3 w-40" />
-          <div className="skeleton-animation h-4 w-full" />
-          <div className="skeleton-animation h-4 w-3/4" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function DropDetailSkeleton() {
-  return (
-    <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
-      <header className="flex items-center gap-3">
-        <div className="skeleton-animation h-14 w-14 shrink-0 rounded-full" />
-        <div className="flex min-w-0 flex-col gap-1.5">
-          <div className="skeleton-animation h-4 w-40 rounded" />
-          <div className="skeleton-animation h-3 w-24 rounded" />
-        </div>
-      </header>
-      <div className="mt-3 flex flex-col gap-2">
-        <div className="skeleton-animation h-4 w-full rounded" />
-        <div className="skeleton-animation h-4 w-full rounded" />
-        <div className="skeleton-animation h-4 w-2/3 rounded" />
-      </div>
-      <div className="border-divider/70 dark:border-divider-dark/70 mt-3 border-b pb-3">
-        <div className="skeleton-animation h-3 w-28 rounded" />
-      </div>
-      <div className="text-gray -ml-2 flex items-center gap-1 pt-3" aria-hidden>
-        {Array.from({ length: 4 }).map((_, i) => {
-          return (
-            <span key={i} className="inline-flex items-center gap-1 px-2 py-1.5">
-              <span className="skeleton-animation h-4 w-4 rounded" />
-              {i < 3 ? <span className="skeleton-animation h-3 w-6 rounded" /> : null}
-            </span>
-          );
-        })}
-      </div>
-    </article>
   );
 }

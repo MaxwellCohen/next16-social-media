@@ -2,7 +2,8 @@ import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDrop, getReplies } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
-import { Drop, DropDetailSkeleton, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/DropDetail';
 import { ReplyComposerForm } from '@/features/drop/components/ReplyComposerForm';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import type { Metadata } from 'next';
@@ -43,7 +44,7 @@ async function DropPageBody({ params }: { params: Promise<{ id: string }> }) {
   const drop = await getDrop(id);
   return (
     <>
-      <Drop drop={drop} detail />
+      <DropDetail drop={drop} />
       <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
         <ReplyComposerForm
           dropId={id}
@@ -65,7 +66,7 @@ async function Replies({ id }: { id: string }) {
   const replies = await getReplies(id);
   return (
     <section>
-      <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 font-mono text-[11px] tracking-wide uppercase sm:px-5">
+      <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 text-sm font-semibold tracking-tight sm:px-5">
         Replies
       </h2>
       {replies.length === 0 ? (

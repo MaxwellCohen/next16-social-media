@@ -34,7 +34,7 @@ export function Sidebar() {
           <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
       </nav>
-      <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 border-t pt-3">
+      <div className="border-divider dark:border-divider-dark mt-auto -mx-4 flex flex-col gap-2 border-t px-4 pt-3 sm:-mx-6 sm:px-6">
         <Suspense fallback={<SidebarProfilePillSkeleton />}>
           <SidebarProfilePill />
         </Suspense>
