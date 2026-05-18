@@ -370,7 +370,7 @@ const DROPS: SeedDrop[] = [
   {
     authorHandle: 'vex',
     body: 'Just published `@vex/use-presence` — a tiny hook for the WebSocket presence pattern I keep rewriting on every project. One hook, no provider, no context. Install and go.',
-    createdAt: new Date(now - 50 * minute),
+    createdAt: new Date(now - 12 * minute),
     embeddedCode: {
       code: "const peers = usePresence('room-id')\nreturn <ul>{peers.map(p => <li key={p.id}>{p.name}</li>)}</ul>",
       lang: 'tsx',
@@ -384,7 +384,7 @@ const DROPS: SeedDrop[] = [
   {
     authorHandle: 'aurorascharff',
     body: 'Releasing `create-talk-deck` — the CLI I built for prepping my React Summit keynote. Markdown slides, hot reload, one command to deploy.',
-    createdAt: new Date(now - 3 * hour),
+    createdAt: new Date(now - 25 * minute),
     embeddedCode: {
       code: 'npx create-talk-deck my-talk\ncd my-talk\nnpm run dev',
       lang: 'bash',
@@ -412,7 +412,7 @@ const DROPS: SeedDrop[] = [
   {
     authorHandle: 'cinder',
     body: 'v2 of `react-cmd` is out. Same command palette, half the bundle, full keyboard support. Drop it into any app — works without a provider.',
-    createdAt: new Date(now - 9 * hour),
+    createdAt: new Date(now - 1 * hour - 30 * minute),
     embeddedCode: {
       code: "<Cmd>\n  <Cmd.Input placeholder='Search…' />\n  <Cmd.List items={results} />\n</Cmd>",
       lang: 'tsx',

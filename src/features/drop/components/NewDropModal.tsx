@@ -51,7 +51,7 @@ export function NewDropModal({ avatar }: Props) {
           </Ariakit.VisuallyHidden>
         </header>
         <form ref={formRef} action={formAction}>
-          <div className="flex gap-3 px-5 pt-4 pb-3">
+          <div className="flex items-start gap-3 px-5 pt-4 pb-3">
             {avatar}
             <Ariakit.VisuallyHidden>
               <label htmlFor="new-drop-body">Drop body</label>
@@ -70,7 +70,7 @@ export function NewDropModal({ avatar }: Props) {
                   formRef.current?.requestSubmit();
                 }
               }}
-              className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-base focus:ring-0 focus:outline-none"
+              className="placeholder-gray flex-1 resize-none border-0 bg-transparent pt-2 text-base focus:ring-0 focus:outline-none"
             />
           </div>
           {state.error ? (
