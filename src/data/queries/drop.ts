@@ -44,14 +44,43 @@ export const getReplies = cache(async (dropId: string) => {
     .sort((a, b) => {return a.createdAt.getTime() - b.createdAt.getTime()});
 });
 
-export const getDropsByAuthor = cache(async (handle: string) => {
+export type ProfileFeedItem =
+  | { kind: 'drop'; drop: import('@/lib/data').Drop; pinnedAt: number }
+  | { kind: 'repost'; drop: import('@/lib/data').Drop; repostedBy: string; pinnedAt: number };
+
+/**
+ * Profile feed: original drops authored by `handle`, plus drops `handle` reposted.
+ * Reposts surface with a `kind: 'repost'` marker so the UI can show a "reposted by …"
+ * label and link to the original author.
+ */
+export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);
 
   await delay(400);
-  return topLevel(getStore().drops)
+  const store = getStore();
+
+  const authored: ProfileFeedItem[] = topLevel(store.drops)
     .filter(d => {return d.authorHandle === handle})
-    .sort((a, b) => {return b.createdAt.getTime() - a.createdAt.getTime()});
+    .map(drop => {return { drop, kind: 'drop' as const, pinnedAt: drop.createdAt.getTime() }});
+
+  const repostedIds = store.reposts[handle] ?? new Set();
+  const reposted: ProfileFeedItem[] = [];
+  for (const id of repostedIds) {
+    const drop = store.drops.find(d => {return d.id === id});
+    if (!drop || drop.parentId) continue;
+    reposted.push({ drop, kind: 'repost' as const, pinnedAt: drop.createdAt.getTime() + 1, repostedBy: handle });
+  }
+
+  return [...authored, ...reposted].sort((a, b) => {return b.pinnedAt - a.pinnedAt});
+});
+
+export const isReposted = cache(async (userHandle: string, dropId: string) => {
+  'use cache: private';
+  cacheTag(`reposted-${userHandle}-${dropId}`);
+
+  await delay(120);
+  return getStore().reposts[userHandle]?.has(dropId) ?? false;
 });
 
 export const getDropsByTag = cache(async (tag: string) => {

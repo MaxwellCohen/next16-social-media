@@ -36,14 +36,13 @@ export function NewDropModal({ authorName, authorColor }: Props) {
             if (e.target === e.currentTarget) close();
           }}
         >
-          <div className="border-divider dark:border-divider-dark w-full max-w-lg rounded-2xl border bg-white p-5 shadow-2xl dark:bg-black">
-            <header className="mb-4 flex items-center justify-between">
-              <h3 className="text-base font-semibold tracking-tight">New drop</h3>
+          <div className="border-divider dark:border-divider-dark w-full max-w-lg rounded-2xl border bg-white shadow-2xl dark:bg-black">
+            <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3">
               <button
                 type="button"
                 aria-label="Close"
                 onClick={close}
-                className="text-gray hover:bg-card dark:hover:bg-card-dark rounded-full p-1 transition-colors hover:text-black dark:hover:text-white"
+                className="text-gray -ml-1.5 rounded-full p-1 transition-colors hover:text-black dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -62,9 +61,8 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                   close();
                 });
               }}
-              className="flex flex-col gap-3"
             >
-              <div className="flex gap-3">
+              <div className="flex gap-3 px-5 pt-4 pb-3">
                 <div
                   className={cn(
                     'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-semibold text-white uppercase shadow-sm',
@@ -80,20 +78,20 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                   required
                   maxLength={280}
                   placeholder="What did you ship today?"
-                  className="flex-1 resize-none"
+                  className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-base focus:ring-0 focus:outline-none"
                 />
               </div>
 
-              {error ? <p className="text-danger text-xs">{error}</p> : null}
+              {error ? <p className="text-danger px-5 pb-2 text-xs">{error}</p> : null}
 
-              <div className="flex items-center justify-end gap-2">
+              <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
                 <Button variant="secondary" size="sm" onClick={close}>
                   Cancel
                 </Button>
                 <Button type="submit" size="sm" disabled={pending}>
                   {pending ? 'Dropping…' : 'Drop it'}
                 </Button>
-              </div>
+              </footer>
             </form>
           </div>
         </div>

@@ -6,10 +6,10 @@ export async function TrendingTags() {
   const tags = await getTrendingTags();
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
-      <header className="px-4 pt-4 pb-2">
+      <header className="px-4 pt-4 pb-3">
         <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
       </header>
-      <ul>
+      <ul className="pb-2">
         {tags.map(tag => {return (
           <li key={tag.name}>
             <Link

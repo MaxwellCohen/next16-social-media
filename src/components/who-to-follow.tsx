@@ -7,31 +7,41 @@ export async function WhoToFollow() {
   const users = await getWhoToFollow();
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
-      <header className="px-4 pt-4 pb-2">
+      <header className="px-4 pt-4 pb-3">
         <h3 className="text-sm font-semibold tracking-tight">Who to follow</h3>
       </header>
-      <ul>
-        {users.map(user => {return (
-          <li
-            key={user.handle}
-            className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
-          >
-            <Link href={`/u/${user.handle}`} className="shrink-0">
-              <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
-            </Link>
-            <div className="min-w-0 flex-1">
-              <Link
-                href={`/u/${user.handle}`}
-                className="block truncate text-sm font-semibold tracking-tight hover:underline"
-              >
-                {user.displayName}
+      {users.length === 0 ? (
+        <p className="text-gray px-4 pb-4 text-xs">
+          You're following everyone we can think of.{' '}
+          <Link href="/tag/nextjs" className="text-accent hover:underline">
+            Browse tags
+          </Link>{' '}
+          to find more people.
+        </p>
+      ) : (
+        <ul className="pb-2">
+          {users.map(user => {return (
+            <li
+              key={user.handle}
+              className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
+            >
+              <Link href={`/u/${user.handle}`} className="shrink-0">
+                <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
               </Link>
-              <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
-            </div>
-            <FollowButton targetHandle={user.handle} initialFollowing={false} />
-          </li>
-        )})}
-      </ul>
+              <div className="min-w-0 flex-1">
+                <Link
+                  href={`/u/${user.handle}`}
+                  className="block truncate text-sm font-semibold tracking-tight hover:underline"
+                >
+                  {user.displayName}
+                </Link>
+                <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
+              </div>
+              <FollowButton targetHandle={user.handle} initialFollowing={false} />
+            </li>
+          )})}
+        </ul>
+      )}
     </section>
   );
 }

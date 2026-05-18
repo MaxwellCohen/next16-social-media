@@ -4,8 +4,8 @@ type Props = {
 };
 
 /**
- * Drop mark: a geometric droplet inspired by Vercel's wordmark approach.
- * Two triangular halves form a teardrop. Right half is the accent.
+ * Drop mark: a single solid droplet. Renders in `currentColor` so callers
+ * control the fill (white in dark mode, near-black in light mode).
  */
 export function DropMark({ className, size = 20 }: Props) {
   return (
@@ -18,10 +18,10 @@ export function DropMark({ className, size = 20 }: Props) {
       className={className}
       aria-hidden
     >
-      {/* Left half: foreground (currentColor) */}
-      <path d="M12 0 L0 24 A12 12 0 0 0 12 32 Z" fill="currentColor" />
-      {/* Right half: accent blue */}
-      <path d="M12 0 L24 24 A12 12 0 0 1 12 32 Z" fill="var(--color-accent)" />
+      <path
+        d="M12 0 Q4 14 2 22 A10 10 0 1 0 22 22 Q20 14 12 0 Z"
+        fill="currentColor"
+      />
     </svg>
   );
 }

@@ -11,13 +11,22 @@ type Props = {
   replies: number;
   reposts: number;
   initialLiked: boolean;
+  initialReposted: boolean;
   initialBookmarked: boolean;
 };
 
 type LikeState = { liked: boolean; count: number };
 type RepostState = { reposted: boolean; count: number };
 
-export function DropActions({ dropId, likes, replies, reposts, initialLiked, initialBookmarked }: Props) {
+export function DropActions({
+  dropId,
+  likes,
+  replies,
+  reposts,
+  initialLiked,
+  initialReposted,
+  initialBookmarked,
+}: Props) {
   const [, startTransition] = useTransition();
 
   const [likeState, setLikeOptimistic] = useOptimistic<LikeState, void>(
@@ -29,8 +38,8 @@ export function DropActions({ dropId, likes, replies, reposts, initialLiked, ini
   );
 
   const [repostState, setRepostOptimistic] = useOptimistic<RepostState, void>(
-    { count: reposts, reposted: false },
-    state => {return { count: state.count + 1, reposted: !state.reposted }},
+    { count: reposts, reposted: initialReposted },
+    state => {return { count: state.count + (state.reposted ? -1 : 1), reposted: !state.reposted }},
   );
 
   const [bookmarked, setBookmarkOptimistic] = useOptimistic<boolean, void>(initialBookmarked, state => {return !state});

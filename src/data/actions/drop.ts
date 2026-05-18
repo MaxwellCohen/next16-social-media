@@ -102,8 +102,18 @@ export async function toggleRepost(dropId: string) {
   const store = getStore();
   const drop = store.drops.find(d => {return d.id === dropId});
   if (!drop) return { ok: false as const };
-  drop.reposts += 1;
+
+  const reposted = store.reposts[store.currentUserHandle] ?? (store.reposts[store.currentUserHandle] = new Set());
+  if (reposted.has(dropId)) {
+    reposted.delete(dropId);
+    drop.reposts -= 1;
+  } else {
+    reposted.add(dropId);
+    drop.reposts += 1;
+  }
   updateTag(`drop-${dropId}`);
+  updateTag(`reposted-${store.currentUserHandle}-${dropId}`);
+  updateTag(`user-drops-${store.currentUserHandle}`);
   updateTag('feed');
   return { ok: true as const, reposts: drop.reposts };
 }

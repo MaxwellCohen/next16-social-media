@@ -60,8 +60,8 @@ async function ProfileHeader({ params }: Params) {
 
 async function ProfileFeed({ params }: Params) {
   const { handle } = await params;
-  const drops = await getDropsByAuthor(handle);
-  if (drops.length === 0) {
+  const items = await getDropsByAuthor(handle);
+  if (items.length === 0) {
     return (
       <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
         No drops yet.
@@ -70,9 +70,12 @@ async function ProfileFeed({ params }: Params) {
   }
   return (
     <ul>
-      {drops.map(drop => {return (
-        <li key={drop.id}>
-          <Drop drop={drop} />
+      {items.map(item => {return (
+        <li key={`${item.kind}-${item.drop.id}`}>
+          <Drop
+            drop={item.drop}
+            repostedBy={item.kind === 'repost' ? item.repostedBy : undefined}
+          />
         </li>
       )})}
     </ul>

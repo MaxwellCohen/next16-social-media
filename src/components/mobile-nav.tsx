@@ -1,13 +1,14 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { DropMark } from '@/components/brand/drop-mark';
+import { MobileTabLink } from '@/components/nav-link';
 import { Avatar } from '@/components/ui/avatar';
 import { getCurrentUser } from '@/data/queries/user';
 
 export async function MobileHeader() {
   const user = await getCurrentUser();
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur sm:hidden dark:bg-black/80">
+    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white px-4 py-3 backdrop-blur sm:hidden dark:bg-black">
       <Link href={`/u/${user.handle}`} aria-label="Profile">
         <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
       </Link>
@@ -19,30 +20,17 @@ export async function MobileHeader() {
   );
 }
 
-export function MobileTabBar() {
+export async function MobileTabBar() {
+  const user = await getCurrentUser();
   return (
     <nav
       aria-label="Primary"
-      className="border-divider/70 dark:border-divider-dark/70 fixed inset-x-0 bottom-0 z-20 flex border-t bg-white/90 backdrop-blur sm:hidden dark:bg-black/90"
+      className="border-divider/70 dark:border-divider-dark/70 fixed inset-x-0 bottom-0 z-20 flex border-t bg-white backdrop-blur sm:hidden dark:bg-black"
     >
-      <TabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-      <TabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
-      <TabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-      <TabLink href="/u/aurora" icon={<User className="h-5 w-5" />} label="Profile" />
+      <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
+      <MobileTabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
+      <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
+      <MobileTabLink href={`/u/${user.handle}`} icon={<User className="h-5 w-5" />} label="Profile" />
     </nav>
-  );
-}
-
-function TabLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-  return (
-    <Link
-      // typedRoutes hint
-      href={href as never}
-      className="text-gray flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors hover:text-black dark:hover:text-white"
-      aria-label={label}
-    >
-      {icon}
-      <span>{label}</span>
-    </Link>
   );
 }

@@ -1,7 +1,12 @@
 import 'server-only';
 
-import { createHighlighter, type Highlighter } from 'shiki';
+import { createHighlighter, type Highlighter, type ThemeRegistrationRaw } from 'shiki';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
+import vercelDarkRaw from './themes/vercel-dark.json';
+import vercelLightRaw from './themes/vercel-light.json';
+
+const vercelDark = vercelDarkRaw as unknown as ThemeRegistrationRaw;
+const vercelLight = vercelLightRaw as unknown as ThemeRegistrationRaw;
 
 const SUPPORTED_LANGS = ['tsx', 'ts', 'jsx', 'js', 'bash', 'shell', 'json', 'css', 'html', 'md'] as const;
 
@@ -9,7 +14,8 @@ export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
 /**
  * Process-wide singleton highlighter. `cache()` from React doesn't dedupe
- * across requests, so we keep a module-scoped promise instead.
+ * across requests, so we keep a module-scoped promise instead. Themes are
+ * Aurora's Vercel Docs theme (light + dark).
  */
 let highlighterPromise: Promise<Highlighter> | null = null;
 
@@ -18,7 +24,7 @@ function getHighlighter(): Promise<Highlighter> {
     highlighterPromise = createHighlighter({
       engine: createJavaScriptRegexEngine({ forgiving: true }),
       langs: SUPPORTED_LANGS as unknown as string[],
-      themes: ['github-light', 'github-dark'],
+      themes: [vercelLight, vercelDark],
     });
   }
   return highlighterPromise;
@@ -36,15 +42,32 @@ export function normalizeLang(lang: string | undefined): SupportedLang {
   return 'bash';
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function highlight(code: string, lang: string | undefined) {
+  'use cache';
   const highlighter = await getHighlighter();
-  return highlighter.codeToHtml(code, {
-    cssVariablePrefix: '--shiki-',
-    defaultColor: 'light',
-    lang: normalizeLang(lang),
-    themes: {
-      dark: 'github-dark',
-      light: 'github-light',
-    },
-  });
+  try {
+    return highlighter.codeToHtml(code, {
+      cssVariablePrefix: '--shiki-',
+      defaultColor: 'light',
+      lang: normalizeLang(lang),
+      themes: {
+        dark: vercelDark.name ?? 'vercel-dark',
+        light: vercelLight.name ?? 'vercel-light',
+      },
+    });
+  } catch {
+    // Shiki's JavaScript regex engine occasionally chokes on edge cases in
+    // certain grammars. Fall back to a plain, escaped <pre><code> so the page
+    // keeps rendering instead of error-boundarying.
+    return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
+  }
 }

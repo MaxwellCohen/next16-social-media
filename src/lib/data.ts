@@ -64,11 +64,11 @@ const day = 24 * hour;
 const USERS: User[] = [
   {
     avatarColor: 'from-blue-500 to-indigo-600',
-    bio: 'DX at Vercel. Building things on the web.',
-    displayName: 'Aurora',
-    followers: 12_400,
-    following: 312,
-    handle: 'aurora',
+    bio: 'DX Engineer on the Next.js team at Vercel. React Cert Lead. Oslo.',
+    displayName: 'Aurora Scharff',
+    followers: 4_911,
+    following: 584,
+    handle: 'aurorascharff',
     id: 'u1',
   },
   {
@@ -138,68 +138,72 @@ const USERS: User[] = [
 
 const DROPS: Drop[] = [
   {
-    authorHandle: 'aurora',
-    body: "the team's been on a roll this canary cycle. instant pages by default, one cache that handles browser and server, the build refusing to ship anything slow. so much of what landed quietly over the last month is going to feel obvious in five minutes.",
+    authorHandle: 'aurorascharff',
+    body: "small canary win: when the same data is read by four components, the framework only fetches it once. you stop hoisting things to the route just to keep them fast.",
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
-    likes: 2_140,
-    replies: 110,
-    reposts: 480,
-    tags: ['nextjs'],
-  },
-  {
-    authorHandle: 'aurora',
-    body: "new canary drop today: the framework now warns you the moment your app stops being instant. not at runtime, not in a lighthouse score weeks later. as you type. it's the closest thing to a TypeScript error for UX I've ever used.",
-    createdAt: new Date(now - 22 * minute),
-    id: 'd2',
-    likes: 1_640,
-    replies: 88,
-    reposts: 320,
-    tags: ['nextjs'],
-  },
-  {
-    authorHandle: 'streambot',
-    body: 'wrote a thread about why we picked one cache model that decides for you instead of two you have to coordinate. tldr: nobody likes running two caches by hand.',
-    createdAt: new Date(now - 45 * minute),
-    id: 'd3',
-    likes: 920,
-    replies: 51,
+    likes: 940,
+    replies: 32,
     reposts: 140,
     tags: ['nextjs'],
   },
   {
-    authorHandle: 'aurora',
-    body: 'every link on your page is already prefetched by the time the user looks at it. as of this canary, the cached parts behind the link are too. clicks land instantly even on slow networks, no app code changed.',
-    createdAt: new Date(now - 1 * hour),
-    id: 'd4',
-    likes: 3_120,
-    replies: 207,
-    reposts: 880,
-    tags: ['nextjs'],
+    authorHandle: 'streambot',
+    body: "found a bug in our analytics that's been there for a year. it was a missing trailing slash. one year.",
+    createdAt: new Date(now - 18 * minute),
+    id: 'd2',
+    likes: 1_240,
+    replies: 88,
+    reposts: 60,
+    tags: [],
   },
   {
-    authorHandle: 'aurora',
-    body: "spent the morning porting our marketing site over. the new dev overlay caught two pages I'd quietly left dynamic for months. minutes of work, both back to instant.",
-    createdAt: new Date(now - 2 * hour),
-    id: 'd5',
-    likes: 1_240,
+    authorHandle: 'aurorascharff',
+    body: 'spent a few hours porting our marketing site to the new canary. two pages I had quietly left dynamic for months got caught by the dev overlay. fix on both was a one-liner.',
+    createdAt: new Date(now - 45 * minute),
+    id: 'd3',
+    likes: 1_640,
     replies: 64,
     reposts: 180,
     tags: ['nextjs'],
+    embeddedCode: {
+      code: `'use cache'`,
+      lang: 'tsx',
+    },
   },
   {
     authorHandle: 'cachepunk',
-    body: 'the per-user cache flavor we shipped last week is wild in practice. server cache shared across everyone, browser cache personal, you describe the behavior, framework picks. no more cookie plumbing.',
-    createdAt: new Date(now - 3 * hour),
-    id: 'd6',
-    likes: 1_840,
-    replies: 142,
-    reposts: 410,
+    body: "I keep forgetting how nice rebuilds get when you give the cache hints about what's actually stable. third project this week where it just felt right.",
+    createdAt: new Date(now - 1 * hour),
+    id: 'd4',
+    likes: 540,
+    replies: 22,
+    reposts: 41,
+    tags: [],
+  },
+  {
+    authorHandle: 'aurorascharff',
+    body: "I love when a feature shows up and quietly changes how you reach for things. the new runtime prefetch is one of those. once your eyes adjust you can't go back.",
+    createdAt: new Date(now - 2 * hour),
+    id: 'd5',
+    likes: 1_980,
+    replies: 110,
+    reposts: 320,
     tags: ['nextjs'],
   },
   {
-    authorHandle: 'aurora',
-    body: "favorite thing about this release: it's the same code path that lets a click feel instant on a fast connection and stream gracefully on a slow one. you don't write the difference, the framework adapts.",
+    authorHandle: 'boundary',
+    body: "designing a new feature is mostly figuring out which loading state never has to exist.",
+    createdAt: new Date(now - 3 * hour),
+    id: 'd6',
+    likes: 2_140,
+    replies: 142,
+    reposts: 410,
+    tags: ['design'],
+  },
+  {
+    authorHandle: 'aurorascharff',
+    body: "one mental shift that took me a while: I stopped thinking 'is this page static or dynamic' and started thinking 'how soon does each piece need to be there.' the rest fell out of that.",
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,
@@ -208,113 +212,125 @@ const DROPS: Drop[] = [
     tags: ['nextjs'],
   },
   {
-    authorHandle: 'boundary',
-    body: "if your framework only streams as a workaround it's not really streaming. been a long road but every page in next is a streaming response by construction now.",
+    authorHandle: 'hydrator',
+    body: 'three coffees deep into a stack trace and the answer was a missing await. it is always a missing await.',
     createdAt: new Date(now - 5 * hour),
     id: 'd8',
-    likes: 4_320,
-    replies: 511,
-    reposts: 1_200,
-    tags: ['react'],
+    likes: 720,
+    replies: 30,
+    reposts: 32,
+    tags: [],
   },
   {
-    authorHandle: 'aurora',
-    body: 'you can post a tweet, like a tweet, change anything on a cached page, and the right things refresh on the server and in the browser at once. one line in your mutation, both caches handled. no coordination layer.',
+    authorHandle: 'aurorascharff',
+    body: "tiny pattern I like: keep the data fetch right next to the component that uses it. when something changes, you change it in one place. the cache makes it free.",
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
-    likes: 1_900,
-    replies: 88,
-    reposts: 310,
+    likes: 1_180,
+    replies: 41,
+    reposts: 92,
     tags: ['nextjs'],
-  },
-  {
-    authorHandle: 'aurora',
-    body: "I keep telling people the prestige of this release isn't any single feature. it's that you can build something that feels like a snappy app, with one mental model, without a client cache library to maintain.",
-    createdAt: new Date(now - 9 * hour),
-    id: 'd10',
-    likes: 2_410,
-    replies: 142,
-    reposts: 540,
-    tags: ['nextjs'],
+    embeddedCode: {
+      code: `async function getProfile(handle) {
+  'use cache'
+  return db.user.findByHandle(handle)
+}`,
+      lang: 'js',
+    },
   },
   {
     authorHandle: 'coldstart',
-    body: 'upgraded our monorepo to canary this morning. one command, everything codemodded, builds passed on first run. the upgrade story keeps getting boringly good.',
+    body: 'wrote a one-line eslint rule for the team. cut a whole class of bug we kept hitting. probably the highest ROI hour of the month.',
+    createdAt: new Date(now - 9 * hour),
+    id: 'd10',
+    likes: 612,
+    replies: 28,
+    reposts: 48,
+    tags: ['devtools'],
+  },
+  {
+    authorHandle: 'aurorascharff',
+    body: "if you've been holding off on upgrading, the codemod handles almost everything now. tried it on three projects this week and the diff was boring in the best way.",
     createdAt: new Date(now - 11 * hour),
     id: 'd11',
     likes: 1_810,
     replies: 96,
     reposts: 340,
     tags: ['nextjs'],
+    embeddedCode: {
+      code: `pnpm dlx @next/codemod@canary upgrade canary`,
+      lang: 'bash',
+    },
   },
   {
-    authorHandle: 'aurora',
-    body: 'fun side effect of how the new cache works: when four pieces of your page ask for the same user, the framework only fetches once. you stop hoisting data to the page just to keep it fast. components own their data again.',
-    createdAt: new Date(now - 14 * hour),
+    authorHandle: 'prefetcher',
+    body: 'today I learned my favorite framework feature is whichever one I forgot was there. happy upgrade day to everyone who finds something new.',
+    createdAt: new Date(now - 13 * hour),
     id: 'd12',
-    likes: 1_180,
-    replies: 47,
-    reposts: 220,
-    tags: ['nextjs'],
+    likes: 880,
+    replies: 22,
+    reposts: 64,
+    tags: [],
   },
   {
-    authorHandle: 'aurora',
-    body: "the adapter work this cycle is the quiet headliner. the same model, the same caching, the same streaming, on whatever platform you host. you don't trade off the architecture to pick where to deploy.",
-    createdAt: new Date(now - 18 * hour),
+    authorHandle: 'aurorascharff',
+    body: "the part that keeps surprising me is how much UI work disappears when the framework knows what's instant and what's not. half my old loading states just became wrong.",
+    createdAt: new Date(now - 16 * hour),
     id: 'd13',
-    likes: 1_640,
-    replies: 110,
-    reposts: 340,
+    likes: 1_320,
+    replies: 47,
+    reposts: 180,
     tags: ['nextjs'],
   },
   {
-    authorHandle: 'hydrator',
-    body: 'tried remix v3 this weekend. data model is clean. still missing a per-component cache primitive though, which is where I keep reaching for next.',
-    createdAt: new Date(now - 22 * hour),
+    authorHandle: 'formfox',
+    body: "switched our team to canary last week and nobody has filed an upgrade complaint. that's either the highest praise or the deepest silence I'll ever get.",
+    createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
-    replies: 142,
-    reposts: 88,
-    tags: ['webdev'],
+    replies: 88,
+    reposts: 96,
+    tags: [],
   },
   {
-    authorHandle: 'aurora',
-    body: "next 16 stable lands next week. canary has been rock solid for two months now. genuinely one of the most fun releases I've worked on. lot of small things, all in the same direction.",
-    createdAt: new Date(now - 1 * day - 2 * hour),
+    authorHandle: 'aurorascharff',
+    body: "a thing I keep coming back to: a faster app and a simpler app should not be opposites. they usually are. when they line up, I notice.",
+    createdAt: new Date(now - 22 * hour),
     id: 'd15',
+    likes: 2_410,
+    replies: 142,
+    reposts: 540,
+    tags: [],
+  },
+  {
+    authorHandle: 'aurorascharff',
+    body: 'stable is close. a lot of small things landed in the same direction this cycle. excited to write the post.',
+    createdAt: new Date(now - 1 * day - 6 * hour),
+    id: 'd16',
     likes: 3_810,
     replies: 320,
     reposts: 1_120,
     tags: ['nextjs'],
   },
   {
-    authorHandle: 'boundary',
-    body: "got astro and sveltekit benchmarks back. they're great at the things they're great at. but if I need streaming, per-user caching, and coordinated mutations in one model, I'm still on next.",
-    createdAt: new Date(now - 1 * day - 8 * hour),
-    id: 'd16',
-    likes: 1_410,
-    replies: 196,
-    reposts: 240,
-    tags: ['webdev'],
-  },
-  {
-    authorHandle: 'aurora',
-    body: "the network tab is the best documentation a framework can write. open it on any next 16 page and you'll watch the framework do most of the work you used to write by hand.",
+    authorHandle: 'aurorascharff',
+    body: 'the network tab is the best documentation a framework can write. open it on a navigation and the model gets honest with you in about five seconds.',
     createdAt: new Date(now - 2 * day),
     id: 'd17',
     likes: 1_120,
     replies: 47,
     reposts: 180,
-    tags: ['nextjs'],
+    tags: [],
   },
 ];
 
-// Replies under d2 (the instant-warning drop), used on the detail page.
+// Replies under d2 (Streambot's analytics-bug drop), used on the detail page.
 const REPLIES: Drop[] = [
+  // Under d2 (Streambot's analytics-bug drop)
   {
-    authorHandle: 'streambot',
-    body: 'this is the part I keep telling people about. the build refuses to ship slow pages. instant is the baseline, not a checklist.',
-    createdAt: new Date(now - 18 * minute),
+    authorHandle: 'boundary',
+    body: 'this is going to haunt my dreams. how many other one-year-old bugs are out there.',
+    createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
     parentId: 'd2',
@@ -323,9 +339,9 @@ const REPLIES: Drop[] = [
     tags: [],
   },
   {
-    authorHandle: 'boundary',
-    body: "every time someone discovers this it ends with 'why isn't this default everywhere.'",
-    createdAt: new Date(now - 15 * minute),
+    authorHandle: 'coldstart',
+    body: 'we have a trailing slash one too. ours is a redirect that fires twice. I refuse to fix it. it brings me joy now.',
+    createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
     parentId: 'd2',
@@ -334,9 +350,9 @@ const REPLIES: Drop[] = [
     tags: [],
   },
   {
-    authorHandle: 'coldstart',
-    body: 'switched our team on as soon as it landed in canary. half the perf review meetings we used to have just stopped happening.',
-    createdAt: new Date(now - 10 * minute),
+    authorHandle: 'aurorascharff',
+    body: 'analytics bugs are the worst kind of bug. you have to trust the data to find the bug.',
+    createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
     parentId: 'd2',
@@ -344,44 +360,115 @@ const REPLIES: Drop[] = [
     reposts: 2,
     tags: [],
   },
+  // Under d5 (Aurora on runtime prefetch)
+  {
+    authorHandle: 'prefetcher',
+    body: "literally my favorite thing this cycle. the slow-click case stopped existing in our app a week ago and I didn't notice for two days.",
+    createdAt: new Date(now - 90 * minute),
+    id: 'r4',
+    likes: 220,
+    parentId: 'd5',
+    replies: 0,
+    reposts: 18,
+    tags: [],
+  },
+  {
+    authorHandle: 'streambot',
+    body: "this is the kind of thing you forget existed in any other model. wild.",
+    createdAt: new Date(now - 80 * minute),
+    id: 'r5',
+    likes: 96,
+    parentId: 'd5',
+    replies: 0,
+    reposts: 4,
+    tags: [],
+  },
+  // Under d8 (Hydrator on missing await)
+  {
+    authorHandle: 'cachepunk',
+    body: 'reading this with one eye on my own stack trace.',
+    createdAt: new Date(now - 4 * hour),
+    id: 'r6',
+    likes: 312,
+    parentId: 'd8',
+    replies: 0,
+    reposts: 22,
+    tags: [],
+  },
+  // Under d11 (Aurora on codemod upgrade)
+  {
+    authorHandle: 'coldstart',
+    body: 'can confirm. did three of ours yesterday, all boring, exactly the right kind of boring.',
+    createdAt: new Date(now - 10 * hour),
+    id: 'r7',
+    likes: 140,
+    parentId: 'd11',
+    replies: 0,
+    reposts: 12,
+    tags: [],
+  },
+  // Under d16 (Aurora "stable is close")
+  {
+    authorHandle: 'formfox',
+    body: 'looking forward to the write-up. canary has felt like a different framework already.',
+    createdAt: new Date(now - 1 * day),
+    id: 'r8',
+    likes: 88,
+    parentId: 'd16',
+    replies: 0,
+    reposts: 4,
+    tags: [],
+  },
 ];
 
 const ALL_DROPS = [...DROPS, ...REPLIES];
 
-const FOLLOWS: Record<string, Set<string>> = {
-  aurora: new Set(['streambot', 'cachepunk', 'boundary', 'prefetcher', 'coldstart', 'hydrator']),
-  boundary: new Set(['aurora', 'streambot', 'coldstart']),
-  cachepunk: new Set(['aurora', 'streambot']),
-  coldstart: new Set(['aurora', 'boundary']),
-  formfox: new Set(['aurora']),
-  hydrator: new Set(['aurora', 'streambot', 'formfox']),
-  prefetcher: new Set(['aurora', 'streambot']),
-  streambot: new Set(['aurora', 'prefetcher', 'cachepunk']),
-};
+function buildFollows(): Record<string, Set<string>> {
+  return {
+    aurora: new Set(['streambot', 'cachepunk', 'boundary', 'prefetcher', 'coldstart', 'hydrator']),
+    boundary: new Set(['aurorascharff', 'streambot', 'coldstart']),
+    cachepunk: new Set(['aurorascharff', 'streambot']),
+    coldstart: new Set(['aurorascharff', 'boundary']),
+    formfox: new Set(['aurorascharff']),
+    hydrator: new Set(['aurorascharff', 'streambot', 'formfox']),
+    prefetcher: new Set(['aurorascharff', 'streambot']),
+    streambot: new Set(['aurorascharff', 'prefetcher', 'cachepunk']),
+  };
+}
 
-const LIKES: Record<string, Set<string>> = {
-  aurora: new Set(['d1', 'd4', 'd7']),
-};
+function buildLikes(): Record<string, Set<string>> {
+  return {
+    aurora: new Set(['d1', 'd4', 'd7']),
+  };
+}
 
-const REPOSTS: Record<string, Set<string>> = {
-  aurora: new Set(['d8', 'd16']),
-};
+function buildReposts(): Record<string, Set<string>> {
+  return {
+    aurora: new Set(['d6', 'd8']),
+  };
+}
 
-const BOOKMARKS: Record<string, Set<string>> = {
-  aurora: new Set(['d4', 'd12']),
-};
+function buildBookmarks(): Record<string, Set<string>> {
+  return {
+    aurora: new Set(['d4', 'd12']),
+  };
+}
 
 // ─── module-local store ───────────────────────────────────────────────────
 
 const store: Store = {
-  bookmarks: BOOKMARKS,
-  currentUserHandle: 'aurora',
+  bookmarks: buildBookmarks(),
+  currentUserHandle: 'aurorascharff',
   dropIdCounter: ALL_DROPS.length + 1,
-  drops: [...ALL_DROPS],
-  follows: FOLLOWS,
-  likes: LIKES,
-  reposts: REPOSTS,
-  users: [...USERS],
+  drops: ALL_DROPS.map(d => {
+    return { ...d };
+  }),
+  follows: buildFollows(),
+  likes: buildLikes(),
+  reposts: buildReposts(),
+  users: USERS.map(u => {
+    return { ...u };
+  }),
 };
 
 // ─── accessors used by `src/data/queries` and `src/data/actions` ──────────
@@ -393,4 +480,23 @@ export function getStore() {
 export function getNextDropId() {
   store.dropIdCounter += 1;
   return `d${store.dropIdCounter}`;
+}
+
+/**
+ * Reset the in-memory store back to seed values. Used by the demo's seed
+ * endpoint so we can re-run the talk without restarting the dev server.
+ */
+export function resetStore() {
+  store.users = USERS.map(u => {
+    return { ...u };
+  });
+  store.drops = ALL_DROPS.map(d => {
+    return { ...d };
+  });
+  store.follows = buildFollows();
+  store.likes = buildLikes();
+  store.reposts = buildReposts();
+  store.bookmarks = buildBookmarks();
+  store.dropIdCounter = ALL_DROPS.length + 1;
+  store.currentUserHandle = 'aurorascharff';
 }
