@@ -39,9 +39,9 @@ export function MobileTabBar() {
         <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
       </Suspense>
       <Suspense
-        fallback={<MobileTabLinkFallback href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />}
+        fallback={<MobileTabLinkFallback href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />}
       >
-        <MobileTabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
       </Suspense>
       <Suspense
         fallback={<MobileTabLinkFallback href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />}

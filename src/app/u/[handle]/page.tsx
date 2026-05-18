@@ -89,13 +89,13 @@ async function ProfileHeader({ params }: Params) {
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
           <UserAvatar handle={user.handle} size="lg" />
-          {isMe ? null : (
-            <div className="pt-12 sm:pt-14">
+          <div className="h-20 pt-12 sm:h-24 sm:pt-14">
+            {isMe ? null : (
               <Suspense fallback={<Skeleton className="h-8 w-28 rounded-full" />}>
                 <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
               </Suspense>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         <div className="mt-3 flex flex-col gap-3">
           <div className="flex flex-col gap-0.5">

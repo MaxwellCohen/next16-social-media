@@ -34,9 +34,9 @@ export function Sidebar() {
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
         </Suspense>
         <Suspense
-          fallback={<SidebarNavLinkFallback href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />}
+          fallback={<SidebarNavLinkFallback href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />}
         >
-          <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
+          <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
       </nav>
       <div className="border-divider dark:border-divider-dark -mx-4 mt-auto flex flex-col gap-2 border-t px-4 pt-3 sm:-mx-6 sm:px-6">
