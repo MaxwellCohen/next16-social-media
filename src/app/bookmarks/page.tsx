@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/Drop';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getBookmarkedDrops } from '@/data/queries/drop';
 import { getCurrentUser } from '@/data/queries/user';
+import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
 
 export default function BookmarksPage() {
   return (

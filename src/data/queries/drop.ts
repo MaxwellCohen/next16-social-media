@@ -3,9 +3,10 @@ import 'server-only';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import { getCurrentUserHandle } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { toDrop, type Drop } from '@/lib/types';
 import { delay } from '@/lib/utils';
+import { toDrop, type Drop } from '@/types/drop';
 
 export const getFeed = cache(async () => {
   'use cache';
@@ -162,7 +163,8 @@ export type DropUserState = {
   bookmarked: boolean;
 };
 
-export const getDropUserState = cache(async (handle: string, dropId: string): Promise<DropUserState> => {
+export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
+  const handle = await getCurrentUserHandle();
   const [liked, reposted, bookmarked] = await Promise.all([
     isLiked(handle, dropId),
     isReposted(handle, dropId),

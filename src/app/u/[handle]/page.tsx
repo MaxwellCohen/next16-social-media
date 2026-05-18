@@ -1,13 +1,28 @@
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/Drop';
-import { FollowButton } from '@/components/FollowButton';
-import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
+import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { FollowButton } from '@/features/user/components/FollowButton';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import { formatCount } from '@/lib/utils';
+import type { Metadata } from 'next';
 
 type Params = Pick<PageProps<'/u/[handle]'>, 'params'>;
+
+export async function generateMetadata({ params }: PageProps<'/u/[handle]'>): Promise<Metadata> {
+  const { handle } = await params;
+  const user = await getUserByHandle(handle);
+  const title = `${user.displayName} (@${user.handle})`;
+  const url = `/u/${user.handle}`;
+  return {
+    alternates: { canonical: url },
+    description: user.bio,
+    openGraph: { description: user.bio, title, type: 'profile', url, username: user.handle },
+    title,
+    twitter: { card: 'summary', creator: `@${user.handle}`, description: user.bio, title },
+  };
+}
 
 export default function ProfilePage({ params }: PageProps<'/u/[handle]'>) {
   return (

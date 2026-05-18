@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { DropComposer } from '@/components/DropComposer';
-import { Feed, FeedSkeleton } from '@/components/Feed';
+import { DropComposer } from '@/features/drop/components/DropComposer';
+import { Feed, FeedSkeleton } from '@/features/drop/components/Feed';
 
 export default function HomePage() {
   return (

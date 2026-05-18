@@ -1,4 +1,4 @@
-import 'server-only';
+import type { Drop as PrismaDrop } from '@/generated/prisma/client';
 
 export type EmbeddedCode = { lang: string; code: string };
 
@@ -14,23 +14,6 @@ export type Drop = {
   embeddedCode?: EmbeddedCode;
   parentId?: string;
 };
-
-export type User = {
-  id: string;
-  handle: string;
-  displayName: string;
-  bio: string;
-  avatarColor: string;
-  followers: number;
-  following: number;
-};
-
-export type Tag = {
-  name: string;
-  count: number;
-};
-
-import type { Drop as PrismaDrop } from '@/generated/prisma/client';
 
 export function toDrop(row: PrismaDrop): Drop {
   return {

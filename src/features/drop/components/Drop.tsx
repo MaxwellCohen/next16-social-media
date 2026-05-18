@@ -1,15 +1,15 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { DropActions, DropActionsSkeleton } from '@/components/DropActions';
-import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { TagPill } from '@/components/ui/TagPill';
 import { getDropUserState } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
+import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 
-import type { Drop as DropT } from '@/lib/types';
+import type { Drop as DropT } from '@/types/drop';
 
 type Props = {
   drop: DropT;

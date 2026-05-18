@@ -1,9 +1,24 @@
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/Drop';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByTag } from '@/data/queries/drop';
+import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import type { Metadata } from 'next';
 
 type Params = Pick<PageProps<'/tag/[tag]'>, 'params'>;
+
+export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Promise<Metadata> {
+  const { tag } = await params;
+  const title = `#${tag}`;
+  const description = `Drops tagged #${tag}`;
+  const url = `/tag/${tag}`;
+  return {
+    alternates: { canonical: url },
+    description,
+    openGraph: { description, title, type: 'website', url },
+    title,
+    twitter: { card: 'summary_large_image', description, title },
+  };
+}
 
 export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
   return (

@@ -1,9 +1,27 @@
 import { Suspense } from 'react';
-import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/app/drop/[id]/_components/ReplyComposerForm';
-import { Drop, DropSkeleton } from '@/components/Drop';
-import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDrop, getReplies } from '@/data/queries/drop';
+import { getUserByHandle } from '@/data/queries/user';
+import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/features/drop/components/ReplyComposerForm';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Promise<Metadata> {
+  const { id } = await params;
+  const drop = await getDrop(id);
+  const author = await getUserByHandle(drop.authorHandle);
+  const title = `${author.displayName} on Drop`;
+  const description = drop.body.length > 160 ? `${drop.body.slice(0, 157)}…` : drop.body;
+  const url = `/drop/${id}`;
+  return {
+    alternates: { canonical: url },
+    description,
+    openGraph: { authors: [author.displayName], description, title, type: 'article', url },
+    title,
+    twitter: { card: 'summary_large_image', creator: `@${author.handle}`, description, title },
+  };
+}
 
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   const idPromise = params.then(({ id }) => {

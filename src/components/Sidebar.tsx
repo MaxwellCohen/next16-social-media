@@ -1,11 +1,11 @@
 import { Bookmark, Hash, Home, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
-import { SidebarNavLink } from '@/components/navigation/NavLink';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { SidebarNavLink } from './SidebarNavLink';
 
 export async function Sidebar() {
   const user = await getCurrentUser();
@@ -25,10 +25,10 @@ export async function Sidebar() {
         <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
         <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
       </nav>
-      <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 rounded-2xl border p-2">
+      <div className="mt-auto flex flex-col gap-2">
         <Link
           href={`/u/${user.handle}`}
-          className="hover:bg-card dark:hover:bg-card-dark -mx-1 flex items-center gap-2.5 rounded-xl px-2 py-1 transition-colors"
+          className="hover:bg-card dark:hover:bg-card-dark flex items-center gap-3 rounded-full px-3 py-2 transition-colors"
         >
           <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
             <UserAvatar handle={user.handle} size="sm" />
@@ -39,7 +39,7 @@ export async function Sidebar() {
           </div>
           <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
         </Link>
-        <div className="border-divider dark:border-divider-dark flex justify-end border-t pt-1.5">
+        <div className="px-3">
           <ThemeToggle variant="inline" />
         </div>
       </div>

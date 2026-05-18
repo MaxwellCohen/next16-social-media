@@ -1,17 +1,32 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
-import { TrendingTags, TrendingTagsSkeleton } from '@/components/TrendingTags';
-import { WhoToFollow, WhoToFollowSkeleton } from '@/components/WhoToFollow';
-import { MobileHeader, MobileTabBar } from '@/components/navigation/MobileNav';
-import { Sidebar } from '@/components/navigation/Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/TrendingTags';
+import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/WhoToFollow';
 import type { Metadata } from 'next';
 import './globals.css';
+import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
 
 export const metadata: Metadata = {
   description: 'A dev-flavored social network.',
-  title: 'Drop',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'),
+  openGraph: {
+    description: 'A dev-flavored social network.',
+    siteName: 'Drop',
+    title: 'Drop',
+    type: 'website',
+  },
+  title: {
+    default: 'Drop',
+    template: '%s · Drop',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    description: 'A dev-flavored social network.',
+    title: 'Drop',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

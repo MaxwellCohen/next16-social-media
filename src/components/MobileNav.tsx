@@ -1,10 +1,10 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
-import { MobileTabLink } from '@/components/navigation/NavLink';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { MobileTabLink } from './SidebarNavLink';
 
 export async function MobileHeader() {
   const user = await getCurrentUser();
