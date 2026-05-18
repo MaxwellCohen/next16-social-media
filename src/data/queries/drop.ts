@@ -61,11 +61,27 @@ export const getReplies = cache(async (dropId: string) => {
   cacheLife('seconds');
 
   await delay(800);
+  const parent = await prisma.drop.findUnique({
+    select: { authorHandle: true },
+    where: { id: dropId },
+  });
   const rows = await prisma.drop.findMany({
-    orderBy: { createdAt: 'asc' },
+    orderBy: { createdAt: 'desc' },
     where: { parentId: dropId },
   });
-  return rows.map(toDrop);
+  // Twitter-style: pin the original author's replies first, then newest-first for everyone else.
+  const authorHandle = parent?.authorHandle;
+  const authorReplies = authorHandle
+    ? rows.filter(r => {
+        return r.authorHandle === authorHandle;
+      })
+    : [];
+  const otherReplies = authorHandle
+    ? rows.filter(r => {
+        return r.authorHandle !== authorHandle;
+      })
+    : rows;
+  return [...authorReplies, ...otherReplies].map(toDrop);
 });
 
 export type ProfileFeedItem =

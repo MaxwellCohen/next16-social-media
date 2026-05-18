@@ -9,7 +9,7 @@ export function DropComposer() {
         <UserAvatar />
       </Suspense>
       <div className="flex flex-1 items-center justify-between gap-3">
-        <span className="text-gray text-sm">What did you ship today?</span>
+        <span className="text-gray text-sm">What did you build today?</span>
         <NewDropModal
           avatar={
             <Suspense fallback={<UserAvatarSkeleton size="md" />}>

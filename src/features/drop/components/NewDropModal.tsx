@@ -63,7 +63,7 @@ export function NewDropModal({ avatar }: Props) {
               rows={6}
               required
               maxLength={1000}
-              placeholder={'What did you ship today?\n\nWrap code in ```ts ... ``` to embed a snippet.'}
+              placeholder={'What did you build today?\n\nWrap code in ```ts ... ``` to embed a snippet.'}
               onKeyDown={e => {
                 if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                   e.preventDefault();

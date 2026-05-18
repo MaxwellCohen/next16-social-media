@@ -383,7 +383,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'The Notes export was the hard part. Once it was structured, the site took an afternoon.',
+    body: "With 16.3 you can finally lean into per-component caching for stuff like this — turned my Notes import into a `'use cache'` function and the rest fell out.",
     createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
@@ -460,7 +460,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Backstage tickets are flying — say hi if you spot the pink hoodie.',
+    body: "Backstage tickets are flying — say hi if you spot the pink hoodie. The 16.3 demo is the one I'll be running live, redesign and all.",
     createdAt: new Date(now - 22 * hour),
     id: 'r9',
     likes: 140,
@@ -482,7 +482,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Yes, same idea — the talks are the source, the RSS is just so I stop forgetting them.',
+    body: "Yes, same idea — the talks are the source, the RSS is just so I stop forgetting them. Now it's a `'use cache'` route I can subscribe to.",
     createdAt: new Date(now - 5 * hour),
     id: 'r11',
     likes: 188,
@@ -504,7 +504,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "Saved this one. The 'three years overdue' part lands.",
+    body: "Saved this one. The 'three years overdue' part lands — that's the entire 16.3 redesign in one sentence.",
     createdAt: new Date(now - 100 * minute),
     id: 'r13',
     likes: 220,
@@ -526,7 +526,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "Feedback welcome on the rough cut — the parts I'm least sure about are the ones I most want to fix before the print run.",
+    body: "Feedback welcome on the rough cut — the parts I'm least sure about are the ones I most want to fix before the print run. The 16.3 chapter is the one that keeps moving.",
     createdAt: new Date(now - 8 * hour),
     id: 'r15',
     likes: 264,
@@ -548,7 +548,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "The 'two engineers ask independently' rule is the closest thing to a real signal in product work.",
+    body: "The 'two engineers ask independently' rule is the closest thing to a real signal in product work. Most of the 16.3 redesign came from that exact signal repeated three times.",
     createdAt: new Date(now - 13 * hour),
     id: 'r17',
     likes: 410,
@@ -570,7 +570,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "If you build with it, send me what you make — happy to feature stuff on stage if it's wild enough.",
+    body: "If you build with it, send me what you make — happy to feature stuff on stage if it's wild enough. The whole point of the 16.3 redesign was making this kind of project a weekend.",
     createdAt: new Date(now - 17 * hour),
     id: 'r19',
     likes: 188,
@@ -592,7 +592,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "Steal it, please. The only feature is 'oldest open PR' and that's the whole point.",
+    body: "Steal it, please. The only feature is 'oldest open PR' and that's the whole point. Now it's running on 16.3 in 40 lines.",
     createdAt: new Date(now - 25 * hour),
     id: 'r21',
     likes: 196,
@@ -614,7 +614,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Honestly should have been a CLI four years ago. Glad it finally exists.',
+    body: "Honestly should have been a CLI four years ago. The 16.3 templates it scaffolds are the ones we've been quietly converging on across every project.",
     createdAt: new Date(now - 29 * hour),
     id: 'r23',
     likes: 142,
@@ -625,7 +625,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Eight clicks beats an afternoon every time. The workshops will be easier to announce now.',
+    body: 'Eight clicks beats an afternoon every time. With 16.3 the announce flow is a server action + a tagged cache — feels almost embarrassing how short it got.',
     createdAt: new Date(now - 40 * minute),
     id: 'r24',
     likes: 96,
@@ -636,7 +636,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "If you're using this template for a workshop too, send me a link — happy to cross-link.",
+    body: "If you're using this template for a workshop too, send me a link — happy to cross-link. The 16.3 prefetch hints make these landing pages feel instant on a click.",
     createdAt: new Date(now - 30 * minute),
     id: 'r25',
     likes: 132,
@@ -647,7 +647,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'The two-user app is undefeated. Mine this year was a chore-rotation thing for my partner and me.',
+    body: "The two-user app is undefeated. Mine this year was a chore-rotation thing for my partner and me. 16.3's private cache made the per-user state of it disappear.",
     createdAt: new Date(now - 28 * minute),
     id: 'r26',
     likes: 220,
@@ -680,7 +680,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "Honestly the friction of shipping a real URL is the whole exercise. Once it's at a URL it counts.",
+    body: "Honestly the friction of shipping a real URL is the whole exercise. Once it's at a URL it counts. The 16.3 deploy story makes the URL step easier than the badge.",
     createdAt: new Date(now - 2 * hour),
     id: 'r29',
     likes: 188,
@@ -702,7 +702,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Replacing a spreadsheet is one of the most useful things software can do for a real person.',
+    body: "Replacing a spreadsheet is one of the most useful things software can do for a real person. Now imagine doing it in an evening on the 16.3 stack — that's the redesign in practice.",
     createdAt: new Date(now - 6 * hour),
     id: 'r31',
     likes: 240,
@@ -724,7 +724,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Slow-grow lists are the best lists. The pressure to publish weekly is what kills good reading.',
+    body: "Slow-grow lists are the best lists. The pressure to publish weekly is what kills good reading. The 16.3 ISR-ish 'cache for hours' is the perfect shape for a list like this.",
     createdAt: new Date(now - 13 * hour),
     id: 'r33',
     likes: 156,
