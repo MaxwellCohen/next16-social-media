@@ -1,10 +1,18 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByTag } from '@/data/queries/drop';
+import { getTrendingTags } from '@/data/queries/tag';
 import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
 import type { Metadata } from 'next';
 
 type Params = Pick<PageProps<'/tag/[tag]'>, 'params'>;
+
+export async function generateStaticParams() {
+  const tags = await getTrendingTags();
+  return tags.map(t => {
+    return { tag: t.name };
+  });
+}
 
 export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Promise<Metadata> {
   const { tag } = await params;

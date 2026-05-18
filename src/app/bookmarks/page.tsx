@@ -3,6 +3,21 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { getBookmarkedDrops } from '@/data/queries/drop';
 import { getCurrentUser } from '@/data/queries/user';
 import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/bookmarks' },
+  description: 'Drops you bookmarked.',
+  openGraph: {
+    description: 'Drops you bookmarked.',
+    title: 'Bookmarks',
+    type: 'website',
+    url: '/bookmarks',
+  },
+  robots: { follow: false, index: false },
+  title: 'Bookmarks',
+  twitter: { card: 'summary', description: 'Drops you bookmarked.', title: 'Bookmarks' },
+};
 
 export default function BookmarksPage() {
   return (

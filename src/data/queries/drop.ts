@@ -164,6 +164,7 @@ export type DropUserState = {
 };
 
 export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
+  'use cache: private';
   const handle = await getCurrentUserHandle();
   const [liked, reposted, bookmarked] = await Promise.all([
     isLiked(handle, dropId),
