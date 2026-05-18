@@ -5,7 +5,7 @@ import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/use
 import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
 import { FollowButton } from '@/features/user/components/FollowButton';
 import { ProfileTabs } from '@/features/user/components/ProfileTabs';
-import { UserAvatar } from '@/features/user/components/UserAvatar';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import { cn, formatCount } from '@/lib/utils';
 import type { Metadata } from 'next';
 
@@ -172,7 +172,9 @@ function ProfileHeaderSkeleton() {
       <div className="bg-card dark:bg-card-dark h-32 w-full sm:h-40" aria-hidden />
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <div className="skeleton-animation h-14 w-14 rounded-full bg-white dark:bg-black" />
+          <div className="rounded-full bg-white dark:bg-black">
+            <UserAvatarSkeleton size="lg" />
+          </div>
           <div className="pt-12 sm:pt-14">
             <div className="skeleton-animation h-8 w-28 rounded-full" />
           </div>
