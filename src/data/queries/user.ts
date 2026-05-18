@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -23,6 +23,7 @@ export const getCurrentUser = cache(async () => {
 export const getUserByHandle = cache(async (handle: string) => {
   'use cache';
   cacheTag('users', `user-${handle}`);
+  cacheLife('minutes');
 
   await delay(250);
   const user = await prisma.user.findUnique({ where: { handle } });
@@ -33,6 +34,7 @@ export const getUserByHandle = cache(async (handle: string) => {
 export const getWhoToFollow = cache(async (handle: string) => {
   'use cache';
   cacheTag(`who-to-follow-${handle}`);
+  cacheLife('seconds');
 
   await delay(400);
   const followed = await prisma.follow.findMany({
@@ -57,6 +59,7 @@ export const getWhoToFollow = cache(async (handle: string) => {
 export const isFollowing = cache(async (followerHandle: string, targetHandle: string) => {
   'use cache';
   cacheTag(`is-following-${targetHandle}`);
+  cacheLife('seconds');
 
   await delay(120);
   const row = await prisma.follow.findUnique({

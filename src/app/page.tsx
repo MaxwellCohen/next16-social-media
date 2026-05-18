@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { DropComposer } from '@/features/drop/components/DropComposer';
 import { Feed, FeedSkeleton } from '@/features/drop/components/Feed';
 
+export const unstable_prefetch = 'force-runtime';
+
 export default function HomePage() {
   return (
     <div>

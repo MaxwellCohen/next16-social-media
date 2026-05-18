@@ -47,6 +47,7 @@ export const getPersonalizedFeed = cache(async (userHandle: string) => {
 export const getDrop = cache(async (id: string) => {
   'use cache';
   cacheTag('drops', `drop-${id}`);
+  cacheLife('seconds');
 
   await delay(300);
   const row = await prisma.drop.findUnique({ where: { id } });
@@ -136,6 +137,7 @@ export const getDropsByTag = cache(async (tag: string) => {
 export const isReposted = cache(async (userHandle: string, dropId: string) => {
   'use cache';
   cacheTag(`reposted-${userHandle}-${dropId}`);
+  cacheLife('seconds');
 
   await delay(120);
   const row = await prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
@@ -145,6 +147,7 @@ export const isReposted = cache(async (userHandle: string, dropId: string) => {
 export const isLiked = cache(async (userHandle: string, dropId: string) => {
   'use cache';
   cacheTag(`liked-${userHandle}-${dropId}`);
+  cacheLife('seconds');
 
   await delay(120);
   const row = await prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
@@ -154,6 +157,7 @@ export const isLiked = cache(async (userHandle: string, dropId: string) => {
 export const isBookmarked = cache(async (userHandle: string, dropId: string) => {
   'use cache';
   cacheTag(`bookmarked-${userHandle}-${dropId}`);
+  cacheLife('seconds');
 
   await delay(120);
   const row = await prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
@@ -183,7 +187,6 @@ export type DropUserState = {
 };
 
 export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
-  'use cache: private';
   const handle = await getCurrentUserHandle();
   const [liked, reposted, bookmarked] = await Promise.all([
     isLiked(handle, dropId),

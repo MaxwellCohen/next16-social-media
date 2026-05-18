@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDrop, getReplies } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
-import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop, DropDetailSkeleton, DropSkeleton } from '@/features/drop/components/Drop';
 import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/features/drop/components/ReplyComposerForm';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import type { Metadata } from 'next';
@@ -23,13 +23,15 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   };
 }
 
+export const unstable_prefetch = 'force-runtime';
+
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
       <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
-      <Suspense fallback={<DropSkeleton />}>
+      <Suspense fallback={<DropDetailSkeleton />}>
         <DropPageBody params={params} />
       </Suspense>
     </div>

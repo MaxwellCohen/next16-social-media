@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { cache } from 'react';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
@@ -8,6 +8,7 @@ import { delay } from '@/lib/utils';
 export const getTrendingTags = cache(async () => {
   'use cache';
   cacheTag('trending');
+  cacheLife('minutes');
 
   await delay(350);
   const rows = await prisma.drop.findMany({ select: { tags: true } });

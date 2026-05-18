@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   twitter: { card: 'summary', description: 'Drops you bookmarked.', title: 'Bookmarks' },
 };
 
+export const unstable_prefetch = 'force-runtime';
+
 export default function BookmarksPage() {
   return (
     <div>
