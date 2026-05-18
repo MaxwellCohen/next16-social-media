@@ -9,6 +9,12 @@ type Props = {
   className?: string;
 };
 
+const sizes: Record<Size, string> = {
+  lg: 'h-14 w-14 text-lg',
+  md: 'h-10 w-10 text-sm',
+  sm: 'h-8 w-8 text-xs',
+};
+
 export async function UserAvatar({ handle, size = 'md', className }: Props) {
   const user = await getUserByHandle(handle ?? (await getCurrentUserHandle()));
   return (
@@ -29,9 +35,3 @@ export async function UserAvatar({ handle, size = 'md', className }: Props) {
 export function UserAvatarSkeleton({ size = 'md', className }: { size?: Size; className?: string }) {
   return <div aria-hidden className={cn('skeleton-animation shrink-0 rounded-full', sizes[size], className)} />;
 }
-
-const sizes: Record<Size, string> = {
-  lg: 'h-14 w-14 text-lg',
-  md: 'h-10 w-10 text-sm',
-  sm: 'h-8 w-8 text-xs',
-};
