@@ -16,7 +16,7 @@ export async function TrendingTags() {
               href={`/tag/${tag.name}`}
               className="flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
             >
-              <span className="text-accent text-sm font-medium">
+              <span className="text-sm font-medium text-black dark:text-white">
                 #{tag.name}
               </span>
               <span className="text-gray font-mono text-xs">

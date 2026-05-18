@@ -50,12 +50,7 @@ export async function Drop({ drop, compact = false }: Props) {
             </Link>
           </header>
 
-          <Link
-            href={`/drop/${drop.id}`}
-            className="text-[15px] leading-snug text-black dark:text-white"
-          >
-            {renderBody(drop.body)}
-          </Link>
+          <DropBody body={drop.body} dropId={drop.id} compact={compact} />
 
           {drop.embeddedCode && !compact ? (
             <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
@@ -100,6 +95,76 @@ function renderBody(body: string) {
     }
     return <span key={i}>{part}</span>;
   });
+}
+
+/**
+ * Parses a drop body and renders prose segments and fenced code blocks
+ * (```lang ... ```). Prose links to the drop detail page; code blocks render
+ * inline with syntax highlighting.
+ */
+function DropBody({
+  body,
+  dropId,
+  compact,
+}: {
+  body: string;
+  dropId: string;
+  compact: boolean;
+}) {
+  const segments = splitCode(body);
+  return (
+    <div className="flex flex-col gap-2">
+      {segments.map((segment, i) => {
+        if (segment.type === "code") {
+          if (compact) return null;
+          return (
+            <CodeBlock key={i} lang={segment.lang} code={segment.code} />
+          );
+        }
+        return (
+          <Link
+            key={i}
+            href={`/drop/${dropId}`}
+            className="text-[15px] leading-snug text-black dark:text-white"
+          >
+            {renderBody(segment.text)}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+type Segment =
+  | { type: "text"; text: string }
+  | { type: "code"; lang: string; code: string };
+
+const FENCE = /```(\w*)\n([\s\S]*?)\n?```/g;
+
+function splitCode(body: string): Segment[] {
+  const segments: Segment[] = [];
+  let lastIndex = 0;
+  for (const match of body.matchAll(FENCE)) {
+    const start = match.index ?? 0;
+    if (start > lastIndex) {
+      const text = body.slice(lastIndex, start).trim();
+      if (text) segments.push({ type: "text", text });
+    }
+    segments.push({
+      type: "code",
+      lang: match[1] || "bash",
+      code: match[2],
+    });
+    lastIndex = start + match[0].length;
+  }
+  if (lastIndex < body.length) {
+    const text = body.slice(lastIndex).trim();
+    if (text) segments.push({ type: "text", text });
+  }
+  if (segments.length === 0) {
+    segments.push({ type: "text", text: body });
+  }
+  return segments;
 }
 
 export function DropSkeleton() {

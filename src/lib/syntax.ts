@@ -1,11 +1,7 @@
 import "server-only";
 
-import { cache } from "react";
-import {
-  createCssVariablesTheme,
-  createHighlighter,
-  type Highlighter,
-} from "shiki";
+import { createHighlighter, type Highlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 
 const SUPPORTED_LANGS = [
   "tsx",
@@ -22,25 +18,22 @@ const SUPPORTED_LANGS = [
 
 export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
-const cssTheme = createCssVariablesTheme({
-  name: "drop",
-  variablePrefix: "--shiki-",
-  variableDefaults: {},
-  fontStyle: true,
-});
-
 /**
- * Shiki highlighter, lazy-loaded once per process. Uses a CSS-variable theme
- * so a single rendered HTML works for both light and dark mode (the variables
- * are defined in globals.css and switch on `.dark`).
+ * Process-wide singleton highlighter. `cache()` from React doesn't dedupe
+ * across requests, so we keep a module-scoped promise instead.
  */
-export const getHighlighter = cache(async (): Promise<Highlighter> => {
-  const highlighter = await createHighlighter({
-    themes: [cssTheme],
-    langs: SUPPORTED_LANGS as unknown as string[],
-  });
-  return highlighter;
-});
+let highlighterPromise: Promise<Highlighter> | null = null;
+
+function getHighlighter(): Promise<Highlighter> {
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighter({
+      themes: ["github-light", "github-dark"],
+      langs: SUPPORTED_LANGS as unknown as string[],
+      engine: createJavaScriptRegexEngine({ forgiving: true }),
+    });
+  }
+  return highlighterPromise;
+}
 
 export function normalizeLang(lang: string | undefined): SupportedLang {
   const l = (lang ?? "").toLowerCase();
@@ -58,6 +51,11 @@ export async function highlight(code: string, lang: string | undefined) {
   const highlighter = await getHighlighter();
   return highlighter.codeToHtml(code, {
     lang: normalizeLang(lang),
-    theme: "drop",
+    themes: {
+      light: "github-light",
+      dark: "github-dark",
+    },
+    defaultColor: "light",
+    cssVariablePrefix: "--shiki-",
   });
 }

@@ -55,7 +55,7 @@ export function DropActions({
         label="Reply"
         icon={<MessageCircle className="h-4 w-4" />}
         count={replies}
-        hoverColor="hover:bg-accent/10 hover:text-accent"
+        hoverColor="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
       />
 
       <ActionButton
