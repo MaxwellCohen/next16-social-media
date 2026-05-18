@@ -12,7 +12,8 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   const { id } = await params;
   const drop = await getDrop(id);
   const author = await getUserByHandle(drop.authorHandle);
-  const title = `${author.displayName} on Drop`;
+  const snippet = drop.body.length > 60 ? `${drop.body.slice(0, 57).trimEnd()}…` : drop.body;
+  const title = `${author.displayName}: ${snippet}`;
   const description = drop.body.length > 160 ? `${drop.body.slice(0, 157)}…` : drop.body;
   const url = `/drop/${id}`;
   return {
