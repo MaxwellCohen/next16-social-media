@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gray: #9ca3af;
+  --color-divider-dark: #262626;
+  --color-divider: #e5e7eb;
+  --color-card-dark: #0f0f0f;
+  --color-card: #f7f7f8;
+  --color-section: #111111;
+
+  --color-primary: #2457fa;
+  --color-primary-dark: #1d47cf;
+  --color-primary-darker: #142f8b;
+  --color-accent: #1b50ff;
+  --color-accent-hover: #1340d1;
+  --color-accent-fade: #214fff22;
+
+  --color-success: #0fa958;
+  --color-danger: #e54848;
+  --color-warning: #f5a524;
+
+  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans);
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.04em;
+  --breakpoint-3xl: 120rem;
+  --breakpoint-4xl: 140rem;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-black antialiased dark:bg-black dark:text-white selection:bg-accent selection:text-white;
+  }
+
+  h1 {
+    @apply font-sans text-2xl font-bold tracking-tight text-black dark:text-white;
+  }
+
+  h2 {
+    @apply font-sans text-lg font-semibold tracking-tight text-black dark:text-white;
+  }
+
+  h3 {
+    @apply font-sans text-base font-semibold tracking-tight text-black dark:text-white;
+  }
+
+  input,
+  textarea {
+    @apply w-full rounded-md border border-divider bg-white px-3 py-2 text-sm text-black placeholder-gray transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 dark:border-divider-dark dark:bg-black dark:text-white;
+  }
+
+  label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-gray;
+  }
+}
+
+.skeleton-animation {
+  background: rgba(150, 150, 150, 0.2);
+  background: linear-gradient(
+    to right,
+    rgba(130, 130, 130, 0.2) 8%,
+    rgba(170, 170, 170, 0.3) 18%,
+    rgba(150, 150, 150, 0.2) 33%
+  );
+  background-size: 800px 100px;
+  animation: wave-lines 2s infinite ease-out;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes wave-lines {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
