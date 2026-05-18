@@ -8,7 +8,7 @@ import { formatCount } from "@/lib/utils";
 export async function Sidebar() {
   const user = await getCurrentUser();
   return (
-    <aside className="flex flex-col gap-4 px-4 py-5 sm:px-6">
+    <aside className="sticky top-0 hidden h-screen flex-col gap-4 px-4 py-5 sm:flex sm:px-6">
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-lg font-bold tracking-tight text-black dark:text-white"

@@ -68,6 +68,9 @@ export const getDropsByTag = cache(async (tag: string) => {
 
 export const isLiked = cache(
   async (userHandle: string, dropId: string) => {
+    "use cache: private";
+    cacheTag(`liked-${userHandle}-${dropId}`);
+
     await delay(120);
     return getStore().likes[userHandle]?.has(dropId) ?? false;
   },
@@ -75,7 +78,22 @@ export const isLiked = cache(
 
 export const isBookmarked = cache(
   async (userHandle: string, dropId: string) => {
+    "use cache: private";
+    cacheTag(`bookmarked-${userHandle}-${dropId}`);
+
     await delay(120);
     return getStore().bookmarks[userHandle]?.has(dropId) ?? false;
   },
 );
+
+export const getBookmarkedDrops = cache(async (userHandle: string) => {
+  "use cache: private";
+  cacheTag(`bookmarks-${userHandle}`);
+
+  await delay(400);
+  const store = getStore();
+  const ids = store.bookmarks[userHandle] ?? new Set();
+  return topLevel(store.drops)
+    .filter((d) => ids.has(d.id))
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+});

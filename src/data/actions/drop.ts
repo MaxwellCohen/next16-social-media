@@ -94,6 +94,7 @@ export async function toggleLike(dropId: string) {
     drop.likes += 1;
   }
   updateTag(`drop-${dropId}`);
+  updateTag(`liked-${store.currentUserHandle}-${dropId}`);
   return { ok: true as const, likes: drop.likes };
 }
 
@@ -121,6 +122,8 @@ export async function toggleBookmark(dropId: string) {
   } else {
     bookmarks.add(dropId);
   }
+  updateTag(`bookmarked-${store.currentUserHandle}-${dropId}`);
+  updateTag(`bookmarks-${store.currentUserHandle}`);
   return { ok: true as const };
 }
 

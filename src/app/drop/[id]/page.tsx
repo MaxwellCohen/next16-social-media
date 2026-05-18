@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Drop, DropSkeleton } from "@/components/drop";
+import { ReplyComposer } from "@/components/reply-composer";
 import { getDrop, getReplies } from "@/data/queries/drop";
 
 export const unstable_prefetch = "force-runtime";
@@ -16,6 +17,10 @@ export default function DropPage({ params }: PageProps<"/drop/[id]">) {
 
       <Suspense fallback={<DropSkeleton />}>
         <DropDetail params={params} />
+      </Suspense>
+
+      <Suspense>
+        <ReplyComposer />
       </Suspense>
 
       <Suspense fallback={<RepliesLoading />}>
