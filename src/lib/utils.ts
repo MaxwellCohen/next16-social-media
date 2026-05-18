@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
  * Don't remove. The whole demo relies on it.
  */
 export function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => {return setTimeout(resolve, ms)});
 }
 
 export function timeAgo(date: Date): string {
@@ -22,7 +22,7 @@ export function timeAgo(date: Date): string {
   if (hours < 24) return `${hours}h`;
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
 }
 
 export function formatCount(n: number): string {

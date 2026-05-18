@@ -1,11 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
   typedRoutes: true,
   experimental: {
     instantInsights: {
-      validationLevel: "warning",
+      validationLevel: 'warning',
     },
     useOffline: true,
     varyParams: true,

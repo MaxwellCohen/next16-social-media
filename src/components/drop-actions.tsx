@@ -1,13 +1,9 @@
-"use client";
+'use client';
 
-import { Bookmark, Heart, MessageCircle, Repeat2 } from "lucide-react";
-import { useOptimistic, useTransition } from "react";
-import {
-  toggleBookmark,
-  toggleLike,
-  toggleRepost,
-} from "@/data/actions/drop";
-import { cn, formatCount } from "@/lib/utils";
+import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
+import { useOptimistic, useTransition } from 'react';
+import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
+import { cn, formatCount } from '@/lib/utils';
 
 type Props = {
   dropId: string;
@@ -21,33 +17,23 @@ type Props = {
 type LikeState = { liked: boolean; count: number };
 type RepostState = { reposted: boolean; count: number };
 
-export function DropActions({
-  dropId,
-  likes,
-  replies,
-  reposts,
-  initialLiked,
-  initialBookmarked,
-}: Props) {
+export function DropActions({ dropId, likes, replies, reposts, initialLiked, initialBookmarked }: Props) {
   const [, startTransition] = useTransition();
 
   const [likeState, setLikeOptimistic] = useOptimistic<LikeState, void>(
-    { liked: initialLiked, count: likes },
-    (state) => ({
-      liked: !state.liked,
+    { count: likes, liked: initialLiked },
+    state => {return {
       count: state.count + (state.liked ? -1 : 1),
-    }),
+      liked: !state.liked,
+    }},
   );
 
   const [repostState, setRepostOptimistic] = useOptimistic<RepostState, void>(
-    { reposted: false, count: reposts },
-    (state) => ({ reposted: !state.reposted, count: state.count + 1 }),
+    { count: reposts, reposted: false },
+    state => {return { count: state.count + 1, reposted: !state.reposted }},
   );
 
-  const [bookmarked, setBookmarkOptimistic] = useOptimistic<boolean, void>(
-    initialBookmarked,
-    (state) => !state,
-  );
+  const [bookmarked, setBookmarkOptimistic] = useOptimistic<boolean, void>(initialBookmarked, state => {return !state});
 
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
@@ -75,9 +61,7 @@ export function DropActions({
 
       <ActionButton
         label="Like"
-        icon={
-          <Heart className={cn("h-4 w-4", likeState.liked && "fill-current")} />
-        }
+        icon={<Heart className={cn('h-4 w-4', likeState.liked && 'fill-current')} />}
         count={likeState.count}
         active={likeState.liked}
         activeColor="text-danger"
@@ -92,9 +76,7 @@ export function DropActions({
 
       <ActionButton
         label="Bookmark"
-        icon={
-          <Bookmark className={cn("h-4 w-4", bookmarked && "fill-current")} />
-        }
+        icon={<Bookmark className={cn('h-4 w-4', bookmarked && 'fill-current')} />}
         active={bookmarked}
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
@@ -119,32 +101,24 @@ type ActionButtonProps = {
   onClick?: () => void;
 };
 
-function ActionButton({
-  label,
-  icon,
-  count,
-  active,
-  activeColor,
-  hoverColor,
-  onClick,
-}: ActionButtonProps) {
+function ActionButton({ label, icon, count, active, activeColor, hoverColor, onClick }: ActionButtonProps) {
   return (
     <button
       type="button"
       aria-label={label}
-      onClick={(e) => {
+      onClick={e => {
         e.preventDefault();
         e.stopPropagation();
         onClick?.();
       }}
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors",
+        'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
         active && activeColor,
         hoverColor,
       )}
     >
       {icon}
-      {typeof count === "number" ? <span>{formatCount(count)}</span> : null}
+      {typeof count === 'number' ? <span>{formatCount(count)}</span> : null}
     </button>
   );
 }

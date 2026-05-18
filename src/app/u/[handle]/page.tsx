@@ -1,19 +1,15 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { Avatar } from "@/components/ui/avatar";
-import { FollowButton } from "@/components/follow-button";
-import { Drop, DropSkeleton } from "@/components/drop";
-import { getDropsByAuthor } from "@/data/queries/drop";
-import {
-  getCurrentUser,
-  getUserByHandle,
-  isFollowing,
-} from "@/data/queries/user";
-import { formatCount } from "@/lib/utils";
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { Drop, DropSkeleton } from '@/components/drop';
+import { FollowButton } from '@/components/follow-button';
+import { Avatar } from '@/components/ui/avatar';
+import { getDropsByAuthor } from '@/data/queries/drop';
+import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
+import { formatCount } from '@/lib/utils';
 
-type Params = Pick<PageProps<"/u/[handle]">, "params">;
+type Params = Pick<PageProps<'/u/[handle]'>, 'params'>;
 
-export default function ProfilePage({ params }: PageProps<"/u/[handle]">) {
+export default function ProfilePage({ params }: PageProps<'/u/[handle]'>) {
   return (
     <div>
       <Suspense fallback={<ProfileHeaderSkeleton />}>
@@ -36,13 +32,11 @@ async function ProfileHeader({ params }: Params) {
   const following = await isFollowing(current.handle, handle);
 
   return (
-    <header className="flex flex-col gap-4 border-b border-divider/70 p-5 dark:border-divider-dark/70">
+    <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
       <div className="flex items-start gap-4">
         <Avatar name={user.displayName} color={user.avatarColor} size="lg" />
         <div className="flex flex-1 flex-col gap-1">
-          <h1 className="text-xl font-bold tracking-tight">
-            {user.displayName}
-          </h1>
+          <h1 className="text-xl font-bold tracking-tight">{user.displayName}</h1>
           <div className="text-gray font-mono text-xs">@{user.handle}</div>
         </div>
         {user.handle === current.handle ? null : (
@@ -54,16 +48,10 @@ async function ProfileHeader({ params }: Params) {
 
       <div className="text-gray flex gap-4 font-mono text-xs">
         <span>
-          <strong className="text-black dark:text-white">
-            {formatCount(user.following)}
-          </strong>{" "}
-          Following
+          <strong className="text-black dark:text-white">{formatCount(user.following)}</strong> Following
         </span>
         <span>
-          <strong className="text-black dark:text-white">
-            {formatCount(user.followers)}
-          </strong>{" "}
-          Followers
+          <strong className="text-black dark:text-white">{formatCount(user.followers)}</strong> Followers
         </span>
       </div>
     </header>
@@ -75,25 +63,25 @@ async function ProfileFeed({ params }: Params) {
   const drops = await getDropsByAuthor(handle);
   if (drops.length === 0) {
     return (
-      <div className="text-gray border-b border-divider/70 px-5 py-8 text-center text-sm dark:border-divider-dark/70">
+      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
         No drops yet.
       </div>
     );
   }
   return (
     <ul>
-      {drops.map((drop) => (
+      {drops.map(drop => {return (
         <li key={drop.id}>
           <Drop drop={drop} />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }
 
 function ProfileHeaderSkeleton() {
   return (
-    <header className="flex flex-col gap-4 border-b border-divider/70 p-5 dark:border-divider-dark/70">
+    <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
       <div className="flex items-start gap-4">
         <div className="skeleton-animation h-14 w-14 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">
@@ -109,11 +97,11 @@ function ProfileHeaderSkeleton() {
 function ProfileFeedSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 3 }).map((_, i) => (
+      {Array.from({ length: 3 }).map((_, i) => {return (
         <li key={i}>
           <DropSkeleton />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }

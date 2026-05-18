@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { Avatar } from "@/components/ui/avatar";
-import { FollowButton } from "@/components/follow-button";
-import { getWhoToFollow } from "@/data/queries/user";
+import Link from 'next/link';
+import { FollowButton } from '@/components/follow-button';
+import { Avatar } from '@/components/ui/avatar';
+import { getWhoToFollow } from '@/data/queries/user';
 
 export async function WhoToFollow() {
   const users = await getWhoToFollow();
   return (
-    <section className="rounded-xl border border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40">
+    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
       <header className="px-4 pt-4 pb-2">
         <h3 className="text-sm font-semibold tracking-tight">Who to follow</h3>
       </header>
       <ul>
-        {users.map((user) => (
+        {users.map(user => {return (
           <li
             key={user.handle}
             className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
@@ -26,13 +26,11 @@ export async function WhoToFollow() {
               >
                 {user.displayName}
               </Link>
-              <div className="text-gray truncate font-mono text-[11px]">
-                @{user.handle}
-              </div>
+              <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
             </div>
             <FollowButton targetHandle={user.handle} initialFollowing={false} />
           </li>
-        ))}
+        )})}
       </ul>
     </section>
   );
@@ -40,10 +38,10 @@ export async function WhoToFollow() {
 
 export function WhoToFollowSkeleton() {
   return (
-    <section className="rounded-xl border border-divider bg-card/40 p-4 dark:border-divider-dark dark:bg-card-dark/40">
+    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border p-4">
       <h3 className="mb-3 text-sm font-semibold tracking-tight">Who to follow</h3>
       <ul className="flex flex-col gap-3">
-        {Array.from({ length: 3 }).map((_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => {return (
           <li key={i} className="flex items-center gap-3">
             <div className="skeleton-animation h-8 w-8 rounded-full" />
             <div className="flex flex-1 flex-col gap-1">
@@ -51,7 +49,7 @@ export function WhoToFollowSkeleton() {
               <div className="skeleton-animation h-3 w-16" />
             </div>
           </li>
-        ))}
+        )})}
       </ul>
     </section>
   );

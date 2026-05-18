@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import { Drop, DropSkeleton } from "@/components/drop";
-import { getBookmarkedDrops } from "@/data/queries/drop";
-import { getCurrentUser } from "@/data/queries/user";
+import { Suspense } from 'react';
+import { Drop, DropSkeleton } from '@/components/drop';
+import { getBookmarkedDrops } from '@/data/queries/drop';
+import { getCurrentUser } from '@/data/queries/user';
 
 export default function BookmarksPage() {
   return (
     <div>
-      <header className="sticky top-0 z-10 border-b border-divider/70 bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:border-divider-dark/70 dark:bg-black/80">
+      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:bg-black/80">
         <h1 className="text-lg font-bold tracking-tight">Bookmarks</h1>
       </header>
 
@@ -23,7 +23,7 @@ async function BookmarksFeed() {
 
   if (drops.length === 0) {
     return (
-      <div className="text-gray border-b border-divider/70 px-5 py-12 text-center text-sm dark:border-divider-dark/70">
+      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-12 text-center text-sm">
         Nothing saved yet. Bookmark a drop to find it here later.
       </div>
     );
@@ -31,11 +31,11 @@ async function BookmarksFeed() {
 
   return (
     <ul>
-      {drops.map((drop) => (
+      {drops.map(drop => {return (
         <li key={drop.id}>
           <Drop drop={drop} />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }
@@ -43,11 +43,11 @@ async function BookmarksFeed() {
 function BookmarksSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 3 }).map((_, i) => (
+      {Array.from({ length: 3 }).map((_, i) => {return (
         <li key={i}>
           <DropSkeleton />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }

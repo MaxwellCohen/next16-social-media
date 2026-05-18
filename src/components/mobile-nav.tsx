@@ -1,13 +1,13 @@
-import Link from "next/link";
-import { Bookmark, Hash, Home, User } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { DropMark } from "@/components/brand/drop-mark";
-import { getCurrentUser } from "@/data/queries/user";
+import { Bookmark, Hash, Home, User } from 'lucide-react';
+import Link from 'next/link';
+import { DropMark } from '@/components/brand/drop-mark';
+import { Avatar } from '@/components/ui/avatar';
+import { getCurrentUser } from '@/data/queries/user';
 
 export async function MobileHeader() {
   const user = await getCurrentUser();
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-divider/70 bg-white/80 px-4 py-3 backdrop-blur sm:hidden dark:border-divider-dark/70 dark:bg-black/80">
+    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur sm:hidden dark:bg-black/80">
       <Link href={`/u/${user.handle}`} aria-label="Profile">
         <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
       </Link>
@@ -23,7 +23,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-20 flex border-t border-divider/70 bg-white/90 backdrop-blur sm:hidden dark:border-divider-dark/70 dark:bg-black/90"
+      className="border-divider/70 dark:border-divider-dark/70 fixed inset-x-0 bottom-0 z-20 flex border-t bg-white/90 backdrop-blur sm:hidden dark:bg-black/90"
     >
       <TabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
       <TabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
@@ -33,15 +33,7 @@ export function MobileTabBar() {
   );
 }
 
-function TabLink({
-  href,
-  icon,
-  label,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-}) {
+function TabLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
     <Link
       // typedRoutes hint

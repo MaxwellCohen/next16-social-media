@@ -1,13 +1,13 @@
-import "server-only";
+import 'server-only';
 
-import { cache } from "react";
-import { cacheTag } from "next/cache";
-import { getStore } from "@/lib/data";
-import { delay } from "@/lib/utils";
+import { cacheTag } from 'next/cache';
+import { cache } from 'react';
+import { getStore } from '@/lib/data';
+import { delay } from '@/lib/utils';
 
 export const getTrendingTags = cache(async () => {
-  "use cache";
-  cacheTag("trending");
+  'use cache';
+  cacheTag('trending');
 
   await delay(350);
   const counts = new Map<string, number>();
@@ -17,7 +17,7 @@ export const getTrendingTags = cache(async () => {
     }
   }
   return Array.from(counts.entries())
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count)
+    .map(([name, count]) => {return { count, name }})
+    .sort((a, b) => {return b.count - a.count})
     .slice(0, 6);
 });

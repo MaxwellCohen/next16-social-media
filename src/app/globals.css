@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-gray: #9ca3af;
@@ -37,7 +37,7 @@
 
 @layer base {
   body {
-    @apply bg-white font-sans text-black antialiased dark:bg-black dark:text-white selection:bg-accent selection:text-white;
+    @apply selection:bg-accent bg-white font-sans text-black antialiased selection:text-white dark:bg-black dark:text-white;
   }
 
   h1 {
@@ -54,11 +54,11 @@
 
   input,
   textarea {
-    @apply w-full rounded-md border border-divider bg-white px-3 py-2 text-sm text-black placeholder-gray transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 dark:border-divider-dark dark:bg-black dark:text-white;
+    @apply border-divider placeholder-gray focus:border-accent focus:ring-accent/30 dark:border-divider-dark w-full rounded-md border bg-white px-3 py-2 text-sm text-black transition-colors focus:ring-2 focus:outline-none dark:bg-black dark:text-white;
   }
 
   label {
-    @apply mb-1.5 block text-xs font-medium tracking-wide text-gray;
+    @apply text-gray mb-1.5 block text-xs font-medium tracking-wide;
   }
 }
 

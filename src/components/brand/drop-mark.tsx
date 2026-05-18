@@ -28,9 +28,7 @@ export function DropMark({ className, size = 20 }: Props) {
 
 export function DropWordmark({ className }: { className?: string }) {
   return (
-    <span
-      className={`inline-flex items-center gap-2 ${className ?? ""}`}
-    >
+    <span className={`inline-flex items-center gap-2 ${className ?? ''}`}>
       <DropMark size={20} />
       <span className="font-bold tracking-tight">drop</span>
     </span>

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useRef, useState, useTransition } from "react";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { postDrop } from "@/data/actions/drop";
-import { cn } from "@/lib/utils";
+import { X } from 'lucide-react';
+import { useRef, useState, useTransition } from 'react';
+import { Button } from '@/components/ui/button';
+import { postDrop } from '@/data/actions/drop';
+import { cn } from '@/lib/utils';
 
 type Props = {
   authorName: string;
@@ -25,27 +25,25 @@ export function NewDropModal({ authorName, authorColor }: Props) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Drop it</Button>
+      <Button onClick={() => {return setOpen(true)}}>Drop it</Button>
 
       {open ? (
         <div
           role="dialog"
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-16 backdrop-blur-sm"
-          onClick={(e) => {
+          onClick={e => {
             if (e.target === e.currentTarget) close();
           }}
         >
-          <div className="w-full max-w-lg rounded-2xl border border-divider bg-white p-5 shadow-2xl dark:border-divider-dark dark:bg-black">
+          <div className="border-divider dark:border-divider-dark w-full max-w-lg rounded-2xl border bg-white p-5 shadow-2xl dark:bg-black">
             <header className="mb-4 flex items-center justify-between">
-              <h3 className="text-base font-semibold tracking-tight">
-                New drop
-              </h3>
+              <h3 className="text-base font-semibold tracking-tight">New drop</h3>
               <button
                 type="button"
                 aria-label="Close"
                 onClick={close}
-                className="text-gray rounded-full p-1 transition-colors hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
+                className="text-gray hover:bg-card dark:hover:bg-card-dark rounded-full p-1 transition-colors hover:text-black dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -69,7 +67,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
               <div className="flex gap-3">
                 <div
                   className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-semibold uppercase text-white shadow-sm",
+                    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-semibold text-white uppercase shadow-sm',
                     authorColor,
                   )}
                   aria-hidden
@@ -93,7 +91,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                   Cancel
                 </Button>
                 <Button type="submit" size="sm" disabled={pending}>
-                  {pending ? "Dropping…" : "Drop it"}
+                  {pending ? 'Dropping…' : 'Drop it'}
                 </Button>
               </div>
             </form>

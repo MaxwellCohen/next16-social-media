@@ -1,17 +1,17 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { Drop, DropSkeleton } from "@/components/drop";
-import { ReplyComposer } from "@/components/reply-composer";
-import { getDrop, getReplies } from "@/data/queries/drop";
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { Drop, DropSkeleton } from '@/components/drop';
+import { ReplyComposer } from '@/components/reply-composer';
+import { getDrop, getReplies } from '@/data/queries/drop';
 
-export const unstable_prefetch = "force-runtime";
+export const unstable_prefetch = 'force-runtime';
 
-type Params = Pick<PageProps<"/drop/[id]">, "params">;
+type Params = Pick<PageProps<'/drop/[id]'>, 'params'>;
 
-export default function DropPage({ params }: PageProps<"/drop/[id]">) {
+export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
-      <header className="sticky top-0 z-10 border-b border-divider/70 bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:border-divider-dark/70 dark:bg-black/80">
+      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:bg-black/80">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
 
@@ -43,7 +43,7 @@ async function Replies({ params }: Params) {
 
   if (replies.length === 0) {
     return (
-      <div className="text-gray border-b border-divider/70 px-5 py-8 text-center text-sm dark:border-divider-dark/70">
+      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
         No replies yet.
       </div>
     );
@@ -51,11 +51,11 @@ async function Replies({ params }: Params) {
 
   return (
     <ul>
-      {replies.map((reply) => (
+      {replies.map(reply => {return (
         <li key={reply.id}>
           <Drop drop={reply} compact />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }
@@ -63,11 +63,11 @@ async function Replies({ params }: Params) {
 function RepliesLoading() {
   return (
     <ul>
-      {Array.from({ length: 2 }).map((_, i) => (
+      {Array.from({ length: 2 }).map((_, i) => {return (
         <li key={i}>
           <DropSkeleton />
         </li>
-      ))}
+      )})}
     </ul>
   );
 }
