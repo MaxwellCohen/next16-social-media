@@ -46,7 +46,9 @@ export function ProfileTabs({ handle, active }: Props) {
             aria-current={isActive ? 'page' : undefined}
             className={cn(
               'flex-1 rounded-lg px-3 py-2 text-center transition-colors',
-              isActive ? 'bg-accent/10 text-accent dark:bg-accent/15' : 'text-gray hover:bg-card dark:hover:bg-card-dark',
+              isActive
+                ? 'bg-accent/10 text-accent dark:bg-accent/15'
+                : 'text-gray hover:bg-card dark:hover:bg-card-dark',
               pending && isActive && 'animate-pulse',
             )}
           >

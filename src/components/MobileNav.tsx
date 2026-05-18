@@ -38,10 +38,14 @@ export function MobileTabBar() {
       <Suspense fallback={<MobileTabLinkFallback href="/" icon={<Home className="h-5 w-5" />} label="Home" />}>
         <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
       </Suspense>
-      <Suspense fallback={<MobileTabLinkFallback href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />}>
+      <Suspense
+        fallback={<MobileTabLinkFallback href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />}
+      >
         <MobileTabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
       </Suspense>
-      <Suspense fallback={<MobileTabLinkFallback href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />}>
+      <Suspense
+        fallback={<MobileTabLinkFallback href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />}
+      >
         <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
       </Suspense>
       <Suspense fallback={<MobileTabLinkFallback href="/" icon={<User className="h-5 w-5" />} label="Profile" />}>
