@@ -1,6 +1,7 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { TagPill } from '@/components/ui/TagPill';
@@ -43,6 +44,11 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
             </span>
           </header>
           <DropBody body={drop.body} compact={compact} />
+          {drop.embeddedCode && !compact ? (
+            <div className="relative z-20">
+              <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
+            </div>
+          ) : null}
           {drop.tags.length > 0 ? (
             <div className="relative z-20 flex flex-wrap gap-1.5">
               {drop.tags.map(t => {
