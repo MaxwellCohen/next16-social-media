@@ -1,11 +1,11 @@
-import { Bookmark, Hash, Home, Settings, User as UserIcon } from 'lucide-react';
+import { Bookmark, Hash, Home, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
-import { SidebarNavLink } from './SidebarNavLink';
+import { SidebarNavLink, SidebarNavLinkFallback } from './SidebarNavLink';
 
 export function Sidebar() {
   return (
@@ -19,18 +19,26 @@ export function Sidebar() {
         <span>drop</span>
       </Link>
       <nav className="flex flex-col gap-0.5 text-sm font-medium">
-        <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-        <Suspense fallback={<SidebarNavLinkSkeleton icon={<UserIcon className="h-5 w-5" />} label="Profile" />}>
+        <Suspense fallback={<SidebarNavLinkFallback href="/" icon={<Home className="h-5 w-5" />} label="Home" />}>
+          <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
+        </Suspense>
+        <Suspense fallback={<SidebarNavLinkFallback href="/" icon={<User className="h-5 w-5" />} label="Profile" />}>
           <SidebarProfileLink />
         </Suspense>
-        <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-        <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        <Suspense
+          fallback={<SidebarNavLinkFallback href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />}
+        >
+          <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
+        </Suspense>
+        <Suspense fallback={<SidebarNavLinkFallback href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />}>
+          <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        </Suspense>
       </nav>
-      <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 rounded-2xl border p-2">
+      <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 border-t pt-3">
         <Suspense fallback={<SidebarProfilePillSkeleton />}>
           <SidebarProfilePill />
         </Suspense>
-        <div className="border-divider dark:border-divider-dark flex justify-end border-t pt-1.5">
+        <div className="flex justify-end">
           <ThemeToggle variant="inline" />
         </div>
       </div>
@@ -40,7 +48,7 @@ export function Sidebar() {
 
 async function SidebarProfileLink() {
   const user = await getCurrentUser();
-  return <SidebarNavLink href={`/u/${user.handle}`} icon={<UserIcon className="h-5 w-5" />} label="Profile" />;
+  return <SidebarNavLink href={`/u/${user.handle}`} icon={<User className="h-5 w-5" />} label="Profile" />;
 }
 
 async function SidebarProfilePill() {
@@ -57,15 +65,6 @@ async function SidebarProfilePill() {
       </div>
       <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
     </Link>
-  );
-}
-
-function SidebarNavLinkSkeleton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <span className="text-gray flex items-center gap-3 rounded-lg px-3 py-2 text-sm" aria-hidden>
-      {icon}
-      <span>{label}</span>
-    </span>
   );
 }
 

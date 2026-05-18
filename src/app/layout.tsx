@@ -1,5 +1,7 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Suspense } from 'react';
 import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
 import { Sidebar } from '@/components/Sidebar';
@@ -51,6 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <MobileTabBar />
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

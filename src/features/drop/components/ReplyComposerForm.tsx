@@ -24,7 +24,7 @@ export function ReplyComposerForm({ idPromise, avatar }: Props) {
         {avatar}
         <textarea
           name="body"
-          rows={2}
+          rows={1}
           required
           maxLength={280}
           placeholder="Drop a reply…"
@@ -34,7 +34,7 @@ export function ReplyComposerForm({ idPromise, avatar }: Props) {
               formRef.current?.requestSubmit();
             }
           }}
-          className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] focus:ring-0 focus:outline-none"
+          className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] leading-10 focus:ring-0 focus:outline-none"
         />
       </div>
       {state.error ? <p className="text-danger text-xs">{state.error}</p> : null}
