@@ -40,6 +40,12 @@ export function ReplyComposerForm({ dropId, authorName, authorColor }: Props) {
           required
           maxLength={280}
           placeholder="Drop a reply…"
+          onKeyDown={e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+              e.preventDefault();
+              formRef.current?.requestSubmit();
+            }
+          }}
           className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] focus:ring-0 focus:outline-none"
         />
       </div>

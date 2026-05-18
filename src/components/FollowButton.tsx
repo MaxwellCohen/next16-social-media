@@ -11,7 +11,6 @@ type Props = {
   initialFollowing: boolean;
 };
 
-/** Hold the green confirmation flash long enough to read. */
 const CONFIRMATION_HOLD_MS = 1200;
 
 export function FollowButton({ targetHandle, initialFollowing }: Props) {
@@ -19,8 +18,7 @@ export function FollowButton({ targetHandle, initialFollowing }: Props) {
     return !state;
   });
   const [, startTransition] = useTransition();
-  // Confirmation flash lives outside the transition so it survives the
-  // server response. Cleared by a setTimeout for a fixed duration.
+  // Flash state lives outside the transition so it persists after the action resolves.
   const [confirmation, setConfirmation] = useState<'followed' | 'removed' | null>(null);
 
   return (
@@ -29,7 +27,6 @@ export function FollowButton({ targetHandle, initialFollowing }: Props) {
       size="sm"
       className={cn('min-w-[7rem]', confirmation && 'border-success bg-success hover:bg-success text-white')}
       onClick={() => {
-        // Snap UI to the new state and flash the confirmation.
         setConfirmation(following ? 'removed' : 'followed');
         window.setTimeout(() => {
           return setConfirmation(null);

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/Drop';
 import { ReplyComposer, ReplyComposerSkeleton } from '@/app/drop/[id]/_components/ReplyComposer';
+import { Drop, DropSkeleton } from '@/components/Drop';
 import { getDrop, getReplies } from '@/data/queries/drop';
 
 export const unstable_prefetch = 'force-runtime';
@@ -11,7 +11,7 @@ type Params = Pick<PageProps<'/drop/[id]'>, 'params'>;
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white px-4 py-4 backdrop-blur sm:px-5 dark:bg-black">
+      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-card-dark/70">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
 

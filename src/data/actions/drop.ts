@@ -8,10 +8,7 @@ import { delay } from '@/lib/utils';
 const HASHTAG_PATTERN = /#(\w+)/g;
 const FENCE_PATTERN = /```\w*\n[\s\S]*?\n?```/g;
 
-/**
- * Pull hashtags out of the prose only — `#` inside a fenced code block
- * isn't a tag, it's syntax.
- */
+/** Hashtags from prose only — `#` inside a fenced code block is syntax, not a tag. */
 function extractTags(body: string): string[] {
   const prose = body.replace(FENCE_PATTERN, '');
   const tags = new Set<string>();
@@ -26,7 +23,7 @@ const postDropSchema = z.object({
     .string()
     .min(1, 'Say something')
     .max(1000, '1000 characters max')
-    .transform(s => s.replace(/\r\n/g, '\n')),
+    .transform(s => {return s.replace(/\r\n/g, '\n')}),
 });
 
 export async function postDrop(formData: FormData) {

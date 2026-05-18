@@ -3,9 +3,9 @@ import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
 import { Sidebar } from '@/components/Sidebar';
-import { ThemeProvider } from '@/components/ThemeProvider';
 import { TrendingTags, TrendingTagsSkeleton } from '@/components/TrendingTags';
 import { WhoToFollow, WhoToFollowSkeleton } from '@/components/WhoToFollow';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full overflow-y-auto overscroll-contain pb-14 sm:border-x sm:pb-0">
               {children}
             </main>
-            <aside className="hidden h-full flex-col gap-4 overflow-y-auto overscroll-contain px-4 py-5 lg:flex">
+            <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-none px-4 py-5 lg:flex">
               <Suspense fallback={<TrendingTagsSkeleton />}>
                 <TrendingTags />
               </Suspense>

@@ -64,11 +64,6 @@ export type ProfileFeedItem =
   | { kind: 'drop'; drop: import('@/lib/data').Drop; pinnedAt: number }
   | { kind: 'repost'; drop: import('@/lib/data').Drop; repostedBy: string; pinnedAt: number };
 
-/**
- * Profile feed: original drops authored by `handle`, plus drops `handle` reposted.
- * Reposts surface with a `kind: 'repost'` marker so the UI can show a "reposted by …"
- * label and link to the original author.
- */
 export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);

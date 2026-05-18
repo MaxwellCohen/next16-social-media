@@ -5,10 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Slow each server read/write down so streaming is visible on a projector.
- * Don't remove. The whole demo relies on it.
- */
+/** Artificial latency so streaming is visible on a projector. Demo-only. */
 export function delay(ms: number) {
   return new Promise(resolve => {
     return setTimeout(resolve, ms);

@@ -1,10 +1,5 @@
 /**
- * In-memory store for the Drop demo.
- *
- * Real apps would talk to Postgres or whatever. This is a small array-backed
- * store so the demo stays small enough to read on a projector and re-seeds on
- * every server restart.
- *
+ * In-memory store for the demo. Reseeds on every server restart.
  * All reads/writes go through `src/data/queries` and `src/data/actions`.
  */
 
@@ -30,7 +25,6 @@ export type Drop = {
   reposts: number;
   tags: string[];
   embeddedCode?: EmbeddedCode;
-  /** id of the drop this is a reply to. Top-level drops have no parent. */
   parentId?: string;
 };
 
@@ -42,13 +36,9 @@ export type Tag = {
 type Store = {
   users: User[];
   drops: Drop[];
-  /** follower handle -> set of handles they follow */
   follows: Record<string, Set<string>>;
-  /** user handle -> set of drop ids they liked */
   likes: Record<string, Set<string>>;
-  /** user handle -> set of drop ids they reposted */
   reposts: Record<string, Set<string>>;
-  /** user handle -> set of drop ids they bookmarked */
   bookmarks: Record<string, Set<string>>;
   dropIdCounter: number;
   currentUserHandle: string;
@@ -139,17 +129,17 @@ const USERS: User[] = [
 const DROPS: Drop[] = [
   {
     authorHandle: 'aurorascharff',
-    body: 'small canary win: when the same data is read by four components, the framework only fetches it once. you stop hoisting things to the route just to keep them fast.',
+    body: 'shipped optimistic reactions on Drop today. the heart and repost counts update instantly while the server catches up — feels like the app got a free upgrade.',
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
     likes: 940,
     replies: 32,
     reposts: 140,
-    tags: ['nextjs'],
+    tags: ['drop'],
   },
   {
-    authorHandle: 'streambot',
-    body: "found a bug in our analytics that's been there for a year. it was a missing trailing slash. one year.",
+    authorHandle: 'vex',
+    body: 'we replaced our entire image upload pipeline with a single edge function this weekend. p95 went from 1800ms to 220ms. four engineers, four years, deleted in a saturday.',
     createdAt: new Date(now - 18 * minute),
     id: 'd2',
     likes: 1_240,
@@ -159,61 +149,64 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'spent a few hours porting our marketing site to the new canary. two pages I had quietly left dynamic for months got caught by the dev overlay. fix on both was a one-liner.',
+    body: 'new on Drop: code snippets. wrap anything in triple backticks and it ships through Shiki with the Vercel docs theme. look what we made:',
     createdAt: new Date(now - 45 * minute),
+    embeddedCode: {
+      code: `export async function CodeBlock({ lang, code }) {
+  const html = await highlight(code, lang)
+  return <pre dangerouslySetInnerHTML={{ __html: html }} />
+}`,
+      lang: 'tsx',
+    },
     id: 'd3',
     likes: 1_640,
     replies: 64,
     reposts: 180,
-    tags: ['nextjs'],
-    embeddedCode: {
-      code: `'use cache'`,
-      lang: 'tsx',
-    },
+    tags: ['drop', 'shiki'],
   },
   {
-    authorHandle: 'cachepunk',
-    body: "I keep forgetting how nice rebuilds get when you give the cache hints about what's actually stable. third project this week where it just felt right.",
+    authorHandle: 'quill',
+    body: 'the new design system is live. one variable for radius, one for shadow, one for motion. our buttons finally agree with each other.',
     createdAt: new Date(now - 1 * hour),
     id: 'd4',
     likes: 540,
     replies: 22,
     reposts: 41,
-    tags: [],
+    tags: ['design'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: "I love when a feature shows up and quietly changes how you reach for things. the new runtime prefetch is one of those. once your eyes adjust you can't go back.",
+    body: 'real-time replies on Drop are live. nothing fancy — server actions, useOptimistic, and a small Suspense boundary. typing → on screen in one frame.',
     createdAt: new Date(now - 2 * hour),
     id: 'd5',
     likes: 1_980,
     replies: 110,
     reposts: 320,
-    tags: ['nextjs'],
+    tags: ['drop'],
   },
   {
-    authorHandle: 'boundary',
-    body: 'designing a new feature is mostly figuring out which loading state never has to exist.',
+    authorHandle: 'onyx',
+    body: 'we replaced our 12-step onboarding with a single page that asks 3 questions. signups doubled in the first week. sometimes the best feature is the four you delete.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
     replies: 142,
     reposts: 410,
-    tags: ['design'],
+    tags: ['product'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: "one mental shift that took me a while: I stopped thinking 'is this page static or dynamic' and started thinking 'how soon does each piece need to be there.' the rest fell out of that.",
+    body: 'added a follow button to profiles. it actually does something now. you can follow vex and watch their build logs come in at 3am.',
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,
     replies: 64,
     reposts: 220,
-    tags: ['nextjs'],
+    tags: ['drop'],
   },
   {
-    authorHandle: 'hydrator',
-    body: 'three coffees deep into a stack trace and the answer was a missing await. it is always a missing await.',
+    authorHandle: 'wren',
+    body: 'spent the morning rewriting our search box. it now ranks results by recency, not alphabet. our PMs are weeping with joy.',
     createdAt: new Date(now - 5 * hour),
     id: 'd8',
     likes: 720,
@@ -223,24 +216,27 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'tiny pattern I like: keep the data fetch right next to the component that uses it. when something changes, you change it in one place. the cache makes it free.',
+    body: 'look at this — the entire feed query for Drop is ten lines. cached by tag, invalidated by action, and every component fetches what it needs.',
     createdAt: new Date(now - 7 * hour),
+    embeddedCode: {
+      code: `export const getFeed = cache(async () => {
+  'use cache'
+  cacheTag('feed')
+  return getStore().drops
+    .filter(d => !d.parentId)
+    .sort((a, b) => b.createdAt - a.createdAt)
+})`,
+      lang: 'ts',
+    },
     id: 'd9',
     likes: 1_180,
     replies: 41,
     reposts: 92,
-    tags: ['nextjs'],
-    embeddedCode: {
-      code: `async function getProfile(handle) {
-  'use cache'
-  return db.user.findByHandle(handle)
-}`,
-      lang: 'js',
-    },
+    tags: ['drop'],
   },
   {
-    authorHandle: 'coldstart',
-    body: 'wrote a one-line eslint rule for the team. cut a whole class of bug we kept hitting. probably the highest ROI hour of the month.',
+    authorHandle: 'cinder',
+    body: 'shipped a CLI today that bootstraps a new internal tool in under 60 seconds. boring problem, boring solution, saves us an hour every time someone joins.',
     createdAt: new Date(now - 9 * hour),
     id: 'd10',
     likes: 612,
@@ -250,86 +246,84 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "if you've been holding off on upgrading, the codemod handles almost everything now. tried it on three projects this week and the diff was boring in the best way.",
+    body: 'bookmarks are working on Drop. private to you, persist across reloads, render with the right icon state without any client round-trip. invalidation is one line:',
     createdAt: new Date(now - 11 * hour),
+    embeddedCode: {
+      code: 'updateTag(`bookmarks-${handle}`)',
+      lang: 'ts',
+    },
     id: 'd11',
     likes: 1_810,
     replies: 96,
     reposts: 340,
-    tags: ['nextjs'],
-    embeddedCode: {
-      code: `pnpm dlx @next/codemod@canary upgrade canary`,
-      lang: 'bash',
-    },
+    tags: ['drop'],
   },
   {
-    authorHandle: 'prefetcher',
-    body: 'today I learned my favorite framework feature is whichever one I forgot was there. happy upgrade day to everyone who finds something new.',
+    authorHandle: 'halo',
+    body: 'side project of the weekend: a tiny menu bar app that nags me to drink water. it is annoying and effective, which is the highest praise software can get.',
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
     replies: 22,
     reposts: 64,
-    tags: [],
+    tags: ['sideproject'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: "the part that keeps surprising me is how much UI work disappears when the framework knows what's instant and what's not. half my old loading states just became wrong.",
+    body: 'Drop has a real theme toggle now. light, dark, and system. shiki swaps grammars to match. look what we made — three buttons that finally do what they say.',
     createdAt: new Date(now - 16 * hour),
     id: 'd13',
     likes: 1_320,
     replies: 47,
     reposts: 180,
-    tags: ['nextjs'],
+    tags: ['drop', 'design'],
   },
   {
-    authorHandle: 'formfox',
-    body: "switched our team to canary last week and nobody has filed an upgrade complaint. that's either the highest praise or the deepest silence I'll ever get.",
+    authorHandle: 'echo',
+    body: 'we shipped a new pricing page. for the first time it is honestly readable on a phone. our designer cried. our CFO cried. different reasons.',
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
     replies: 88,
     reposts: 96,
-    tags: [],
+    tags: ['product'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'a thing I keep coming back to: a faster app and a simpler app should not be opposites. they usually are. when they line up, I notice.',
+    body: "trending tags on Drop. counts come from a cached query, updateTag('trending') keeps it honest. nothing about it lives on the client.",
     createdAt: new Date(now - 22 * hour),
     id: 'd15',
     likes: 2_410,
     replies: 142,
     reposts: 540,
-    tags: [],
+    tags: ['drop'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'stable is close. a lot of small things landed in the same direction this cycle. excited to write the post.',
+    body: 'the Drop talk demo is feature-complete. feed, replies, follows, bookmarks, reposts, theming, code snippets, optimistic everything. amsterdam, see you soon.',
     createdAt: new Date(now - 1 * day - 6 * hour),
     id: 'd16',
     likes: 3_810,
     replies: 320,
     reposts: 1_120,
-    tags: ['nextjs'],
+    tags: ['reactsummit', 'drop'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'the network tab is the best documentation a framework can write. open it on a navigation and the model gets honest with you in about five seconds.',
+    body: 'every feature in Drop is a server component plus a server action plus a tiny client island. nothing else. look what we made out of three primitives.',
     createdAt: new Date(now - 2 * day),
     id: 'd17',
     likes: 1_120,
     replies: 47,
     reposts: 180,
-    tags: [],
+    tags: ['drop'],
   },
 ];
 
-// Replies under d2 (Streambot's analytics-bug drop), used on the detail page.
 const REPLIES: Drop[] = [
-  // Under d2 (Streambot's analytics-bug drop)
   {
-    authorHandle: 'boundary',
-    body: 'this is going to haunt my dreams. how many other one-year-old bugs are out there.',
+    authorHandle: 'onyx',
+    body: 'four engineers four years vs one weekend is the realest performance graph in our industry.',
     createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
@@ -339,19 +333,19 @@ const REPLIES: Drop[] = [
     tags: [],
   },
   {
-    authorHandle: 'coldstart',
-    body: 'we have a trailing slash one too. ours is a redirect that fires twice. I refuse to fix it. it brings me joy now.',
+    authorHandle: 'aurorascharff',
+    body: 'this is the kind of "look what we made" drop I built this app for. show it off, vex.',
     createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
     parentId: 'd2',
     replies: 1,
     reposts: 3,
-    tags: [],
+    tags: ['drop'],
   },
   {
-    authorHandle: 'aurorascharff',
-    body: 'analytics bugs are the worst kind of bug. you have to trust the data to find the bug.',
+    authorHandle: 'cinder',
+    body: 'p95 220ms is wild. did you keep the old pipeline around for the dashboard screenshot?',
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -360,10 +354,9 @@ const REPLIES: Drop[] = [
     reposts: 2,
     tags: [],
   },
-  // Under d5 (Aurora on runtime prefetch)
   {
-    authorHandle: 'prefetcher',
-    body: "literally my favorite thing this cycle. the slow-click case stopped existing in our app a week ago and I didn't notice for two days.",
+    authorHandle: 'quill',
+    body: "the reply composer feel is so satisfying. it shouldn't be this hard to nail, but it is, and you nailed it.",
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
@@ -373,8 +366,8 @@ const REPLIES: Drop[] = [
     tags: [],
   },
   {
-    authorHandle: 'streambot',
-    body: 'this is the kind of thing you forget existed in any other model. wild.',
+    authorHandle: 'echo',
+    body: 'fully stealing the optimistic count pattern for our app. clean as a whistle.',
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,
@@ -383,10 +376,9 @@ const REPLIES: Drop[] = [
     reposts: 4,
     tags: [],
   },
-  // Under d8 (Hydrator on missing await)
   {
-    authorHandle: 'cachepunk',
-    body: 'reading this with one eye on my own stack trace.',
+    authorHandle: 'halo',
+    body: 'ranking by recency is the cheat code nobody admits. you saved your team months of arguing.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -395,10 +387,9 @@ const REPLIES: Drop[] = [
     reposts: 22,
     tags: [],
   },
-  // Under d11 (Aurora on codemod upgrade)
   {
-    authorHandle: 'coldstart',
-    body: 'can confirm. did three of ours yesterday, all boring, exactly the right kind of boring.',
+    authorHandle: 'vex',
+    body: "one-line invalidation is the dream. we're refactoring our bookmarks app to look like this.",
     createdAt: new Date(now - 10 * hour),
     id: 'r7',
     likes: 140,
@@ -407,17 +398,16 @@ const REPLIES: Drop[] = [
     reposts: 12,
     tags: [],
   },
-  // Under d16 (Aurora "stable is close")
   {
-    authorHandle: 'formfox',
-    body: 'looking forward to the write-up. canary has felt like a different framework already.',
+    authorHandle: 'echo',
+    body: 'see you in amsterdam. bringing my laptop in case anything explodes live.',
     createdAt: new Date(now - 1 * day),
     id: 'r8',
     likes: 88,
     parentId: 'd16',
     replies: 0,
     reposts: 4,
-    tags: [],
+    tags: ['reactsummit'],
   },
 ];
 
@@ -425,32 +415,32 @@ const ALL_DROPS = [...DROPS, ...REPLIES];
 
 function buildFollows(): Record<string, Set<string>> {
   return {
-    aurora: new Set(['streambot', 'cachepunk', 'boundary', 'prefetcher', 'coldstart', 'hydrator']),
-    boundary: new Set(['aurorascharff', 'streambot', 'coldstart']),
-    cachepunk: new Set(['aurorascharff', 'streambot']),
-    coldstart: new Set(['aurorascharff', 'boundary']),
-    formfox: new Set(['aurorascharff']),
-    hydrator: new Set(['aurorascharff', 'streambot', 'formfox']),
-    prefetcher: new Set(['aurorascharff', 'streambot']),
-    streambot: new Set(['aurorascharff', 'prefetcher', 'cachepunk']),
+    aurorascharff: new Set(['vex', 'quill', 'onyx', 'wren', 'cinder']),
+    cinder: new Set(['aurorascharff', 'vex', 'quill']),
+    echo: new Set(['aurorascharff']),
+    halo: new Set(['aurorascharff', 'vex', 'echo']),
+    onyx: new Set(['aurorascharff', 'vex']),
+    quill: new Set(['aurorascharff', 'wren']),
+    vex: new Set(['aurorascharff', 'onyx', 'cinder']),
+    wren: new Set(['aurorascharff', 'quill']),
   };
 }
 
 function buildLikes(): Record<string, Set<string>> {
   return {
-    aurora: new Set(['d1', 'd4', 'd7']),
+    aurorascharff: new Set(['d2', 'd4', 'd8', 'd10']),
   };
 }
 
 function buildReposts(): Record<string, Set<string>> {
   return {
-    aurora: new Set(['d6', 'd8']),
+    aurorascharff: new Set(['d6', 'd8']),
   };
 }
 
 function buildBookmarks(): Record<string, Set<string>> {
   return {
-    aurora: new Set(['d4', 'd12']),
+    aurorascharff: new Set(['d2', 'd12']),
   };
 }
 
@@ -483,8 +473,7 @@ export function getNextDropId() {
 }
 
 /**
- * Reset the in-memory store back to seed values. Used by the demo's seed
- * endpoint so we can re-run the talk without restarting the dev server.
+ * Reset the in-memory store back to seed values.
  */
 export function resetStore() {
   store.users = USERS.map(u => {

@@ -3,10 +3,7 @@ type Props = {
   size?: number;
 };
 
-/**
- * Drop mark: a single solid droplet. Renders in `currentColor` so callers
- * control the fill (white in dark mode, near-black in light mode).
- */
+
 export function DropMark({ className, size = 20 }: Props) {
   return (
     <svg

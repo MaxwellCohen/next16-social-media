@@ -84,6 +84,12 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                   required
                   maxLength={1000}
                   placeholder={'What did you ship today?\n\nWrap code in ```ts ... ``` to embed a snippet.'}
+                  onKeyDown={e => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                      e.preventDefault();
+                      formRef.current?.requestSubmit();
+                    }
+                  }}
                   className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-base focus:ring-0 focus:outline-none"
                 />
               </div>

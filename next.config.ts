@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     instantInsights: {
       validationLevel: 'warning',
     },
+    instantNavigationDevToolsToggle: true,
     optimisticRouting: true,
     prefetchInlining: true,
     useOffline: true,

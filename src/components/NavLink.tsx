@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 type CommonProps = {
@@ -16,7 +16,6 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Side-rail nav link with active highlight, used in the desktop Sidebar. */
 export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
   const pathname = usePathname();
   const active = isActive(pathname, href);
@@ -35,7 +34,6 @@ export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
   );
 }
 
-/** Bottom tab-bar entry, used in the mobile nav. */
 export function MobileTabLink({ href, icon, label }: CommonProps) {
   const pathname = usePathname();
   const active = isActive(pathname, href);

@@ -12,7 +12,7 @@ export async function WhoToFollow() {
       </header>
       {users.length === 0 ? (
         <p className="text-gray px-4 pb-4 text-xs">
-          You're following everyone we can think of.{' '}
+          You&apos;re following everyone we can think of.{' '}
           <Link href="/tag/nextjs" className="text-accent hover:underline">
             Browse tags
           </Link>{' '}

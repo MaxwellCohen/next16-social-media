@@ -5,10 +5,6 @@ type Props = {
   dropId: string;
 };
 
-/**
- * Reply composer shown above the replies thread on the drop detail page.
- * Server component that fetches the current user; form is a client island.
- */
 export async function ReplyComposer({ dropId }: Props) {
   const user = await getCurrentUser();
   return (
@@ -18,11 +14,6 @@ export async function ReplyComposer({ dropId }: Props) {
   );
 }
 
-/**
- * Layout-matching skeleton. Reserves the same vertical space as the real
- * composer so the parent drop and the replies thread don't shift when this
- * suspends.
- */
 export function ReplyComposerSkeleton() {
   return (
     <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">

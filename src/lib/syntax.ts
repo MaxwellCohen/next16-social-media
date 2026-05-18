@@ -12,11 +12,7 @@ const SUPPORTED_LANGS = ['tsx', 'ts', 'jsx', 'js', 'bash', 'shell', 'json', 'css
 
 export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
-/**
- * Process-wide singleton highlighter. `cache()` from React doesn't dedupe
- * across requests, so we keep a module-scoped promise instead. Themes are
- * Aurora's Vercel Docs theme (light + dark).
- */
+// Module-scoped: React `cache()` doesn't dedupe across requests.
 let highlighterPromise: Promise<Highlighter> | null = null;
 
 function getHighlighter(): Promise<Highlighter> {
@@ -65,9 +61,7 @@ export async function highlight(code: string, lang: string | undefined) {
       },
     });
   } catch {
-    // Shiki's JavaScript regex engine occasionally chokes on edge cases in
-    // certain grammars. Fall back to a plain, escaped <pre><code> so the page
-    // keeps rendering instead of error-boundarying.
+    // Shiki's JS regex engine can choke on some grammars; fall back to plain text.
     return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
   }
 }

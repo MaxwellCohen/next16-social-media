@@ -1,10 +1,10 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
-import { CodeBlock } from '@/components/ui/CodeBlock';
 import { DropActions } from '@/components/DropActions';
+import { Avatar } from '@/components/ui/Avatar';
+import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { TagPill } from '@/components/ui/TagPill';
-import { Avatar } from '@/components/ui/Avatar';
 import { isBookmarked, isLiked, isReposted } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
 import type { Drop as DropT } from '@/lib/data';
@@ -12,9 +12,7 @@ import type { Drop as DropT } from '@/lib/data';
 type Props = {
   drop: DropT;
   compact?: boolean;
-  /** Render as the focused drop on a detail page (no card click, larger type). */
   detail?: boolean;
-  /** Handle of the user whose timeline reposted this drop, if any. */
   repostedBy?: string;
 };
 
@@ -81,11 +79,7 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
 
   return (
     <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      {/*
-        Card-wide click target. Sits on top via z-0, while every interactive
-        descendant (avatar link, name link, tag pills, action buttons, code
-        blocks for selection) opts back in with `relative z-20`.
-      */}
+      {/* Card-wide click target at z-10. Interactive children opt back in with `relative z-20`. */}
       <Link href={`/drop/${drop.id}`} aria-label={`Drop by ${author.displayName}`} className="absolute inset-0 z-10" />
       {reposter ? (
         <Link
@@ -165,11 +159,6 @@ function renderBody(body: string) {
   });
 }
 
-/**
- * Parses a drop body and renders prose segments and fenced code blocks
- * (```lang ... ```). Code blocks render inline with syntax highlighting and
- * sit above the card-wide click target so users can select code freely.
- */
 function DropBody({ body, compact, detail = false }: { body: string; compact: boolean; detail?: boolean }) {
   const segments = splitCode(body);
   return (
