@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getDropsByTag } from '@/data/queries/drop';
 import { Drop, DropListSkeleton } from '@/features/drop/components/Drop';
 import type { Metadata } from 'next';
@@ -70,9 +71,9 @@ async function TagFeed({ params }: Params) {
 function TagHeaderSkeleton() {
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5 dark:bg-black">
-      <div className="skeleton-animation h-3 w-10 rounded" />
-      <div className="skeleton-animation mt-1.5 h-6 w-32 rounded" />
-      <div className="skeleton-animation mt-1.5 h-3 w-20 rounded" />
+      <Skeleton className="h-3 w-10 rounded" />
+      <Skeleton className="mt-1.5 h-6 w-32 rounded" />
+      <Skeleton className="mt-1.5 h-3 w-20 rounded" />
     </header>
   );
 }

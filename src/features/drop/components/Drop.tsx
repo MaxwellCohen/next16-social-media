@@ -2,6 +2,7 @@ import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { RelativeTime } from '@/components/ui/RelativeTime';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { TagPill } from '@/components/ui/TagPill';
 import { getDropUserState } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
@@ -64,11 +65,11 @@ export function DropSkeleton() {
   return (
     <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
       <div className="flex gap-3">
-        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
+        <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">
-          <div className="skeleton-animation h-3 w-40" />
-          <div className="skeleton-animation h-4 w-full" />
-          <div className="skeleton-animation h-4 w-3/4" />
+          <Skeleton className="h-3 w-40" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
         </div>
       </div>
     </div>
@@ -109,8 +110,8 @@ async function AuthorName({ handle }: { handle: string }) {
 function AuthorNameSkeleton() {
   return (
     <>
-      <span className="skeleton-animation h-4 w-24 rounded" />
-      <span className="skeleton-animation h-3 w-16 rounded" />
+      <Skeleton className="h-4 w-24 rounded" />
+      <Skeleton className="h-3 w-16 rounded" />
     </>
   );
 }

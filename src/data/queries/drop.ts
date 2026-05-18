@@ -8,7 +8,11 @@ import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
 
-export const getFeed = cache(async () => {
+export const FEED_PAGE_SIZE = 10;
+
+export type FeedPage = { drops: Drop[]; nextCursor: string | null };
+
+export const getFeed = cache(async (cursor: string | null = null): Promise<FeedPage> => {
   'use cache';
   cacheTag('feed');
   cacheLife('seconds');
@@ -16,9 +20,18 @@ export const getFeed = cache(async () => {
   await delay(500);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
-    where: { parentId: null },
+    take: FEED_PAGE_SIZE + 1,
+    where: {
+      parentId: null,
+      ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
+    },
   });
-  return rows.map(toDrop);
+  const hasMore = rows.length > FEED_PAGE_SIZE;
+  const page = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  return {
+    drops: page.map(toDrop),
+    nextCursor: hasMore ? page[page.length - 1].createdAt.toISOString() : null,
+  };
 });
 
 export const getPersonalizedFeed = cache(async (userHandle: string) => {

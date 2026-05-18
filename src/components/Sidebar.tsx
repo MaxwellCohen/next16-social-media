@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { DropMark } from '@/components/ui/DropMark';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getCurrentUser } from '@/data/queries/user';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import { SidebarNavLink, SidebarNavLinkFallback } from './SidebarNavLink';
@@ -77,8 +78,8 @@ function SidebarProfilePillSkeleton() {
     <div className="-mx-1 flex items-center gap-2.5 px-2 py-1" aria-hidden>
       <UserAvatarSkeleton size="sm" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="skeleton-animation h-[17px] w-20 rounded" />
-        <span className="skeleton-animation h-[15px] w-14 rounded" />
+        <Skeleton className="h-[17px] w-20 rounded" />
+        <Skeleton className="h-[15px] w-14 rounded" />
       </div>
       <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
     </div>

@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getCurrentUserHandle, getUserByHandle } from '@/data/queries/user';
 import { cn } from '@/lib/utils';
 
@@ -33,5 +34,5 @@ export async function UserAvatar({ handle, size = 'md', className }: Props) {
 }
 
 export function UserAvatarSkeleton({ size = 'md', className }: { size?: Size; className?: string }) {
-  return <div aria-hidden className={cn('skeleton-animation shrink-0 rounded-full', sizes[size], className)} />;
+  return <Skeleton className={cn('shrink-0 rounded-full', sizes[size], className)} />;
 }

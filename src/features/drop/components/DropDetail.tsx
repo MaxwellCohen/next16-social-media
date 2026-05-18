@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { TagPill } from '@/components/ui/TagPill';
 import { getDropUserState } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
@@ -57,26 +58,26 @@ export function DropDetailSkeleton() {
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
       <header className="flex items-center gap-3">
-        <div className="skeleton-animation h-14 w-14 shrink-0 rounded-full" />
+        <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
         <div className="flex min-w-0 flex-col gap-1.5">
-          <div className="skeleton-animation h-4 w-40 rounded" />
-          <div className="skeleton-animation h-3 w-24 rounded" />
+          <Skeleton className="h-4 w-40 rounded" />
+          <Skeleton className="h-3 w-24 rounded" />
         </div>
       </header>
       <div className="mt-3 flex flex-col gap-2">
-        <div className="skeleton-animation h-4 w-full rounded" />
-        <div className="skeleton-animation h-4 w-full rounded" />
-        <div className="skeleton-animation h-4 w-2/3 rounded" />
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-2/3 rounded" />
       </div>
       <div className="border-divider/70 dark:border-divider-dark/70 mt-3 border-b pb-3">
-        <div className="skeleton-animation h-3 w-28 rounded" />
+        <Skeleton className="h-3 w-28 rounded" />
       </div>
       <div className="text-gray -ml-2 flex items-center gap-1 pt-3" aria-hidden>
         {Array.from({ length: 4 }).map((_, i) => {
           return (
             <span key={i} className="inline-flex items-center gap-1 px-2 py-1.5">
-              <span className="skeleton-animation h-4 w-4 rounded" />
-              {i < 3 ? <span className="skeleton-animation h-3 w-6 rounded" /> : null}
+              <Skeleton className="h-4 w-4 rounded" />
+              {i < 3 ? <Skeleton className="h-3 w-6 rounded" /> : null}
             </span>
           );
         })}

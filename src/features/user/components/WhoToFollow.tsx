@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getWhoToFollow } from '@/data/queries/user';
 import { getCurrentUserHandle } from '@/data/queries/user';
 import { FollowButton } from '@/features/user/components/FollowButton';
@@ -60,10 +61,10 @@ export function WhoToFollowSkeleton() {
         {Array.from({ length: 3 }).map((_, i) => {
           return (
             <li key={i} className="flex items-center gap-3">
-              <div className="skeleton-animation h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
               <div className="flex flex-1 flex-col gap-1">
-                <div className="skeleton-animation h-3 w-24" />
-                <div className="skeleton-animation h-3 w-16" />
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-16" />
               </div>
             </li>
           );

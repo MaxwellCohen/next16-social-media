@@ -1,10 +1,11 @@
 import { getFeed } from '@/data/queries/drop';
 import { Drop } from '@/features/drop/components/Drop';
+import { FeedList } from '@/features/drop/components/FeedList';
 
 export async function Feed() {
-  const drops = await getFeed();
+  const { drops, nextCursor } = await getFeed();
   return (
-    <ul>
+    <FeedList initialCursor={nextCursor}>
       {drops.map(drop => {
         return (
           <li key={drop.id}>
@@ -12,6 +13,6 @@ export async function Feed() {
           </li>
         );
       })}
-    </ul>
+    </FeedList>
   );
 }

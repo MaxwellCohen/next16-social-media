@@ -4,6 +4,7 @@ import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { use } from 'react';
 import { ActionButton } from '@/components/design/ActionButton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
 import type { DropUserState } from '@/data/queries/drop';
 import { cn, formatCount } from '@/lib/utils';
@@ -77,8 +78,8 @@ export function DropActionsSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => {
         return (
           <span key={i} className="inline-flex items-center gap-1 px-2 py-1.5">
-            <span className="skeleton-animation h-4 w-4 rounded" />
-            {i < 3 ? <span className="skeleton-animation h-3 w-6 rounded" /> : null}
+            <Skeleton className="h-4 w-4 rounded" />
+            {i < 3 ? <Skeleton className="h-3 w-6 rounded" /> : null}
           </span>
         );
       })}

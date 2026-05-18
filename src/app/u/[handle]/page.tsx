@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getDropsByAuthor, getRepliesByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
 import { Drop, DropListSkeleton } from '@/features/drop/components/Drop';
@@ -66,7 +67,7 @@ function ProfileTabsSkeleton() {
       {Array.from({ length: 2 }).map((_, i) => {
         return (
           <span key={i} className="flex-1 px-4 py-4 text-center">
-            <span className="skeleton-animation inline-block h-5 w-16 rounded align-middle" />
+            <Skeleton className="inline-block h-5 w-16 rounded align-middle" />
           </span>
         );
       })}
@@ -90,7 +91,7 @@ async function ProfileHeader({ params }: Params) {
           <UserAvatar handle={user.handle} size="lg" />
           {isMe ? null : (
             <div className="pt-12 sm:pt-14">
-              <Suspense fallback={<div className="skeleton-animation h-8 w-28 rounded-full" />}>
+              <Suspense fallback={<Skeleton className="h-8 w-28 rounded-full" />}>
                 <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
               </Suspense>
             </div>
@@ -176,21 +177,21 @@ function ProfileHeaderSkeleton() {
             <UserAvatarSkeleton size="lg" />
           </div>
           <div className="pt-12 sm:pt-14">
-            <div className="skeleton-animation h-8 w-28 rounded-full" />
+            <Skeleton className="h-8 w-28 rounded-full" />
           </div>
         </div>
         <div className="mt-3 flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <div className="skeleton-animation h-6 w-40 rounded" />
-            <div className="skeleton-animation h-3.5 w-24 rounded" />
+            <Skeleton className="h-6 w-40 rounded" />
+            <Skeleton className="h-3.5 w-24 rounded" />
           </div>
           <div className="flex flex-col gap-2">
-            <div className="skeleton-animation h-4 w-full rounded" />
-            <div className="skeleton-animation h-4 w-2/3 rounded" />
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-2/3 rounded" />
           </div>
           <div className="flex gap-4">
-            <div className="skeleton-animation h-4 w-20 rounded" />
-            <div className="skeleton-animation h-4 w-20 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { getTrendingTags } from '@/data/queries/tag';
 import { formatCount } from '@/lib/utils';
 
@@ -34,7 +35,11 @@ export function TrendingTagsSkeleton() {
       <h3 className="mb-3 text-sm font-semibold tracking-tight">Trending now</h3>
       <ul className="flex flex-col gap-2.5">
         {Array.from({ length: 5 }).map((_, i) => {
-          return <li key={i} className="skeleton-animation h-4 w-32" />;
+          return (
+            <li key={i}>
+              <Skeleton className="h-4 w-32" />
+            </li>
+          );
         })}
       </ul>
     </section>
