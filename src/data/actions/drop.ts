@@ -79,6 +79,7 @@ export async function postReply(parentId: string, formData: FormData) {
   ]);
   updateTag(`drop-${parentId}`);
   updateTag(`replies-${parentId}`);
+  updateTag(`user-replies-${me}`);
   return { ok: true as const, reply };
 }
 

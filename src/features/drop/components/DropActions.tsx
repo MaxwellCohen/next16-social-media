@@ -1,12 +1,12 @@
 'use client';
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { use } from 'react';
 import { ActionButton } from '@/components/design/ActionButton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
 import type { DropUserState } from '@/data/queries/drop';
-import { cn } from '@/lib/utils';
+import { cn, formatCount } from '@/lib/utils';
 import type { Drop } from '@/types/drop';
 
 type Props = {
@@ -16,20 +16,19 @@ type Props = {
 
 export function DropActions({ drop, userStatePromise }: Props) {
   const { liked, reposted, bookmarked } = use(userStatePromise);
-  const router = useRouter();
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
-      <ActionButton
-        label="Reply"
-        icon={() => {
-          return <MessageCircle className="h-4 w-4" />;
+      <Link
+        href={`/drop/${drop.id}`}
+        aria-label="Reply"
+        onClick={e => {
+          e.stopPropagation();
         }}
-        count={drop.replies}
-        action={() => {
-          router.push(`/drop/${drop.id}`);
-        }}
-        hoverColor="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
-      />
+        className="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors"
+      >
+        <MessageCircle className="h-4 w-4" />
+        <span>{formatCount(drop.replies)}</span>
+      </Link>
       <ActionButton
         label="Repost"
         icon={() => {

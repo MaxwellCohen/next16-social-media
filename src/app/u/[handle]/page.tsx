@@ -1,14 +1,21 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { getDropsByAuthor } from '@/data/queries/drop';
+import { getDropsByAuthor, getRepliesByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
 import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
 import { FollowButton } from '@/features/user/components/FollowButton';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { ProfileTabs } from '@/features/user/components/ProfileTabs';
+import { UserAvatar } from '@/features/user/components/UserAvatar';
 import { formatCount } from '@/lib/utils';
 import type { Metadata } from 'next';
 
 type Params = Pick<PageProps<'/u/[handle]'>, 'params'>;
+
+type Tab = 'drops' | 'replies';
+
+function parseTab(value: string | string[] | undefined): Tab {
+  return value === 'replies' ? 'replies' : 'drops';
+}
 
 export async function generateMetadata({ params }: PageProps<'/u/[handle]'>): Promise<Metadata> {
   const { handle } = await params;
@@ -24,36 +31,65 @@ export async function generateMetadata({ params }: PageProps<'/u/[handle]'>): Pr
   };
 }
 
-export default function ProfilePage({ params }: PageProps<'/u/[handle]'>) {
+export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return (
     <div>
       <Suspense fallback={<ProfileHeaderSkeleton />}>
         <ProfileHeader params={params} />
       </Suspense>
-      <Suspense fallback={<ProfileFeedSkeleton />}>
-        <ProfileFeed params={params} />
+      <Suspense fallback={<ProfileTabsSkeleton />}>
+        <ProfileTabsBar params={params} searchParams={searchParams} />
       </Suspense>
+      <Suspense fallback={<ProfileFeedSkeleton />}>
+        <ProfileFeed params={params} searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function ProfileTabsBar({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ handle: string }>;
+  searchParams: Promise<{ tab?: string | string[] }>;
+}) {
+  const [{ handle }, sp] = await Promise.all([params, searchParams]);
+  return <ProfileTabs handle={handle} active={parseTab(sp.tab)} />;
+}
+
+function ProfileTabsSkeleton() {
+  return (
+    <div className="border-divider/70 dark:border-divider-dark/70 flex gap-1 border-b p-2" aria-hidden>
+      {Array.from({ length: 2 }).map((_, i) => {
+        return (
+          <span key={i} className="flex-1 rounded-lg px-3 py-2 text-center">
+            <span className="skeleton-animation inline-block h-3.5 w-16 rounded" />
+          </span>
+        );
+      })}
     </div>
   );
 }
 
 async function ProfileHeader({ params }: Params) {
   const { handle } = await params;
-  const user = await getUserByHandle(handle);
+  const [user, current] = await Promise.all([getUserByHandle(handle), getCurrentUser()]);
+  const isMe = current.handle === handle;
 
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
       <div className="flex items-start gap-4">
-        <Suspense fallback={<UserAvatarSkeleton size="lg" />}>
-          <UserAvatar handle={user.handle} size="lg" />
-        </Suspense>
+        <UserAvatar handle={user.handle} size="lg" />
         <div className="flex flex-1 flex-col gap-1">
           <h1 className="text-xl font-bold tracking-tight">{user.displayName}</h1>
           <div className="text-gray font-mono text-xs">@{user.handle}</div>
         </div>
-        <Suspense fallback={<div className="skeleton-animation h-8 w-28 rounded-full" />}>
-          <ProfileFollowButton handle={user.handle} />
-        </Suspense>
+        {isMe ? null : (
+          <Suspense fallback={<div className="skeleton-animation h-8 w-28 rounded-full" />}>
+            <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
+          </Suspense>
+        )}
       </div>
       <p className="min-h-[2lh] text-sm">{user.bio}</p>
       <div className="text-gray flex gap-4 font-mono text-xs">
@@ -68,15 +104,39 @@ async function ProfileHeader({ params }: Params) {
   );
 }
 
-async function ProfileFollowButton({ handle }: { handle: string }) {
-  const current = await getCurrentUser();
-  if (current.handle === handle) return null;
-  const following = await isFollowing(current.handle, handle);
+async function ProfileFollowButton({ handle, currentHandle }: { handle: string; currentHandle: string }) {
+  const following = await isFollowing(currentHandle, handle);
   return <FollowButton targetHandle={handle} initialFollowing={following} />;
 }
 
-async function ProfileFeed({ params }: Params) {
-  const { handle } = await params;
+async function ProfileFeed({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ handle: string }>;
+  searchParams: Promise<{ tab?: string | string[] }>;
+}) {
+  const [{ handle }, sp] = await Promise.all([params, searchParams]);
+  const tab = parseTab(sp.tab);
+
+  if (tab === 'replies') {
+    const replies = await getRepliesByAuthor(handle);
+    if (replies.length === 0) {
+      return <EmptyState title="No replies yet" body="When they reply to a drop, it'll show up here." />;
+    }
+    return (
+      <ul>
+        {replies.map(reply => {
+          return (
+            <li key={reply.id}>
+              <Drop drop={reply} />
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
   const items = await getDropsByAuthor(handle);
   if (items.length === 0) {
     return <EmptyState title="No drops yet" body="When they post something, it'll show up here." />;

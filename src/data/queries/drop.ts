@@ -101,6 +101,18 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
   });
 });
 
+export const getRepliesByAuthor = cache(async (handle: string) => {
+  'use cache';
+  cacheTag('drops', `user-replies-${handle}`);
+
+  await delay(400);
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { authorHandle: handle, parentId: { not: null } },
+  });
+  return rows.map(toDrop);
+});
+
 export const getDropsByTag = cache(async (tag: string) => {
   'use cache';
   cacheTag('drops', `tag-${tag}`);
