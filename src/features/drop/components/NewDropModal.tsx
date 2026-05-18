@@ -10,6 +10,10 @@ type Props = {
   avatar: ReactNode;
 };
 
+type State = { error: string | null; submittedAt: number };
+
+const INITIAL: State = { error: null, submittedAt: 0 };
+
 export function NewDropModal({ avatar }: Props) {
   const dialog = Ariakit.useDialogStore();
   const [state, formAction, pending] = useActionState(submit, INITIAL);
@@ -85,10 +89,6 @@ export function NewDropModal({ avatar }: Props) {
     </>
   );
 }
-
-type State = { error: string | null; submittedAt: number };
-
-const INITIAL: State = { error: null, submittedAt: 0 };
 
 async function submit(_: State, formData: FormData): Promise<State> {
   const result = await postDrop(formData);
