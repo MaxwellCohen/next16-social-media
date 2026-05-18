@@ -180,7 +180,7 @@ function ProfileHeaderSkeleton() {
 function ProfileFeedSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 3 }).map((_, i) => {
+      {Array.from({ length: 5 }).map((_, i) => {
         return (
           <li key={i}>
             <DropSkeleton />

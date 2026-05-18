@@ -19,12 +19,12 @@ export function DropActions({ drop, userStatePromise }: Props) {
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <Link
-        href={`/drop/${drop.id}`}
+        href={`/drop/${drop.parentId ?? drop.id}`}
         aria-label="Reply"
         onClick={e => {
           e.stopPropagation();
         }}
-        className="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors"
+        className="hover:bg-card dark:hover:bg-card-dark inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors hover:text-black dark:hover:text-white"
       >
         <MessageCircle className="h-4 w-4" />
         <span>{formatCount(drop.replies)}</span>

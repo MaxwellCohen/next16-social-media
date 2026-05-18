@@ -72,6 +72,9 @@
   );
   background-size: 800px 100px;
   animation: wave-lines 2s infinite ease-out;
+}
+
+.skeleton-animation:not([class*='rounded-']) {
   border-radius: var(--radius-sm);
 }
 
