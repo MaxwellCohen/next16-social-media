@@ -11,7 +11,6 @@ export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
       <Suspense fallback={<TagHeaderSkeleton />}>
         <TagHeader params={params} />
       </Suspense>
-
       <Suspense fallback={<TagFeedSkeleton />}>
         <TagFeed params={params} />
       </Suspense>
@@ -23,7 +22,7 @@ async function TagHeader({ params }: Params) {
   const { tag } = await params;
   const drops = await getDropsByTag(tag);
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white px-4 py-4 sm:px-5 dark:bg-black">
+    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
       <div className="text-gray font-mono text-[11px] tracking-wide uppercase">Tag</div>
       <h1 className="text-lg font-bold tracking-tight">#{tag}</h1>
       <div className="text-gray font-mono text-xs">{drops.length} drops</div>

@@ -3,7 +3,7 @@
 import { updateTag } from 'next/cache';
 import { z } from 'zod';
 import { getCurrentUserHandle } from '@/lib/auth';
-import { getNextDropId, getStore, type Drop } from '@/lib/data';
+import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 const HASHTAG_PATTERN = /#(\w+)/g;
@@ -31,25 +31,21 @@ const postDropSchema = z.object({
 export async function postDrop(formData: FormData) {
   await delay(600);
 
-  const parsed = postDropSchema.safeParse({
-    body: formData.get('body'),
-  });
+  const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message, ok: false as const };
   }
 
   const me = await getCurrentUserHandle();
-  const drop: Drop = {
-    authorHandle: me,
-    body: parsed.data.body,
-    createdAt: new Date(),
-    id: getNextDropId(),
-    likes: 0,
-    replies: 0,
-    reposts: 0,
-    tags: extractTags(parsed.data.body),
-  };
-  getStore().drops.unshift(drop);
+  const tags = extractTags(parsed.data.body);
+  const drop = await prisma.drop.create({
+    data: {
+      authorHandle: me,
+      body: parsed.data.body,
+      createdAt: new Date(),
+      tags: tags.join(','),
+    },
+  });
   updateTag('feed');
   updateTag(`user-drops-${me}`);
   updateTag('trending');
@@ -59,33 +55,28 @@ export async function postDrop(formData: FormData) {
 export async function postReply(parentId: string, formData: FormData) {
   await delay(600);
 
-  const parsed = postDropSchema.safeParse({
-    body: formData.get('body'),
-  });
+  const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message, ok: false as const };
   }
 
-  const store = getStore();
-  const parent = store.drops.find(d => {
-    return d.id === parentId;
-  });
+  const parent = await prisma.drop.findUnique({ where: { id: parentId } });
   if (!parent) return { error: 'Drop not found', ok: false as const };
 
   const me = await getCurrentUserHandle();
-  const reply: Drop = {
-    authorHandle: me,
-    body: parsed.data.body,
-    createdAt: new Date(),
-    id: getNextDropId(),
-    likes: 0,
-    parentId,
-    replies: 0,
-    reposts: 0,
-    tags: extractTags(parsed.data.body),
-  };
-  store.drops.push(reply);
-  parent.replies += 1;
+  const tags = extractTags(parsed.data.body);
+  const [reply] = await prisma.$transaction([
+    prisma.drop.create({
+      data: {
+        authorHandle: me,
+        body: parsed.data.body,
+        createdAt: new Date(),
+        parentId,
+        tags: tags.join(','),
+      },
+    }),
+    prisma.drop.update({ data: { replyCount: { increment: 1 } }, where: { id: parentId } }),
+  ]);
   updateTag(`drop-${parentId}`);
   updateTag(`replies-${parentId}`);
   return { ok: true as const, reply };
@@ -93,64 +84,54 @@ export async function postReply(parentId: string, formData: FormData) {
 
 export async function toggleLike(dropId: string) {
   await delay(300);
-  const store = getStore();
-  const drop = store.drops.find(d => {
-    return d.id === dropId;
-  });
-  if (!drop) return { ok: false as const };
-
   const me = await getCurrentUserHandle();
-  const liked = store.likes[me] ?? (store.likes[me] = new Set());
-  if (liked.has(dropId)) {
-    liked.delete(dropId);
-    drop.likes -= 1;
+  const existing = await prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle: me } } });
+  if (existing) {
+    await prisma.$transaction([
+      prisma.like.delete({ where: { userHandle_dropId: { dropId, userHandle: me } } }),
+      prisma.drop.update({ data: { likeCount: { decrement: 1 } }, where: { id: dropId } }),
+    ]);
   } else {
-    liked.add(dropId);
-    drop.likes += 1;
+    await prisma.$transaction([
+      prisma.like.create({ data: { dropId, userHandle: me } }),
+      prisma.drop.update({ data: { likeCount: { increment: 1 } }, where: { id: dropId } }),
+    ]);
   }
   updateTag(`drop-${dropId}`);
   updateTag(`liked-${me}-${dropId}`);
-  return { likes: drop.likes, ok: true as const };
+  return { ok: true as const };
 }
 
 export async function toggleRepost(dropId: string) {
   await delay(300);
-  const store = getStore();
-  const drop = store.drops.find(d => {
-    return d.id === dropId;
-  });
-  if (!drop) return { ok: false as const };
-
   const me = await getCurrentUserHandle();
-  const reposted = store.reposts[me] ?? (store.reposts[me] = new Set());
-  if (reposted.has(dropId)) {
-    reposted.delete(dropId);
-    drop.reposts -= 1;
+  const existing = await prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle: me } } });
+  if (existing) {
+    await prisma.$transaction([
+      prisma.repost.delete({ where: { userHandle_dropId: { dropId, userHandle: me } } }),
+      prisma.drop.update({ data: { repostCount: { decrement: 1 } }, where: { id: dropId } }),
+    ]);
   } else {
-    reposted.add(dropId);
-    drop.reposts += 1;
+    await prisma.$transaction([
+      prisma.repost.create({ data: { dropId, userHandle: me } }),
+      prisma.drop.update({ data: { repostCount: { increment: 1 } }, where: { id: dropId } }),
+    ]);
   }
   updateTag(`drop-${dropId}`);
   updateTag(`reposted-${me}-${dropId}`);
   updateTag(`user-drops-${me}`);
   updateTag('feed');
-  return { ok: true as const, reposts: drop.reposts };
+  return { ok: true as const };
 }
 
 export async function toggleBookmark(dropId: string) {
   await delay(250);
-  const store = getStore();
-  const drop = store.drops.find(d => {
-    return d.id === dropId;
-  });
-  if (!drop) return { ok: false as const };
-
   const me = await getCurrentUserHandle();
-  const bookmarks = store.bookmarks[me] ?? (store.bookmarks[me] = new Set());
-  if (bookmarks.has(dropId)) {
-    bookmarks.delete(dropId);
+  const existing = await prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle: me } } });
+  if (existing) {
+    await prisma.bookmark.delete({ where: { userHandle_dropId: { dropId, userHandle: me } } });
   } else {
-    bookmarks.add(dropId);
+    await prisma.bookmark.create({ data: { dropId, userHandle: me } });
   }
   updateTag(`bookmarked-${me}-${dropId}`);
   updateTag(`bookmarks-${me}`);
@@ -159,34 +140,30 @@ export async function toggleBookmark(dropId: string) {
 
 export async function toggleFollow(targetHandle: string) {
   await delay(300);
-  const store = getStore();
-  const meHandle = await getCurrentUserHandle();
-  if (targetHandle === meHandle) {
+  const me = await getCurrentUserHandle();
+  if (targetHandle === me) {
     return { ok: false as const };
   }
-  const me = store.users.find(u => {
-    return u.handle === meHandle;
+  const existing = await prisma.follow.findUnique({
+    where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } },
   });
-  const target = store.users.find(u => {
-    return u.handle === targetHandle;
-  });
-  if (!me || !target) return { ok: false as const };
-
-  const follows = store.follows[meHandle] ?? (store.follows[meHandle] = new Set());
-
-  if (follows.has(targetHandle)) {
-    follows.delete(targetHandle);
-    me.following -= 1;
-    target.followers -= 1;
+  if (existing) {
+    await prisma.$transaction([
+      prisma.follow.delete({ where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } } }),
+      prisma.user.update({ data: { following: { decrement: 1 } }, where: { handle: me } }),
+      prisma.user.update({ data: { followers: { decrement: 1 } }, where: { handle: targetHandle } }),
+    ]);
   } else {
-    follows.add(targetHandle);
-    me.following += 1;
-    target.followers += 1;
+    await prisma.$transaction([
+      prisma.follow.create({ data: { followerHandle: me, targetHandle } }),
+      prisma.user.update({ data: { following: { increment: 1 } }, where: { handle: me } }),
+      prisma.user.update({ data: { followers: { increment: 1 } }, where: { handle: targetHandle } }),
+    ]);
   }
   updateTag(`user-${targetHandle}`);
+  updateTag(`user-${me}`);
   updateTag(`is-following-${targetHandle}`);
-  updateTag('current-user');
-  updateTag('who-to-follow');
+  updateTag(`who-to-follow-${me}`);
   updateTag('feed');
   return { ok: true as const };
 }

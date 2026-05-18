@@ -1,10 +1,10 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
-import { Sidebar } from '@/components/Sidebar';
 import { TrendingTags, TrendingTagsSkeleton } from '@/components/TrendingTags';
 import { WhoToFollow, WhoToFollowSkeleton } from '@/components/WhoToFollow';
 import { MobileHeader, MobileTabBar } from '@/components/navigation/MobileNav';
+import { Sidebar } from '@/components/navigation/Sidebar';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import type { Metadata } from 'next';
 import './globals.css';

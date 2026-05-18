@@ -1,4 +1,8 @@
-export type User = {
+/* eslint-disable no-console */
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaClient } from '../src/generated/prisma/client';
+
+type SeedUser = {
   id: string;
   handle: string;
   displayName: string;
@@ -8,9 +12,7 @@ export type User = {
   following: number;
 };
 
-export type EmbeddedCode = { lang: string; code: string };
-
-export type Drop = {
+type SeedDrop = {
   id: string;
   authorHandle: string;
   body: string;
@@ -19,23 +21,8 @@ export type Drop = {
   replies: number;
   reposts: number;
   tags: string[];
-  embeddedCode?: EmbeddedCode;
+  embeddedCode?: { lang: string; code: string };
   parentId?: string;
-};
-
-export type Tag = {
-  name: string;
-  count: number;
-};
-
-type Store = {
-  users: User[];
-  drops: Drop[];
-  follows: Record<string, Set<string>>;
-  likes: Record<string, Set<string>>;
-  reposts: Record<string, Set<string>>;
-  bookmarks: Record<string, Set<string>>;
-  dropIdCounter: number;
 };
 
 const now = Date.now();
@@ -43,7 +30,7 @@ const minute = 60_000;
 const hour = 60 * minute;
 const day = 24 * hour;
 
-const USERS: User[] = [
+const USERS: SeedUser[] = [
   {
     avatarColor: 'from-pink-500 to-rose-600',
     bio: 'DX Engineer on the Next.js team at Vercel. React Cert Lead. Oslo.',
@@ -118,16 +105,13 @@ const USERS: User[] = [
   },
 ];
 
-const DROPS: Drop[] = [
+const DROPS: SeedDrop[] = [
   {
     authorHandle: 'aurorascharff',
     body: 'One directive turns any function into a cached server function. Opt in per-component instead of per-route.',
     createdAt: new Date(now - 8 * minute),
     embeddedCode: {
-      code: `async function getDrop(id) {
-  'use cache'
-  return db.drops.findById(id)
-}`,
+      code: "async function getDrop(id) {\n  'use cache'\n  return db.drops.findById(id)\n}",
       lang: 'ts',
     },
     id: 'd1',
@@ -151,11 +135,7 @@ const DROPS: Drop[] = [
     body: 'Optimistic UI is now a few lines. Snap the state, fire the action, React reconciles when the server agrees.',
     createdAt: new Date(now - 45 * minute),
     embeddedCode: {
-      code: `const [count, addOptimistic] = useOptimistic(likes, n => n + 1)
-startTransition(() => {
-  addOptimistic()
-  toggleLike(id)
-})`,
+      code: 'const [count, addOptimistic] = useOptimistic(likes, n => n + 1)\nstartTransition(() => {\n  addOptimistic()\n  toggleLike(id)\n})',
       lang: 'tsx',
     },
     id: 'd3',
@@ -179,11 +159,7 @@ startTransition(() => {
     body: 'Private cache for per-user data. Same primitive, scoped to the request. Bookmarks, drafts, feeds you own.',
     createdAt: new Date(now - 2 * hour),
     embeddedCode: {
-      code: `async function getBookmarks(handle) {
-  'use cache: private'
-  cacheTag(\`bookmarks-\${handle}\`)
-  return db.bookmarks.byHandle(handle)
-}`,
+      code: "async function getBookmarks(handle) {\n  'use cache: private'\n  cacheTag(`bookmarks-${handle}`)\n  return db.bookmarks.byHandle(handle)\n}",
       lang: 'ts',
     },
     id: 'd5',
@@ -206,12 +182,7 @@ startTransition(() => {
     authorHandle: 'aurorascharff',
     body: 'Suspense boundaries are where the streaming story lives. Wrap the slow bit, let the rest paint.',
     createdAt: new Date(now - 4 * hour),
-    embeddedCode: {
-      code: `<Suspense fallback={<FeedSkeleton />}>
-  <Feed />
-</Suspense>`,
-      lang: 'tsx',
-    },
+    embeddedCode: { code: '<Suspense fallback={<FeedSkeleton />}>\n  <Feed />\n</Suspense>', lang: 'tsx' },
     id: 'd7',
     likes: 1_540,
     replies: 64,
@@ -233,8 +204,7 @@ startTransition(() => {
     body: 'useActionState handles the form lifecycle: pending, errors, success. One hook, no extra state.',
     createdAt: new Date(now - 7 * hour),
     embeddedCode: {
-      code: `const [state, action, pending] = useActionState(postDrop, null)
-return <form action={action}>...</form>`,
+      code: 'const [state, action, pending] = useActionState(postDrop, null)\nreturn <form action={action}>...</form>',
       lang: 'tsx',
     },
     id: 'd9',
@@ -257,13 +227,7 @@ return <form action={action}>...</form>`,
     authorHandle: 'aurorascharff',
     body: 'The cacheComponents flag is opt-in for now. Flip it and everything reads from a tagged, per-component cache.',
     createdAt: new Date(now - 11 * hour),
-    embeddedCode: {
-      code: `// next.config.ts
-export default {
-  cacheComponents: true,
-}`,
-      lang: 'ts',
-    },
+    embeddedCode: { code: '// next.config.ts\nexport default {\n  cacheComponents: true,\n}', lang: 'ts' },
     id: 'd11',
     likes: 1_810,
     replies: 96,
@@ -285,11 +249,7 @@ export default {
     body: "Server actions are just functions. You import them into a client component and call them. That's the whole API.",
     createdAt: new Date(now - 16 * hour),
     embeddedCode: {
-      code: `'use server'
-export async function toggleLike(id) {
-  await db.likes.toggle(id)
-  updateTag(\`drop-\${id}\`)
-}`,
+      code: "'use server'\nexport async function toggleLike(id) {\n  await db.likes.toggle(id)\n  updateTag(`drop-${id}`)\n}",
       lang: 'ts',
     },
     id: 'd13',
@@ -340,7 +300,7 @@ export async function toggleLike(id) {
   },
 ];
 
-const REPLIES: Drop[] = [
+const REPLIES: SeedDrop[] = [
   {
     authorHandle: 'onyx',
     body: 'Owning the dashboard server-side has been a quiet win for us too. Less state, fewer race conditions, easier reviews.',
@@ -431,74 +391,98 @@ const REPLIES: Drop[] = [
   },
 ];
 
-const ALL_DROPS = [...DROPS, ...REPLIES];
-
-function buildFollows(): Record<string, Set<string>> {
-  return {
-    aurorascharff: new Set(['vex', 'quill', 'onyx', 'wren', 'cinder']),
-    cinder: new Set(['aurorascharff', 'vex', 'quill']),
-    echo: new Set(['aurorascharff']),
-    halo: new Set(['aurorascharff', 'vex', 'echo']),
-    onyx: new Set(['aurorascharff', 'vex']),
-    quill: new Set(['aurorascharff', 'wren']),
-    vex: new Set(['aurorascharff', 'onyx', 'cinder']),
-    wren: new Set(['aurorascharff', 'quill']),
-  };
-}
-
-function buildLikes(): Record<string, Set<string>> {
-  return {
-    aurorascharff: new Set(['d2', 'd4', 'd8', 'd10']),
-  };
-}
-
-function buildReposts(): Record<string, Set<string>> {
-  return {
-    aurorascharff: new Set(['d6', 'd8']),
-  };
-}
-
-function buildBookmarks(): Record<string, Set<string>> {
-  return {
-    aurorascharff: new Set(['d2', 'd12']),
-  };
-}
-
-const store: Store = {
-  bookmarks: buildBookmarks(),
-  currentUserHandle: 'aurorascharff',
-  dropIdCounter: ALL_DROPS.length + 1,
-  drops: ALL_DROPS.map(d => {
-    return { ...d };
-  }),
-  follows: buildFollows(),
-  likes: buildLikes(),
-  reposts: buildReposts(),
-  users: USERS.map(u => {
-    return { ...u };
-  }),
+const FOLLOWS: Record<string, string[]> = {
+  aurorascharff: ['vex', 'quill', 'onyx', 'wren', 'cinder'],
+  cinder: ['aurorascharff', 'vex', 'quill'],
+  echo: ['aurorascharff'],
+  halo: ['aurorascharff', 'vex', 'echo'],
+  onyx: ['aurorascharff', 'vex'],
+  quill: ['aurorascharff', 'wren'],
+  vex: ['aurorascharff', 'onyx', 'cinder'],
+  wren: ['aurorascharff', 'quill'],
 };
 
-export function getStore() {
-  return store;
+const LIKES: Record<string, string[]> = {
+  aurorascharff: ['d2', 'd4', 'd8', 'd10'],
+};
+
+const REPOSTS: Record<string, string[]> = {
+  aurorascharff: ['d6', 'd8'],
+};
+
+const BOOKMARKS: Record<string, string[]> = {
+  aurorascharff: ['d2', 'd12'],
+};
+
+async function main() {
+  const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL ?? 'file:./drop.db' });
+  const prisma = new PrismaClient({ adapter });
+
+  console.log('Clearing existing data...');
+  await prisma.like.deleteMany();
+  await prisma.repost.deleteMany();
+  await prisma.bookmark.deleteMany();
+  await prisma.follow.deleteMany();
+  await prisma.drop.deleteMany();
+  await prisma.user.deleteMany();
+
+  console.log('Inserting users...');
+  for (const u of USERS) {
+    await prisma.user.create({ data: u });
+  }
+
+  console.log('Inserting drops...');
+  for (const d of [...DROPS, ...REPLIES]) {
+    await prisma.drop.create({
+      data: {
+        authorHandle: d.authorHandle,
+        body: d.body,
+        createdAt: d.createdAt,
+        embeddedCode: d.embeddedCode?.code,
+        embeddedLang: d.embeddedCode?.lang,
+        id: d.id,
+        likeCount: d.likes,
+        parentId: d.parentId,
+        replyCount: d.replies,
+        repostCount: d.reposts,
+        tags: d.tags.join(','),
+      },
+    });
+  }
+
+  console.log('Inserting follows...');
+  for (const [follower, targets] of Object.entries(FOLLOWS)) {
+    for (const target of targets) {
+      await prisma.follow.create({ data: { followerHandle: follower, targetHandle: target } });
+    }
+  }
+
+  console.log('Inserting likes...');
+  for (const [user, drops] of Object.entries(LIKES)) {
+    for (const dropId of drops) {
+      await prisma.like.create({ data: { dropId, userHandle: user } });
+    }
+  }
+
+  console.log('Inserting reposts...');
+  for (const [user, drops] of Object.entries(REPOSTS)) {
+    for (const dropId of drops) {
+      await prisma.repost.create({ data: { dropId, userHandle: user } });
+    }
+  }
+
+  console.log('Inserting bookmarks...');
+  for (const [user, drops] of Object.entries(BOOKMARKS)) {
+    for (const dropId of drops) {
+      await prisma.bookmark.create({ data: { dropId, userHandle: user } });
+    }
+  }
+
+  console.log(`Seeded ${USERS.length} users, ${DROPS.length + REPLIES.length} drops`);
+  await prisma.$disconnect();
 }
 
-export function getNextDropId() {
-  store.dropIdCounter += 1;
-  return `d${store.dropIdCounter}`;
-}
-
-export function resetStore() {
-  store.users = USERS.map(u => {
-    return { ...u };
-  });
-  store.drops = ALL_DROPS.map(d => {
-    return { ...d };
-  });
-  store.follows = buildFollows();
-  store.likes = buildLikes();
-  store.reposts = buildReposts();
-  store.bookmarks = buildBookmarks();
-  store.dropIdCounter = ALL_DROPS.length + 1;
-  store.currentUserHandle = 'aurorascharff';
-}
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

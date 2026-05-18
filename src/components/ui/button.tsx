@@ -18,7 +18,6 @@ const sizes: Record<Size, string> = {
   icon: 'h-9 w-9 rounded-full',
   sm: 'px-3 py-1.5 text-xs',
 };
-
 const variants: Record<Variant, string> = {
   ghost: 'text-gray hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white',
   primary: 'bg-accent text-white hover:bg-accent-hover',

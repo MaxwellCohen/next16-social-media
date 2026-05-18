@@ -3,23 +3,20 @@ import 'server-only';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { getStore, type Drop } from '@/lib/data';
+import { prisma } from '@/lib/db';
+import { toDrop, type Drop } from '@/lib/types';
 import { delay } from '@/lib/utils';
-
-function topLevel(drops: Drop[]) {
-  return drops.filter(d => {
-    return !d.parentId;
-  });
-}
 
 export const getFeed = cache(async () => {
   'use cache';
   cacheTag('feed');
 
   await delay(500);
-  return topLevel(getStore().drops).sort((a, b) => {
-    return b.createdAt.getTime() - a.createdAt.getTime();
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { parentId: null },
   });
+  return rows.map(toDrop);
 });
 
 export const getPersonalizedFeed = cache(async (userHandle: string) => {
@@ -27,15 +24,21 @@ export const getPersonalizedFeed = cache(async (userHandle: string) => {
   cacheTag('feed', `feed-${userHandle}`);
 
   await delay(450);
-  const store = getStore();
-  const follows = store.follows[userHandle] ?? new Set();
-  return topLevel(store.drops)
-    .filter(d => {
-      return follows.has(d.authorHandle) || d.authorHandle === userHandle;
-    })
-    .sort((a, b) => {
-      return b.createdAt.getTime() - a.createdAt.getTime();
-    });
+  const follows = await prisma.follow.findMany({
+    select: { targetHandle: true },
+    where: { followerHandle: userHandle },
+  });
+  const followedHandles = follows.map(f => {
+    return f.targetHandle;
+  });
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: {
+      authorHandle: { in: [...followedHandles, userHandle] },
+      parentId: null,
+    },
+  });
+  return rows.map(toDrop);
 });
 
 export const getDrop = cache(async (id: string) => {
@@ -43,11 +46,9 @@ export const getDrop = cache(async (id: string) => {
   cacheTag('drops', `drop-${id}`);
 
   await delay(300);
-  const drop = getStore().drops.find(d => {
-    return d.id === id;
-  });
-  if (!drop) notFound();
-  return drop;
+  const row = await prisma.drop.findUnique({ where: { id } });
+  if (!row) notFound();
+  return toDrop(row);
 });
 
 export const getReplies = cache(async (dropId: string) => {
@@ -55,13 +56,11 @@ export const getReplies = cache(async (dropId: string) => {
   cacheTag(`replies-${dropId}`);
 
   await delay(800);
-  return getStore()
-    .drops.filter(d => {
-      return d.parentId === dropId;
-    })
-    .sort((a, b) => {
-      return a.createdAt.getTime() - b.createdAt.getTime();
-    });
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'asc' },
+    where: { parentId: dropId },
+  });
+  return rows.map(toDrop);
 });
 
 export type ProfileFeedItem =
@@ -73,28 +72,45 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
   cacheTag('drops', `user-drops-${handle}`);
 
   await delay(400);
-  const store = getStore();
+  const [authored, reposts] = await Promise.all([
+    prisma.drop.findMany({
+      where: { authorHandle: handle, parentId: null },
+    }),
+    prisma.repost.findMany({
+      include: { drop: true },
+      where: { drop: { parentId: null }, userHandle: handle },
+    }),
+  ]);
 
-  const authored: ProfileFeedItem[] = topLevel(store.drops)
-    .filter(d => {
-      return d.authorHandle === handle;
-    })
-    .map(drop => {
-      return { drop, kind: 'drop' as const, pinnedAt: drop.createdAt.getTime() };
-    });
-
-  const repostedIds = store.reposts[handle] ?? new Set();
-  const reposted: ProfileFeedItem[] = [];
-  for (const id of repostedIds) {
-    const drop = store.drops.find(d => {
-      return d.id === id;
-    });
-    if (!drop || drop.parentId) continue;
-    reposted.push({ drop, kind: 'repost' as const, pinnedAt: drop.createdAt.getTime() + 1, repostedBy: handle });
-  }
-
-  return [...authored, ...reposted].sort((a, b) => {
+  const items: ProfileFeedItem[] = [
+    ...authored.map(d => {
+      return { drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() };
+    }),
+    ...reposts.map(r => {
+      return {
+        drop: toDrop(r.drop),
+        kind: 'repost' as const,
+        pinnedAt: r.drop.createdAt.getTime() + 1,
+        repostedBy: handle,
+      };
+    }),
+  ];
+  return items.sort((a, b) => {
     return b.pinnedAt - a.pinnedAt;
+  });
+});
+
+export const getDropsByTag = cache(async (tag: string) => {
+  'use cache';
+  cacheTag('drops', `tag-${tag}`);
+
+  await delay(400);
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { parentId: null, tags: { contains: tag } },
+  });
+  return rows.map(toDrop).filter(d => {
+    return d.tags.includes(tag);
   });
 });
 
@@ -103,21 +119,8 @@ export const isReposted = cache(async (userHandle: string, dropId: string) => {
   cacheTag(`reposted-${userHandle}-${dropId}`);
 
   await delay(120);
-  return getStore().reposts[userHandle]?.has(dropId) ?? false;
-});
-
-export const getDropsByTag = cache(async (tag: string) => {
-  'use cache';
-  cacheTag('drops', `tag-${tag}`);
-
-  await delay(400);
-  return topLevel(getStore().drops)
-    .filter(d => {
-      return d.tags.includes(tag);
-    })
-    .sort((a, b) => {
-      return b.createdAt.getTime() - a.createdAt.getTime();
-    });
+  const row = await prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
+  return row !== null;
 });
 
 export const isLiked = cache(async (userHandle: string, dropId: string) => {
@@ -125,7 +128,8 @@ export const isLiked = cache(async (userHandle: string, dropId: string) => {
   cacheTag(`liked-${userHandle}-${dropId}`);
 
   await delay(120);
-  return getStore().likes[userHandle]?.has(dropId) ?? false;
+  const row = await prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
+  return row !== null;
 });
 
 export const isBookmarked = cache(async (userHandle: string, dropId: string) => {
@@ -133,7 +137,8 @@ export const isBookmarked = cache(async (userHandle: string, dropId: string) => 
   cacheTag(`bookmarked-${userHandle}-${dropId}`);
 
   await delay(120);
-  return getStore().bookmarks[userHandle]?.has(dropId) ?? false;
+  const row = await prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
+  return row !== null;
 });
 
 export const getBookmarkedDrops = cache(async (userHandle: string) => {
@@ -141,13 +146,27 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
   cacheTag(`bookmarks-${userHandle}`);
 
   await delay(400);
-  const store = getStore();
-  const ids = store.bookmarks[userHandle] ?? new Set();
-  return topLevel(store.drops)
-    .filter(d => {
-      return ids.has(d.id);
-    })
-    .sort((a, b) => {
-      return b.createdAt.getTime() - a.createdAt.getTime();
-    });
+  const rows = await prisma.bookmark.findMany({
+    include: { drop: true },
+    orderBy: { createdAt: 'desc' },
+    where: { drop: { parentId: null }, userHandle },
+  });
+  return rows.map(r => {
+    return toDrop(r.drop);
+  });
+});
+
+export type DropUserState = {
+  liked: boolean;
+  reposted: boolean;
+  bookmarked: boolean;
+};
+
+export const getDropUserState = cache(async (handle: string, dropId: string): Promise<DropUserState> => {
+  const [liked, reposted, bookmarked] = await Promise.all([
+    isLiked(handle, dropId),
+    isReposted(handle, dropId),
+    isBookmarked(handle, dropId),
+  ]);
+  return { bookmarked, liked, reposted };
 });

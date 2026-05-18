@@ -1,4 +1,5 @@
 import { getUserByHandle } from '@/data/queries/user';
+import { getCurrentUserHandle } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -10,13 +11,13 @@ const sizes: Record<Size, string> = {
 };
 
 type Props = {
-  handle: string;
+  handle?: string;
   size?: Size;
   className?: string;
 };
 
 export async function UserAvatar({ handle, size = 'md', className }: Props) {
-  const user = await getUserByHandle(handle);
+  const user = await getUserByHandle(handle ?? (await getCurrentUserHandle()));
   return (
     <div
       aria-hidden

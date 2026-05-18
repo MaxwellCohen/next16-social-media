@@ -15,7 +15,6 @@ export default function ProfilePage({ params }: PageProps<'/u/[handle]'>) {
       <Suspense fallback={<ProfileHeaderSkeleton />}>
         <ProfileHeader params={params} />
       </Suspense>
-
       <Suspense fallback={<ProfileFeedSkeleton />}>
         <ProfileFeed params={params} />
       </Suspense>
@@ -41,9 +40,7 @@ async function ProfileHeader({ params }: Params) {
           <ProfileFollowButton handle={user.handle} />
         </Suspense>
       </div>
-
       <p className="min-h-[2lh] text-sm">{user.bio}</p>
-
       <div className="text-gray flex gap-4 font-mono text-xs">
         <span>
           <strong className="text-black dark:text-white">{formatCount(user.following)}</strong> Following

@@ -18,7 +18,6 @@ export function ReplyComposerForm({ idPromise, avatar }: Props) {
     const result = await postReply(dropId, formData);
     return { error: result.ok ? null : result.error };
   }, INITIAL);
-
   return (
     <form ref={formRef} action={formAction} className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
@@ -38,9 +37,7 @@ export function ReplyComposerForm({ idPromise, avatar }: Props) {
           className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] focus:ring-0 focus:outline-none"
         />
       </div>
-
       {state.error ? <p className="text-danger text-xs">{state.error}</p> : null}
-
       <div className="flex justify-end">
         <Button type="submit" size="sm" disabled={pending}>
           {pending ? 'Replying…' : 'Reply'}

@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id          String     @id @default(cuid())
+  handle      String     @unique
+  displayName String
+  bio         String
+  avatarColor String
+  followers   Int        @default(0)
+  following   Int        @default(0)
+  createdAt   DateTime   @default(now())
+
+  drops      Drop[]
+  likes      Like[]
+  reposts    Repost[]
+  bookmarks  Bookmark[]
+  followsOut Follow[]   @relation("FollowsFrom")
+  followsIn  Follow[]   @relation("FollowsTo")
+}
+
+model Drop {
+  id           String   @id @default(cuid())
+  authorHandle String
+  body         String
+  parentId     String?
+  replyCount   Int      @default(0)
+  likeCount    Int      @default(0)
+  repostCount  Int      @default(0)
+  embeddedLang String?
+  embeddedCode String?
+  tags         String   @default("")
+  createdAt    DateTime
+
+  author    User       @relation(fields: [authorHandle], references: [handle])
+  parent    Drop?      @relation("Replies", fields: [parentId], references: [id])
+  replies   Drop[]     @relation("Replies")
+  likes     Like[]
+  reposts   Repost[]
+  bookmarks Bookmark[]
+
+  @@index([parentId])
+  @@index([authorHandle, createdAt])
+  @@index([createdAt])
+}
+
+model Like {
+  userHandle String
+  dropId     String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userHandle], references: [handle])
+  drop Drop @relation(fields: [dropId], references: [id], onDelete: Cascade)
+
+  @@id([userHandle, dropId])
+  @@index([userHandle])
+}
+
+model Repost {
+  userHandle String
+  dropId     String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userHandle], references: [handle])
+  drop Drop @relation(fields: [dropId], references: [id], onDelete: Cascade)
+
+  @@id([userHandle, dropId])
+  @@index([userHandle])
+}
+
+model Bookmark {
+  userHandle String
+  dropId     String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userHandle], references: [handle])
+  drop Drop @relation(fields: [dropId], references: [id], onDelete: Cascade)
+
+  @@id([userHandle, dropId])
+  @@index([userHandle])
+}
+
+model Follow {
+  followerHandle String
+  targetHandle   String
+  createdAt      DateTime @default(now())
+
+  follower User @relation("FollowsFrom", fields: [followerHandle], references: [handle])
+  target   User @relation("FollowsTo", fields: [targetHandle], references: [handle])
+
+  @@id([followerHandle, targetHandle])
+  @@index([followerHandle])
+  @@index([targetHandle])
+}

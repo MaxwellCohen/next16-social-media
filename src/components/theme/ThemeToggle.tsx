@@ -10,7 +10,6 @@ type Props = { variant?: 'pill' | 'inline' };
 const subscribe = () => {
   return () => {};
 };
-
 function useIsMounted() {
   return useSyncExternalStore(
     subscribe,

@@ -1,14 +1,15 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { DropActions } from '@/components/DropActions';
+import { DropActions, DropActionsSkeleton } from '@/components/DropActions';
 import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { TagPill } from '@/components/ui/TagPill';
-import { isBookmarked, isLiked, isReposted } from '@/data/queries/drop';
+import { getDropUserState } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
-import type { Drop as DropT } from '@/lib/data';
+
+import type { Drop as DropT } from '@/lib/types';
 
 type Props = {
   drop: DropT;
@@ -33,7 +34,6 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
             </Suspense>
           </div>
         </header>
-
         <div className="mt-3 flex flex-col gap-3">
           <DropBody body={drop.body} compact={false} detail />
           {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
@@ -45,20 +45,17 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
             </div>
           ) : null}
         </div>
-
         <div className="text-gray border-divider/70 dark:border-divider-dark/70 mt-3 border-b pb-3 font-mono text-[12px]">
           <RelativeTime date={drop.createdAt} verbose />
         </div>
-
         <div className="pt-2">
-          <Suspense fallback={<DropActionsSkeleton drop={drop} />}>
-            <DropActionsLive drop={drop} />
+          <Suspense fallback={<DropActionsSkeleton />}>
+            <DropActions drop={drop} userStatePromise={getDropUserState(drop.id)} />
           </Suspense>
         </div>
       </article>
     );
   }
-
   return (
     <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
       <Link href={`/drop/${drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
@@ -83,15 +80,12 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
               <RelativeTime date={drop.createdAt} />
             </span>
           </header>
-
           <DropBody body={drop.body} compact={compact} />
-
           {drop.embeddedCode && !compact ? (
             <div className="relative z-20">
               <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
             </div>
           ) : null}
-
           {drop.tags.length > 0 ? (
             <div className="relative z-20 flex flex-wrap gap-1.5">
               {drop.tags.map(t => {
@@ -99,10 +93,9 @@ export function Drop({ drop, compact = false, detail = false, repostedBy }: Prop
               })}
             </div>
           ) : null}
-
           <div className="relative z-20">
-            <Suspense fallback={<DropActionsSkeleton drop={drop} />}>
-              <DropActionsLive drop={drop} />
+            <Suspense fallback={<DropActionsSkeleton />}>
+              <DropActions drop={drop} userStatePromise={getDropUserState(drop.id)} />
             </Suspense>
           </div>
         </div>
@@ -162,40 +155,6 @@ async function Reposter({ handle }: { handle: string }) {
       <Repeat2 className="h-3 w-3" />
       <span>{reposter.handle === current.handle ? 'You' : reposter.displayName} reposted</span>
     </Link>
-  );
-}
-
-async function DropActionsLive({ drop }: { drop: DropT }) {
-  const current = await getCurrentUser();
-  const [liked, reposted, bookmarked] = await Promise.all([
-    isLiked(current.handle, drop.id),
-    isReposted(current.handle, drop.id),
-    isBookmarked(current.handle, drop.id),
-  ]);
-  return (
-    <DropActions
-      dropId={drop.id}
-      likes={drop.likes}
-      replies={drop.replies}
-      reposts={drop.reposts}
-      initialLiked={liked}
-      initialReposted={reposted}
-      initialBookmarked={bookmarked}
-    />
-  );
-}
-
-function DropActionsSkeleton({ drop }: { drop: DropT }) {
-  return (
-    <DropActions
-      dropId={drop.id}
-      likes={drop.likes}
-      replies={drop.replies}
-      reposts={drop.reposts}
-      initialLiked={false}
-      initialReposted={false}
-      initialBookmarked={false}
-    />
   );
 }
 

@@ -7,7 +7,6 @@ export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: 
   const [label, setLabel] = useState(() => {
     return verbose ? formatAbsolute(date) : timeAgo(date);
   });
-
   useEffect(() => {
     const update = () => {
       setLabel(verbose ? formatAbsolute(date) : timeAgo(date));
@@ -19,7 +18,6 @@ export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: 
       clearInterval(id);
     };
   }, [date, verbose]);
-
   return (
     <time dateTime={date.toISOString()} suppressHydrationWarning>
       {label}

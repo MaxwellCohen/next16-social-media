@@ -29,7 +29,6 @@ export function NewDropModal({ avatar }: Props) {
   useEffect(() => {
     if (state.submittedAt > 0) dialog.hide();
   }, [state.submittedAt, dialog]);
-
   return (
     <>
       <Button
@@ -39,7 +38,6 @@ export function NewDropModal({ avatar }: Props) {
       >
         New drop
       </Button>
-
       <Ariakit.Dialog
         store={dialog}
         backdrop={<div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />}
@@ -58,7 +56,6 @@ export function NewDropModal({ avatar }: Props) {
             <Ariakit.DialogHeading>New drop</Ariakit.DialogHeading>
           </Ariakit.VisuallyHidden>
         </header>
-
         <form ref={formRef} action={formAction}>
           <div className="flex gap-3 px-5 pt-4 pb-3">
             {avatar}
@@ -82,13 +79,11 @@ export function NewDropModal({ avatar }: Props) {
               className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-base focus:ring-0 focus:outline-none"
             />
           </div>
-
           {state.error ? (
             <p role="alert" className="text-danger px-5 pb-2 text-xs">
               {state.error}
             </p>
           ) : null}
-
           <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
             <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
             <Button type="submit" disabled={pending}>

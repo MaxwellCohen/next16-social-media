@@ -7,10 +7,9 @@ import { getCurrentUser } from '@/data/queries/user';
 export default function BookmarksPage() {
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white px-4 py-4 sm:px-5 dark:bg-black">
+      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
         <h1 className="text-lg font-bold tracking-tight">Bookmarks</h1>
       </header>
-
       <Suspense fallback={<BookmarksSkeleton />}>
         <BookmarksFeed />
       </Suspense>
@@ -25,7 +24,6 @@ async function BookmarksFeed() {
   if (drops.length === 0) {
     return <EmptyState title="Nothing saved yet" body="Bookmark a drop to find it here later." />;
   }
-
   return (
     <ul>
       {drops.map(drop => {

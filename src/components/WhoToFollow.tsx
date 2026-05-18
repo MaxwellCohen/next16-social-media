@@ -3,9 +3,10 @@ import { Suspense } from 'react';
 import { FollowButton } from '@/components/FollowButton';
 import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { getWhoToFollow } from '@/data/queries/user';
+import { getCurrentUserHandle } from '@/lib/auth';
 
 export async function WhoToFollow() {
-  const users = await getWhoToFollow();
+  const users = await getWhoToFollow(await getCurrentUserHandle());
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
       <header className="px-4 pt-4 pb-3">
