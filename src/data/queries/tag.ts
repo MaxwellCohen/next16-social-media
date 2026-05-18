@@ -11,6 +11,19 @@ export const getTrendingTags = cache(async () => {
   cacheLife('minutes');
 
   await delay(350);
+  return countTags(6);
+});
+
+export const getAllTags = cache(async () => {
+  'use cache';
+  cacheTag('trending');
+  cacheLife('minutes');
+
+  await delay(400);
+  return countTags();
+});
+
+async function countTags(limit?: number) {
   const rows = await prisma.drop.findMany({ select: { tags: true } });
   const counts = new Map<string, number>();
   for (const row of rows) {
@@ -19,12 +32,12 @@ export const getTrendingTags = cache(async () => {
       counts.set(tag, (counts.get(tag) ?? 0) + 1);
     }
   }
-  return Array.from(counts.entries())
+  const sorted = Array.from(counts.entries())
     .map(([name, count]) => {
       return { count, name };
     })
     .sort((a, b) => {
       return b.count - a.count;
-    })
-    .slice(0, 6);
-});
+    });
+  return limit ? sorted.slice(0, limit) : sorted;
+}

@@ -50,12 +50,13 @@ export function ProfileTabs({ handle, active }: Props) {
               pending && isActive && 'animate-pulse',
             )}
           >
-            <span className="relative inline-block">
-              {t.label}
-              {isActive ? (
-                <span className="absolute -bottom-4 left-0 h-1 w-full rounded-full bg-black dark:bg-white" aria-hidden />
-              ) : null}
-            </span>
+            {t.label}
+            {isActive ? (
+              <span
+                className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white"
+                aria-hidden
+              />
+            ) : null}
           </button>
         );
       })}
