@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/drop';
+import { Drop, DropSkeleton } from '@/components/Drop';
 import { getDropsByTag } from '@/data/queries/drop';
 
 type Params = Pick<PageProps<'/tag/[tag]'>, 'params'>;

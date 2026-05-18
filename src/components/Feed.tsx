@@ -1,4 +1,4 @@
-import { Drop, DropSkeleton } from '@/components/drop';
+import { Drop, DropSkeleton } from '@/components/Drop';
 import { getFeed } from '@/data/queries/drop';
 
 export async function Feed() {

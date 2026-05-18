@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { FollowButton } from '@/components/follow-button';
-import { Avatar } from '@/components/ui/avatar';
+import { FollowButton } from '@/components/FollowButton';
+import { Avatar } from '@/components/ui/Avatar';
 import { getWhoToFollow } from '@/data/queries/user';
 
 export async function WhoToFollow() {

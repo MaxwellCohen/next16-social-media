@@ -2,7 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { useOptimistic, useState, useTransition } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { toggleFollow } from '@/data/actions/drop';
 import { cn } from '@/lib/utils';
 

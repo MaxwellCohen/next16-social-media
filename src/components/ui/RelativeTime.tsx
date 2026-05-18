@@ -11,24 +11,32 @@ import { timeAgo } from '@/lib/utils';
  * server's snapshot — the server can't know the exact second the client
  * hydrates.
  */
-export function RelativeTime({ date }: { date: Date }) {
+export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: boolean }) {
   const [label, setLabel] = useState(() => {
-    return timeAgo(date);
+    return verbose ? formatAbsolute(date) : timeAgo(date);
   });
 
   useEffect(() => {
-    setLabel(timeAgo(date));
-    const id = setInterval(() => {
-      setLabel(timeAgo(date));
-    }, 60_000);
+    const update = () => {
+      setLabel(verbose ? formatAbsolute(date) : timeAgo(date));
+    };
+    update();
+    if (verbose) return;
+    const id = setInterval(update, 60_000);
     return () => {
       clearInterval(id);
     };
-  }, [date]);
+  }, [date, verbose]);
 
   return (
     <time dateTime={date.toISOString()} suppressHydrationWarning>
       {label}
     </time>
   );
+}
+
+function formatAbsolute(date: Date): string {
+  const time = date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  const day = date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  return `${time} · ${day}`;
 }

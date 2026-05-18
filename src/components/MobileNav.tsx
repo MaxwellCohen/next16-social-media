@@ -1,8 +1,8 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
-import { DropMark } from '@/components/brand/drop-mark';
-import { MobileTabLink } from '@/components/nav-link';
-import { Avatar } from '@/components/ui/avatar';
+import { DropMark } from '@/components/ui/DropMark';
+import { MobileTabLink } from '@/components/NavLink';
+import { Avatar } from '@/components/ui/Avatar';
 import { getCurrentUser } from '@/data/queries/user';
 
 export async function MobileHeader() {

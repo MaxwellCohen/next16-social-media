@@ -6,17 +6,27 @@ import { getNextDropId, getStore, type Drop } from '@/lib/data';
 import { delay } from '@/lib/utils';
 
 const HASHTAG_PATTERN = /#(\w+)/g;
+const FENCE_PATTERN = /```\w*\n[\s\S]*?\n?```/g;
 
+/**
+ * Pull hashtags out of the prose only — `#` inside a fenced code block
+ * isn't a tag, it's syntax.
+ */
 function extractTags(body: string): string[] {
+  const prose = body.replace(FENCE_PATTERN, '');
   const tags = new Set<string>();
-  for (const match of body.matchAll(HASHTAG_PATTERN)) {
+  for (const match of prose.matchAll(HASHTAG_PATTERN)) {
     tags.add(match[1].toLowerCase());
   }
   return Array.from(tags);
 }
 
 const postDropSchema = z.object({
-  body: z.string().min(1, 'Say something').max(280, '280 characters max'),
+  body: z
+    .string()
+    .min(1, 'Say something')
+    .max(1000, '1000 characters max')
+    .transform((s) => s.replace(/\r\n/g, '\n')),
 });
 
 export async function postDrop(formData: FormData) {

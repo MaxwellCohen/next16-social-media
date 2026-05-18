@@ -1,5 +1,5 @@
-import { NewDropModal } from '@/app/_components/new-drop-modal';
-import { Avatar } from '@/components/ui/avatar';
+import { NewDropModal } from '@/components/NewDropModal';
+import { Avatar } from '@/components/ui/Avatar';
 import { getCurrentUser } from '@/data/queries/user';
 
 export async function DropComposer() {

@@ -1,4 +1,4 @@
-import { ReplyComposerForm } from '@/app/drop/[id]/_components/reply-composer-form';
+import { ReplyComposerForm } from '@/app/drop/[id]/_components/ReplyComposerForm';
 import { getCurrentUser } from '@/data/queries/user';
 
 type Props = {

@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useRef, useState, useTransition } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { postDrop } from '@/data/actions/drop';
 import { cn } from '@/lib/utils';
 
@@ -25,7 +25,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
 
   return (
     <>
-      <Button onClick={() => {return setOpen(true)}}>Drop it</Button>
+      <Button onClick={() => {return setOpen(true)}}>New drop</Button>
 
       {open ? (
         <div
@@ -74,10 +74,10 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                 </div>
                 <textarea
                   name="body"
-                  rows={4}
+                  rows={6}
                   required
-                  maxLength={280}
-                  placeholder="What did you ship today?"
+                  maxLength={1000}
+                  placeholder={'What did you ship today?\n\nWrap code in ```ts ... ``` to embed a snippet.'}
                   className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-base focus:ring-0 focus:outline-none"
                 />
               </div>
@@ -85,10 +85,10 @@ export function NewDropModal({ authorName, authorColor }: Props) {
               {error ? <p className="text-danger px-5 pb-2 text-xs">{error}</p> : null}
 
               <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
-                <Button variant="secondary" size="sm" onClick={close}>
+                <Button variant="secondary" onClick={close}>
                   Cancel
                 </Button>
-                <Button type="submit" size="sm" disabled={pending}>
+                <Button type="submit" disabled={pending}>
                   {pending ? 'Dropping…' : 'Drop it'}
                 </Button>
               </footer>

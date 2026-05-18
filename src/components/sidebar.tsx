@@ -1,9 +1,9 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
-import { DropMark } from '@/components/brand/drop-mark';
-import { SidebarNavLink } from '@/components/nav-link';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Avatar } from '@/components/ui/avatar';
+import { DropMark } from '@/components/ui/DropMark';
+import { SidebarNavLink } from '@/components/NavLink';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { Avatar } from '@/components/ui/Avatar';
 import { getCurrentUser } from '@/data/queries/user';
 import { formatCount } from '@/lib/utils';
 

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/drop';
+import { Drop, DropSkeleton } from '@/components/Drop';
 import { getBookmarkedDrops } from '@/data/queries/drop';
 import { getCurrentUser } from '@/data/queries/user';
 

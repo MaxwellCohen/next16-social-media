@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { Drop, DropSkeleton } from '@/components/drop';
-import { FollowButton } from '@/components/follow-button';
-import { Avatar } from '@/components/ui/avatar';
+import { Drop, DropSkeleton } from '@/components/Drop';
+import { FollowButton } from '@/components/FollowButton';
+import { Avatar } from '@/components/ui/Avatar';
 import { getDropsByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
 import { formatCount } from '@/lib/utils';
