@@ -1,10 +1,12 @@
-import { Bookmark, Hash, Home, User } from 'lucide-react';
+import { Bookmark, Hash, Home, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { SidebarNavLink } from '@/components/NavLink';
 import { ResetDemoButton } from '@/components/demo/ResetDemoButton';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { Avatar } from '@/components/ui/Avatar';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
+import { formatCount } from '@/lib/utils';
 
 export async function Sidebar() {
   const user = await getCurrentUser();
@@ -29,6 +31,16 @@ export async function Sidebar() {
       <div className="mt-auto flex flex-col gap-3">
         <ThemeToggle />
         <ResetDemoButton />
+        <div className="border-divider dark:border-divider-dark flex items-center gap-3 rounded-full border p-2 pr-3">
+          <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
+            <div className="text-gray truncate font-mono text-[11px]">
+              @{user.handle} · {formatCount(user.followers)}
+            </div>
+          </div>
+          <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
+        </div>
       </div>
     </aside>
   );

@@ -50,6 +50,9 @@ export const getDrop = cache(async (id: string) => {
 });
 
 export const getReplies = cache(async (dropId: string) => {
+  'use cache';
+  cacheTag(`replies-${dropId}`);
+
   await delay(800);
   return getStore()
     .drops.filter(d => {

@@ -84,6 +84,7 @@ export async function postReply(parentId: string, formData: FormData) {
   store.drops.push(reply);
   parent.replies += 1;
   updateTag(`drop-${parentId}`);
+  updateTag(`replies-${parentId}`);
   return { ok: true as const, reply };
 }
 
@@ -176,6 +177,7 @@ export async function toggleFollow(targetHandle: string) {
     target.followers += 1;
   }
   updateTag(`user-${targetHandle}`);
+  updateTag(`is-following-${targetHandle}`);
   updateTag('current-user');
   updateTag('who-to-follow');
   updateTag('feed');

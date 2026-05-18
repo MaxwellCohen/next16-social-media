@@ -45,6 +45,9 @@ export const getWhoToFollow = cache(async () => {
 });
 
 export const isFollowing = cache(async (followerHandle: string, targetHandle: string) => {
+  'use cache: private';
+  cacheTag(`is-following-${targetHandle}`);
+
   await delay(120);
   return getStore().follows[followerHandle]?.has(targetHandle) ?? false;
 });

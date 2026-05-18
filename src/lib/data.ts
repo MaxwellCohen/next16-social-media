@@ -129,201 +129,249 @@ const USERS: User[] = [
 const DROPS: Drop[] = [
   {
     authorHandle: 'aurorascharff',
-    body: 'shipped optimistic reactions on Drop today. the heart and repost counts update instantly while the server catches up — feels like the app got a free upgrade.',
+    body: 'one directive turns any function into a cached server function. opt in per-component instead of per-route.',
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
     likes: 940,
     replies: 32,
     reposts: 140,
-    tags: ['drop'],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `async function getDrop(id) {
+  'use cache'
+  return db.drops.findById(id)
+}`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'vex',
-    body: 'we replaced our entire image upload pipeline with a single edge function this weekend. p95 went from 1800ms to 220ms. four engineers, four years, deleted in a saturday.',
+    body: 'tags + updateTag is the cleanest invalidation story i\'ve used. no router refresh dance, no client round-trip.',
     createdAt: new Date(now - 18 * minute),
     id: 'd2',
     likes: 1_240,
     replies: 88,
     reposts: 60,
-    tags: [],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `'use cache'
+cacheTag('feed')
+// later, in an action:
+updateTag('feed')`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'new on Drop: code snippets. wrap anything in triple backticks and it ships through Shiki with the Vercel docs theme. look what we made:',
+    body: 'optimistic UI is now a few lines. snap the state, fire the action, react reconciles when the server agrees.',
     createdAt: new Date(now - 45 * minute),
-    embeddedCode: {
-      code: `export async function CodeBlock({ lang, code }) {
-  const html = await highlight(code, lang)
-  return <pre dangerouslySetInnerHTML={{ __html: html }} />
-}`,
-      lang: 'tsx',
-    },
     id: 'd3',
     likes: 1_640,
     replies: 64,
     reposts: 180,
-    tags: ['drop', 'shiki'],
+    tags: ['react19'],
+    embeddedCode: {
+      code: `const [count, addOptimistic] = useOptimistic(likes, n => n + 1)
+startTransition(() => {
+  addOptimistic()
+  toggleLike(id)
+})`,
+      lang: 'tsx',
+    },
   },
   {
     authorHandle: 'quill',
-    body: 'the new design system is live. one variable for radius, one for shadow, one for motion. our buttons finally agree with each other.',
+    body: 'params is a promise now. await it where you need it. the rest of the page streams while it resolves.',
     createdAt: new Date(now - 1 * hour),
     id: 'd4',
     likes: 540,
     replies: 22,
     reposts: 41,
-    tags: ['design'],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `export default async function Page({ params }) {
+  const { id } = await params
+  return <Drop id={id} />
+}`,
+      lang: 'tsx',
+    },
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'real-time replies on Drop are live. nothing fancy — server actions, useOptimistic, and a small Suspense boundary. typing → on screen in one frame.',
+    body: 'private cache for per-user data. same primitive, scoped to the request. bookmarks, drafts, feeds you own.',
     createdAt: new Date(now - 2 * hour),
     id: 'd5',
     likes: 1_980,
     replies: 110,
     reposts: 320,
-    tags: ['drop'],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `async function getBookmarks(handle) {
+  'use cache: private'
+  cacheTag(\`bookmarks-\${handle}\`)
+  return db.bookmarks.byHandle(handle)
+}`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'onyx',
-    body: 'we replaced our 12-step onboarding with a single page that asks 3 questions. signups doubled in the first week. sometimes the best feature is the four you delete.',
+    body: 'co-locating data with the component that needs it sounds obvious. then you do it and the codebase gets noticeably smaller.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
     replies: 142,
     reposts: 410,
-    tags: ['product'],
+    tags: ['nextjs', 'patterns'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'added a follow button to profiles. it actually does something now. you can follow vex and watch their build logs come in at 3am.',
+    body: 'suspense boundaries are where the streaming story lives. wrap the slow bit, let the rest paint.',
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,
     replies: 64,
     reposts: 220,
-    tags: ['drop'],
+    tags: ['react19'],
+    embeddedCode: {
+      code: `<Suspense fallback={<FeedSkeleton />}>
+  <Feed />
+</Suspense>`,
+      lang: 'tsx',
+    },
   },
   {
     authorHandle: 'wren',
-    body: 'spent the morning rewriting our search box. it now ranks results by recency, not alphabet. our PMs are weeping with joy.',
+    body: 'cachelife lets you say how fresh a value needs to be without writing your own ttl logic. small thing, ships every time.',
     createdAt: new Date(now - 5 * hour),
     id: 'd8',
     likes: 720,
     replies: 30,
     reposts: 32,
-    tags: [],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `'use cache'
+cacheLife('hours')
+return getTrendingTags()`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'look at this — the entire feed query for Drop is ten lines. cached by tag, invalidated by action, and every component fetches what it needs.',
+    body: 'useactionstate handles the form lifecycle: pending, errors, success. one hook, no extra state.',
     createdAt: new Date(now - 7 * hour),
-    embeddedCode: {
-      code: `export const getFeed = cache(async () => {
-  'use cache'
-  cacheTag('feed')
-  return getStore().drops
-    .filter(d => !d.parentId)
-    .sort((a, b) => b.createdAt - a.createdAt)
-})`,
-      lang: 'ts',
-    },
     id: 'd9',
     likes: 1_180,
     replies: 41,
     reposts: 92,
-    tags: ['drop'],
+    tags: ['react19'],
+    embeddedCode: {
+      code: `const [state, action, pending] = useActionState(postDrop, null)
+return <form action={action}>...</form>`,
+      lang: 'tsx',
+    },
   },
   {
     authorHandle: 'cinder',
-    body: 'shipped a CLI today that bootstraps a new internal tool in under 60 seconds. boring problem, boring solution, saves us an hour every time someone joins.',
+    body: 'the rsc payload is just data. once that clicks, the rest of the model gets quieter.',
     createdAt: new Date(now - 9 * hour),
     id: 'd10',
     likes: 612,
     replies: 28,
     reposts: 48,
-    tags: ['devtools'],
+    tags: ['rsc'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'bookmarks are working on Drop. private to you, persist across reloads, render with the right icon state without any client round-trip. invalidation is one line:',
+    body: 'the cache components flag is opt-in for now. flip it and everything reads from a tagged, per-component cache.',
     createdAt: new Date(now - 11 * hour),
-    embeddedCode: {
-      code: 'updateTag(`bookmarks-${handle}`)',
-      lang: 'ts',
-    },
     id: 'd11',
     likes: 1_810,
     replies: 96,
     reposts: 340,
-    tags: ['drop'],
+    tags: ['nextjs'],
+    embeddedCode: {
+      code: `// next.config.ts
+export default {
+  cacheComponents: true,
+}`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'halo',
-    body: 'side project of the weekend: a tiny menu bar app that nags me to drink water. it is annoying and effective, which is the highest praise software can get.',
+    body: 'finally building things server-first again. less coordination, less state, less to debug.',
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
     replies: 22,
     reposts: 64,
-    tags: ['sideproject'],
+    tags: ['rsc'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'Drop has a real theme toggle now. light, dark, and system. shiki swaps grammars to match. look what we made — three buttons that finally do what they say.',
+    body: 'server actions are just functions. you import them into a client component and call them. that\'s the whole api.',
     createdAt: new Date(now - 16 * hour),
     id: 'd13',
     likes: 1_320,
     replies: 47,
     reposts: 180,
-    tags: ['drop', 'design'],
+    tags: ['react19'],
+    embeddedCode: {
+      code: `'use server'
+export async function toggleLike(id) {
+  await db.likes.toggle(id)
+  updateTag(\`drop-\${id}\`)
+}`,
+      lang: 'ts',
+    },
   },
   {
     authorHandle: 'echo',
-    body: 'we shipped a new pricing page. for the first time it is honestly readable on a phone. our designer cried. our CFO cried. different reasons.',
+    body: 'we tried cache components on a real codebase this week. removed a lot of effects. didn\'t replace them with anything.',
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
     replies: 88,
     reposts: 96,
-    tags: ['product'],
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: "trending tags on Drop. counts come from a cached query, updateTag('trending') keeps it honest. nothing about it lives on the client.",
+    body: 'streaming + suspense + tags is the trio. learn those three and most of the app router feels obvious.',
     createdAt: new Date(now - 22 * hour),
     id: 'd15',
     likes: 2_410,
     replies: 142,
     reposts: 540,
-    tags: ['drop'],
+    tags: ['nextjs', 'patterns'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'the Drop talk demo is feature-complete. feed, replies, follows, bookmarks, reposts, theming, code snippets, optimistic everything. amsterdam, see you soon.',
+    body: '16.3 lands soon. async react patterns get a real home. excited for next week.',
     createdAt: new Date(now - 1 * day - 6 * hour),
     id: 'd16',
     likes: 3_810,
     replies: 320,
     reposts: 1_120,
-    tags: ['reactsummit', 'drop'],
+    tags: ['nextjs', 'reactsummit'],
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'every feature in Drop is a server component plus a server action plus a tiny client island. nothing else. look what we made out of three primitives.',
+    body: 'every async react pattern in this app comes back to one rule: do the work close to the thing that uses it.',
     createdAt: new Date(now - 2 * day),
     id: 'd17',
     likes: 1_120,
     replies: 47,
     reposts: 180,
-    tags: ['drop'],
+    tags: ['patterns'],
   },
 ];
 
 const REPLIES: Drop[] = [
   {
     authorHandle: 'onyx',
-    body: 'four engineers four years vs one weekend is the realest performance graph in our industry.',
+    body: 'we just rewrote our invalidation layer around this. so much less code.',
     createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
@@ -334,18 +382,18 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'this is the kind of "look what we made" drop I built this app for. show it off, vex.',
+    body: 'this is the part i wish i had two years ago.',
     createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
     parentId: 'd2',
     replies: 1,
     reposts: 3,
-    tags: ['drop'],
+    tags: [],
   },
   {
     authorHandle: 'cinder',
-    body: 'p95 220ms is wild. did you keep the old pipeline around for the dashboard screenshot?',
+    body: 'does cacheTag accept multiple tags? we\'d invalidate by user + by feed.',
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -356,29 +404,29 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "the reply composer feel is so satisfying. it shouldn't be this hard to nail, but it is, and you nailed it.",
+    body: 'first time useOptimistic + a transition felt obvious. the suspense pieces lined up around it.',
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
-    parentId: 'd5',
+    parentId: 'd3',
     replies: 0,
     reposts: 18,
     tags: [],
   },
   {
     authorHandle: 'echo',
-    body: 'fully stealing the optimistic count pattern for our app. clean as a whistle.',
+    body: 'we kept reaching for client state for this. won\'t anymore.',
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,
-    parentId: 'd5',
+    parentId: 'd3',
     replies: 0,
     reposts: 4,
     tags: [],
   },
   {
     authorHandle: 'halo',
-    body: 'ranking by recency is the cheat code nobody admits. you saved your team months of arguing.',
+    body: 'cachelife is doing a lot more for me than i expected. one line, and the dashboard just feels right.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -389,7 +437,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "one-line invalidation is the dream. we're refactoring our bookmarks app to look like this.",
+    body: 'switching to cacheComponents in our app. the flag is the easy part.',
     createdAt: new Date(now - 10 * hour),
     id: 'r7',
     likes: 140,

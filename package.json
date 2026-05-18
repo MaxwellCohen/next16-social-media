@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@ariakit/react": "^0.4.26",
     "clsx": "^2.1.1",
     "geist": "^1.7.0",
     "lucide-react": "^1.8.0",

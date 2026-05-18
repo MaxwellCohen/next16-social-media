@@ -86,12 +86,20 @@ function ProfileHeaderSkeleton() {
     <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
       <div className="flex items-start gap-4">
         <div className="skeleton-animation h-14 w-14 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-2 pt-1">
           <div className="skeleton-animation h-5 w-40" />
           <div className="skeleton-animation h-3 w-24" />
         </div>
+        <div className="skeleton-animation h-8 w-28 rounded-full" />
       </div>
-      <div className="skeleton-animation h-4 w-full" />
+      <div className="flex flex-col gap-1.5">
+        <div className="skeleton-animation h-3.5 w-full" />
+        <div className="skeleton-animation h-3.5 w-2/3" />
+      </div>
+      <div className="flex gap-4">
+        <div className="skeleton-animation h-3 w-20" />
+        <div className="skeleton-animation h-3 w-20" />
+      </div>
     </header>
   );
 }
