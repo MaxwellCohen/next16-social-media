@@ -65,8 +65,8 @@ function ProfileTabsSkeleton() {
     <div className="border-divider/70 dark:border-divider-dark/70 flex gap-1 border-b p-2" aria-hidden>
       {Array.from({ length: 2 }).map((_, i) => {
         return (
-          <span key={i} className="flex-1 rounded-lg px-3 py-2 text-center">
-            <span className="skeleton-animation inline-block h-3.5 w-16 rounded" />
+          <span key={i} className="flex-1 rounded-lg px-3 py-2 text-center text-sm">
+            <span className="skeleton-animation inline-block h-5 w-16 rounded align-middle" />
           </span>
         );
       })}

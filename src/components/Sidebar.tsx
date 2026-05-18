@@ -77,8 +77,8 @@ function SidebarProfilePillSkeleton() {
     <div className="-mx-1 flex items-center gap-2.5 px-2 py-1" aria-hidden>
       <UserAvatarSkeleton size="sm" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="skeleton-animation h-3 w-20 rounded" />
-        <span className="skeleton-animation h-2.5 w-14 rounded" />
+        <span className="skeleton-animation h-[17px] w-20 rounded" />
+        <span className="skeleton-animation h-[15px] w-14 rounded" />
       </div>
       <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
     </div>
