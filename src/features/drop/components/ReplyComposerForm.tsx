@@ -45,20 +45,3 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
     </form>
   );
 }
-
-export function ReplyComposerFormSkeleton() {
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex gap-3">
-        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2 pt-1.5">
-          <div className="skeleton-animation h-4 w-3/4" />
-          <div className="skeleton-animation h-4 w-1/2" />
-        </div>
-      </div>
-      <div className="flex justify-end">
-        <div className="skeleton-animation h-8 w-20 rounded-full" />
-      </div>
-    </div>
-  );
-}

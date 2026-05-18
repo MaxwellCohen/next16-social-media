@@ -3,7 +3,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { getDrop, getReplies } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
 import { Drop, DropDetailSkeleton, DropSkeleton } from '@/features/drop/components/Drop';
-import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/features/drop/components/ReplyComposerForm';
+import { ReplyComposerForm } from '@/features/drop/components/ReplyComposerForm';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import type { Metadata } from 'next';
 
@@ -45,16 +45,14 @@ async function DropPageBody({ params }: { params: Promise<{ id: string }> }) {
     <>
       <Drop drop={drop} detail />
       <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
-        <Suspense fallback={<ReplyComposerFormSkeleton />}>
-          <ReplyComposerForm
-            dropId={id}
-            avatar={
-              <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                <UserAvatar />
-              </Suspense>
-            }
-          />
-        </Suspense>
+        <ReplyComposerForm
+          dropId={id}
+          avatar={
+            <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+              <UserAvatar />
+            </Suspense>
+          }
+        />
       </section>
       <Suspense fallback={<RepliesLoading />}>
         <Replies id={id} />
