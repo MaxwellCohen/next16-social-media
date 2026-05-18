@@ -6,7 +6,7 @@ import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
 import { FollowButton } from '@/features/user/components/FollowButton';
 import { ProfileTabs } from '@/features/user/components/ProfileTabs';
 import { UserAvatar } from '@/features/user/components/UserAvatar';
-import { formatCount } from '@/lib/utils';
+import { cn, formatCount } from '@/lib/utils';
 import type { Metadata } from 'next';
 
 type Params = Pick<PageProps<'/u/[handle]'>, 'params'>;
@@ -80,27 +80,32 @@ async function ProfileHeader({ params }: Params) {
   const isMe = current.handle === handle;
 
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
-      <div className="flex items-start gap-4">
-        <UserAvatar handle={user.handle} size="lg" />
-        <div className="flex flex-1 flex-col gap-1">
-          <h1 className="text-xl font-bold tracking-tight">{user.displayName}</h1>
-          <div className="text-gray font-mono text-xs">@{user.handle}</div>
+    <header className="border-divider/70 dark:border-divider-dark/70 border-b">
+      <div className={cn('h-32 w-full bg-gradient-to-br sm:h-40', user.avatarColor)} aria-hidden />
+      <div className="flex flex-col gap-4 px-5 pb-5">
+        <div className="-mt-10 flex items-end gap-4 sm:-mt-12">
+          <div className="ring-4 ring-white dark:ring-black">
+            <UserAvatar handle={user.handle} size="lg" />
+          </div>
+          <div className="flex flex-1 flex-col gap-1 pb-1">
+            <h1 className="text-xl font-bold tracking-tight">{user.displayName}</h1>
+            <div className="text-gray font-mono text-xs">@{user.handle}</div>
+          </div>
+          {isMe ? null : (
+            <Suspense fallback={<div className="skeleton-animation h-8 w-28 rounded-full" />}>
+              <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
+            </Suspense>
+          )}
         </div>
-        {isMe ? null : (
-          <Suspense fallback={<div className="skeleton-animation h-8 w-28 rounded-full" />}>
-            <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
-          </Suspense>
-        )}
-      </div>
-      <p className="min-h-[2lh] text-sm">{user.bio}</p>
-      <div className="text-gray flex gap-4 font-mono text-xs">
-        <span>
-          <strong className="text-black dark:text-white">{formatCount(user.following)}</strong> Following
-        </span>
-        <span>
-          <strong className="text-black dark:text-white">{formatCount(user.followers)}</strong> Followers
-        </span>
+        <p className="min-h-[2lh] text-sm">{user.bio}</p>
+        <div className="text-gray flex gap-4 font-mono text-xs">
+          <span>
+            <strong className="text-black dark:text-white">{formatCount(user.following)}</strong> Following
+          </span>
+          <span>
+            <strong className="text-black dark:text-white">{formatCount(user.followers)}</strong> Followers
+          </span>
+        </div>
       </div>
     </header>
   );
@@ -158,22 +163,27 @@ async function ProfileFeed({
 
 function ProfileHeaderSkeleton() {
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 flex flex-col gap-4 border-b p-5">
-      <div className="flex items-start gap-4">
-        <div className="skeleton-animation h-14 w-14 rounded-full" />
-        <div className="flex flex-1 flex-col gap-1">
-          <div className="skeleton-animation h-6 w-40 rounded" />
-          <div className="skeleton-animation h-3.5 w-24 rounded" />
+    <header className="border-divider/70 dark:border-divider-dark/70 border-b">
+      <div className="skeleton-animation h-32 w-full sm:h-40" />
+      <div className="flex flex-col gap-4 px-5 pb-5">
+        <div className="-mt-10 flex items-end gap-4 sm:-mt-12">
+          <div className="ring-4 ring-white dark:ring-black">
+            <div className="skeleton-animation h-14 w-14 rounded-full" />
+          </div>
+          <div className="flex flex-1 flex-col gap-1.5 pb-1">
+            <div className="skeleton-animation h-6 w-40 rounded" />
+            <div className="skeleton-animation h-3.5 w-24 rounded" />
+          </div>
+          <div className="skeleton-animation h-8 w-28 rounded-full" />
         </div>
-        <div className="skeleton-animation h-8 w-28 rounded-full" />
-      </div>
-      <div className="flex flex-col gap-2">
-        <div className="skeleton-animation h-4 w-full rounded" />
-        <div className="skeleton-animation h-4 w-2/3 rounded" />
-      </div>
-      <div className="flex gap-4">
-        <div className="skeleton-animation h-4 w-20 rounded" />
-        <div className="skeleton-animation h-4 w-20 rounded" />
+        <div className="flex flex-col gap-2">
+          <div className="skeleton-animation h-4 w-full rounded" />
+          <div className="skeleton-animation h-4 w-2/3 rounded" />
+        </div>
+        <div className="flex gap-4">
+          <div className="skeleton-animation h-4 w-20 rounded" />
+          <div className="skeleton-animation h-4 w-20 rounded" />
+        </div>
       </div>
     </header>
   );
