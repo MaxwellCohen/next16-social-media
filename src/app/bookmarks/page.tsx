@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Drop, DropSkeleton } from '@/components/Drop';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getBookmarkedDrops } from '@/data/queries/drop';
 import { getCurrentUser } from '@/data/queries/user';
 
@@ -22,11 +23,7 @@ async function BookmarksFeed() {
   const drops = await getBookmarkedDrops(user.handle);
 
   if (drops.length === 0) {
-    return (
-      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-12 text-center text-sm">
-        Nothing saved yet. Bookmark a drop to find it here later.
-      </div>
-    );
+    return <EmptyState title="Nothing saved yet" body="Bookmark a drop to find it here later." />;
   }
 
   return (

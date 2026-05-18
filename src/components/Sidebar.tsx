@@ -26,12 +26,14 @@ export async function Sidebar() {
         <SidebarNavLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
       </nav>
 
-      <div className="mt-auto flex flex-col gap-3">
-        <ThemeToggle />
-        <div className="border-divider dark:border-divider-dark hover:bg-card dark:hover:bg-card-dark flex items-center gap-2.5 rounded-full border p-1 pr-3 transition-colors">
+      <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 rounded-2xl border p-2">
+        <div className="flex items-center gap-2.5 px-1 pt-1">
           <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
           <div className="min-w-0 flex-1 truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
           <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
+        </div>
+        <div className="border-divider dark:border-divider-dark flex justify-end border-t pt-1.5">
+          <ThemeToggle variant="inline" />
         </div>
       </div>
     </aside>

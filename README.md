@@ -1,4 +1,4 @@
-# Next 16 Drop
+# Next 16 Social Media App "Drop"
 
 A dev-flavored social network exploring Cache Components, streaming, and runtime prefetch with Next.js 16, React 19, Tailwind CSS v4, and Shiki.
 

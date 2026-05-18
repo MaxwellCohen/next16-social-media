@@ -27,10 +27,7 @@ export function NewDropModal({ avatar }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (state.submittedAt > 0) {
-      formRef.current?.reset();
-      dialog.hide();
-    }
+    if (state.submittedAt > 0) dialog.hide();
   }, [state.submittedAt, dialog]);
 
   return (

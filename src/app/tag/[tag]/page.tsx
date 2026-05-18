@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Drop, DropSkeleton } from '@/components/Drop';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByTag } from '@/data/queries/drop';
 
 type Params = Pick<PageProps<'/tag/[tag]'>, 'params'>;
@@ -34,11 +35,7 @@ async function TagFeed({ params }: Params) {
   const { tag } = await params;
   const drops = await getDropsByTag(tag);
   if (drops.length === 0) {
-    return (
-      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
-        No drops with this tag yet.
-      </div>
-    );
+    return <EmptyState title="No drops with this tag yet" body="Be the first to use it." />;
   }
   return (
     <ul>

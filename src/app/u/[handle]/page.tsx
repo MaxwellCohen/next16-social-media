@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Drop, DropSkeleton } from '@/components/Drop';
 import { FollowButton } from '@/components/FollowButton';
 import { Avatar } from '@/components/ui/Avatar';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
 import { formatCount } from '@/lib/utils';
@@ -59,11 +60,7 @@ async function ProfileFeed({ params }: Params) {
   const { handle } = await params;
   const items = await getDropsByAuthor(handle);
   if (items.length === 0) {
-    return (
-      <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
-        No drops yet.
-      </div>
-    );
+    return <EmptyState title="No drops yet" body="When they post something, it'll show up here." />;
   }
   return (
     <ul>

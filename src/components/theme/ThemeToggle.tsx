@@ -2,65 +2,66 @@
 
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { cn } from '@/lib/utils';
 
-export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+type Props = { variant?: 'pill' | 'inline' };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+const subscribe = () => {
+  return () => {};
+};
+
+function useIsMounted() {
+  return useSyncExternalStore(
+    subscribe,
+    () => {
+      return true;
+    },
+    () => {
+      return false;
+    },
+  );
+}
+
+export function ThemeToggle({ variant = 'pill' }: Props) {
+  const { theme, setTheme } = useTheme();
+  const mounted = useIsMounted();
+  const active = mounted ? theme : undefined;
+
+  const wrapperClass =
+    variant === 'inline'
+      ? 'inline-flex items-center gap-0.5'
+      : 'border-divider dark:border-divider-dark inline-flex items-center rounded-full border p-0.5';
 
   return (
-    <div
-      style={{ viewTransitionName: 'theme-toggle' }}
-      className="border-divider dark:border-divider-dark inline-flex items-center rounded-full border p-0.5"
-    >
-      {!mounted ? (
-        <>
-          <span className="rounded-full p-1.5">
-            <Sun className="size-4 opacity-0" />
-          </span>
-          <span className="rounded-full p-1.5">
-            <Moon className="size-4 opacity-0" />
-          </span>
-          <span className="rounded-full p-1.5">
-            <Monitor className="size-4 opacity-0" />
-          </span>
-        </>
-      ) : (
-        <>
-          <ToggleButton
-            active={theme === 'light'}
-            label="Light mode"
-            onClick={() => {
-              return setTheme('light');
-            }}
-          >
-            <Sun className="size-4" />
-          </ToggleButton>
-          <ToggleButton
-            active={theme === 'dark'}
-            label="Dark mode"
-            onClick={() => {
-              return setTheme('dark');
-            }}
-          >
-            <Moon className="size-4" />
-          </ToggleButton>
-          <ToggleButton
-            active={theme === 'system'}
-            label="System theme"
-            onClick={() => {
-              return setTheme('system');
-            }}
-          >
-            <Monitor className="size-4" />
-          </ToggleButton>
-        </>
-      )}
+    <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass}>
+      <ToggleButton
+        active={active === 'light'}
+        label="Light mode"
+        onClick={() => {
+          return setTheme('light');
+        }}
+      >
+        <Sun className="size-4" />
+      </ToggleButton>
+      <ToggleButton
+        active={active === 'dark'}
+        label="Dark mode"
+        onClick={() => {
+          return setTheme('dark');
+        }}
+      >
+        <Moon className="size-4" />
+      </ToggleButton>
+      <ToggleButton
+        active={active === 'system'}
+        label="System theme"
+        onClick={() => {
+          return setTheme('system');
+        }}
+      >
+        <Monitor className="size-4" />
+      </ToggleButton>
     </div>
   );
 }

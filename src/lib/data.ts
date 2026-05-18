@@ -46,7 +46,7 @@ const day = 24 * hour;
 
 const USERS: User[] = [
   {
-    avatarColor: 'from-blue-500 to-indigo-600',
+    avatarColor: 'from-pink-500 to-rose-600',
     bio: 'DX Engineer on the Next.js team at Vercel. React Cert Lead. Oslo.',
     displayName: 'Aurora Scharff',
     followers: 4_911,
@@ -82,7 +82,7 @@ const USERS: User[] = [
     id: 'u4',
   },
   {
-    avatarColor: 'from-blue-400 to-purple-600',
+    avatarColor: 'from-blue-400 to-blue-700',
     bio: "Frontend lead. Reading source code so you don't have to.",
     displayName: 'Wren',
     followers: 2_900,
@@ -100,7 +100,7 @@ const USERS: User[] = [
     id: 'u6',
   },
   {
-    avatarColor: 'from-blue-500 to-pink-500',
+    avatarColor: 'from-sky-500 to-blue-600',
     bio: 'Full-stack. Building things on the side, mostly tools.',
     displayName: 'Halo',
     followers: 1_870,

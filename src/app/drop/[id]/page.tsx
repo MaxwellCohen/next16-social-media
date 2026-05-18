@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/app/drop/[id]/_components/ReplyComposerForm';
 import { CurrentUserAvatar, CurrentUserAvatarSkeleton } from '@/components/CurrentUserAvatar';
 import { Drop, DropSkeleton } from '@/components/Drop';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getDrop, getReplies } from '@/data/queries/drop';
 
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
@@ -52,9 +53,7 @@ async function Replies({ idPromise }: { idPromise: Promise<string> }) {
         Replies
       </h2>
       {replies.length === 0 ? (
-        <div className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-5 py-8 text-center text-sm">
-          No replies yet.
-        </div>
+        <EmptyState title="No replies yet" body="Be the first to reply." />
       ) : (
         <ul>
           {replies.map(reply => {

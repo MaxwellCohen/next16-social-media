@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { use, useActionState, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { postReply } from '@/data/actions/drop';
 
@@ -9,26 +9,19 @@ type Props = {
   avatar: ReactNode;
 };
 
-type State = { error: string | null; submittedAt: number };
-
-const INITIAL: State = { error: null, submittedAt: 0 };
+const INITIAL = { error: null as string | null };
 
 export function ReplyComposerForm({ idPromise, avatar }: Props) {
   const dropId = use(idPromise);
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, pending] = useActionState(async (_: State, formData: FormData): Promise<State> => {
+  const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
-    if (!result.ok) return { error: result.error, submittedAt: 0 };
-    return { error: null, submittedAt: Date.now() };
+    return { error: result.ok ? null : result.error };
   }, INITIAL);
-
-  useEffect(() => {
-    if (state.submittedAt > 0) formRef.current?.reset();
-  }, [state.submittedAt]);
 
   return (
     <form ref={formRef} action={formAction} className="flex flex-col gap-3">
-      <div className="flex gap-3">
+      <div className="flex items-center gap-3">
         {avatar}
         <textarea
           name="body"
