@@ -1,20 +1,17 @@
-import { Bookmark, Hash, Home, User } from 'lucide-react';
+import { Bookmark, Hash, Home, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { DropMark } from '@/components/ui/DropMark';
-import { getCurrentUser } from '@/data/queries/user';
+import { getCurrentUser, getCurrentUserHandle } from '@/data/queries/user';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import { MobileTabLink } from './SidebarNavLink';
 
-export async function MobileHeader() {
-  const user = await getCurrentUser();
+export function MobileHeader() {
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:hidden">
-      <Link href={`/u/${user.handle}`} aria-label="Profile">
-        <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
-          <UserAvatar handle={user.handle} size="sm" />
-        </Suspense>
-      </Link>
+      <Suspense fallback={<MobileAvatarPlaceholder />}>
+        <MobileHeaderAvatar />
+      </Suspense>
       <Link href="/" aria-label="Drop home" className="inline-flex items-center">
         <DropMark size={22} className="text-black dark:text-white" />
       </Link>
@@ -23,8 +20,24 @@ export async function MobileHeader() {
   );
 }
 
-export async function MobileTabBar() {
-  const user = await getCurrentUser();
+async function MobileHeaderAvatar() {
+  const handle = await getCurrentUserHandle();
+  return (
+    <Link href={`/u/${handle}`} aria-label="Profile">
+      <UserAvatar handle={handle} size="sm" />
+    </Link>
+  );
+}
+
+function MobileAvatarPlaceholder() {
+  return (
+    <span className="inline-flex" aria-hidden>
+      <UserAvatarSkeleton size="sm" />
+    </span>
+  );
+}
+
+export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary"
@@ -33,7 +46,21 @@ export async function MobileTabBar() {
       <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
       <MobileTabLink href="/tag/nextjs" icon={<Hash className="h-5 w-5" />} label="Tags" />
       <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-      <MobileTabLink href={`/u/${user.handle}`} icon={<User className="h-5 w-5" />} label="Profile" />
+      <Suspense
+        fallback={
+          <span className="text-gray flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium" aria-hidden>
+            <UserIcon className="h-5 w-5" />
+            <span>Profile</span>
+          </span>
+        }
+      >
+        <MobileProfileTab />
+      </Suspense>
     </nav>
   );
+}
+
+async function MobileProfileTab() {
+  const user = await getCurrentUser();
+  return <MobileTabLink href={`/u/${user.handle}`} icon={<UserIcon className="h-5 w-5" />} label="Profile" />;
 }

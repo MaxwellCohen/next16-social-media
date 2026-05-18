@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getWhoToFollow } from '@/data/queries/user';
+import { getCurrentUserHandle } from '@/data/queries/user';
 import { FollowButton } from '@/features/user/components/FollowButton';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
-import { getCurrentUserHandle } from '@/lib/auth';
 
 export async function WhoToFollow() {
   const users = await getWhoToFollow(await getCurrentUserHandle());

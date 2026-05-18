@@ -1,11 +1,20 @@
 import 'server-only';
 
 import { cacheTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { getCurrentUserHandle } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
+
+const SESSION_COOKIE = 'drop-user';
+const DEFAULT_HANDLE = 'aurorascharff';
+
+export const getCurrentUserHandle = cache(async (): Promise<string> => {
+  'use cache: private';
+  const store = await cookies();
+  return store.get(SESSION_COOKIE)?.value ?? DEFAULT_HANDLE;
+});
 
 export const getCurrentUser = cache(async () => {
   return getUserByHandle(await getCurrentUserHandle());

@@ -405,6 +405,7 @@ export type RepostCreateOrConnectWithoutUserInput = {
 
 export type RepostCreateManyUserInputEnvelope = {
   data: Prisma.RepostCreateManyUserInput | Prisma.RepostCreateManyUserInput[];
+  skipDuplicates?: boolean;
 };
 
 export type RepostUpsertWithWhereUniqueWithoutUserInput = {
@@ -449,6 +450,7 @@ export type RepostCreateOrConnectWithoutDropInput = {
 
 export type RepostCreateManyDropInputEnvelope = {
   data: Prisma.RepostCreateManyDropInput | Prisma.RepostCreateManyDropInput[];
+  skipDuplicates?: boolean;
 };
 
 export type RepostUpsertWithWhereUniqueWithoutDropInput = {
@@ -1359,6 +1361,7 @@ export type RepostCreateManyArgs<
    * The data used to create many Reposts.
    */
   data: Prisma.RepostCreateManyInput | Prisma.RepostCreateManyInput[];
+  skipDuplicates?: boolean;
 };
 
 /**
@@ -1379,6 +1382,7 @@ export type RepostCreateManyAndReturnArgs<
    * The data used to create many Reposts.
    */
   data: Prisma.RepostCreateManyInput | Prisma.RepostCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */

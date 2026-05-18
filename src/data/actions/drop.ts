@@ -2,7 +2,7 @@
 
 import { updateTag } from 'next/cache';
 import { z } from 'zod';
-import { getCurrentUserHandle } from '@/lib/auth';
+import { getCurrentUserHandle } from '@/data/queries/user';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 

@@ -3,7 +3,7 @@ import 'server-only';
 import { cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { getCurrentUserHandle } from '@/lib/auth';
+import { getCurrentUserHandle } from '@/data/queries/user';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';

@@ -1,13 +1,13 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
+import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
 import { Sidebar } from '@/components/Sidebar';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/TrendingTags';
 import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/WhoToFollow';
 import type { Metadata } from 'next';
 import './globals.css';
-import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
 
 export const metadata: Metadata = {
   description: 'A dev-flavored social network.',
@@ -34,13 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="h-screen overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
-          <Suspense>
-            <MobileHeader />
-          </Suspense>
+          <MobileHeader />
           <div className="mx-auto grid h-full max-w-7xl grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_20rem]">
-            <Suspense>
-              <Sidebar />
-            </Suspense>
+            <Sidebar />
             <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full min-w-0 overflow-y-auto overscroll-y-contain pb-14 sm:border-x sm:pb-0">
               {children}
             </main>
@@ -53,9 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Suspense>
             </aside>
           </div>
-          <Suspense>
-            <MobileTabBar />
-          </Suspense>
+          <MobileTabBar />
         </ThemeProvider>
       </body>
     </html>

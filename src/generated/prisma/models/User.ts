@@ -2056,6 +2056,7 @@ export type UserCreateManyArgs<
    * The data used to create many Users.
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[];
+  skipDuplicates?: boolean;
 };
 
 /**
@@ -2076,6 +2077,7 @@ export type UserCreateManyAndReturnArgs<
    * The data used to create many Users.
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[];
+  skipDuplicates?: boolean;
 };
 
 /**

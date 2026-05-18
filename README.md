@@ -1,11 +1,15 @@
-# Next 16 Social Media App "Drop"
+# Next 16 Drop
 
-A dev-flavored social network exploring Cache Components, streaming, and runtime prefetch with Next.js 16, React 19, Tailwind CSS v4, and Shiki.
+A dev-flavored social network exploring Async React, Cache Components, and streaming with Next.js 16, React 19, Tailwind CSS, Prisma, and Shiki.
+
+Built with Next.js 16, React 19, Tailwind CSS v4, Prisma 7 on Neon Postgres, and Shiki for server-side syntax highlighting.
 
 ## Getting Started
 
 ```bash
 pnpm install
+pnpm run prisma.push
+pnpm run prisma.seed
 pnpm run dev
 ```
 
@@ -16,28 +20,31 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 app/                      # Pages and layouts
 components/
-  navigation/             # Mobile nav + NavLink
+  design/                 # Action prop components (ActionButton, …)
   theme/                  # Theme provider and toggle
-  ui/                     # Small primitives (Button, Avatar, CodeBlock, …)
+  ui/                     # Visual primitives (Button, CodeBlock, Skeleton, …)
+features/                 # Feature-sliced UI: drop/, user/, tag/
 data/
   actions/                # Server Actions
   queries/                # Data fetching with `'use cache'` + `cacheTag`
-lib/                      # In-memory store, syntax, helpers
+types/                    # Shared types derived from query return types
+lib/                      # Prisma client, utilities, syntax helpers
+prisma/                   # Schema and seed data
 ```
+
+- **components/ui** — visual primitives with no async coordination
+- **components/design** — components that expose action props and handle `useTransition` + `useOptimistic` internally (ActionButton)
+- **features/** — feature-sliced components grouped by domain (drops, users, tags)
 
 Every route folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
 
-**Naming:** PascalCase for components, kebab-case for folders, camelCase for functions/hooks.
+**Naming:** PascalCase for components, kebab-case for folders, camelCase for functions/hooks. Suffix transition-based functions with "Action".
 
 ## Key Patterns
 
 **Cache Components:** Uses `cacheComponents: true` to statically render server components that don't access dynamic data. Keep pages non-async and push dynamic data access into `<Suspense>` boundaries to maximize the static shell.
 
-**One model for caching:** `'use cache'` for shared data, `'use cache: private'` for per-user data (bookmarks, likes, follow state). Server actions invalidate with `updateTag()`.
-
-**Interactivity that flows with the server:** React 19 primitives (`useTransition`, `useOptimistic`, `useActionState`, `<Suspense>`, `use()`) are how the client stays in sync with cached server state — not a separate concern, just the coordination layer that makes optimistic UI, pending states, and streaming look like one cohesive thing.
-
-**Syntax highlighting:** Shiki runs on the server with the JavaScript regex engine and emits highlighted HTML once per code block. No client highlighter, no client JS for code.
+**Async React:** Replace manual `isLoading`/`isError` state with React 19's coordination primitives — `useTransition` for tracking async work, `useOptimistic` for instant feedback, `Suspense` for loading boundaries, and `use()` for reading promises during render.
 
 ## Development Flow
 
@@ -46,12 +53,14 @@ Every route folder should contain everything it needs. Components and functions 
 - **Caching** — Add `"use cache"` with `cacheTag()` to pages, components, or functions to include them in the static shell.
 - **Errors** — `error.tsx` for boundaries, `not-found.tsx` + `notFound()` for 404s.
 
-## Data
+## Database
 
-In-memory store that reseeds on every server restart.
+Uses Prisma with PostgreSQL (Vercel Neon).
 
 ```bash
-pnpm run seed       # POST /api/seed — reset between rehearsals
+pnpm run prisma.push     # Push schema to DB
+pnpm run prisma.seed     # Seed with sample data
+pnpm run prisma.studio   # Open Prisma Studio
 ```
 
 ## Development Tools

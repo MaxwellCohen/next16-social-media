@@ -1,5 +1,5 @@
 import { getUserByHandle } from '@/data/queries/user';
-import { getCurrentUserHandle } from '@/lib/auth';
+import { getCurrentUserHandle } from '@/data/queries/user';
 import { cn } from '@/lib/utils';
 
 type Size = 'sm' | 'md' | 'lg';

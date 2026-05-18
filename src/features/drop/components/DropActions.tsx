@@ -19,35 +19,49 @@ export function DropActions({ drop, userStatePromise }: Props) {
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <ActionButton
         label="Reply"
-        icon={() => {return <MessageCircle className="h-4 w-4" />}}
+        icon={() => {
+          return <MessageCircle className="h-4 w-4" />;
+        }}
         count={drop.replies}
         hoverColor="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
       />
       <ActionButton
         label="Repost"
-        icon={() => {return <Repeat2 className="h-4 w-4" />}}
+        icon={() => {
+          return <Repeat2 className="h-4 w-4" />;
+        }}
         count={drop.reposts}
         active={reposted}
         activeColor="text-success"
         hoverColor="hover:bg-success/10 hover:text-success"
-        action={() => {return toggleRepost(drop.id)}}
+        action={() => {
+          return toggleRepost(drop.id);
+        }}
       />
       <ActionButton
         label="Like"
-        icon={on => {return <Heart className={cn('h-4 w-4', on && 'fill-current')} />}}
+        icon={on => {
+          return <Heart className={cn('h-4 w-4', on && 'fill-current')} />;
+        }}
         count={drop.likes}
         active={liked}
         activeColor="text-danger"
         hoverColor="hover:bg-danger/10 hover:text-danger"
-        action={() => {return toggleLike(drop.id)}}
+        action={() => {
+          return toggleLike(drop.id);
+        }}
       />
       <ActionButton
         label="Bookmark"
-        icon={on => {return <Bookmark className={cn('h-4 w-4', on && 'fill-current')} />}}
+        icon={on => {
+          return <Bookmark className={cn('h-4 w-4', on && 'fill-current')} />;
+        }}
         active={bookmarked}
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
-        action={() => {return toggleBookmark(drop.id)}}
+        action={() => {
+          return toggleBookmark(drop.id);
+        }}
       />
     </div>
   );

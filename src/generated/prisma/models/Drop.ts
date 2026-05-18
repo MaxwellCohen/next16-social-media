@@ -767,6 +767,7 @@ export type DropCreateOrConnectWithoutAuthorInput = {
 
 export type DropCreateManyAuthorInputEnvelope = {
   data: Prisma.DropCreateManyAuthorInput | Prisma.DropCreateManyAuthorInput[];
+  skipDuplicates?: boolean;
 };
 
 export type DropUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -882,6 +883,7 @@ export type DropCreateOrConnectWithoutParentInput = {
 
 export type DropCreateManyParentInputEnvelope = {
   data: Prisma.DropCreateManyParentInput | Prisma.DropCreateManyParentInput[];
+  skipDuplicates?: boolean;
 };
 
 export type DropUpsertWithoutRepliesInput = {
@@ -2330,6 +2332,7 @@ export type DropCreateManyArgs<
    * The data used to create many Drops.
    */
   data: Prisma.DropCreateManyInput | Prisma.DropCreateManyInput[];
+  skipDuplicates?: boolean;
 };
 
 /**
@@ -2350,6 +2353,7 @@ export type DropCreateManyAndReturnArgs<
    * The data used to create many Drops.
    */
   data: Prisma.DropCreateManyInput | Prisma.DropCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
