@@ -1,5 +1,6 @@
 import 'server-only';
 
+import DOMPurify from 'isomorphic-dompurify';
 import { createHighlighter, type Highlighter, type ThemeRegistrationRaw } from 'shiki';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 import vercelDarkRaw from './themes/vercel-dark.json';
@@ -49,8 +50,9 @@ function escapeHtml(s: string): string {
 export async function highlight(code: string, lang: string | undefined) {
   'use cache';
   const highlighter = await getHighlighter();
+  let html: string;
   try {
-    return highlighter.codeToHtml(code, {
+    html = highlighter.codeToHtml(code, {
       cssVariablePrefix: '--shiki-',
       defaultColor: 'light',
       lang: normalizeLang(lang),
@@ -60,6 +62,10 @@ export async function highlight(code: string, lang: string | undefined) {
       },
     });
   } catch {
-    return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
+    html = `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
   }
+  return DOMPurify.sanitize(html, {
+    ALLOWED_ATTR: ['class', 'style', 'tabindex'],
+    ALLOWED_TAGS: ['pre', 'code', 'span', 'div', 'br'],
+  });
 }

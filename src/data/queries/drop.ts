@@ -23,7 +23,7 @@ export const getFeed = cache(async () => {
 });
 
 export const getPersonalizedFeed = cache(async (userHandle: string) => {
-  'use cache: private';
+  'use cache';
   cacheTag('feed', `feed-${userHandle}`);
 
   await delay(450);
@@ -65,8 +65,8 @@ export const getReplies = cache(async (dropId: string) => {
 });
 
 export type ProfileFeedItem =
-  | { kind: 'drop'; drop: import('@/lib/data').Drop; pinnedAt: number }
-  | { kind: 'repost'; drop: import('@/lib/data').Drop; repostedBy: string; pinnedAt: number };
+  | { kind: 'drop'; drop: Drop; pinnedAt: number }
+  | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 
 export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
   'use cache';
@@ -99,7 +99,7 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
 });
 
 export const isReposted = cache(async (userHandle: string, dropId: string) => {
-  'use cache: private';
+  'use cache';
   cacheTag(`reposted-${userHandle}-${dropId}`);
 
   await delay(120);
@@ -121,7 +121,7 @@ export const getDropsByTag = cache(async (tag: string) => {
 });
 
 export const isLiked = cache(async (userHandle: string, dropId: string) => {
-  'use cache: private';
+  'use cache';
   cacheTag(`liked-${userHandle}-${dropId}`);
 
   await delay(120);
@@ -129,7 +129,7 @@ export const isLiked = cache(async (userHandle: string, dropId: string) => {
 });
 
 export const isBookmarked = cache(async (userHandle: string, dropId: string) => {
-  'use cache: private';
+  'use cache';
   cacheTag(`bookmarked-${userHandle}-${dropId}`);
 
   await delay(120);
@@ -137,7 +137,7 @@ export const isBookmarked = cache(async (userHandle: string, dropId: string) => 
 });
 
 export const getBookmarkedDrops = cache(async (userHandle: string) => {
-  'use cache: private';
+  'use cache';
   cacheTag(`bookmarks-${userHandle}`);
 
   await delay(400);

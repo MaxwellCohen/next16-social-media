@@ -1,8 +1,9 @@
 import { Bookmark, Hash, Home, Settings, User } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { SidebarNavLink } from '@/components/navigation/NavLink';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { Avatar } from '@/components/ui/Avatar';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
 
@@ -27,11 +28,16 @@ export async function Sidebar() {
       </nav>
 
       <div className="border-divider dark:border-divider-dark mt-auto flex flex-col gap-2 rounded-2xl border p-2">
-        <div className="flex items-center gap-2.5 px-1 pt-1">
-          <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
+        <Link
+          href={`/u/${user.handle}`}
+          className="hover:bg-card dark:hover:bg-card-dark -mx-1 flex items-center gap-2.5 rounded-xl px-2 py-1 transition-colors"
+        >
+          <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
+            <UserAvatar handle={user.handle} size="sm" />
+          </Suspense>
           <div className="min-w-0 flex-1 truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
           <Settings className="text-gray h-4 w-4 shrink-0" aria-hidden />
-        </div>
+        </Link>
         <div className="border-divider dark:border-divider-dark flex justify-end border-t pt-1.5">
           <ThemeToggle variant="inline" />
         </div>

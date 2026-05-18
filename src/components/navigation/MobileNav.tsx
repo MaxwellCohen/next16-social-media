@@ -1,7 +1,8 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { MobileTabLink } from '@/components/navigation/NavLink';
-import { Avatar } from '@/components/ui/Avatar';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';
 
@@ -10,7 +11,9 @@ export async function MobileHeader() {
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:hidden">
       <Link href={`/u/${user.handle}`} aria-label="Profile">
-        <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
+        <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
+          <UserAvatar handle={user.handle} size="sm" />
+        </Suspense>
       </Link>
       <Link href="/" aria-label="Drop home" className="inline-flex items-center">
         <DropMark size={22} className="text-black dark:text-white" />

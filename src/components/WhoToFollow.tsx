@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { FollowButton } from '@/components/FollowButton';
-import { Avatar } from '@/components/ui/Avatar';
+import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { getWhoToFollow } from '@/data/queries/user';
 
 export async function WhoToFollow() {
@@ -27,7 +28,9 @@ export async function WhoToFollow() {
                 className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
               >
                 <Link href={`/u/${user.handle}`} className="shrink-0">
-                  <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
+                  <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
+                    <UserAvatar handle={user.handle} size="sm" />
+                  </Suspense>
                 </Link>
                 <div className="min-w-0 flex-1">
                   <Link

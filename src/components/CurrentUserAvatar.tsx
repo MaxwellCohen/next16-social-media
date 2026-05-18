@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/ui/Avatar';
+import { UserAvatar } from '@/components/UserAvatar';
 import { getCurrentUser } from '@/data/queries/user';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +12,7 @@ const sizeMap: Record<Size, string> = {
 
 export async function CurrentUserAvatar({ size = 'md', className }: { size?: Size; className?: string }) {
   const user = await getCurrentUser();
-  return <Avatar name={user.displayName} color={user.avatarColor} size={size} className={className} />;
+  return <UserAvatar handle={user.handle} size={size} className={className} />;
 }
 
 export function CurrentUserAvatarSkeleton({ size = 'md', className }: { size?: Size; className?: string }) {

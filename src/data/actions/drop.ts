@@ -2,6 +2,7 @@
 
 import { updateTag } from 'next/cache';
 import { z } from 'zod';
+import { getCurrentUserHandle } from '@/lib/auth';
 import { getNextDropId, getStore, type Drop } from '@/lib/data';
 import { delay } from '@/lib/utils';
 
@@ -37,9 +38,9 @@ export async function postDrop(formData: FormData) {
     return { error: parsed.error.issues[0].message, ok: false as const };
   }
 
-  const store = getStore();
+  const me = await getCurrentUserHandle();
   const drop: Drop = {
-    authorHandle: store.currentUserHandle,
+    authorHandle: me,
     body: parsed.data.body,
     createdAt: new Date(),
     id: getNextDropId(),
@@ -48,9 +49,9 @@ export async function postDrop(formData: FormData) {
     reposts: 0,
     tags: extractTags(parsed.data.body),
   };
-  store.drops.unshift(drop);
+  getStore().drops.unshift(drop);
   updateTag('feed');
-  updateTag(`user-drops-${store.currentUserHandle}`);
+  updateTag(`user-drops-${me}`);
   updateTag('trending');
   return { drop, ok: true as const };
 }
@@ -71,8 +72,9 @@ export async function postReply(parentId: string, formData: FormData) {
   });
   if (!parent) return { error: 'Drop not found', ok: false as const };
 
+  const me = await getCurrentUserHandle();
   const reply: Drop = {
-    authorHandle: store.currentUserHandle,
+    authorHandle: me,
     body: parsed.data.body,
     createdAt: new Date(),
     id: getNextDropId(),
@@ -97,7 +99,8 @@ export async function toggleLike(dropId: string) {
   });
   if (!drop) return { ok: false as const };
 
-  const liked = store.likes[store.currentUserHandle] ?? (store.likes[store.currentUserHandle] = new Set());
+  const me = await getCurrentUserHandle();
+  const liked = store.likes[me] ?? (store.likes[me] = new Set());
   if (liked.has(dropId)) {
     liked.delete(dropId);
     drop.likes -= 1;
@@ -106,7 +109,7 @@ export async function toggleLike(dropId: string) {
     drop.likes += 1;
   }
   updateTag(`drop-${dropId}`);
-  updateTag(`liked-${store.currentUserHandle}-${dropId}`);
+  updateTag(`liked-${me}-${dropId}`);
   return { likes: drop.likes, ok: true as const };
 }
 
@@ -118,7 +121,8 @@ export async function toggleRepost(dropId: string) {
   });
   if (!drop) return { ok: false as const };
 
-  const reposted = store.reposts[store.currentUserHandle] ?? (store.reposts[store.currentUserHandle] = new Set());
+  const me = await getCurrentUserHandle();
+  const reposted = store.reposts[me] ?? (store.reposts[me] = new Set());
   if (reposted.has(dropId)) {
     reposted.delete(dropId);
     drop.reposts -= 1;
@@ -127,8 +131,8 @@ export async function toggleRepost(dropId: string) {
     drop.reposts += 1;
   }
   updateTag(`drop-${dropId}`);
-  updateTag(`reposted-${store.currentUserHandle}-${dropId}`);
-  updateTag(`user-drops-${store.currentUserHandle}`);
+  updateTag(`reposted-${me}-${dropId}`);
+  updateTag(`user-drops-${me}`);
   updateTag('feed');
   return { ok: true as const, reposts: drop.reposts };
 }
@@ -141,32 +145,34 @@ export async function toggleBookmark(dropId: string) {
   });
   if (!drop) return { ok: false as const };
 
-  const bookmarks = store.bookmarks[store.currentUserHandle] ?? (store.bookmarks[store.currentUserHandle] = new Set());
+  const me = await getCurrentUserHandle();
+  const bookmarks = store.bookmarks[me] ?? (store.bookmarks[me] = new Set());
   if (bookmarks.has(dropId)) {
     bookmarks.delete(dropId);
   } else {
     bookmarks.add(dropId);
   }
-  updateTag(`bookmarked-${store.currentUserHandle}-${dropId}`);
-  updateTag(`bookmarks-${store.currentUserHandle}`);
+  updateTag(`bookmarked-${me}-${dropId}`);
+  updateTag(`bookmarks-${me}`);
   return { ok: true as const };
 }
 
 export async function toggleFollow(targetHandle: string) {
   await delay(300);
   const store = getStore();
-  if (targetHandle === store.currentUserHandle) {
+  const meHandle = await getCurrentUserHandle();
+  if (targetHandle === meHandle) {
     return { ok: false as const };
   }
   const me = store.users.find(u => {
-    return u.handle === store.currentUserHandle;
+    return u.handle === meHandle;
   });
   const target = store.users.find(u => {
     return u.handle === targetHandle;
   });
   if (!me || !target) return { ok: false as const };
 
-  const follows = store.follows[store.currentUserHandle] ?? (store.follows[store.currentUserHandle] = new Set());
+  const follows = store.follows[meHandle] ?? (store.follows[meHandle] = new Set());
 
   if (follows.has(targetHandle)) {
     follows.delete(targetHandle);

@@ -1,7 +1,8 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { DropActions } from '@/components/DropActions';
-import { Avatar } from '@/components/ui/Avatar';
+import { UserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { TagPill } from '@/components/ui/TagPill';
@@ -16,32 +17,20 @@ type Props = {
   repostedBy?: string;
 };
 
-export async function Drop({ drop, compact = false, detail = false, repostedBy }: Props) {
-  const author = await getUserByHandle(drop.authorHandle);
-
-  const current = await getCurrentUser();
-  const liked = await isLiked(current.handle, drop.id);
-  const reposted = await isReposted(current.handle, drop.id);
-  const bookmarked = await isBookmarked(current.handle, drop.id);
-  const reposter = repostedBy ? await getUserByHandle(repostedBy) : null;
-
+export function Drop({ drop, compact = false, detail = false, repostedBy }: Props) {
   if (detail) {
     return (
       <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
         <header className="flex items-center gap-3">
-          <Link href={`/u/${author.handle}`} className="shrink-0">
-            <Avatar name={author.displayName} color={author.avatarColor} size="lg" />
+          <Link href={`/u/${drop.authorHandle}`} className="shrink-0">
+            <Suspense fallback={<UserAvatarSkeleton size="lg" />}>
+              <UserAvatar handle={drop.authorHandle} size="lg" />
+            </Suspense>
           </Link>
           <div className="flex min-w-0 flex-col">
-            <Link
-              href={`/u/${author.handle}`}
-              className="font-semibold tracking-tight text-black hover:underline dark:text-white"
-            >
-              {author.displayName}
-            </Link>
-            <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
-              @{author.handle}
-            </Link>
+            <Suspense fallback={<AuthorNameSkeleton />}>
+              <AuthorName handle={drop.authorHandle} layout="stacked" />
+            </Suspense>
           </div>
         </header>
 
@@ -62,15 +51,9 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
         </div>
 
         <div className="pt-2">
-          <DropActions
-            dropId={drop.id}
-            likes={drop.likes}
-            replies={drop.replies}
-            reposts={drop.reposts}
-            initialLiked={liked}
-            initialReposted={reposted}
-            initialBookmarked={bookmarked}
-          />
+          <Suspense fallback={<DropActionsSkeleton drop={drop} />}>
+            <DropActionsLive drop={drop} />
+          </Suspense>
         </div>
       </article>
     );
@@ -78,31 +61,23 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
 
   return (
     <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      <Link href={`/drop/${drop.id}`} aria-label={`Drop by ${author.displayName}`} className="absolute inset-0 z-10" />
-      {reposter ? (
-        <Link
-          href={`/u/${reposter.handle}`}
-          className="text-gray hover:text-success relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5"
-        >
-          <Repeat2 className="h-3 w-3" />
-          <span>{reposter.handle === current.handle ? 'You' : reposter.displayName} reposted</span>
-        </Link>
+      <Link href={`/drop/${drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
+      {repostedBy ? (
+        <Suspense fallback={null}>
+          <Reposter handle={repostedBy} />
+        </Suspense>
       ) : null}
       <div className="relative flex gap-3 px-4 py-4 sm:px-5">
-        <Link href={`/u/${author.handle}`} className="relative z-20 shrink-0">
-          <Avatar name={author.displayName} color={author.avatarColor} size="md" />
+        <Link href={`/u/${drop.authorHandle}`} className="relative z-20 shrink-0">
+          <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+            <UserAvatar handle={drop.authorHandle} size="md" />
+          </Suspense>
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <header className="flex flex-wrap items-baseline gap-x-1.5 text-sm">
-            <Link
-              href={`/u/${author.handle}`}
-              className="relative z-20 font-semibold tracking-tight text-black hover:underline dark:text-white"
-            >
-              {author.displayName}
-            </Link>
-            <Link href={`/u/${author.handle}`} className="text-gray relative z-20 font-mono text-[12px]">
-              @{author.handle}
-            </Link>
+            <Suspense fallback={<AuthorNameSkeleton />}>
+              <AuthorName handle={drop.authorHandle} layout="inline" />
+            </Suspense>
             <span className="text-gray font-mono text-[12px]">·</span>
             <span className="text-gray font-mono text-[12px]">
               <RelativeTime date={drop.createdAt} />
@@ -126,19 +101,101 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
           ) : null}
 
           <div className="relative z-20">
-            <DropActions
-              dropId={drop.id}
-              likes={drop.likes}
-              replies={drop.replies}
-              reposts={drop.reposts}
-              initialLiked={liked}
-              initialReposted={reposted}
-              initialBookmarked={bookmarked}
-            />
+            <Suspense fallback={<DropActionsSkeleton drop={drop} />}>
+              <DropActionsLive drop={drop} />
+            </Suspense>
           </div>
         </div>
       </div>
     </article>
+  );
+}
+
+async function AuthorName({ handle, layout }: { handle: string; layout: 'inline' | 'stacked' }) {
+  const author = await getUserByHandle(handle);
+  if (layout === 'stacked') {
+    return (
+      <>
+        <Link
+          href={`/u/${author.handle}`}
+          className="font-semibold tracking-tight text-black hover:underline dark:text-white"
+        >
+          {author.displayName}
+        </Link>
+        <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
+          @{author.handle}
+        </Link>
+      </>
+    );
+  }
+  return (
+    <>
+      <Link
+        href={`/u/${author.handle}`}
+        className="relative z-20 font-semibold tracking-tight text-black hover:underline dark:text-white"
+      >
+        {author.displayName}
+      </Link>
+      <Link href={`/u/${author.handle}`} className="text-gray relative z-20 font-mono text-[12px]">
+        @{author.handle}
+      </Link>
+    </>
+  );
+}
+
+function AuthorNameSkeleton() {
+  return (
+    <>
+      <span className="skeleton-animation h-4 w-24 rounded" />
+      <span className="skeleton-animation h-3 w-16 rounded" />
+    </>
+  );
+}
+
+async function Reposter({ handle }: { handle: string }) {
+  const [reposter, current] = await Promise.all([getUserByHandle(handle), getCurrentUser()]);
+  return (
+    <Link
+      href={`/u/${reposter.handle}`}
+      className="text-gray hover:text-success relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5"
+    >
+      <Repeat2 className="h-3 w-3" />
+      <span>{reposter.handle === current.handle ? 'You' : reposter.displayName} reposted</span>
+    </Link>
+  );
+}
+
+async function DropActionsLive({ drop }: { drop: DropT }) {
+  const current = await getCurrentUser();
+  const [liked, reposted, bookmarked] = await Promise.all([
+    isLiked(current.handle, drop.id),
+    isReposted(current.handle, drop.id),
+    isBookmarked(current.handle, drop.id),
+  ]);
+  return (
+    <DropActions
+      dropId={drop.id}
+      likes={drop.likes}
+      replies={drop.replies}
+      reposts={drop.reposts}
+      initialLiked={liked}
+      initialReposted={reposted}
+      initialBookmarked={bookmarked}
+    />
+  );
+}
+
+function DropActionsSkeleton({ drop }: { drop: DropT }) {
+  return (
+    <DropActions
+      dropId={drop.id}
+      likes={drop.likes}
+      replies={drop.replies}
+      reposts={drop.reposts}
+      initialLiked={false}
+      initialReposted={false}
+      initialBookmarked={false}
+    />
   );
 }
 

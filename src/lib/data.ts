@@ -36,7 +36,6 @@ type Store = {
   reposts: Record<string, Set<string>>;
   bookmarks: Record<string, Set<string>>;
   dropIdCounter: number;
-  currentUserHandle: string;
 };
 
 const now = Date.now();
@@ -139,20 +138,13 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "Tags + updateTag is the cleanest invalidation story I've used. No router refresh dance, no client round-trip.",
+    body: 'Building the same dashboard twice this week reminded me how much state goes away when the server owns the data.',
     createdAt: new Date(now - 18 * minute),
-    embeddedCode: {
-      code: `'use cache'
-cacheTag('feed')
-// later, in an action:
-updateTag('feed')`,
-      lang: 'ts',
-    },
     id: 'd2',
     likes: 1_240,
     replies: 88,
     reposts: 60,
-    tags: ['nextjs'],
+    tags: ['react'],
   },
   {
     authorHandle: 'aurorascharff',
@@ -174,20 +166,13 @@ startTransition(() => {
   },
   {
     authorHandle: 'quill',
-    body: 'Params is a promise now. Await it where you need it. The rest of the page streams while it resolves.',
+    body: 'Designed three loading states this morning, deleted two before lunch. The right answer was just letting the page paint when it was ready.',
     createdAt: new Date(now - 1 * hour),
-    embeddedCode: {
-      code: `export default async function Page({ params }) {
-  const { id } = await params
-  return <Drop id={id} />
-}`,
-      lang: 'tsx',
-    },
     id: 'd4',
     likes: 540,
     replies: 22,
     reposts: 41,
-    tags: ['nextjs'],
+    tags: ['design'],
   },
   {
     authorHandle: 'aurorascharff',
@@ -235,19 +220,13 @@ startTransition(() => {
   },
   {
     authorHandle: 'wren',
-    body: 'cacheLife lets you say how fresh a value needs to be without writing your own TTL logic. Small thing, ships every time.',
+    body: 'Replaced a 200-line state machine with a single async function and a couple of awaits. The diff was almost embarrassing.',
     createdAt: new Date(now - 5 * hour),
-    embeddedCode: {
-      code: `'use cache'
-cacheLife('hours')
-return getTrendingTags()`,
-      lang: 'ts',
-    },
     id: 'd8',
     likes: 720,
     replies: 30,
     reposts: 32,
-    tags: ['nextjs'],
+    tags: ['react'],
   },
   {
     authorHandle: 'aurorascharff',
@@ -321,13 +300,13 @@ export async function toggleLike(id) {
   },
   {
     authorHandle: 'echo',
-    body: "We tried Cache Components on a real codebase this week. Removed a lot of effects. Didn't replace them with anything.",
+    body: "We deleted a lot of useEffect this quarter. It wasn't a plan, it just kept happening. The code that replaced it is shorter and less weird.",
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
     replies: 88,
     reposts: 96,
-    tags: ['nextjs'],
+    tags: ['react'],
   },
   {
     authorHandle: 'aurorascharff',
@@ -364,7 +343,7 @@ export async function toggleLike(id) {
 const REPLIES: Drop[] = [
   {
     authorHandle: 'onyx',
-    body: 'We just rewrote our invalidation layer around this. So much less code.',
+    body: 'Owning the dashboard server-side has been a quiet win for us too. Less state, fewer race conditions, easier reviews.',
     createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
@@ -386,7 +365,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Does cacheTag accept multiple tags? We'd invalidate by user + by feed.",
+    body: 'Same. The shape of the code follows the shape of the data now, not the other way around.',
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -419,7 +398,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'cacheLife is doing a lot more for me than I expected. One line, and the dashboard just feels right.',
+    body: 'Same energy here. The state machine I deleted last week was the proudest piece of code I had a year ago. Felt great.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -430,7 +409,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'Switching to cacheComponents in our app. The flag is the easy part.',
+    body: 'Ours too. The smallest pieces are starting to feel obvious.',
     createdAt: new Date(now - 10 * hour),
     id: 'r7',
     likes: 140,
@@ -441,7 +420,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'Counting the days. The Cache Components track has been wild this cycle.',
+    body: 'Counting the days. The async React talk track is the one I keep clearing my calendar for.',
     createdAt: new Date(now - 1 * day),
     id: 'r8',
     likes: 88,
