@@ -36,7 +36,7 @@ async function ProfileHeader({ params }: Params) {
   const following = await isFollowing(current.handle, handle);
 
   return (
-    <header className="border-divider dark:border-divider-dark flex flex-col gap-4 border-b p-5">
+    <header className="flex flex-col gap-4 border-b border-divider/70 p-5 dark:border-divider-dark/70">
       <div className="flex items-start gap-4">
         <Avatar name={user.displayName} color={user.avatarColor} size="lg" />
         <div className="flex flex-1 flex-col gap-1">
@@ -52,7 +52,7 @@ async function ProfileHeader({ params }: Params) {
 
       <p className="text-sm">{user.bio}</p>
 
-      <div className="text-gray flex gap-4 font-mono text-xs uppercase tracking-wide">
+      <div className="text-gray flex gap-4 font-mono text-xs">
         <span>
           <strong className="text-black dark:text-white">
             {formatCount(user.following)}
@@ -75,7 +75,7 @@ async function ProfileFeed({ params }: Params) {
   const drops = await getDropsByAuthor(handle);
   if (drops.length === 0) {
     return (
-      <div className="text-gray border-divider dark:border-divider-dark border-b px-5 py-8 text-center text-sm">
+      <div className="text-gray border-b border-divider/70 px-5 py-8 text-center text-sm dark:border-divider-dark/70">
         No drops yet.
       </div>
     );
@@ -93,9 +93,9 @@ async function ProfileFeed({ params }: Params) {
 
 function ProfileHeaderSkeleton() {
   return (
-    <header className="border-divider dark:border-divider-dark flex flex-col gap-4 border-b p-5">
+    <header className="flex flex-col gap-4 border-b border-divider/70 p-5 dark:border-divider-dark/70">
       <div className="flex items-start gap-4">
-        <div className="skeleton-animation h-14 w-14" />
+        <div className="skeleton-animation h-14 w-14 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">
           <div className="skeleton-animation h-5 w-40" />
           <div className="skeleton-animation h-3 w-24" />

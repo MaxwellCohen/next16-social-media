@@ -5,27 +5,22 @@ import { formatCount } from "@/lib/utils";
 export async function TrendingTags() {
   const tags = await getTrendingTags();
   return (
-    <section className="border-divider dark:border-divider-dark border">
-      <header className="border-divider dark:border-divider-dark border-b px-4 py-3">
-        <h3 className="text-xs font-bold tracking-wide uppercase">
-          Trending now
-        </h3>
+    <section className="rounded-xl border border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40">
+      <header className="px-4 pt-4 pb-2">
+        <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
       </header>
       <ul>
         {tags.map((tag) => (
-          <li
-            key={tag.name}
-            className="border-divider dark:border-divider-dark border-b last:border-b-0"
-          >
+          <li key={tag.name}>
             <Link
               href={`/tag/${tag.name}`}
-              className="hover:bg-card dark:hover:bg-card-dark flex items-center justify-between px-4 py-3 transition-colors"
+              className="flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
             >
-              <span className="text-accent font-mono text-sm">
+              <span className="text-accent text-sm font-medium">
                 #{tag.name}
               </span>
               <span className="text-gray font-mono text-xs">
-                {formatCount(tag.count)} drops
+                {formatCount(tag.count)}
               </span>
             </Link>
           </li>
@@ -37,20 +32,11 @@ export async function TrendingTags() {
 
 export function TrendingTagsSkeleton() {
   return (
-    <section className="border-divider dark:border-divider-dark border">
-      <header className="border-divider dark:border-divider-dark border-b px-4 py-3">
-        <h3 className="text-xs font-bold tracking-wide uppercase">
-          Trending now
-        </h3>
-      </header>
-      <ul>
+    <section className="rounded-xl border border-divider bg-card/40 p-4 dark:border-divider-dark dark:bg-card-dark/40">
+      <h3 className="mb-3 text-sm font-semibold tracking-tight">Trending now</h3>
+      <ul className="flex flex-col gap-2.5">
         {Array.from({ length: 5 }).map((_, i) => (
-          <li
-            key={i}
-            className="border-divider dark:border-divider-dark border-b px-4 py-3 last:border-b-0"
-          >
-            <div className="skeleton-animation h-4 w-32" />
-          </li>
+          <li key={i} className="skeleton-animation h-4 w-32" />
         ))}
       </ul>
     </section>

@@ -22,16 +22,12 @@ async function TagHeader({ params }: Params) {
   const { tag } = await params;
   const drops = await getDropsByTag(tag);
   return (
-    <header className="border-divider dark:border-divider-dark sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:bg-black/80">
-      <div className="text-accent font-mono text-xs uppercase tracking-wide">
+    <header className="sticky top-0 z-10 border-b border-divider/70 bg-white/80 px-4 py-4 backdrop-blur sm:px-5 dark:border-divider-dark/70 dark:bg-black/80">
+      <div className="text-accent font-mono text-[11px] uppercase tracking-wide">
         Tag
       </div>
-      <h1 className="text-base font-bold tracking-tight uppercase">
-        #{tag}
-      </h1>
-      <div className="text-gray font-mono text-xs">
-        {drops.length} drops
-      </div>
+      <h1 className="text-lg font-bold tracking-tight">#{tag}</h1>
+      <div className="text-gray font-mono text-xs">{drops.length} drops</div>
     </header>
   );
 }
@@ -41,7 +37,7 @@ async function TagFeed({ params }: Params) {
   const drops = await getDropsByTag(tag);
   if (drops.length === 0) {
     return (
-      <div className="text-gray border-divider dark:border-divider-dark border-b px-5 py-8 text-center text-sm">
+      <div className="text-gray border-b border-divider/70 px-5 py-8 text-center text-sm dark:border-divider-dark/70">
         No drops with this tag yet.
       </div>
     );
@@ -59,7 +55,7 @@ async function TagFeed({ params }: Params) {
 
 function TagHeaderSkeleton() {
   return (
-    <header className="border-divider dark:border-divider-dark border-b px-4 py-4 sm:px-5">
+    <header className="border-b border-divider/70 px-4 py-4 sm:px-5 dark:border-divider-dark/70">
       <div className="skeleton-animation mb-2 h-3 w-24" />
       <div className="skeleton-animation h-5 w-40" />
     </header>

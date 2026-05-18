@@ -50,11 +50,12 @@ export function DropActions({
   );
 
   return (
-    <div className="text-gray flex items-center gap-6 pt-1">
+    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <ActionButton
         label="Reply"
         icon={<MessageCircle className="h-4 w-4" />}
         count={replies}
+        hoverColor="hover:bg-accent/10 hover:text-accent"
       />
 
       <ActionButton
@@ -63,6 +64,7 @@ export function DropActions({
         count={repostState.count}
         active={repostState.reposted}
         activeColor="text-success"
+        hoverColor="hover:bg-success/10 hover:text-success"
         onClick={() => {
           startTransition(async () => {
             setRepostOptimistic();
@@ -74,13 +76,12 @@ export function DropActions({
       <ActionButton
         label="Like"
         icon={
-          <Heart
-            className={cn("h-4 w-4", likeState.liked && "fill-current")}
-          />
+          <Heart className={cn("h-4 w-4", likeState.liked && "fill-current")} />
         }
         count={likeState.count}
         active={likeState.liked}
         activeColor="text-danger"
+        hoverColor="hover:bg-danger/10 hover:text-danger"
         onClick={() => {
           startTransition(async () => {
             setLikeOptimistic();
@@ -92,12 +93,11 @@ export function DropActions({
       <ActionButton
         label="Bookmark"
         icon={
-          <Bookmark
-            className={cn("h-4 w-4", bookmarked && "fill-current")}
-          />
+          <Bookmark className={cn("h-4 w-4", bookmarked && "fill-current")} />
         }
         active={bookmarked}
         activeColor="text-accent"
+        hoverColor="hover:bg-accent/10 hover:text-accent"
         onClick={() => {
           startTransition(async () => {
             setBookmarkOptimistic();
@@ -115,6 +115,7 @@ type ActionButtonProps = {
   count?: number;
   active?: boolean;
   activeColor?: string;
+  hoverColor?: string;
   onClick?: () => void;
 };
 
@@ -124,16 +125,22 @@ function ActionButton({
   count,
   active,
   activeColor,
+  hoverColor,
   onClick,
 }: ActionButtonProps) {
   return (
     <button
       type="button"
       aria-label={label}
-      onClick={onClick}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick?.();
+      }}
       className={cn(
-        "hover:text-accent inline-flex items-center gap-1.5 font-mono text-xs transition-colors",
+        "inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors",
         active && activeColor,
+        hoverColor,
       )}
     >
       {icon}

@@ -5,7 +5,7 @@ type Props = {
 
 export function CodeBlock({ lang, code }: Props) {
   return (
-    <pre className="border-divider dark:border-divider-dark dark:bg-card-dark overflow-x-auto border bg-gray-50 p-3 font-mono text-xs leading-relaxed text-black dark:text-white">
+    <pre className="overflow-x-auto rounded-lg border border-divider bg-card p-3 font-mono text-xs leading-relaxed text-black dark:border-divider-dark dark:bg-card-dark dark:text-white">
       <code data-lang={lang}>{code}</code>
     </pre>
   );

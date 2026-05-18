@@ -3,6 +3,8 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Suspense } from "react";
 import { Sidebar } from "@/components/sidebar";
+import { TrendingTags, TrendingTagsSkeleton } from "@/components/trending-tags";
+import { WhoToFollow, WhoToFollowSkeleton } from "@/components/who-to-follow";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,34 +23,23 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable} dark`}
     >
       <body className="min-h-screen bg-white text-black antialiased dark:bg-black dark:text-white">
-        <div className="3xl:max-w-5xl mx-auto grid min-h-screen grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_18rem] xl:max-w-7xl">
+        <div className="mx-auto grid min-h-screen grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_20rem] xl:max-w-7xl">
           <Suspense>
             <Sidebar />
           </Suspense>
-          <main className="border-divider dark:border-divider-dark border-r">
+          <main className="border-x border-divider/70 dark:border-divider-dark/70">
             {children}
           </main>
-          <aside className="hidden flex-col gap-4 p-4 lg:flex">
-            <RightRail />
+          <aside className="hidden flex-col gap-4 px-4 py-5 lg:flex">
+            <Suspense fallback={<TrendingTagsSkeleton />}>
+              <TrendingTags />
+            </Suspense>
+            <Suspense fallback={<WhoToFollowSkeleton />}>
+              <WhoToFollow />
+            </Suspense>
           </aside>
         </div>
       </body>
     </html>
-  );
-}
-
-import { TrendingTags, TrendingTagsSkeleton } from "@/components/trending-tags";
-import { WhoToFollow, WhoToFollowSkeleton } from "@/components/who-to-follow";
-
-function RightRail() {
-  return (
-    <>
-      <Suspense fallback={<TrendingTagsSkeleton />}>
-        <TrendingTags />
-      </Suspense>
-      <Suspense fallback={<WhoToFollowSkeleton />}>
-        <WhoToFollow />
-      </Suspense>
-    </>
   );
 }

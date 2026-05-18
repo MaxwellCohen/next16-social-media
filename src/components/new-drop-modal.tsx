@@ -25,33 +25,27 @@ export function NewDropModal({ authorName, authorColor }: Props) {
 
   return (
     <>
-      <Button
-        variant="primary"
-        className="w-full justify-center sm:w-auto"
-        onClick={() => setOpen(true)}
-      >
-        Drop it
-      </Button>
+      <Button onClick={() => setOpen(true)}>Drop it</Button>
 
       {open ? (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-16"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-16 backdrop-blur-sm"
           onClick={(e) => {
             if (e.target === e.currentTarget) close();
           }}
         >
-          <div className="border-divider dark:border-divider-dark w-full max-w-lg border bg-white p-5 shadow-xl dark:bg-black">
+          <div className="w-full max-w-lg rounded-2xl border border-divider bg-white p-5 shadow-2xl dark:border-divider-dark dark:bg-black">
             <header className="mb-4 flex items-center justify-between">
-              <h3 className="text-base font-bold tracking-tight uppercase">
+              <h3 className="text-base font-semibold tracking-tight">
                 New drop
               </h3>
               <button
                 type="button"
                 aria-label="Close"
                 onClick={close}
-                className="text-gray hover:text-black dark:hover:text-white"
+                className="text-gray rounded-full p-1 transition-colors hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -75,7 +69,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
               <div className="flex gap-3">
                 <div
                   className={cn(
-                    "h-10 w-10 shrink-0 bg-gradient-to-br font-semibold uppercase text-white flex items-center justify-center",
+                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-semibold uppercase text-white shadow-sm",
                     authorColor,
                   )}
                   aria-hidden
@@ -92,15 +86,13 @@ export function NewDropModal({ authorName, authorColor }: Props) {
                 />
               </div>
 
-              {error ? (
-                <p className="text-danger text-xs">{error}</p>
-              ) : null}
+              {error ? <p className="text-danger text-xs">{error}</p> : null}
 
               <div className="flex items-center justify-end gap-2">
-                <Button variant="secondary" onClick={close}>
+                <Button variant="secondary" size="sm" onClick={close}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={pending}>
+                <Button type="submit" size="sm" disabled={pending}>
                   {pending ? "Dropping…" : "Drop it"}
                 </Button>
               </div>

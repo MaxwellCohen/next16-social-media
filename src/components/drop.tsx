@@ -3,10 +3,9 @@ import { Avatar } from "@/components/ui/avatar";
 import { TagPill } from "@/components/tag-pill";
 import { CodeBlock } from "@/components/code-block";
 import { DropActions } from "@/components/drop-actions";
-import { getUserByHandle } from "@/data/queries/user";
+import { getUserByHandle, getCurrentUser } from "@/data/queries/user";
 import { isLiked, isBookmarked } from "@/data/queries/drop";
-import { getCurrentUser } from "@/data/queries/user";
-import { formatCount, timeAgo } from "@/lib/utils";
+import { timeAgo } from "@/lib/utils";
 import type { Drop as DropT } from "@/lib/data";
 
 type Props = {
@@ -23,35 +22,38 @@ export async function Drop({ drop, compact = false }: Props) {
   const bookmarked = await isBookmarked(current.handle, drop.id);
 
   return (
-    <article className="border-divider dark:border-divider-dark border-b bg-white dark:bg-black">
-      <div className="flex gap-3 p-4 sm:p-5">
+    <article className="group/drop border-b border-divider/70 transition-colors hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40">
+      <div className="flex gap-3 px-4 py-4 sm:px-5">
         <Link href={`/u/${author.handle}`} className="shrink-0">
           <Avatar name={author.displayName} color={author.avatarColor} size="md" />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <header className="flex flex-wrap items-baseline gap-x-2 text-sm">
+          <header className="flex flex-wrap items-baseline gap-x-1.5 text-sm">
             <Link
               href={`/u/${author.handle}`}
-              className="font-bold tracking-tight text-black hover:underline dark:text-white"
+              className="font-semibold tracking-tight text-black hover:underline dark:text-white"
             >
               {author.displayName}
             </Link>
             <Link
               href={`/u/${author.handle}`}
-              className="text-gray font-mono text-xs"
+              className="text-gray font-mono text-[12px]"
             >
               @{author.handle}
             </Link>
-            <span className="text-gray font-mono text-xs">·</span>
+            <span className="text-gray font-mono text-[12px]">·</span>
             <Link
               href={`/drop/${drop.id}`}
-              className="text-gray font-mono text-xs hover:underline"
+              className="text-gray font-mono text-[12px] hover:underline"
             >
               {timeAgo(drop.createdAt)}
             </Link>
           </header>
 
-          <Link href={`/drop/${drop.id}`} className="text-[15px] leading-snug">
+          <Link
+            href={`/drop/${drop.id}`}
+            className="text-[15px] leading-snug text-black dark:text-white"
+          >
             {renderBody(drop.body)}
           </Link>
 
@@ -82,7 +84,6 @@ export async function Drop({ drop, compact = false }: Props) {
 }
 
 function renderBody(body: string) {
-  // Inline-render #hashtags as accent-colored, leave everything else as text.
   const parts = body.split(/(#\w+)/g);
   return parts.map((part, i) => {
     if (part.startsWith("#")) {
@@ -103,9 +104,9 @@ function renderBody(body: string) {
 
 export function DropSkeleton() {
   return (
-    <div className="border-divider dark:border-divider-dark border-b p-4 sm:p-5">
+    <div className="border-b border-divider/70 px-4 py-4 sm:px-5 dark:border-divider-dark/70">
       <div className="flex gap-3">
-        <div className="skeleton-animation h-10 w-10 shrink-0" />
+        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">
           <div className="skeleton-animation h-3 w-40" />
           <div className="skeleton-animation h-4 w-full" />

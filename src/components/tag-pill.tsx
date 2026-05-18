@@ -8,7 +8,7 @@ export function TagPill({ tag }: Props) {
   return (
     <Link
       href={`/tag/${tag}`}
-      className="border-accent text-accent hover:bg-accent-fade inline-flex items-center border px-2 py-0.5 font-mono text-xs uppercase tracking-wide"
+      className="inline-flex items-center rounded-full border border-divider px-2.5 py-0.5 font-mono text-[11px] text-gray transition-colors hover:border-accent hover:text-accent dark:border-divider-dark"
     >
       #{tag}
     </Link>

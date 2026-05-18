@@ -18,7 +18,7 @@ export function Avatar({ name, color, size = "md", className }: Props) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center bg-gradient-to-br font-semibold uppercase text-white",
+        "flex items-center justify-center rounded-full bg-gradient-to-br font-semibold uppercase text-white shadow-sm",
         color,
         sizes[size],
         className,
