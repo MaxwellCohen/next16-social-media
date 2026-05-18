@@ -1,8 +1,9 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { getDrop, getReplies } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
-import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop, DropListSkeleton } from '@/features/drop/components/Drop';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/DropDetail';
 import { ReplyComposerForm } from '@/features/drop/components/ReplyComposerForm';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
@@ -30,9 +31,9 @@ export const unstable_prefetch = 'force-runtime';
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
+      <PageHeader>
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
-      </header>
+      </PageHeader>
       <Suspense fallback={<DropDetailSkeleton />}>
         <DropPageBody params={params} />
       </Suspense>
@@ -56,7 +57,7 @@ async function DropPageBody({ params }: { params: Promise<{ id: string }> }) {
           }
         />
       </section>
-      <Suspense fallback={<RepliesLoading />}>
+      <Suspense fallback={<DropListSkeleton count={2} />}>
         <Replies id={id} />
       </Suspense>
     </>
@@ -84,19 +85,5 @@ async function Replies({ id }: { id: string }) {
         </ul>
       )}
     </section>
-  );
-}
-
-function RepliesLoading() {
-  return (
-    <ul>
-      {Array.from({ length: 2 }).map((_, i) => {
-        return (
-          <li key={i}>
-            <DropSkeleton />
-          </li>
-        );
-      })}
-    </ul>
   );
 }

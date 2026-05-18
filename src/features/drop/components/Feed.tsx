@@ -1,5 +1,5 @@
 import { getFeed } from '@/data/queries/drop';
-import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop } from '@/features/drop/components/Drop';
 
 export async function Feed() {
   const drops = await getFeed();
@@ -9,20 +9,6 @@ export async function Feed() {
         return (
           <li key={drop.id}>
             <Drop drop={drop} />
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-export function FeedSkeleton() {
-  return (
-    <ul>
-      {Array.from({ length: 5 }).map((_, i) => {
-        return (
-          <li key={i}>
-            <DropSkeleton />
           </li>
         );
       })}

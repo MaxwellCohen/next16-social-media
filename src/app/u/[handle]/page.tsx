@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getDropsByAuthor, getRepliesByAuthor } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle, isFollowing } from '@/data/queries/user';
-import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop, DropListSkeleton } from '@/features/drop/components/Drop';
 import { FollowButton } from '@/features/user/components/FollowButton';
 import { ProfileTabs } from '@/features/user/components/ProfileTabs';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
@@ -42,7 +42,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
       <Suspense fallback={<ProfileTabsSkeleton />}>
         <ProfileTabsBar params={params} searchParams={searchParams} />
       </Suspense>
-      <Suspense fallback={<ProfileFeedSkeleton />}>
+      <Suspense fallback={<DropListSkeleton />}>
         <ProfileFeed params={params} searchParams={searchParams} />
       </Suspense>
     </div>
@@ -62,10 +62,10 @@ async function ProfileTabsBar({
 
 function ProfileTabsSkeleton() {
   return (
-    <div className="border-divider/70 dark:border-divider-dark/70 flex gap-1 border-b p-2" aria-hidden>
+    <div className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-hidden>
       {Array.from({ length: 2 }).map((_, i) => {
         return (
-          <span key={i} className="flex-1 rounded-lg px-3 py-2 text-center text-sm">
+          <span key={i} className="flex-1 px-4 py-4 text-center">
             <span className="skeleton-animation inline-block h-5 w-16 rounded align-middle" />
           </span>
         );
@@ -195,19 +195,5 @@ function ProfileHeaderSkeleton() {
         </div>
       </div>
     </header>
-  );
-}
-
-function ProfileFeedSkeleton() {
-  return (
-    <ul>
-      {Array.from({ length: 5 }).map((_, i) => {
-        return (
-          <li key={i}>
-            <DropSkeleton />
-          </li>
-        );
-      })}
-    </ul>
   );
 }

@@ -13,7 +13,12 @@ import './globals.css';
 
 export const metadata: Metadata = {
   description: 'A dev-flavored social network.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : 'http://localhost:3000'),
+  ),
   openGraph: {
     description: 'A dev-flavored social network.',
     siteName: 'Drop',

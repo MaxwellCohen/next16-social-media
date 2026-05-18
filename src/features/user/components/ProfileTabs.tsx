@@ -31,7 +31,7 @@ export function ProfileTabs({ handle, active }: Props) {
 
   return (
     <nav
-      className="border-divider/70 dark:border-divider-dark/70 flex gap-1 border-b p-2 text-sm font-medium"
+      className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
       aria-label="Profile sections"
     >
       {TABS.map(t => {
@@ -45,14 +45,17 @@ export function ProfileTabs({ handle, active }: Props) {
             }}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex-1 rounded-lg px-3 py-2 text-center transition-colors',
-              isActive
-                ? 'bg-accent/10 text-accent dark:bg-accent/15'
-                : 'text-gray hover:bg-card dark:hover:bg-card-dark',
+              'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 transition-colors',
+              isActive ? 'font-semibold text-black dark:text-white' : 'text-gray font-medium',
               pending && isActive && 'animate-pulse',
             )}
           >
-            {t.label}
+            <span className="relative inline-block">
+              {t.label}
+              {isActive ? (
+                <span className="absolute -bottom-4 left-0 h-1 w-full rounded-full bg-black dark:bg-white" aria-hidden />
+              ) : null}
+            </span>
           </button>
         );
       })}

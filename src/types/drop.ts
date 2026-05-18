@@ -1,7 +1,5 @@
 import type { Drop as PrismaDrop } from '@/generated/prisma/client';
 
-export type EmbeddedCode = { lang: string; code: string };
-
 export type Drop = {
   id: string;
   authorHandle: string;
@@ -11,7 +9,7 @@ export type Drop = {
   replies: number;
   reposts: number;
   tags: string[];
-  embeddedCode?: EmbeddedCode;
+  embeddedCode?: { lang: string; code: string };
   parentId?: string;
 };
 

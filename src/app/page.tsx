@@ -1,17 +1,19 @@
 import { Suspense } from 'react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { DropListSkeleton } from '@/features/drop/components/Drop';
 import { DropComposer } from '@/features/drop/components/DropComposer';
-import { Feed, FeedSkeleton } from '@/features/drop/components/Feed';
+import { Feed } from '@/features/drop/components/Feed';
 
 export const unstable_prefetch = 'force-runtime';
 
 export default function HomePage() {
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
+      <PageHeader>
         <h1 className="text-lg font-bold tracking-tight">Home</h1>
-      </header>
+      </PageHeader>
       <DropComposer />
-      <Suspense fallback={<FeedSkeleton />}>
+      <Suspense fallback={<DropListSkeleton />}>
         <Feed />
       </Suspense>
     </div>

@@ -1,8 +1,9 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { getBookmarkedDrops } from '@/data/queries/drop';
 import { getCurrentUser } from '@/data/queries/user';
-import { Drop, DropSkeleton } from '@/features/drop/components/Drop';
+import { Drop, DropListSkeleton } from '@/features/drop/components/Drop';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -24,10 +25,10 @@ export const unstable_prefetch = 'force-runtime';
 export default function BookmarksPage() {
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
+      <PageHeader>
         <h1 className="text-lg font-bold tracking-tight">Bookmarks</h1>
-      </header>
-      <Suspense fallback={<BookmarksSkeleton />}>
+      </PageHeader>
+      <Suspense fallback={<DropListSkeleton count={3} />}>
         <BookmarksFeed />
       </Suspense>
     </div>
@@ -47,20 +48,6 @@ async function BookmarksFeed() {
         return (
           <li key={drop.id}>
             <Drop drop={drop} />
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function BookmarksSkeleton() {
-  return (
-    <ul>
-      {Array.from({ length: 3 }).map((_, i) => {
-        return (
-          <li key={i}>
-            <DropSkeleton />
           </li>
         );
       })}

@@ -75,6 +75,20 @@ export function DropSkeleton() {
   );
 }
 
+export function DropListSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <ul aria-hidden>
+      {Array.from({ length: count }).map((_, i) => {
+        return (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 async function AuthorName({ handle }: { handle: string }) {
   const author = await getUserByHandle(handle);
   return (
