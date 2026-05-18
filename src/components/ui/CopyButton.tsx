@@ -25,9 +25,9 @@ export function CopyButton({ code }: { code: string }) {
       type="button"
       onClick={copy}
       aria-label={copied ? 'Copied' : 'Copy code'}
-      className="border-divider bg-white text-gray hover:text-black dark:border-divider-dark dark:bg-card-dark dark:hover:text-white absolute top-2 right-2 z-30 inline-flex h-7 w-7 items-center justify-center rounded-md border opacity-0 transition-all group-hover/code:opacity-100 focus:opacity-100"
+      className="border-divider text-gray dark:border-divider-dark dark:bg-card-dark absolute top-2 right-2 z-30 inline-flex h-7 w-7 items-center justify-center rounded-md border bg-white opacity-0 transition-all group-hover/code:opacity-100 hover:text-black focus:opacity-100 dark:hover:text-white"
     >
-      {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? <Check className="text-success h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
   );
 }

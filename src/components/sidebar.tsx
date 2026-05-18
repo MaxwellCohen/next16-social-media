@@ -1,7 +1,6 @@
 import { Bookmark, Hash, Home, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { SidebarNavLink } from '@/components/NavLink';
-import { ResetDemoButton } from '@/components/demo/ResetDemoButton';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Avatar } from '@/components/ui/Avatar';
 import { DropMark } from '@/components/ui/DropMark';
@@ -30,7 +29,6 @@ export async function Sidebar() {
 
       <div className="mt-auto flex flex-col gap-3">
         <ThemeToggle />
-        <ResetDemoButton />
         <div className="border-divider dark:border-divider-dark flex items-center gap-3 rounded-full border p-2 pr-3">
           <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
           <div className="min-w-0 flex-1">

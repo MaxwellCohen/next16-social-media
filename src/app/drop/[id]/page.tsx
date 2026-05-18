@@ -1,51 +1,44 @@
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { ReplyComposer, ReplyComposerSkeleton } from '@/app/drop/[id]/_components/ReplyComposer';
+import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/app/drop/[id]/_components/ReplyComposerForm';
 import { Drop, DropSkeleton } from '@/components/Drop';
 import { getDrop, getReplies } from '@/data/queries/drop';
-
-export const unstable_prefetch = 'force-runtime';
-
-type Params = Pick<PageProps<'/drop/[id]'>, 'params'>;
+import { getCurrentUser } from '@/data/queries/user';
 
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
+  const idPromise = params.then(({ id }) => {
+    return id;
+  });
+
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-card-dark/70">
+      <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
 
       <Suspense fallback={<DropSkeleton />}>
-        <DropDetail params={params} />
+        <DropDetail idPromise={idPromise} />
       </Suspense>
 
-      <Suspense fallback={<ReplyComposerSkeleton />}>
-        <ReplyComposerSection params={params} />
-      </Suspense>
+      <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
+        <Suspense fallback={<ReplyComposerFormSkeleton />}>
+          <ReplyComposerForm idPromise={idPromise} userPromise={getCurrentUser()} />
+        </Suspense>
+      </section>
 
       <Suspense fallback={<RepliesLoading />}>
-        <Replies params={params} />
+        <Replies idPromise={idPromise} />
       </Suspense>
     </div>
   );
 }
 
-async function ReplyComposerSection({ params }: Params) {
-  const { id } = await params;
-  return <ReplyComposer dropId={id} />;
-}
-
-async function DropDetail({ params }: Params) {
-  const { id } = await params;
-  const drop = await getDrop(id);
-  if (!drop) notFound();
+async function DropDetail({ idPromise }: { idPromise: Promise<string> }) {
+  const drop = await getDrop(await idPromise);
   return <Drop drop={drop} detail />;
 }
 
-async function Replies({ params }: Params) {
-  const { id } = await params;
-  const replies = await getReplies(id);
-
+async function Replies({ idPromise }: { idPromise: Promise<string> }) {
+  const replies = await getReplies(await idPromise);
   return (
     <section>
       <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 font-mono text-[11px] tracking-wide uppercase sm:px-5">

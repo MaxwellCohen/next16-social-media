@@ -18,7 +18,6 @@ type Props = {
 
 export async function Drop({ drop, compact = false, detail = false, repostedBy }: Props) {
   const author = await getUserByHandle(drop.authorHandle);
-  if (!author) return null;
 
   const current = await getCurrentUser();
   const liked = await isLiked(current.handle, drop.id);
@@ -79,7 +78,6 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
 
   return (
     <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      {/* Card-wide click target at z-10. Interactive children opt back in with `relative z-20`. */}
       <Link href={`/drop/${drop.id}`} aria-label={`Drop by ${author.displayName}`} className="absolute inset-0 z-10" />
       {reposter ? (
         <Link

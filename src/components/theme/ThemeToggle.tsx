@@ -32,13 +32,31 @@ export function ThemeToggle() {
         </>
       ) : (
         <>
-          <ToggleButton active={theme === 'light'} label="Light mode" onClick={() => {return setTheme('light')}}>
+          <ToggleButton
+            active={theme === 'light'}
+            label="Light mode"
+            onClick={() => {
+              return setTheme('light');
+            }}
+          >
             <Sun className="size-4" />
           </ToggleButton>
-          <ToggleButton active={theme === 'dark'} label="Dark mode" onClick={() => {return setTheme('dark')}}>
+          <ToggleButton
+            active={theme === 'dark'}
+            label="Dark mode"
+            onClick={() => {
+              return setTheme('dark');
+            }}
+          >
             <Moon className="size-4" />
           </ToggleButton>
-          <ToggleButton active={theme === 'system'} label="System theme" onClick={() => {return setTheme('system')}}>
+          <ToggleButton
+            active={theme === 'system'}
+            label="System theme"
+            onClick={() => {
+              return setTheme('system');
+            }}
+          >
             <Monitor className="size-4" />
           </ToggleButton>
         </>

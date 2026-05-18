@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { cacheTag } from 'next/cache';
+import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { getStore } from '@/lib/data';
 import { delay } from '@/lib/utils';
@@ -23,11 +24,11 @@ export const getUserByHandle = cache(async (handle: string) => {
   cacheTag('users', `user-${handle}`);
 
   await delay(250);
-  return (
-    getStore().users.find(u => {
-      return u.handle === handle;
-    }) ?? null
-  );
+  const user = getStore().users.find(u => {
+    return u.handle === handle;
+  });
+  if (!user) notFound();
+  return user;
 });
 
 export const getWhoToFollow = cache(async () => {

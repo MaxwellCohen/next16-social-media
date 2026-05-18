@@ -2,7 +2,7 @@
 
 import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
-import { useRef, useState, useTransition } from 'react';
+import { useActionState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { postDrop } from '@/data/actions/drop';
 import { cn } from '@/lib/utils';
@@ -12,18 +12,28 @@ type Props = {
   authorColor: string;
 };
 
+type State = { error: string | null; submittedAt: number };
+
+const INITIAL: State = { error: null, submittedAt: 0 };
+
+async function submit(_: State, formData: FormData): Promise<State> {
+  const result = await postDrop(formData);
+  if (!result.ok) return { error: result.error, submittedAt: 0 };
+  return { error: null, submittedAt: Date.now() };
+}
+
 export function NewDropModal({ authorName, authorColor }: Props) {
   const dialog = Ariakit.useDialogStore();
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [state, formAction, pending] = useActionState(submit, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  function close() {
-    setError(null);
-    formRef.current?.reset();
-    dialog.hide();
-  }
+  useEffect(() => {
+    if (state.submittedAt > 0) {
+      formRef.current?.reset();
+      dialog.hide();
+    }
+  }, [state.submittedAt, dialog]);
 
   return (
     <>
@@ -54,20 +64,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
           </Ariakit.VisuallyHidden>
         </header>
 
-        <form
-          ref={formRef}
-          action={(formData: FormData) => {
-            setError(null);
-            startTransition(async () => {
-              const result = await postDrop(formData);
-              if (!result.ok) {
-                setError(result.error);
-                return;
-              }
-              close();
-            });
-          }}
-        >
+        <form ref={formRef} action={formAction}>
           <div className="flex gap-3 px-5 pt-4 pb-3">
             <div
               className={cn(
@@ -99,9 +96,9 @@ export function NewDropModal({ authorName, authorColor }: Props) {
             />
           </div>
 
-          {error ? (
+          {state.error ? (
             <p role="alert" className="text-danger px-5 pb-2 text-xs">
-              {error}
+              {state.error}
             </p>
           ) : null}
 

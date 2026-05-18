@@ -14,3 +14,15 @@ export async function DropComposer() {
     </section>
   );
 }
+
+export function DropComposerSkeleton() {
+  return (
+    <section className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b p-4 sm:p-5">
+      <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
+      <div className="flex flex-1 items-center justify-between gap-3">
+        <div className="skeleton-animation h-4 w-44" />
+        <div className="skeleton-animation h-9 w-24 rounded-full" />
+      </div>
+    </section>
+  );
+}

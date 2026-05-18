@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Drop, DropSkeleton } from '@/components/Drop';
 import { FollowButton } from '@/components/FollowButton';
@@ -26,8 +25,6 @@ export default function ProfilePage({ params }: PageProps<'/u/[handle]'>) {
 async function ProfileHeader({ params }: Params) {
   const { handle } = await params;
   const user = await getUserByHandle(handle);
-  if (!user) notFound();
-
   const current = await getCurrentUser();
   const following = await isFollowing(current.handle, handle);
 

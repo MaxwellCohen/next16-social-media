@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { cacheTag } from 'next/cache';
+import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { getStore, type Drop } from '@/lib/data';
 import { delay } from '@/lib/utils';
@@ -42,11 +43,11 @@ export const getDrop = cache(async (id: string) => {
   cacheTag('drops', `drop-${id}`);
 
   await delay(300);
-  return (
-    getStore().drops.find(d => {
-      return d.id === id;
-    }) ?? null
-  );
+  const drop = getStore().drops.find(d => {
+    return d.id === id;
+  });
+  if (!drop) notFound();
+  return drop;
 });
 
 export const getReplies = cache(async (dropId: string) => {

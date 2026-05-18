@@ -5,7 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Artificial latency so streaming is visible on a projector. Demo-only. */
 export function delay(ms: number) {
   return new Promise(resolve => {
     return setTimeout(resolve, ms);

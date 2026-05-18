@@ -1,39 +1,38 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { use, useActionState, useEffect, useRef } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { postReply } from '@/data/actions/drop';
+import type { User } from '@/lib/data';
 
 type Props = {
-  dropId: string;
-  authorName: string;
-  authorColor: string;
+  idPromise: Promise<string>;
+  userPromise: Promise<User>;
 };
 
-export function ReplyComposerForm({ dropId, authorName, authorColor }: Props) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+type State = { error: string | null; submittedAt: number };
+
+const INITIAL: State = { error: null, submittedAt: 0 };
+
+export function ReplyComposerForm({ idPromise, userPromise }: Props) {
+  const user = use(userPromise);
+  const dropId = use(idPromise);
   const formRef = useRef<HTMLFormElement>(null);
+  const [state, formAction, pending] = useActionState(async (_: State, formData: FormData): Promise<State> => {
+    const result = await postReply(dropId, formData);
+    if (!result.ok) return { error: result.error, submittedAt: 0 };
+    return { error: null, submittedAt: Date.now() };
+  }, INITIAL);
+
+  useEffect(() => {
+    if (state.submittedAt > 0) formRef.current?.reset();
+  }, [state.submittedAt]);
 
   return (
-    <form
-      ref={formRef}
-      action={(formData: FormData) => {
-        setError(null);
-        startTransition(async () => {
-          const result = await postReply(dropId, formData);
-          if (!result.ok) {
-            setError(result.error);
-            return;
-          }
-          formRef.current?.reset();
-        });
-      }}
-      className="flex flex-col gap-3"
-    >
+    <form ref={formRef} action={formAction} className="flex flex-col gap-3">
       <div className="flex gap-3">
-        <Avatar name={authorName} color={authorColor} size="md" />
+        <Avatar name={user.displayName} color={user.avatarColor} size="md" />
         <textarea
           name="body"
           rows={2}
@@ -50,7 +49,7 @@ export function ReplyComposerForm({ dropId, authorName, authorColor }: Props) {
         />
       </div>
 
-      {error ? <p className="text-danger text-xs">{error}</p> : null}
+      {state.error ? <p className="text-danger text-xs">{state.error}</p> : null}
 
       <div className="flex justify-end">
         <Button type="submit" size="sm" disabled={pending}>
@@ -58,5 +57,22 @@ export function ReplyComposerForm({ dropId, authorName, authorColor }: Props) {
         </Button>
       </div>
     </form>
+  );
+}
+
+export function ReplyComposerFormSkeleton() {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-3">
+        <div className="skeleton-animation h-10 w-10 shrink-0 rounded-full" />
+        <div className="flex flex-1 flex-col gap-2 pt-1.5">
+          <div className="skeleton-animation h-4 w-3/4" />
+          <div className="skeleton-animation h-4 w-1/2" />
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <div className="skeleton-animation h-8 w-20 rounded-full" />
+      </div>
+    </div>
   );
 }

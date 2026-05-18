@@ -22,7 +22,7 @@ async function TagHeader({ params }: Params) {
   const { tag } = await params;
   const drops = await getDropsByTag(tag);
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-card-dark/70">
+    <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5">
       <div className="text-gray font-mono text-[11px] tracking-wide uppercase">Tag</div>
       <h1 className="text-lg font-bold tracking-tight">#{tag}</h1>
       <div className="text-gray font-mono text-xs">{drops.length} drops</div>

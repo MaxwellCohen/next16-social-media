@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react';
 import { timeAgo } from '@/lib/utils';
 
-// Server and client labels are expected to disagree (`Date.now()` differs),
-// so we render once and update on the client.
 export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: boolean }) {
   const [label, setLabel] = useState(() => {
     return verbose ? formatAbsolute(date) : timeAgo(date);

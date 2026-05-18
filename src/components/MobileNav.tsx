@@ -8,7 +8,7 @@ import { getCurrentUser } from '@/data/queries/user';
 export async function MobileHeader() {
   const user = await getCurrentUser();
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:hidden dark:bg-card-dark/70">
+    <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:hidden">
       <Link href={`/u/${user.handle}`} aria-label="Profile">
         <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
       </Link>

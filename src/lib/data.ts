@@ -1,8 +1,3 @@
-/**
- * In-memory store for the demo. Reseeds on every server restart.
- * All reads/writes go through `src/data/queries` and `src/data/actions`.
- */
-
 export type User = {
   id: string;
   handle: string;
@@ -43,8 +38,6 @@ type Store = {
   dropIdCounter: number;
   currentUserHandle: string;
 };
-
-// ─── seed data ─────────────────────────────────────────────────────────────
 
 const now = Date.now();
 const minute = 60_000;
@@ -131,11 +124,6 @@ const DROPS: Drop[] = [
     authorHandle: 'aurorascharff',
     body: 'one directive turns any function into a cached server function. opt in per-component instead of per-route.',
     createdAt: new Date(now - 8 * minute),
-    id: 'd1',
-    likes: 940,
-    replies: 32,
-    reposts: 140,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `async function getDrop(id) {
   'use cache'
@@ -143,16 +131,16 @@ const DROPS: Drop[] = [
 }`,
       lang: 'ts',
     },
+    id: 'd1',
+    likes: 940,
+    replies: 32,
+    reposts: 140,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'vex',
-    body: 'tags + updateTag is the cleanest invalidation story i\'ve used. no router refresh dance, no client round-trip.',
+    body: "tags + updateTag is the cleanest invalidation story i've used. no router refresh dance, no client round-trip.",
     createdAt: new Date(now - 18 * minute),
-    id: 'd2',
-    likes: 1_240,
-    replies: 88,
-    reposts: 60,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `'use cache'
 cacheTag('feed')
@@ -160,16 +148,16 @@ cacheTag('feed')
 updateTag('feed')`,
       lang: 'ts',
     },
+    id: 'd2',
+    likes: 1_240,
+    replies: 88,
+    reposts: 60,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'aurorascharff',
     body: 'optimistic UI is now a few lines. snap the state, fire the action, react reconciles when the server agrees.',
     createdAt: new Date(now - 45 * minute),
-    id: 'd3',
-    likes: 1_640,
-    replies: 64,
-    reposts: 180,
-    tags: ['react19'],
     embeddedCode: {
       code: `const [count, addOptimistic] = useOptimistic(likes, n => n + 1)
 startTransition(() => {
@@ -178,16 +166,16 @@ startTransition(() => {
 })`,
       lang: 'tsx',
     },
+    id: 'd3',
+    likes: 1_640,
+    replies: 64,
+    reposts: 180,
+    tags: ['react19'],
   },
   {
     authorHandle: 'quill',
     body: 'params is a promise now. await it where you need it. the rest of the page streams while it resolves.',
     createdAt: new Date(now - 1 * hour),
-    id: 'd4',
-    likes: 540,
-    replies: 22,
-    reposts: 41,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `export default async function Page({ params }) {
   const { id } = await params
@@ -195,16 +183,16 @@ startTransition(() => {
 }`,
       lang: 'tsx',
     },
+    id: 'd4',
+    likes: 540,
+    replies: 22,
+    reposts: 41,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'aurorascharff',
     body: 'private cache for per-user data. same primitive, scoped to the request. bookmarks, drafts, feeds you own.',
     createdAt: new Date(now - 2 * hour),
-    id: 'd5',
-    likes: 1_980,
-    replies: 110,
-    reposts: 320,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `async function getBookmarks(handle) {
   'use cache: private'
@@ -213,6 +201,11 @@ startTransition(() => {
 }`,
       lang: 'ts',
     },
+    id: 'd5',
+    likes: 1_980,
+    replies: 110,
+    reposts: 320,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'onyx',
@@ -228,48 +221,48 @@ startTransition(() => {
     authorHandle: 'aurorascharff',
     body: 'suspense boundaries are where the streaming story lives. wrap the slow bit, let the rest paint.',
     createdAt: new Date(now - 4 * hour),
-    id: 'd7',
-    likes: 1_540,
-    replies: 64,
-    reposts: 220,
-    tags: ['react19'],
     embeddedCode: {
       code: `<Suspense fallback={<FeedSkeleton />}>
   <Feed />
 </Suspense>`,
       lang: 'tsx',
     },
+    id: 'd7',
+    likes: 1_540,
+    replies: 64,
+    reposts: 220,
+    tags: ['react19'],
   },
   {
     authorHandle: 'wren',
     body: 'cachelife lets you say how fresh a value needs to be without writing your own ttl logic. small thing, ships every time.',
     createdAt: new Date(now - 5 * hour),
-    id: 'd8',
-    likes: 720,
-    replies: 30,
-    reposts: 32,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `'use cache'
 cacheLife('hours')
 return getTrendingTags()`,
       lang: 'ts',
     },
+    id: 'd8',
+    likes: 720,
+    replies: 30,
+    reposts: 32,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'aurorascharff',
     body: 'useactionstate handles the form lifecycle: pending, errors, success. one hook, no extra state.',
     createdAt: new Date(now - 7 * hour),
-    id: 'd9',
-    likes: 1_180,
-    replies: 41,
-    reposts: 92,
-    tags: ['react19'],
     embeddedCode: {
       code: `const [state, action, pending] = useActionState(postDrop, null)
 return <form action={action}>...</form>`,
       lang: 'tsx',
     },
+    id: 'd9',
+    likes: 1_180,
+    replies: 41,
+    reposts: 92,
+    tags: ['react19'],
   },
   {
     authorHandle: 'cinder',
@@ -285,11 +278,6 @@ return <form action={action}>...</form>`,
     authorHandle: 'aurorascharff',
     body: 'the cache components flag is opt-in for now. flip it and everything reads from a tagged, per-component cache.',
     createdAt: new Date(now - 11 * hour),
-    id: 'd11',
-    likes: 1_810,
-    replies: 96,
-    reposts: 340,
-    tags: ['nextjs'],
     embeddedCode: {
       code: `// next.config.ts
 export default {
@@ -297,6 +285,11 @@ export default {
 }`,
       lang: 'ts',
     },
+    id: 'd11',
+    likes: 1_810,
+    replies: 96,
+    reposts: 340,
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'halo',
@@ -310,13 +303,8 @@ export default {
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'server actions are just functions. you import them into a client component and call them. that\'s the whole api.',
+    body: "server actions are just functions. you import them into a client component and call them. that's the whole api.",
     createdAt: new Date(now - 16 * hour),
-    id: 'd13',
-    likes: 1_320,
-    replies: 47,
-    reposts: 180,
-    tags: ['react19'],
     embeddedCode: {
       code: `'use server'
 export async function toggleLike(id) {
@@ -325,10 +313,15 @@ export async function toggleLike(id) {
 }`,
       lang: 'ts',
     },
+    id: 'd13',
+    likes: 1_320,
+    replies: 47,
+    reposts: 180,
+    tags: ['react19'],
   },
   {
     authorHandle: 'echo',
-    body: 'we tried cache components on a real codebase this week. removed a lot of effects. didn\'t replace them with anything.',
+    body: "we tried cache components on a real codebase this week. removed a lot of effects. didn't replace them with anything.",
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
@@ -393,7 +386,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: 'does cacheTag accept multiple tags? we\'d invalidate by user + by feed.',
+    body: "does cacheTag accept multiple tags? we'd invalidate by user + by feed.",
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -415,7 +408,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'we kept reaching for client state for this. won\'t anymore.',
+    body: "we kept reaching for client state for this. won't anymore.",
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,
@@ -492,8 +485,6 @@ function buildBookmarks(): Record<string, Set<string>> {
   };
 }
 
-// ─── module-local store ───────────────────────────────────────────────────
-
 const store: Store = {
   bookmarks: buildBookmarks(),
   currentUserHandle: 'aurorascharff',
@@ -509,8 +500,6 @@ const store: Store = {
   }),
 };
 
-// ─── accessors used by `src/data/queries` and `src/data/actions` ──────────
-
 export function getStore() {
   return store;
 }
@@ -520,9 +509,6 @@ export function getNextDropId() {
   return `d${store.dropIdCounter}`;
 }
 
-/**
- * Reset the in-memory store back to seed values.
- */
 export function resetStore() {
   store.users = USERS.map(u => {
     return { ...u };

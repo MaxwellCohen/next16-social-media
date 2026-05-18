@@ -22,11 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Suspense>
             <MobileHeader />
           </Suspense>
-          <div className="mx-auto grid h-full grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_20rem] xl:max-w-7xl">
+          <div className="mx-auto grid h-full max-w-7xl grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_20rem]">
             <Suspense>
               <Sidebar />
             </Suspense>
-            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full overflow-y-auto overscroll-contain pb-14 sm:border-x sm:pb-0">
+            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full min-w-0 overflow-y-auto overscroll-contain pb-14 sm:border-x sm:pb-0">
               {children}
             </main>
             <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-none px-4 py-5 lg:flex">

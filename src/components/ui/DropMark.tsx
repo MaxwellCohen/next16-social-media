@@ -3,7 +3,6 @@ type Props = {
   size?: number;
 };
 
-
 export function DropMark({ className, size = 20 }: Props) {
   return (
     <svg

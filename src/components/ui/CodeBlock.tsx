@@ -14,7 +14,6 @@ export async function CodeBlock({ lang, code }: Props) {
       <CopyButton code={code} />
       <div
         className="shiki-block border-divider bg-card dark:border-divider-dark dark:bg-card-dark overflow-x-auto rounded-sm border p-3 font-mono text-xs leading-relaxed"
-        // Output is from Shiki: escaped HTML.
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

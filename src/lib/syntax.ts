@@ -12,7 +12,6 @@ const SUPPORTED_LANGS = ['tsx', 'ts', 'jsx', 'js', 'bash', 'shell', 'json', 'css
 
 export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
-// Module-scoped: React `cache()` doesn't dedupe across requests.
 let highlighterPromise: Promise<Highlighter> | null = null;
 
 function getHighlighter(): Promise<Highlighter> {
@@ -61,7 +60,6 @@ export async function highlight(code: string, lang: string | undefined) {
       },
     });
   } catch {
-    // Shiki's JS regex engine can choke on some grammars; fall back to plain text.
     return `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
   }
 }
