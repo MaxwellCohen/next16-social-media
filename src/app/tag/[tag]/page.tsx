@@ -42,11 +42,13 @@ async function TagFeed({ params }: Params) {
   }
   return (
     <ul>
-      {drops.map(drop => {return (
-        <li key={drop.id}>
-          <Drop drop={drop} />
-        </li>
-      )})}
+      {drops.map(drop => {
+        return (
+          <li key={drop.id}>
+            <Drop drop={drop} />
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -63,11 +65,13 @@ function TagHeaderSkeleton() {
 function TagFeedSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 4 }).map((_, i) => {return (
-        <li key={i}>
-          <DropSkeleton />
-        </li>
-      )})}
+      {Array.from({ length: 4 }).map((_, i) => {
+        return (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        );
+      })}
     </ul>
   );
 }

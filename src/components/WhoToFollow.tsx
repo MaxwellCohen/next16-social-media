@@ -20,26 +20,28 @@ export async function WhoToFollow() {
         </p>
       ) : (
         <ul className="pb-2">
-          {users.map(user => {return (
-            <li
-              key={user.handle}
-              className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
-            >
-              <Link href={`/u/${user.handle}`} className="shrink-0">
-                <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
-              </Link>
-              <div className="min-w-0 flex-1">
-                <Link
-                  href={`/u/${user.handle}`}
-                  className="block truncate text-sm font-semibold tracking-tight hover:underline"
-                >
-                  {user.displayName}
+          {users.map(user => {
+            return (
+              <li
+                key={user.handle}
+                className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
+              >
+                <Link href={`/u/${user.handle}`} className="shrink-0">
+                  <Avatar name={user.displayName} color={user.avatarColor} size="sm" />
                 </Link>
-                <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
-              </div>
-              <FollowButton targetHandle={user.handle} initialFollowing={false} />
-            </li>
-          )})}
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/u/${user.handle}`}
+                    className="block truncate text-sm font-semibold tracking-tight hover:underline"
+                  >
+                    {user.displayName}
+                  </Link>
+                  <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
+                </div>
+                <FollowButton targetHandle={user.handle} initialFollowing={false} />
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
@@ -51,15 +53,17 @@ export function WhoToFollowSkeleton() {
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border p-4">
       <h3 className="mb-3 text-sm font-semibold tracking-tight">Who to follow</h3>
       <ul className="flex flex-col gap-3">
-        {Array.from({ length: 3 }).map((_, i) => {return (
-          <li key={i} className="flex items-center gap-3">
-            <div className="skeleton-animation h-8 w-8 rounded-full" />
-            <div className="flex flex-1 flex-col gap-1">
-              <div className="skeleton-animation h-3 w-24" />
-              <div className="skeleton-animation h-3 w-16" />
-            </div>
-          </li>
-        )})}
+        {Array.from({ length: 3 }).map((_, i) => {
+          return (
+            <li key={i} className="flex items-center gap-3">
+              <div className="skeleton-animation h-8 w-8 rounded-full" />
+              <div className="flex flex-1 flex-col gap-1">
+                <div className="skeleton-animation h-3 w-24" />
+                <div className="skeleton-animation h-3 w-16" />
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

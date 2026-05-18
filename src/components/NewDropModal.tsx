@@ -25,7 +25,13 @@ export function NewDropModal({ authorName, authorColor }: Props) {
 
   return (
     <>
-      <Button onClick={() => {return setOpen(true)}}>New drop</Button>
+      <Button
+        onClick={() => {
+          return setOpen(true);
+        }}
+      >
+        New drop
+      </Button>
 
       {open ? (
         <div

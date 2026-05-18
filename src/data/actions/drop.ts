@@ -26,7 +26,7 @@ const postDropSchema = z.object({
     .string()
     .min(1, 'Say something')
     .max(1000, '1000 characters max')
-    .transform((s) => s.replace(/\r\n/g, '\n')),
+    .transform(s => s.replace(/\r\n/g, '\n')),
 });
 
 export async function postDrop(formData: FormData) {
@@ -68,7 +68,9 @@ export async function postReply(parentId: string, formData: FormData) {
   }
 
   const store = getStore();
-  const parent = store.drops.find(d => {return d.id === parentId});
+  const parent = store.drops.find(d => {
+    return d.id === parentId;
+  });
   if (!parent) return { error: 'Drop not found', ok: false as const };
 
   const reply: Drop = {
@@ -91,7 +93,9 @@ export async function postReply(parentId: string, formData: FormData) {
 export async function toggleLike(dropId: string) {
   await delay(300);
   const store = getStore();
-  const drop = store.drops.find(d => {return d.id === dropId});
+  const drop = store.drops.find(d => {
+    return d.id === dropId;
+  });
   if (!drop) return { ok: false as const };
 
   const liked = store.likes[store.currentUserHandle] ?? (store.likes[store.currentUserHandle] = new Set());
@@ -110,7 +114,9 @@ export async function toggleLike(dropId: string) {
 export async function toggleRepost(dropId: string) {
   await delay(300);
   const store = getStore();
-  const drop = store.drops.find(d => {return d.id === dropId});
+  const drop = store.drops.find(d => {
+    return d.id === dropId;
+  });
   if (!drop) return { ok: false as const };
 
   const reposted = store.reposts[store.currentUserHandle] ?? (store.reposts[store.currentUserHandle] = new Set());
@@ -131,7 +137,9 @@ export async function toggleRepost(dropId: string) {
 export async function toggleBookmark(dropId: string) {
   await delay(250);
   const store = getStore();
-  const drop = store.drops.find(d => {return d.id === dropId});
+  const drop = store.drops.find(d => {
+    return d.id === dropId;
+  });
   if (!drop) return { ok: false as const };
 
   const bookmarks = store.bookmarks[store.currentUserHandle] ?? (store.bookmarks[store.currentUserHandle] = new Set());
@@ -151,8 +159,12 @@ export async function toggleFollow(targetHandle: string) {
   if (targetHandle === store.currentUserHandle) {
     return { ok: false as const };
   }
-  const me = store.users.find(u => {return u.handle === store.currentUserHandle});
-  const target = store.users.find(u => {return u.handle === targetHandle});
+  const me = store.users.find(u => {
+    return u.handle === store.currentUserHandle;
+  });
+  const target = store.users.find(u => {
+    return u.handle === targetHandle;
+  });
   if (!me || !target) return { ok: false as const };
 
   const follows = store.follows[store.currentUserHandle] ?? (store.follows[store.currentUserHandle] = new Set());

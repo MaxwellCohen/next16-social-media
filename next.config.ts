@@ -2,17 +2,17 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
-  typedRoutes: true,
   experimental: {
+    cachedNavigations: true,
     instantInsights: {
       validationLevel: 'warning',
     },
+    optimisticRouting: true,
+    prefetchInlining: true,
     useOffline: true,
     varyParams: true,
-    prefetchInlining: true,
-    optimisticRouting: true,
-    cachedNavigations: true,
   },
+  typedRoutes: true,
 };
 
 export default nextConfig;

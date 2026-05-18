@@ -57,11 +57,13 @@ async function Replies({ params }: Params) {
         </div>
       ) : (
         <ul>
-          {replies.map(reply => {return (
-            <li key={reply.id}>
-              <Drop drop={reply} compact />
-            </li>
-          )})}
+          {replies.map(reply => {
+            return (
+              <li key={reply.id}>
+                <Drop drop={reply} compact />
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
@@ -71,11 +73,13 @@ async function Replies({ params }: Params) {
 function RepliesLoading() {
   return (
     <ul>
-      {Array.from({ length: 2 }).map((_, i) => {return (
-        <li key={i}>
-          <DropSkeleton />
-        </li>
-      )})}
+      {Array.from({ length: 2 }).map((_, i) => {
+        return (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        );
+      })}
     </ul>
   );
 }

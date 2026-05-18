@@ -10,7 +10,9 @@ export function cn(...inputs: ClassValue[]) {
  * Don't remove. The whole demo relies on it.
  */
 export function delay(ms: number) {
-  return new Promise(resolve => {return setTimeout(resolve, ms)});
+  return new Promise(resolve => {
+    return setTimeout(resolve, ms);
+  });
 }
 
 export function timeAgo(date: Date): string {

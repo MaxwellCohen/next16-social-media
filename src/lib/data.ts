@@ -100,7 +100,7 @@ const USERS: User[] = [
   },
   {
     avatarColor: 'from-blue-400 to-purple-600',
-    bio: 'Frontend lead. Reading source code so you don\'t have to.',
+    bio: "Frontend lead. Reading source code so you don't have to.",
     displayName: 'Wren',
     followers: 2_900,
     following: 188,
@@ -139,7 +139,7 @@ const USERS: User[] = [
 const DROPS: Drop[] = [
   {
     authorHandle: 'aurorascharff',
-    body: "small canary win: when the same data is read by four components, the framework only fetches it once. you stop hoisting things to the route just to keep them fast.",
+    body: 'small canary win: when the same data is read by four components, the framework only fetches it once. you stop hoisting things to the route just to keep them fast.',
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
     likes: 940,
@@ -193,7 +193,7 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'boundary',
-    body: "designing a new feature is mostly figuring out which loading state never has to exist.",
+    body: 'designing a new feature is mostly figuring out which loading state never has to exist.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
@@ -223,7 +223,7 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "tiny pattern I like: keep the data fetch right next to the component that uses it. when something changes, you change it in one place. the cache makes it free.",
+    body: 'tiny pattern I like: keep the data fetch right next to the component that uses it. when something changes, you change it in one place. the cache makes it free.',
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
     likes: 1_180,
@@ -294,7 +294,7 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: "a thing I keep coming back to: a faster app and a simpler app should not be opposites. they usually are. when they line up, I notice.",
+    body: 'a thing I keep coming back to: a faster app and a simpler app should not be opposites. they usually are. when they line up, I notice.',
     createdAt: new Date(now - 22 * hour),
     id: 'd15',
     likes: 2_410,
@@ -374,7 +374,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'streambot',
-    body: "this is the kind of thing you forget existed in any other model. wild.",
+    body: 'this is the kind of thing you forget existed in any other model. wild.',
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,

@@ -70,14 +70,13 @@ async function ProfileFeed({ params }: Params) {
   }
   return (
     <ul>
-      {items.map(item => {return (
-        <li key={`${item.kind}-${item.drop.id}`}>
-          <Drop
-            drop={item.drop}
-            repostedBy={item.kind === 'repost' ? item.repostedBy : undefined}
-          />
-        </li>
-      )})}
+      {items.map(item => {
+        return (
+          <li key={`${item.kind}-${item.drop.id}`}>
+            <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -100,11 +99,13 @@ function ProfileHeaderSkeleton() {
 function ProfileFeedSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 3 }).map((_, i) => {return (
-        <li key={i}>
-          <DropSkeleton />
-        </li>
-      )})}
+      {Array.from({ length: 3 }).map((_, i) => {
+        return (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        );
+      })}
     </ul>
   );
 }

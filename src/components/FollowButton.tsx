@@ -15,7 +15,9 @@ type Props = {
 const CONFIRMATION_HOLD_MS = 1200;
 
 export function FollowButton({ targetHandle, initialFollowing }: Props) {
-  const [following, setOptimistic] = useOptimistic<boolean, void>(initialFollowing, state => {return !state});
+  const [following, setOptimistic] = useOptimistic<boolean, void>(initialFollowing, state => {
+    return !state;
+  });
   const [, startTransition] = useTransition();
   // Confirmation flash lives outside the transition so it survives the
   // server response. Cleared by a setTimeout for a fixed duration.
@@ -29,7 +31,9 @@ export function FollowButton({ targetHandle, initialFollowing }: Props) {
       onClick={() => {
         // Snap UI to the new state and flash the confirmation.
         setConfirmation(following ? 'removed' : 'followed');
-        window.setTimeout(() => {return setConfirmation(null)}, CONFIRMATION_HOLD_MS);
+        window.setTimeout(() => {
+          return setConfirmation(null);
+        }, CONFIRMATION_HOLD_MS);
 
         startTransition(async () => {
           setOptimistic();

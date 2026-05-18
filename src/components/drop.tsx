@@ -50,9 +50,7 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
 
         <div className="mt-3 flex flex-col gap-3">
           <DropBody body={drop.body} compact={false} detail />
-          {drop.embeddedCode ? (
-            <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
-          ) : null}
+          {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
           {drop.tags.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {drop.tags.map(t => {
@@ -88,11 +86,7 @@ export async function Drop({ drop, compact = false, detail = false, repostedBy }
         descendant (avatar link, name link, tag pills, action buttons, code
         blocks for selection) opts back in with `relative z-20`.
       */}
-      <Link
-        href={`/drop/${drop.id}`}
-        aria-label={`Drop by ${author.displayName}`}
-        className="absolute inset-0 z-10"
-      />
+      <Link href={`/drop/${drop.id}`} aria-label={`Drop by ${author.displayName}`} className="absolute inset-0 z-10" />
       {reposter ? (
         <Link
           href={`/u/${reposter.handle}`}

@@ -6,7 +6,9 @@ import { getStore, type Drop } from '@/lib/data';
 import { delay } from '@/lib/utils';
 
 function topLevel(drops: Drop[]) {
-  return drops.filter(d => {return !d.parentId});
+  return drops.filter(d => {
+    return !d.parentId;
+  });
 }
 
 export const getFeed = cache(async () => {
@@ -14,7 +16,9 @@ export const getFeed = cache(async () => {
   cacheTag('feed');
 
   await delay(500);
-  return topLevel(getStore().drops).sort((a, b) => {return b.createdAt.getTime() - a.createdAt.getTime()});
+  return topLevel(getStore().drops).sort((a, b) => {
+    return b.createdAt.getTime() - a.createdAt.getTime();
+  });
 });
 
 export const getPersonalizedFeed = cache(async (userHandle: string) => {
@@ -25,8 +29,12 @@ export const getPersonalizedFeed = cache(async (userHandle: string) => {
   const store = getStore();
   const follows = store.follows[userHandle] ?? new Set();
   return topLevel(store.drops)
-    .filter(d => {return follows.has(d.authorHandle) || d.authorHandle === userHandle})
-    .sort((a, b) => {return b.createdAt.getTime() - a.createdAt.getTime()});
+    .filter(d => {
+      return follows.has(d.authorHandle) || d.authorHandle === userHandle;
+    })
+    .sort((a, b) => {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
 });
 
 export const getDrop = cache(async (id: string) => {
@@ -34,14 +42,22 @@ export const getDrop = cache(async (id: string) => {
   cacheTag('drops', `drop-${id}`);
 
   await delay(300);
-  return getStore().drops.find(d => {return d.id === id}) ?? null;
+  return (
+    getStore().drops.find(d => {
+      return d.id === id;
+    }) ?? null
+  );
 });
 
 export const getReplies = cache(async (dropId: string) => {
   await delay(800);
   return getStore()
-    .drops.filter(d => {return d.parentId === dropId})
-    .sort((a, b) => {return a.createdAt.getTime() - b.createdAt.getTime()});
+    .drops.filter(d => {
+      return d.parentId === dropId;
+    })
+    .sort((a, b) => {
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
 });
 
 export type ProfileFeedItem =
@@ -61,18 +77,26 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
   const store = getStore();
 
   const authored: ProfileFeedItem[] = topLevel(store.drops)
-    .filter(d => {return d.authorHandle === handle})
-    .map(drop => {return { drop, kind: 'drop' as const, pinnedAt: drop.createdAt.getTime() }});
+    .filter(d => {
+      return d.authorHandle === handle;
+    })
+    .map(drop => {
+      return { drop, kind: 'drop' as const, pinnedAt: drop.createdAt.getTime() };
+    });
 
   const repostedIds = store.reposts[handle] ?? new Set();
   const reposted: ProfileFeedItem[] = [];
   for (const id of repostedIds) {
-    const drop = store.drops.find(d => {return d.id === id});
+    const drop = store.drops.find(d => {
+      return d.id === id;
+    });
     if (!drop || drop.parentId) continue;
     reposted.push({ drop, kind: 'repost' as const, pinnedAt: drop.createdAt.getTime() + 1, repostedBy: handle });
   }
 
-  return [...authored, ...reposted].sort((a, b) => {return b.pinnedAt - a.pinnedAt});
+  return [...authored, ...reposted].sort((a, b) => {
+    return b.pinnedAt - a.pinnedAt;
+  });
 });
 
 export const isReposted = cache(async (userHandle: string, dropId: string) => {
@@ -89,8 +113,12 @@ export const getDropsByTag = cache(async (tag: string) => {
 
   await delay(400);
   return topLevel(getStore().drops)
-    .filter(d => {return d.tags.includes(tag)})
-    .sort((a, b) => {return b.createdAt.getTime() - a.createdAt.getTime()});
+    .filter(d => {
+      return d.tags.includes(tag);
+    })
+    .sort((a, b) => {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
 });
 
 export const isLiked = cache(async (userHandle: string, dropId: string) => {
@@ -117,6 +145,10 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
   const store = getStore();
   const ids = store.bookmarks[userHandle] ?? new Set();
   return topLevel(store.drops)
-    .filter(d => {return ids.has(d.id)})
-    .sort((a, b) => {return b.createdAt.getTime() - a.createdAt.getTime()});
+    .filter(d => {
+      return ids.has(d.id);
+    })
+    .sort((a, b) => {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
 });

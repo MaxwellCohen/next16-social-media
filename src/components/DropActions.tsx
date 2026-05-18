@@ -31,18 +31,24 @@ export function DropActions({
 
   const [likeState, setLikeOptimistic] = useOptimistic<LikeState, void>(
     { count: likes, liked: initialLiked },
-    state => {return {
-      count: state.count + (state.liked ? -1 : 1),
-      liked: !state.liked,
-    }},
+    state => {
+      return {
+        count: state.count + (state.liked ? -1 : 1),
+        liked: !state.liked,
+      };
+    },
   );
 
   const [repostState, setRepostOptimistic] = useOptimistic<RepostState, void>(
     { count: reposts, reposted: initialReposted },
-    state => {return { count: state.count + (state.reposted ? -1 : 1), reposted: !state.reposted }},
+    state => {
+      return { count: state.count + (state.reposted ? -1 : 1), reposted: !state.reposted };
+    },
   );
 
-  const [bookmarked, setBookmarkOptimistic] = useOptimistic<boolean, void>(initialBookmarked, state => {return !state});
+  const [bookmarked, setBookmarkOptimistic] = useOptimistic<boolean, void>(initialBookmarked, state => {
+    return !state;
+  });
 
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">

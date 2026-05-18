@@ -17,7 +17,11 @@ export const getTrendingTags = cache(async () => {
     }
   }
   return Array.from(counts.entries())
-    .map(([name, count]) => {return { count, name }})
-    .sort((a, b) => {return b.count - a.count})
+    .map(([name, count]) => {
+      return { count, name };
+    })
+    .sort((a, b) => {
+      return b.count - a.count;
+    })
     .slice(0, 6);
 });

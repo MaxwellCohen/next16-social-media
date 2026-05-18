@@ -26,9 +26,7 @@ export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
       aria-current={active ? 'page' : undefined}
       className={cn(
         'flex items-center gap-3 rounded-full px-3 py-2 text-sm transition-colors',
-        active
-          ? 'bg-accent/10 text-accent dark:bg-accent/15'
-          : 'hover:bg-card dark:hover:bg-card-dark',
+        active ? 'bg-accent/10 text-accent dark:bg-accent/15' : 'hover:bg-card dark:hover:bg-card-dark',
       )}
     >
       {icon}

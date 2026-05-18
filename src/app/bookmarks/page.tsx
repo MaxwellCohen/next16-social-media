@@ -31,11 +31,13 @@ async function BookmarksFeed() {
 
   return (
     <ul>
-      {drops.map(drop => {return (
-        <li key={drop.id}>
-          <Drop drop={drop} />
-        </li>
-      )})}
+      {drops.map(drop => {
+        return (
+          <li key={drop.id}>
+            <Drop drop={drop} />
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -43,11 +45,13 @@ async function BookmarksFeed() {
 function BookmarksSkeleton() {
   return (
     <ul>
-      {Array.from({ length: 3 }).map((_, i) => {return (
-        <li key={i}>
-          <DropSkeleton />
-        </li>
-      )})}
+      {Array.from({ length: 3 }).map((_, i) => {
+        return (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        );
+      })}
     </ul>
   );
 }
