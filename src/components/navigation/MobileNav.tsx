@@ -1,6 +1,6 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
-import { MobileTabLink } from '@/components/NavLink';
+import { MobileTabLink } from '@/components/navigation/NavLink';
 import { Avatar } from '@/components/ui/Avatar';
 import { DropMark } from '@/components/ui/DropMark';
 import { getCurrentUser } from '@/data/queries/user';

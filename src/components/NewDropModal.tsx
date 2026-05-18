@@ -2,14 +2,12 @@
 
 import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
-import { useActionState, useEffect, useRef } from 'react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { postDrop } from '@/data/actions/drop';
-import { cn } from '@/lib/utils';
 
 type Props = {
-  authorName: string;
-  authorColor: string;
+  avatar: ReactNode;
 };
 
 type State = { error: string | null; submittedAt: number };
@@ -22,7 +20,7 @@ async function submit(_: State, formData: FormData): Promise<State> {
   return { error: null, submittedAt: Date.now() };
 }
 
-export function NewDropModal({ authorName, authorColor }: Props) {
+export function NewDropModal({ avatar }: Props) {
   const dialog = Ariakit.useDialogStore();
   const [state, formAction, pending] = useActionState(submit, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
@@ -66,15 +64,7 @@ export function NewDropModal({ authorName, authorColor }: Props) {
 
         <form ref={formRef} action={formAction}>
           <div className="flex gap-3 px-5 pt-4 pb-3">
-            <div
-              className={cn(
-                'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br font-semibold text-white uppercase shadow-sm',
-                authorColor,
-              )}
-              aria-hidden
-            >
-              {authorName.charAt(0)}
-            </div>
+            {avatar}
             <Ariakit.VisuallyHidden>
               <label htmlFor="new-drop-body">Drop body</label>
             </Ariakit.VisuallyHidden>

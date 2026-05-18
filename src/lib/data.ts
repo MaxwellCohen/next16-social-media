@@ -122,7 +122,7 @@ const USERS: User[] = [
 const DROPS: Drop[] = [
   {
     authorHandle: 'aurorascharff',
-    body: 'one directive turns any function into a cached server function. opt in per-component instead of per-route.',
+    body: 'One directive turns any function into a cached server function. Opt in per-component instead of per-route.',
     createdAt: new Date(now - 8 * minute),
     embeddedCode: {
       code: `async function getDrop(id) {
@@ -139,7 +139,7 @@ const DROPS: Drop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "tags + updateTag is the cleanest invalidation story i've used. no router refresh dance, no client round-trip.",
+    body: "Tags + updateTag is the cleanest invalidation story I've used. No router refresh dance, no client round-trip.",
     createdAt: new Date(now - 18 * minute),
     embeddedCode: {
       code: `'use cache'
@@ -156,7 +156,7 @@ updateTag('feed')`,
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'optimistic UI is now a few lines. snap the state, fire the action, react reconciles when the server agrees.',
+    body: 'Optimistic UI is now a few lines. Snap the state, fire the action, React reconciles when the server agrees.',
     createdAt: new Date(now - 45 * minute),
     embeddedCode: {
       code: `const [count, addOptimistic] = useOptimistic(likes, n => n + 1)
@@ -174,7 +174,7 @@ startTransition(() => {
   },
   {
     authorHandle: 'quill',
-    body: 'params is a promise now. await it where you need it. the rest of the page streams while it resolves.',
+    body: 'Params is a promise now. Await it where you need it. The rest of the page streams while it resolves.',
     createdAt: new Date(now - 1 * hour),
     embeddedCode: {
       code: `export default async function Page({ params }) {
@@ -191,7 +191,7 @@ startTransition(() => {
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'private cache for per-user data. same primitive, scoped to the request. bookmarks, drafts, feeds you own.',
+    body: 'Private cache for per-user data. Same primitive, scoped to the request. Bookmarks, drafts, feeds you own.',
     createdAt: new Date(now - 2 * hour),
     embeddedCode: {
       code: `async function getBookmarks(handle) {
@@ -209,7 +209,7 @@ startTransition(() => {
   },
   {
     authorHandle: 'onyx',
-    body: 'co-locating data with the component that needs it sounds obvious. then you do it and the codebase gets noticeably smaller.',
+    body: 'Co-locating data with the component that needs it sounds obvious. Then you do it and the codebase gets noticeably smaller.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
@@ -219,7 +219,7 @@ startTransition(() => {
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'suspense boundaries are where the streaming story lives. wrap the slow bit, let the rest paint.',
+    body: 'Suspense boundaries are where the streaming story lives. Wrap the slow bit, let the rest paint.',
     createdAt: new Date(now - 4 * hour),
     embeddedCode: {
       code: `<Suspense fallback={<FeedSkeleton />}>
@@ -235,7 +235,7 @@ startTransition(() => {
   },
   {
     authorHandle: 'wren',
-    body: 'cachelife lets you say how fresh a value needs to be without writing your own ttl logic. small thing, ships every time.',
+    body: 'cacheLife lets you say how fresh a value needs to be without writing your own TTL logic. Small thing, ships every time.',
     createdAt: new Date(now - 5 * hour),
     embeddedCode: {
       code: `'use cache'
@@ -251,7 +251,7 @@ return getTrendingTags()`,
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'useactionstate handles the form lifecycle: pending, errors, success. one hook, no extra state.',
+    body: 'useActionState handles the form lifecycle: pending, errors, success. One hook, no extra state.',
     createdAt: new Date(now - 7 * hour),
     embeddedCode: {
       code: `const [state, action, pending] = useActionState(postDrop, null)
@@ -266,7 +266,7 @@ return <form action={action}>...</form>`,
   },
   {
     authorHandle: 'cinder',
-    body: 'the rsc payload is just data. once that clicks, the rest of the model gets quieter.',
+    body: 'The RSC payload is just data. Once that clicks, the rest of the model gets quieter.',
     createdAt: new Date(now - 9 * hour),
     id: 'd10',
     likes: 612,
@@ -276,7 +276,7 @@ return <form action={action}>...</form>`,
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'the cache components flag is opt-in for now. flip it and everything reads from a tagged, per-component cache.',
+    body: 'The cacheComponents flag is opt-in for now. Flip it and everything reads from a tagged, per-component cache.',
     createdAt: new Date(now - 11 * hour),
     embeddedCode: {
       code: `// next.config.ts
@@ -293,7 +293,7 @@ export default {
   },
   {
     authorHandle: 'halo',
-    body: 'finally building things server-first again. less coordination, less state, less to debug.',
+    body: 'Finally building things server-first again. Less coordination, less state, less to debug.',
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
@@ -303,7 +303,7 @@ export default {
   },
   {
     authorHandle: 'aurorascharff',
-    body: "server actions are just functions. you import them into a client component and call them. that's the whole api.",
+    body: "Server actions are just functions. You import them into a client component and call them. That's the whole API.",
     createdAt: new Date(now - 16 * hour),
     embeddedCode: {
       code: `'use server'
@@ -321,7 +321,7 @@ export async function toggleLike(id) {
   },
   {
     authorHandle: 'echo',
-    body: "we tried cache components on a real codebase this week. removed a lot of effects. didn't replace them with anything.",
+    body: "We tried Cache Components on a real codebase this week. Removed a lot of effects. Didn't replace them with anything.",
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
@@ -331,7 +331,7 @@ export async function toggleLike(id) {
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'streaming + suspense + tags is the trio. learn those three and most of the app router feels obvious.',
+    body: 'Streaming + Suspense + tags is the trio. Learn those three and most of the App Router feels obvious.',
     createdAt: new Date(now - 22 * hour),
     id: 'd15',
     likes: 2_410,
@@ -341,7 +341,7 @@ export async function toggleLike(id) {
   },
   {
     authorHandle: 'aurorascharff',
-    body: '16.3 lands soon. async react patterns get a real home. excited for next week.',
+    body: '16.3 lands soon. Cache Components, runtime prefetch, the whole streaming model gets a real home. Excited for next week.',
     createdAt: new Date(now - 1 * day - 6 * hour),
     id: 'd16',
     likes: 3_810,
@@ -351,7 +351,7 @@ export async function toggleLike(id) {
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'every async react pattern in this app comes back to one rule: do the work close to the thing that uses it.',
+    body: 'Every pattern in this app comes back to one rule: do the work close to the thing that uses it. Caching, streaming, mutations.',
     createdAt: new Date(now - 2 * day),
     id: 'd17',
     likes: 1_120,
@@ -364,7 +364,7 @@ export async function toggleLike(id) {
 const REPLIES: Drop[] = [
   {
     authorHandle: 'onyx',
-    body: 'we just rewrote our invalidation layer around this. so much less code.',
+    body: 'We just rewrote our invalidation layer around this. So much less code.',
     createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
@@ -375,7 +375,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'aurorascharff',
-    body: 'this is the part i wish i had two years ago.',
+    body: 'This is the part I wish I had two years ago.',
     createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
@@ -386,7 +386,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "does cacheTag accept multiple tags? we'd invalidate by user + by feed.",
+    body: "Does cacheTag accept multiple tags? We'd invalidate by user + by feed.",
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -397,7 +397,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'first time useOptimistic + a transition felt obvious. the suspense pieces lined up around it.',
+    body: 'First time useOptimistic + a transition felt obvious. The Suspense pieces lined up around it.',
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
@@ -408,7 +408,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "we kept reaching for client state for this. won't anymore.",
+    body: "We kept reaching for client state for this. Won't anymore.",
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,
@@ -419,7 +419,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'cachelife is doing a lot more for me than i expected. one line, and the dashboard just feels right.',
+    body: 'cacheLife is doing a lot more for me than I expected. One line, and the dashboard just feels right.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -430,7 +430,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'switching to cacheComponents in our app. the flag is the easy part.',
+    body: 'Switching to cacheComponents in our app. The flag is the easy part.',
     createdAt: new Date(now - 10 * hour),
     id: 'r7',
     likes: 140,
@@ -441,7 +441,7 @@ const REPLIES: Drop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'see you in amsterdam. bringing my laptop in case anything explodes live.',
+    body: 'Counting the days. The Cache Components track has been wild this cycle.',
     createdAt: new Date(now - 1 * day),
     id: 'r8',
     likes: 88,

@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { ReplyComposerForm, ReplyComposerFormSkeleton } from '@/app/drop/[id]/_components/ReplyComposerForm';
+import { CurrentUserAvatar, CurrentUserAvatarSkeleton } from '@/components/CurrentUserAvatar';
 import { Drop, DropSkeleton } from '@/components/Drop';
 import { getDrop, getReplies } from '@/data/queries/drop';
-import { getCurrentUser } from '@/data/queries/user';
 
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   const idPromise = params.then(({ id }) => {
@@ -11,7 +11,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
 
   return (
     <div>
-      <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-10 border-b bg-white/80 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5">
+      <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/75 sticky top-0 z-10 border-b bg-white/75 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
 
@@ -21,7 +21,14 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
 
       <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
         <Suspense fallback={<ReplyComposerFormSkeleton />}>
-          <ReplyComposerForm idPromise={idPromise} userPromise={getCurrentUser()} />
+          <ReplyComposerForm
+            idPromise={idPromise}
+            avatar={
+              <Suspense fallback={<CurrentUserAvatarSkeleton />}>
+                <CurrentUserAvatar />
+              </Suspense>
+            }
+          />
         </Suspense>
       </section>
 

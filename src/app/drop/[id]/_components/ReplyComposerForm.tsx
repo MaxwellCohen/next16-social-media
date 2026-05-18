@@ -1,22 +1,19 @@
 'use client';
 
-import { use, useActionState, useEffect, useRef } from 'react';
-import { Avatar } from '@/components/ui/Avatar';
+import { use, useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { postReply } from '@/data/actions/drop';
-import type { User } from '@/lib/data';
 
 type Props = {
   idPromise: Promise<string>;
-  userPromise: Promise<User>;
+  avatar: ReactNode;
 };
 
 type State = { error: string | null; submittedAt: number };
 
 const INITIAL: State = { error: null, submittedAt: 0 };
 
-export function ReplyComposerForm({ idPromise, userPromise }: Props) {
-  const user = use(userPromise);
+export function ReplyComposerForm({ idPromise, avatar }: Props) {
   const dropId = use(idPromise);
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, pending] = useActionState(async (_: State, formData: FormData): Promise<State> => {
@@ -32,7 +29,7 @@ export function ReplyComposerForm({ idPromise, userPromise }: Props) {
   return (
     <form ref={formRef} action={formAction} className="flex flex-col gap-3">
       <div className="flex gap-3">
-        <Avatar name={user.displayName} color={user.avatarColor} size="md" />
+        {avatar}
         <textarea
           name="body"
           rows={2}
