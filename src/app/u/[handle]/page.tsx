@@ -172,7 +172,7 @@ function ProfileHeaderSkeleton() {
       <div className="bg-card dark:bg-card-dark h-32 w-full sm:h-40" aria-hidden />
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <div className="skeleton-animation h-14 w-14 rounded-full" />
+          <div className="skeleton-animation h-14 w-14 rounded-full bg-white dark:bg-black" />
           <div className="pt-12 sm:pt-14">
             <div className="skeleton-animation h-8 w-28 rounded-full" />
           </div>
