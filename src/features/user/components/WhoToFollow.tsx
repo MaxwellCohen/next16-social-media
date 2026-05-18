@@ -42,7 +42,7 @@ export async function WhoToFollow() {
                   </Link>
                   <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
                 </div>
-                <FollowButton targetHandle={user.handle} initialFollowing={user.following} />
+                <FollowButton targetHandle={user.handle} initialFollowing={false} />
               </li>
             );
           })}

@@ -39,28 +39,18 @@ export const getWhoToFollow = cache(async (handle: string) => {
     select: { targetHandle: true },
     where: { followerHandle: handle },
   });
-  const followedSet = new Set(
-    followed.map(f => {
-      return f.targetHandle;
-    }),
-  );
-  // Prefer users you don't follow yet.
-  const fresh = await prisma.user.findMany({
+  return prisma.user.findMany({
     take: 1,
-    where: { handle: { notIn: [handle, ...followedSet] } },
-  });
-  if (fresh.length > 0) {
-    return fresh.map(u => {
-      return { ...u, following: false };
-    });
-  }
-  // All caught up — pull one user you already follow so you can unfollow / refollow.
-  const cycled = await prisma.user.findMany({
-    take: 1,
-    where: { handle: { in: [...followedSet] } },
-  });
-  return cycled.map(u => {
-    return { ...u, following: true };
+    where: {
+      handle: {
+        notIn: [
+          handle,
+          ...followed.map(f => {
+            return f.targetHandle;
+          }),
+        ],
+      },
+    },
   });
 });
 

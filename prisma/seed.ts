@@ -452,6 +452,18 @@ async function main() {
     });
   }
 
+  console.log('Reconciling reply counts...');
+  const parents = await prisma.drop.groupBy({
+    _count: { _all: true },
+    by: ['parentId'],
+    where: { parentId: { not: null } },
+  });
+  await prisma.drop.updateMany({ data: { replyCount: 0 }, where: { parentId: null } });
+  for (const p of parents) {
+    if (!p.parentId) continue;
+    await prisma.drop.update({ data: { replyCount: p._count._all }, where: { id: p.parentId } });
+  }
+
   console.log('Inserting follows...');
   for (const [follower, targets] of Object.entries(FOLLOWS)) {
     for (const target of targets) {

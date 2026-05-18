@@ -147,6 +147,7 @@ export async function toggleFollow(targetHandle: string) {
   const existing = await prisma.follow.findUnique({
     where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } },
   });
+  let recycledHandle: string | null = null;
   if (existing) {
     await prisma.$transaction([
       prisma.follow.delete({ where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } } }),
@@ -159,11 +160,38 @@ export async function toggleFollow(targetHandle: string) {
       prisma.user.update({ data: { following: { increment: 1 } }, where: { handle: me } }),
       prisma.user.update({ data: { followers: { increment: 1 } }, where: { handle: targetHandle } }),
     ]);
+    // Keep "Who to follow" rotating forever: if you'd just followed everyone,
+    // silently unfollow your oldest follow (other than the one you just made)
+    // so a fresh candidate always exists.
+    const [followedCount, totalUsers] = await Promise.all([
+      prisma.follow.count({ where: { followerHandle: me } }),
+      prisma.user.count(),
+    ]);
+    if (followedCount >= totalUsers - 1) {
+      const oldest = await prisma.follow.findFirst({
+        orderBy: { createdAt: 'asc' },
+        where: { followerHandle: me, targetHandle: { not: targetHandle } },
+      });
+      if (oldest) {
+        recycledHandle = oldest.targetHandle;
+        await prisma.$transaction([
+          prisma.follow.delete({
+            where: { followerHandle_targetHandle: { followerHandle: me, targetHandle: oldest.targetHandle } },
+          }),
+          prisma.user.update({ data: { following: { decrement: 1 } }, where: { handle: me } }),
+          prisma.user.update({ data: { followers: { decrement: 1 } }, where: { handle: oldest.targetHandle } }),
+        ]);
+      }
+    }
   }
   updateTag(`user-${targetHandle}`);
   updateTag(`user-${me}`);
   updateTag(`is-following-${targetHandle}`);
   updateTag(`who-to-follow-${me}`);
   updateTag('feed');
+  if (recycledHandle) {
+    updateTag(`user-${recycledHandle}`);
+    updateTag(`is-following-${recycledHandle}`);
+  }
   return { ok: true as const };
 }

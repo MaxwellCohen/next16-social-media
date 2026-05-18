@@ -1,6 +1,7 @@
 'use client';
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { ActionButton } from '@/components/design/ActionButton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
@@ -15,6 +16,7 @@ type Props = {
 
 export function DropActions({ drop, userStatePromise }: Props) {
   const { liked, reposted, bookmarked } = use(userStatePromise);
+  const router = useRouter();
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <ActionButton
@@ -23,6 +25,9 @@ export function DropActions({ drop, userStatePromise }: Props) {
           return <MessageCircle className="h-4 w-4" />;
         }}
         count={drop.replies}
+        action={() => {
+          router.push(`/drop/${drop.id}`);
+        }}
         hoverColor="hover:bg-card hover:text-black dark:hover:bg-card-dark dark:hover:text-white"
       />
       <ActionButton
@@ -34,8 +39,8 @@ export function DropActions({ drop, userStatePromise }: Props) {
         active={reposted}
         activeColor="text-success"
         hoverColor="hover:bg-success/10 hover:text-success"
-        action={() => {
-          return toggleRepost(drop.id);
+        action={async () => {
+          await toggleRepost(drop.id);
         }}
       />
       <ActionButton
@@ -47,8 +52,8 @@ export function DropActions({ drop, userStatePromise }: Props) {
         active={liked}
         activeColor="text-danger"
         hoverColor="hover:bg-danger/10 hover:text-danger"
-        action={() => {
-          return toggleLike(drop.id);
+        action={async () => {
+          await toggleLike(drop.id);
         }}
       />
       <ActionButton
@@ -59,8 +64,8 @@ export function DropActions({ drop, userStatePromise }: Props) {
         active={bookmarked}
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
-        action={() => {
-          return toggleBookmark(drop.id);
+        action={async () => {
+          await toggleBookmark(drop.id);
         }}
       />
     </div>

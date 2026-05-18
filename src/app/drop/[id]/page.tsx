@@ -24,21 +24,28 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
 }
 
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
-  const idPromise = params.then(({ id }) => {
-    return id;
-  });
   return (
     <div>
       <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </header>
       <Suspense fallback={<DropSkeleton />}>
-        <DropDetail idPromise={idPromise} />
+        <DropPageBody params={params} />
       </Suspense>
+    </div>
+  );
+}
+
+async function DropPageBody({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const drop = await getDrop(id);
+  return (
+    <>
+      <Drop drop={drop} detail />
       <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
         <Suspense fallback={<ReplyComposerFormSkeleton />}>
           <ReplyComposerForm
-            idPromise={idPromise}
+            dropId={id}
             avatar={
               <Suspense fallback={<UserAvatarSkeleton size="md" />}>
                 <UserAvatar />
@@ -48,19 +55,14 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
         </Suspense>
       </section>
       <Suspense fallback={<RepliesLoading />}>
-        <Replies idPromise={idPromise} />
+        <Replies id={id} />
       </Suspense>
-    </div>
+    </>
   );
 }
 
-async function DropDetail({ idPromise }: { idPromise: Promise<string> }) {
-  const drop = await getDrop(await idPromise);
-  return <Drop drop={drop} detail />;
-}
-
-async function Replies({ idPromise }: { idPromise: Promise<string> }) {
-  const replies = await getReplies(await idPromise);
+async function Replies({ id }: { id: string }) {
+  const replies = await getReplies(id);
   return (
     <section>
       <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 font-mono text-[11px] tracking-wide uppercase sm:px-5">

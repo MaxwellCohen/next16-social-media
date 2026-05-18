@@ -1,18 +1,17 @@
 'use client';
 
-import { use, useActionState, useRef, type ReactNode } from 'react';
+import { useActionState, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { postReply } from '@/data/actions/drop';
 
 type Props = {
-  idPromise: Promise<string>;
+  dropId: string;
   avatar: ReactNode;
 };
 
 const INITIAL = { error: null as string | null };
 
-export function ReplyComposerForm({ idPromise, avatar }: Props) {
-  const dropId = use(idPromise);
+export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);

@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
 import { cn, formatCount } from '@/lib/utils';
 
@@ -12,43 +11,14 @@ type Props = {
   activeColor?: string;
   hoverColor?: string;
   action?: () => void | Promise<void>;
-  href?: string;
 };
 
-export function ActionButton({ label, icon, count, active = false, activeColor, hoverColor, action, href }: Props) {
+export function ActionButton({ label, icon, count, active = false, activeColor, hoverColor, action }: Props) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
   const [, startTransition] = useTransition();
 
   const visibleCount =
     typeof count === 'number' ? (optimisticActive === active ? count : count + (optimisticActive ? 1 : -1)) : undefined;
-
-  const className = cn(
-    'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
-    optimisticActive && activeColor,
-    hoverColor,
-  );
-
-  const content = (
-    <>
-      {icon(optimisticActive)}
-      {typeof visibleCount === 'number' ? <span>{formatCount(visibleCount)}</span> : null}
-    </>
-  );
-
-  if (href) {
-    return (
-      <Link
-        href={href as never}
-        aria-label={label}
-        className={className}
-        onClick={e => {
-          e.stopPropagation();
-        }}
-      >
-        {content}
-      </Link>
-    );
-  }
 
   return (
     <button
@@ -64,9 +34,14 @@ export function ActionButton({ label, icon, count, active = false, activeColor, 
           await action();
         });
       }}
-      className={className}
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
+        optimisticActive && activeColor,
+        hoverColor,
+      )}
     >
-      {content}
+      {icon(optimisticActive)}
+      {typeof visibleCount === 'number' ? <span>{formatCount(visibleCount)}</span> : null}
     </button>
   );
 }
