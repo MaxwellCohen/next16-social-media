@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="h-screen overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
           <MobileHeader />
-          <div className="mx-auto grid h-full max-w-7xl grid-cols-1 sm:grid-cols-[16rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,38rem)_20rem]">
+          <div className="mx-auto grid h-full max-w-7xl grid-cols-1 sm:grid-cols-[17.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
             <Sidebar />
             <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full min-w-0 overflow-y-auto overscroll-y-contain pb-14 sm:border-x sm:pb-0">
               {children}

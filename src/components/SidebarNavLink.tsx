@@ -16,7 +16,7 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const sidebarBase = 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors';
+const sidebarBase = 'flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight transition-colors';
 const sidebarInactive = 'hover:bg-card dark:hover:bg-card-dark';
 const sidebarActive = 'bg-accent/10 text-accent dark:bg-accent/15';
 

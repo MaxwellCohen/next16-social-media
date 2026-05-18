@@ -42,7 +42,7 @@ export const getWhoToFollow = cache(async (handle: string) => {
     where: { followerHandle: handle },
   });
   return prisma.user.findMany({
-    take: 1,
+    take: 3,
     where: {
       handle: {
         notIn: [

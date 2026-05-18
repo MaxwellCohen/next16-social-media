@@ -69,9 +69,9 @@ function TagsListSkeleton() {
             className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-3 sm:px-5"
           >
             <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
-            <div className="flex flex-1 flex-col gap-1.5">
-              <Skeleton className="h-4 w-24 rounded" />
-              <Skeleton className="h-3 w-16 rounded" />
+            <div className="flex flex-1 flex-col">
+              <Skeleton className="h-5 w-24 rounded" />
+              <Skeleton className="h-4 w-16 rounded" />
             </div>
           </li>
         );

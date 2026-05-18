@@ -89,7 +89,7 @@ async function ProfileHeader({ params }: Params) {
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
           <UserAvatar handle={user.handle} size="lg" />
-          <div className="h-20 pt-12 sm:h-24 sm:pt-14">
+          <div className="flex h-20 items-end sm:h-24">
             {isMe ? null : (
               <Suspense fallback={<Skeleton className="h-8 w-28 rounded-full" />}>
                 <ProfileFollowButton handle={user.handle} currentHandle={current.handle} />
@@ -176,22 +176,19 @@ function ProfileHeaderSkeleton() {
           <div className="rounded-full bg-white dark:bg-black">
             <UserAvatarSkeleton size="lg" />
           </div>
-          <div className="pt-12 sm:pt-14">
+          <div className="flex h-20 items-end sm:h-24">
             <Skeleton className="h-8 w-28 rounded-full" />
           </div>
         </div>
         <div className="mt-3 flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <Skeleton className="h-6 w-40 rounded" />
-            <Skeleton className="h-3.5 w-24 rounded" />
+          <div className="flex flex-col gap-0.5">
+            <Skeleton className="h-7 w-40 rounded" />
+            <Skeleton className="h-4 w-24 rounded" />
           </div>
-          <div className="flex flex-col gap-2">
-            <Skeleton className="h-4 w-full rounded" />
-            <Skeleton className="h-4 w-2/3 rounded" />
-          </div>
+          <Skeleton className="h-5 w-2/3 rounded" />
           <div className="flex gap-4">
-            <Skeleton className="h-4 w-20 rounded" />
-            <Skeleton className="h-4 w-20 rounded" />
+            <Skeleton className="h-4 w-24 rounded" />
+            <Skeleton className="h-4 w-24 rounded" />
           </div>
         </div>
       </div>
