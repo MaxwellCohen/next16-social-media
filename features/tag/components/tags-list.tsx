@@ -38,16 +38,16 @@ export async function TagsList() {
 export function TagsListSkeleton() {
   return (
     <ul aria-hidden>
-      {Array.from({ length: 8 }).map((_, i) => {
+      {Array.from({ length: 3 }).map((_, i) => {
         return (
           <li
             key={i}
             className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-3 sm:px-5"
           >
             <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
-            <div className="flex flex-1 flex-col">
-              <Skeleton className="h-5 w-24 rounded" />
-              <Skeleton className="h-4 w-16 rounded" />
+            <div className="flex flex-1 flex-col gap-1">
+              <Skeleton className="h-4 w-24 rounded" />
+              <Skeleton className="h-3.5 w-16 rounded" />
             </div>
           </li>
         );
