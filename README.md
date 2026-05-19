@@ -18,15 +18,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure
 
 ```
-src/
-  app/                  Pages and layouts
-  components/           Shared UI (sidebar, mobile nav, theme, primitives)
-  features/
-    drop/               Queries, actions, and components for drops
-    user/               Queries, actions, and components for users
-    tag/                Queries and components for tags
-  types/                Shared types
-  lib/                  Prisma client, utilities, syntax helpers
+app/                    Pages and layouts
+components/             Shared UI (sidebar, theme, primitives)
+features/
+  drop/                 Queries, actions, and components for drops
+  user/                 Queries, actions, and components for users
+  tag/                  Queries and components for tags
+types/                  Shared types
+lib/                    Prisma client, utilities, syntax helpers
 prisma/                 Schema and seed data
 ```
 
