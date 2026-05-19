@@ -139,7 +139,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'Just launched the redesign of my portfolio :sparkle: Three years overdue, finally honest about what I actually do. Less hero copy, more screenshots of the work.',
+    body: 'Just launched the redesign of my portfolio :shipit: Three years overdue, finally honest about what I actually do. Less hero copy, more screenshots of the work.',
     createdAt: new Date(now - 1 * hour),
     id: 'd4',
     likes: 540,
@@ -189,7 +189,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Today's small ship :ship: an RSS feed for my talks. I keep forgetting which conferences I said yes to. Now I just subscribe to myself.",
+    body: "Today's small ship :shipit: an RSS feed for my talks. I keep forgetting which conferences I said yes to. Now I just subscribe to myself.",
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
     likes: 1_180,
@@ -359,7 +359,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Encouragement nobody asked for: ship the thing that has one user :heart: It teaches you more than the thing with the polished pitch deck.',
+    body: 'Encouragement nobody asked for: ship the thing that has one user :lgtm: It teaches you more than the thing with the polished pitch deck.',
     createdAt: new Date(now - 28 * hour),
     id: 'd26',
     likes: 1_640,
@@ -478,7 +478,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Cloning this tonight :bulb: I have a Notes folder named 'someday' that has wanted to be a site for years.",
+    body: "Cloning this tonight :mindblown: I have a Notes folder named 'someday' that has wanted to be a site for years.",
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -489,7 +489,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Forking this immediately :ship: We've been about to build this kit internally for six months.",
+    body: "Forking this immediately :shipit: We've been about to build this kit internally for six months.",
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
@@ -511,7 +511,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'A 200-star Tuesday is the dream :fire: Congrats on the v1.0 — the docs feel really cared for.',
+    body: 'A 200-star Tuesday is the dream :fire: Congrats on the v1.0 — the docs feel really cared for. :lgtm:',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
