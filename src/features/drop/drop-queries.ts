@@ -3,7 +3,6 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
@@ -163,36 +162,6 @@ export const getDropsByTag = cache(async (tag: string) => {
   });
 });
 
-export const isReposted = cache(async (userHandle: string, dropId: string) => {
-  'use cache';
-  cacheTag(`reposted-${userHandle}-${dropId}`);
-  cacheLife('seconds');
-
-  await delay(120);
-  const row = await prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
-  return row !== null;
-});
-
-export const isLiked = cache(async (userHandle: string, dropId: string) => {
-  'use cache';
-  cacheTag(`liked-${userHandle}-${dropId}`);
-  cacheLife('seconds');
-
-  await delay(120);
-  const row = await prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
-  return row !== null;
-});
-
-export const isBookmarked = cache(async (userHandle: string, dropId: string) => {
-  'use cache';
-  cacheTag(`bookmarked-${userHandle}-${dropId}`);
-  cacheLife('seconds');
-
-  await delay(120);
-  const row = await prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle } } });
-  return row !== null;
-});
-
 export const getBookmarkedDrops = cache(async (userHandle: string) => {
   'use cache';
   cacheTag(`bookmarks-${userHandle}`);
@@ -207,20 +176,4 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
   return rows.map(r => {
     return toDrop(r.drop);
   });
-});
-
-export type DropUserState = {
-  liked: boolean;
-  reposted: boolean;
-  bookmarked: boolean;
-};
-
-export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
-  const handle = await getCurrentUserHandle();
-  const [liked, reposted, bookmarked] = await Promise.all([
-    isLiked(handle, dropId),
-    isReposted(handle, dropId),
-    isBookmarked(handle, dropId),
-  ]);
-  return { bookmarked, liked, reposted };
 });

@@ -5,10 +5,10 @@ import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
-import { getDrop, getDropUserState } from '@/features/drop/drop-queries';
+import { getDrop } from '@/features/drop/drop-queries';
 import { TagPill } from '@/features/tag/components/tag-pill';
 import { UserAvatar } from '@/features/user/components/user-avatar';
-import { getUserByHandle } from '@/features/user/user-queries';
+import { getDropUserState, getUserByHandle } from '@/features/user/user-queries';
 
 export async function DropDetail({ id }: { id: string }) {
   const drop = await getDrop(id);

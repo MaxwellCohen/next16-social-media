@@ -6,10 +6,9 @@ import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
-import { getDropUserState } from '@/features/drop/drop-queries';
 import { TagPill } from '@/features/tag/components/tag-pill';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
-import { getCurrentUser, getUserByHandle } from '@/features/user/user-queries';
+import { getCurrentUserHandle, getDropUserState, getUserByHandle } from '@/features/user/user-queries';
 import type { Drop as DropT } from '@/types/drop';
 
 type Props = {
@@ -130,14 +129,14 @@ function AuthorNameSkeleton() {
 }
 
 async function Reposter({ handle }: { handle: string }) {
-  const [reposter, current] = await Promise.all([getUserByHandle(handle), getCurrentUser()]);
+  const [reposter, currentHandle] = await Promise.all([getUserByHandle(handle), getCurrentUserHandle()]);
   return (
     <Link
       href={`/u/${reposter.handle}`}
       className="text-gray hover:text-success relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5"
     >
       <Repeat2 className="h-3 w-3" />
-      <span>{reposter.handle === current.handle ? 'You' : reposter.displayName} reposted</span>
+      <span>{reposter.handle === currentHandle ? 'You' : reposter.displayName} reposted</span>
     </Link>
   );
 }

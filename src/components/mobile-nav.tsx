@@ -2,7 +2,7 @@ import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { DropMark } from '@/components/ui/drop-mark';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { MobileTabLink, MobileTabLinkSkeleton } from './sidebar-nav-link';
 import type { Route } from 'next';
@@ -25,7 +25,7 @@ async function MobileHeaderAvatar() {
   const handle = await getCurrentUserHandle();
   return (
     <Link href={`/u/${handle}` as Route} aria-label="Profile">
-      <UserAvatar size="sm" />
+      <CurrentUserAvatar size="sm" />
     </Link>
   );
 }

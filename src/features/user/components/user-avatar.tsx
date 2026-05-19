@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 type Size = 'sm' | 'md' | 'lg';
 
 type Props = {
-  handle?: string;
+  handle: string;
   size?: Size;
   className?: string;
 };
@@ -17,8 +17,7 @@ const sizes: Record<Size, string> = {
 };
 
 export async function UserAvatar({ handle, size = 'md', className }: Props) {
-  const resolvedHandle = handle ?? (await getCurrentUserHandle());
-  const user = await getUserByHandle(resolvedHandle);
+  const user = await getUserByHandle(handle);
   return (
     <div
       aria-hidden
@@ -32,6 +31,11 @@ export async function UserAvatar({ handle, size = 'md', className }: Props) {
       {user.displayName.charAt(0).toUpperCase()}
     </div>
   );
+}
+
+export async function CurrentUserAvatar({ size = 'md', className }: { size?: Size; className?: string }) {
+  const handle = await getCurrentUserHandle();
+  return <UserAvatar handle={handle} size={size} className={className} />;
 }
 
 export function UserAvatarSkeleton({ size = 'md', className }: { size?: Size; className?: string }) {

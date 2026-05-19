@@ -5,7 +5,7 @@ import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-
 import { Replies } from '@/features/drop/components/replies';
 import { ReplyComposerForm } from '@/features/drop/components/reply-form';
 import { getDrop } from '@/features/drop/drop-queries';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getUserByHandle } from '@/features/user/user-queries';
 import type { Metadata } from 'next';
 
@@ -44,7 +44,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                   dropId={id}
                   avatar={
                     <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                      <UserAvatar />
+                      <CurrentUserAvatar />
                     </Suspense>
                   }
                 />

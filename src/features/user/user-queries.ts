@@ -17,6 +17,10 @@ export const getCurrentUserHandle = cache(async (): Promise<string> => {
 });
 
 export const getCurrentUser = cache(async () => {
+  'use cache: private';
+  cacheTag('current-user');
+  cacheLife('seconds');
+
   return getUserByHandle(await getCurrentUserHandle());
 });
 
@@ -66,4 +70,25 @@ export const isFollowing = cache(async (followerHandle: string, targetHandle: st
     where: { followerHandle_targetHandle: { followerHandle, targetHandle } },
   });
   return row !== null;
+});
+
+export type DropUserState = {
+  liked: boolean;
+  reposted: boolean;
+  bookmarked: boolean;
+};
+
+export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
+  'use cache: private';
+  cacheTag(`user-state-${dropId}`);
+  cacheLife('seconds');
+
+  const handle = await getCurrentUserHandle();
+  await delay(120);
+  const [like, repost, bookmark] = await Promise.all([
+    prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
+    prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
+    prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
+  ]);
+  return { bookmarked: bookmark !== null, liked: like !== null, reposted: repost !== null };
 });

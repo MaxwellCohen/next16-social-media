@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import { Skeleton } from '@/components/ui/skeleton';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { SidebarNavLink } from './sidebar-nav-link';
 import type { Route } from 'next';
@@ -56,7 +56,7 @@ async function SidebarProfilePill() {
       href={`/u/${user.handle}`}
       className="hover:bg-card dark:hover:bg-card-dark flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors"
     >
-      <UserAvatar size="sm" />
+      <CurrentUserAvatar size="sm" />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
         <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>

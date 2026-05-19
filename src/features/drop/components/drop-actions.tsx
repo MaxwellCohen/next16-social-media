@@ -6,7 +6,7 @@ import { use } from 'react';
 import { ActionButton } from '@/components/ui/action-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
-import type { DropUserState } from '@/features/drop/drop-queries';
+import type { DropUserState } from '@/features/user/user-queries';
 import { cn, formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 
