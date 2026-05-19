@@ -1,34 +1,8 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
-import Link from 'next/link';
 import { Suspense } from 'react';
-import { DropMark } from '@/components/ui/drop-mark';
-import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { MobileTabLink, MobileTabLinkSkeleton } from './sidebar-nav-link';
 import type { Route } from 'next';
-
-export function MobileHeader() {
-  return (
-    <header className="border-divider/70 dark:border-divider-dark/70 dark:bg-card-dark/70 sticky top-0 z-20 flex items-center justify-between border-b bg-white/80 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:hidden">
-      <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
-        <MobileHeaderAvatar />
-      </Suspense>
-      <Link href="/" aria-label="Drop home" className="inline-flex items-center">
-        <DropMark size={22} className="text-black dark:text-white" />
-      </Link>
-      <div className="h-8 w-8" aria-hidden />
-    </header>
-  );
-}
-
-async function MobileHeaderAvatar() {
-  const handle = await getCurrentUserHandle();
-  return (
-    <Link href={`/u/${handle}` as Route} aria-label="Profile">
-      <CurrentUserAvatar size="sm" />
-    </Link>
-  );
-}
 
 export function MobileTabBar() {
   return (
