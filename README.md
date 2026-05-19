@@ -1,4 +1,4 @@
-# Next 16 Drop
+# Next 16 Social Media "Drop"
 
 A dev-flavored social network exploring Async React, Cache Components, and streaming with Next.js 16, React 19, Tailwind CSS, Prisma, and Shiki.
 
@@ -18,27 +18,24 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure
 
 ```
-app/                      # Pages and layouts
-components/
-  design/                 # Action prop components (ActionButton, …)
-  theme/                  # Theme provider and toggle
-  ui/                     # Visual primitives (Button, CodeBlock, Skeleton, …)
-features/                 # Feature-sliced UI: drop/, user/, tag/
-data/
-  actions/                # Server Actions
-  queries/                # Data fetching with `'use cache'` + `cacheTag`
-types/                    # Shared types derived from query return types
-lib/                      # Prisma client, utilities, syntax helpers
-prisma/                   # Schema and seed data
+src/
+  app/                  Pages and layouts
+  components/           Shared UI (sidebar, mobile nav, theme, primitives)
+  features/
+    drop/               Queries, actions, and components for drops
+    user/               Queries, actions, and components for users
+    tag/                Queries and components for tags
+  types/                Shared types
+  lib/                  Prisma client, utilities, syntax helpers
+prisma/                 Schema and seed data
 ```
 
-- **components/ui** — visual primitives with no async coordination
-- **components/design** — components that expose action props and handle `useTransition` + `useOptimistic` internally (ActionButton)
-- **features/** — feature-sliced components grouped by domain (drops, users, tags)
+- **components/ui** — Visual primitives with no domain logic
+- **features/** — Feature-sliced modules; each has queries, actions, and components
 
 Every route folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
 
-**Naming:** PascalCase for components, kebab-case for folders, camelCase for functions/hooks. Suffix transition-based functions with "Action".
+**Naming:** PascalCase for components, kebab-case for filenames, camelCase for functions/hooks.
 
 ## Key Patterns
 
@@ -48,9 +45,9 @@ Every route folder should contain everything it needs. Components and functions 
 
 ## Development Flow
 
-- **Fetching data** — Queries in `data/queries/`, wrapped with `'use cache'` + `cacheTag`. Await in Server Components directly.
-- **Mutating data** — Server Actions in `data/actions/` with `"use server"`. Invalidate with `updateTag()`. Use `useOptimistic` for instant feedback.
-- **Caching** — Add `"use cache"` with `cacheTag()` to pages, components, or functions to include them in the static shell.
+- **Fetching data** — Queries in feature `*-queries.ts` files, wrapped with `'use cache'` + `cacheTag`. Await in Server Components directly.
+- **Mutating data** — Server Actions in feature `*-actions.ts` files with `"use server"`. Invalidate with `updateTag()`. Use `useOptimistic` for instant feedback.
+- **Caching** — Add `"use cache"` with `cacheTag()` and `cacheLife()` to pages, components, or functions to include them in the static shell. Use `'use cache: private'` for per-user queries that read cookies.
 - **Errors** — `error.tsx` for boundaries, `not-found.tsx` + `notFound()` for 404s.
 
 ## Database
