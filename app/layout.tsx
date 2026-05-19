@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <div className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 grid-cols-1 sm:grid-cols-[17.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
             <Sidebar />
-            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-h-0 min-w-0 overflow-y-auto overscroll-y-contain pb-[calc(4rem+env(safe-area-inset-bottom))] sm:border-x sm:pb-0">
+            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-h-0 min-w-0 overflow-y-auto overscroll-y-contain pb-20 sm:border-x sm:pb-0">
               {children}
             </main>
             <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-y-none px-4 py-5 lg:flex">
