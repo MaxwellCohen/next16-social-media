@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { useActionState, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EmojiPicker } from '@/components/ui/emoji-picker';
@@ -21,6 +21,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
     if (!result.ok) toast.error(result.error);
     return { error: result.ok ? null : result.error };
   }, INITIAL);
+
   return (
     <form ref={formRef} action={formAction} className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
@@ -30,7 +31,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
           ref={textareaRef}
           rows={1}
           required
-          maxLength={280}
+          maxLength={1000}
           placeholder="Drop a reply…"
           onKeyDown={e => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {

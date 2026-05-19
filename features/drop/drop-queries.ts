@@ -7,7 +7,7 @@ import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
 
-export const FEED_PAGE_SIZE = 10;
+const FEED_PAGE_SIZE = 10;
 
 export type FeedPage = { drops: Drop[]; nextCursor: string | null };
 
@@ -31,29 +31,6 @@ export const getFeed = cache(async (cursor: string | null = null): Promise<FeedP
     drops: page.map(toDrop),
     nextCursor: hasMore ? page[page.length - 1].createdAt.toISOString() : null,
   };
-});
-
-export const getPersonalizedFeed = cache(async (userHandle: string) => {
-  'use cache';
-  cacheTag('feed', `feed-${userHandle}`);
-  cacheLife('seconds');
-
-  await delay(450);
-  const follows = await prisma.follow.findMany({
-    select: { targetHandle: true },
-    where: { followerHandle: userHandle },
-  });
-  const followedHandles = follows.map(f => {
-    return f.targetHandle;
-  });
-  const rows = await prisma.drop.findMany({
-    orderBy: { createdAt: 'desc' },
-    where: {
-      authorHandle: { in: [...followedHandles, userHandle] },
-      parentId: null,
-    },
-  });
-  return rows.map(toDrop);
 });
 
 export const getDrop = cache(async (id: string) => {

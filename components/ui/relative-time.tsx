@@ -18,6 +18,7 @@ export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: 
       clearInterval(id);
     };
   }, [date, verbose]);
+
   return (
     <time dateTime={date.toISOString()} suppressHydrationWarning>
       {label}

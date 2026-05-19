@@ -3,8 +3,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
-import { getWhoToFollow } from '@/features/user/user-queries';
-import { getCurrentUserHandle } from '@/features/user/user-queries';
+import { getCurrentUserHandle, getWhoToFollow } from '@/features/user/user-queries';
 
 export async function WhoToFollow() {
   const handle = await getCurrentUserHandle();

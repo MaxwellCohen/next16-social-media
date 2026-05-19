@@ -11,7 +11,7 @@ const vercelLight = vercelLightRaw as unknown as ThemeRegistrationRaw;
 
 const SUPPORTED_LANGS = ['tsx', 'ts', 'jsx', 'js', 'bash', 'shell', 'json', 'css', 'html', 'md'] as const;
 
-export type SupportedLang = (typeof SUPPORTED_LANGS)[number];
+type SupportedLang = (typeof SUPPORTED_LANGS)[number];
 
 let highlighterPromise: Promise<Highlighter> | null = null;
 
@@ -26,7 +26,7 @@ function getHighlighter(): Promise<Highlighter> {
   return highlighterPromise;
 }
 
-export function normalizeLang(lang: string | undefined): SupportedLang {
+function normalizeLang(lang: string | undefined): SupportedLang {
   const l = (lang ?? '').toLowerCase();
   if ((SUPPORTED_LANGS as readonly string[]).includes(l)) {
     return l as SupportedLang;
