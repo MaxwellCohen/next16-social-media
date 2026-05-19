@@ -2,6 +2,7 @@
 
 import { useActionState, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
+import { EmojiPicker } from '@/components/ui/emoji-picker';
 import { postReply } from '@/features/drop/drop-actions';
 
 type Props = {
@@ -13,6 +14,7 @@ const INITIAL = { error: null as string | null };
 
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
     return { error: result.ok ? null : result.error };
@@ -23,6 +25,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
         {avatar}
         <textarea
           name="body"
+          ref={textareaRef}
           rows={1}
           required
           maxLength={280}
@@ -37,7 +40,8 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
         />
       </div>
       {state.error ? <p className="text-danger text-xs">{state.error}</p> : null}
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        <EmojiPicker textareaRef={textareaRef} />
         <Button type="submit" size="sm" disabled={pending}>
           {pending ? 'Replying…' : 'Reply'}
         </Button>

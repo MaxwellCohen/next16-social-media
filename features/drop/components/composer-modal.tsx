@@ -4,17 +4,19 @@ import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
+import { EmojiPicker } from '@/components/ui/emoji-picker';
 import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
   avatar: ReactNode;
+  onOpenTrigger?: ReactNode;
 };
 
 type State = { error: string | null; submittedAt: number };
 
 const INITIAL: State = { error: null, submittedAt: 0 };
 
-export function NewDropModal({ avatar }: Props) {
+export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const dialog = Ariakit.useDialogStore();
   const [state, formAction, pending] = useActionState(submit, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
@@ -25,6 +27,16 @@ export function NewDropModal({ avatar }: Props) {
   }, [state.submittedAt, dialog]);
   return (
     <>
+      {onOpenTrigger ? (
+        <button
+          type="button"
+          onClick={() => {
+            dialog.show();
+          }}
+        >
+          {onOpenTrigger}
+        </button>
+      ) : null}
       <Button
         onClick={() => {
           dialog.show();
@@ -78,11 +90,14 @@ export function NewDropModal({ avatar }: Props) {
               {state.error}
             </p>
           ) : null}
-          <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
-            <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-            <Button type="submit" disabled={pending}>
-              {pending ? 'Dropping…' : 'Drop it'}
-            </Button>
+          <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between gap-2 border-t px-5 py-3">
+            <EmojiPicker textareaRef={textareaRef} />
+            <div className="flex items-center gap-2">
+              <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
+              <Button type="submit" disabled={pending}>
+                {pending ? 'Dropping…' : 'Drop it'}
+              </Button>
+            </div>
           </footer>
         </form>
       </Ariakit.Dialog>

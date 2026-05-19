@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CodeBlock } from '@/components/ui/code-block';
+import { renderCustomEmojis } from '@/components/ui/custom-emoji';
 
 type Props = {
   body: string;
@@ -74,6 +75,6 @@ function renderText(text: string) {
         </Link>
       );
     }
-    return <span key={i}>{part}</span>;
+    return <span key={i}>{renderCustomEmojis(part)}</span>;
   });
 }

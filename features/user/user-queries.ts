@@ -8,7 +8,7 @@ import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 const SESSION_COOKIE = 'drop-user';
-const DEFAULT_HANDLE = 'aurorascharff';
+const DEFAULT_HANDLE = 'aurora';
 
 export const getCurrentUserHandle = cache(async (): Promise<string> => {
   'use cache: private';
