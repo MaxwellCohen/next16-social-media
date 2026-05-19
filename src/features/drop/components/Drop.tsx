@@ -1,14 +1,14 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TagPill } from '@/components/ui/TagPill';
 import { getDropUserState } from '@/data/queries/drop';
 import { getCurrentUser, getUserByHandle } from '@/data/queries/user';
+import { CodeBlock } from '@/features/drop/components/CodeBlock';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
 import { DropBody } from '@/features/drop/components/DropBody';
+import { TagPill } from '@/features/tag/components/TagPill';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
 import type { Drop as DropT } from '@/types/drop';
 

@@ -2,13 +2,13 @@
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
-import type { Route } from 'next';
 import { use } from 'react';
-import { ActionButton } from '@/components/design/ActionButton';
+import { ActionButton } from '@/components/ui/ActionButton';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
 import type { DropUserState } from '@/data/queries/drop';
 import { cn, formatCount } from '@/lib/utils';
+import type { Route } from 'next';
 
 type Props = {
   dropId: string;

@@ -1,4 +1,4 @@
-import { CopyButton } from '@/components/ui/CopyButton';
+import { CopyButton } from '@/features/drop/components/CopyButton';
 import { highlight } from '@/lib/syntax';
 
 type Props = {

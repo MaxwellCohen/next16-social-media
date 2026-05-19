@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CodeBlock } from '@/components/ui/CodeBlock';
+import { CodeBlock } from '@/features/drop/components/CodeBlock';
 
 type Props = {
   body: string;

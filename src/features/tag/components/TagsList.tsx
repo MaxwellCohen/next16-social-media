@@ -1,0 +1,56 @@
+import { Hash } from 'lucide-react';
+import Link from 'next/link';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { getAllTags } from '@/data/queries/tag';
+import { formatCount } from '@/lib/utils';
+import type { Route } from 'next';
+
+export async function TagsList() {
+  const tags = await getAllTags();
+  if (tags.length === 0) {
+    return <p className="text-gray p-6 text-sm">No tags yet.</p>;
+  }
+  return (
+    <ul>
+      {tags.map(tag => {
+        return (
+          <li key={tag.name}>
+            <Link
+              href={`/tag/${tag.name}` as Route}
+              className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-center gap-3 border-b px-4 py-3 transition-colors sm:px-5"
+            >
+              <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
+              <div className="flex flex-1 flex-col">
+                <span className="text-sm font-semibold tracking-tight">#{tag.name}</span>
+                <span className="text-gray font-mono text-[11px]">
+                  {formatCount(tag.count)} {tag.count === 1 ? 'drop' : 'drops'}
+                </span>
+              </div>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export function TagsListSkeleton() {
+  return (
+    <ul aria-hidden>
+      {Array.from({ length: 8 }).map((_, i) => {
+        return (
+          <li
+            key={i}
+            className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-3 sm:px-5"
+          >
+            <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
+            <div className="flex flex-1 flex-col">
+              <Skeleton className="h-5 w-24 rounded" />
+              <Skeleton className="h-4 w-16 rounded" />
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

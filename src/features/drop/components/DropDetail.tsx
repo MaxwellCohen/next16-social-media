@@ -1,36 +1,20 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { TagPill } from '@/components/ui/TagPill';
 import { getDrop, getDropUserState } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
+import { CodeBlock } from '@/features/drop/components/CodeBlock';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
 import { DropBody } from '@/features/drop/components/DropBody';
+import { TagPill } from '@/features/tag/components/TagPill';
 import { UserAvatar } from '@/features/user/components/UserAvatar';
 
 export async function DropDetail({ id }: { id: string }) {
   const drop = await getDrop(id);
-  const author = await getUserByHandle(drop.authorHandle);
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
-      <header className="flex items-center gap-3">
-        <Link href={`/u/${author.handle}`} className="shrink-0">
-          <UserAvatar handle={author.handle} size="lg" />
-        </Link>
-        <div className="flex min-w-0 flex-col">
-          <Link
-            href={`/u/${author.handle}`}
-            className="font-semibold tracking-tight text-black hover:underline dark:text-white"
-          >
-            {author.displayName}
-          </Link>
-          <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
-            @{author.handle}
-          </Link>
-        </div>
-      </header>
+      <DropAuthor handle={drop.authorHandle} />
       <div className="mt-3 flex flex-col gap-3">
         <DropBody body={drop.body} detail />
         {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
@@ -58,6 +42,28 @@ export async function DropDetail({ id }: { id: string }) {
         </Suspense>
       </div>
     </article>
+  );
+}
+
+async function DropAuthor({ handle }: { handle: string }) {
+  const author = await getUserByHandle(handle);
+  return (
+    <header className="flex items-center gap-3">
+      <Link href={`/u/${author.handle}`} className="shrink-0">
+        <UserAvatar handle={author.handle} size="lg" />
+      </Link>
+      <div className="flex min-w-0 flex-col">
+        <Link
+          href={`/u/${author.handle}`}
+          className="font-semibold tracking-tight text-black hover:underline dark:text-white"
+        >
+          {author.displayName}
+        </Link>
+        <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
+          @{author.handle}
+        </Link>
+      </div>
+    </header>
   );
 }
 
