@@ -5,6 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { MobileTabBar } from '@/components/mobile-nav';
+import { OfflineIndicator } from '@/components/offline-indicator';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/trending-tags';
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="flex h-[100dvh] flex-col overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
+          <OfflineIndicator />
           <div className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
             <Sidebar />
             <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-h-0 min-w-0 overflow-y-auto overscroll-y-contain sm:border-x">
