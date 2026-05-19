@@ -1,6 +1,6 @@
 # Next 16 Social Media "Drop"
 
-A dev-flavored social network exploring Async React, Cache Components, and streaming with Next.js 16, React 19, Tailwind CSS, Prisma, and Shiki.
+A dev-flavored social network demo exploring Async React, Cache Components, and streaming with Next.js 16, React 19, Tailwind CSS, Prisma, and Shiki.
 
 Built with Next.js 16, React 19, Tailwind CSS v4, Prisma 7 on Neon Postgres, and Shiki for server-side syntax highlighting.
 
