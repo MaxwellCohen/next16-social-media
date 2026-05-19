@@ -15,13 +15,10 @@ export function MobileTabBar() {
         <MobileTabLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
         <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-        <MobileProfileTab />
+        {getCurrentUserHandle().then(handle => {
+          return <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
+        })}
       </Suspense>
     </nav>
   );
-}
-
-async function MobileProfileTab() {
-  const handle = await getCurrentUserHandle();
-  return <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
 }

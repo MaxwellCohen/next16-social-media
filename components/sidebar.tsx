@@ -8,7 +8,7 @@ import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/component
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
-import { SidebarNavLink } from './sidebar-nav-link';
+import { SidebarNavLink, SidebarNavLinkSkeleton } from './sidebar-nav-link';
 import type { Route } from 'next';
 
 export function Sidebar() {
@@ -29,8 +29,12 @@ export function Sidebar() {
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
           <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
-        <Suspense fallback={<SidebarNavLinkSkeleton />}>
-          <SidebarProfileLink />
+        <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
+          {getCurrentUserHandle().then(handle => {
+            return (
+              <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
+            );
+          })}
         </Suspense>
       </nav>
       <div className="border-divider dark:border-divider-dark -mx-4 mt-auto -mb-5 flex items-center gap-1 border-t px-2 py-3 sm:-mx-6 sm:px-4">
@@ -71,20 +75,6 @@ function SidebarProfilePillSkeleton() {
         <Skeleton className="h-[17px] w-20 rounded" />
         <Skeleton className="h-[15px] w-14 rounded" />
       </div>
-    </div>
-  );
-}
-
-async function SidebarProfileLink() {
-  const handle = await getCurrentUserHandle();
-  return <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
-}
-
-function SidebarNavLinkSkeleton() {
-  return (
-    <div className="flex items-center gap-4 rounded-lg px-3 py-2.5" aria-hidden>
-      <Skeleton className="h-5 w-5 rounded" />
-      <Skeleton className="h-5 w-16 rounded" />
     </div>
   );
 }

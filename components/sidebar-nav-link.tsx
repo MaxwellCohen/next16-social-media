@@ -53,3 +53,12 @@ export function MobileTabLink({ href, icon, label }: CommonProps) {
     </Link>
   );
 }
+
+export function SidebarNavLinkSkeleton({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span className="text-gray flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight opacity-50">
+      {icon}
+      <span>{label}</span>
+    </span>
+  );
+}
