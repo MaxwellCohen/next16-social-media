@@ -16,6 +16,13 @@ export const getCurrentUserHandle = cache(async (): Promise<string> => {
   return store.get(SESSION_COOKIE)?.value ?? DEFAULT_HANDLE;
 });
 
+export async function verifyUser(): Promise<string> {
+  const handle = await getCurrentUserHandle();
+  const user = await prisma.user.findUnique({ where: { handle } });
+  if (!user) throw new Error('Unauthorized');
+  return handle;
+}
+
 export const getCurrentUser = cache(async () => {
   'use cache: private';
   cacheTag('current-user');

@@ -1,35 +1,39 @@
 'use server';
 
 import { updateTag } from 'next/cache';
-import { getCurrentUserHandle } from '@/features/user/user-queries';
+import { z } from 'zod';
+import { verifyUser } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
+const handleSchema = z.string().min(1).max(30).regex(/^\w+$/);
+
 export async function toggleFollow(targetHandle: string) {
   await delay(300);
-  const me = await getCurrentUserHandle();
-  if (targetHandle === me) {
+  const target = handleSchema.parse(targetHandle);
+  const me = await verifyUser();
+  if (target === me) {
     return { ok: false as const };
   }
   const existing = await prisma.follow.findUnique({
-    where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } },
+    where: { followerHandle_targetHandle: { followerHandle: me, targetHandle: target } },
   });
   if (existing) {
     await prisma.$transaction([
-      prisma.follow.delete({ where: { followerHandle_targetHandle: { followerHandle: me, targetHandle } } }),
+      prisma.follow.delete({ where: { followerHandle_targetHandle: { followerHandle: me, targetHandle: target } } }),
       prisma.user.update({ data: { following: { decrement: 1 } }, where: { handle: me } }),
-      prisma.user.update({ data: { followers: { decrement: 1 } }, where: { handle: targetHandle } }),
+      prisma.user.update({ data: { followers: { decrement: 1 } }, where: { handle: target } }),
     ]);
   } else {
     await prisma.$transaction([
-      prisma.follow.create({ data: { followerHandle: me, targetHandle } }),
+      prisma.follow.create({ data: { followerHandle: me, targetHandle: target } }),
       prisma.user.update({ data: { following: { increment: 1 } }, where: { handle: me } }),
-      prisma.user.update({ data: { followers: { increment: 1 } }, where: { handle: targetHandle } }),
+      prisma.user.update({ data: { followers: { increment: 1 } }, where: { handle: target } }),
     ]);
   }
-  updateTag(`user-${targetHandle}`);
+  updateTag(`user-${target}`);
   updateTag(`user-${me}`);
-  updateTag(`is-following-${targetHandle}`);
+  updateTag(`is-following-${target}`);
   updateTag(`who-to-follow-${me}`);
   updateTag('feed');
   return { ok: true as const };
