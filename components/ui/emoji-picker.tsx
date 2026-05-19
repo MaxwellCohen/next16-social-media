@@ -21,7 +21,7 @@ export function EmojiPicker({ textareaRef }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex min-w-0 items-center gap-0.5 overflow-x-auto">
       {CUSTOM_EMOJIS.map(e => {
         return (
           <button

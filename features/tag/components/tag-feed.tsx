@@ -1,5 +1,5 @@
 import { EmptyState } from '@/components/ui/empty-state';
-import { Drop } from '@/features/drop/components/drop';
+import { DropList } from '@/features/drop/components/drop';
 import { getDropsByTag } from '@/features/drop/drop-queries';
 
 export async function TagFeed({ tag }: { tag: string }) {
@@ -8,15 +8,5 @@ export async function TagFeed({ tag }: { tag: string }) {
     return <EmptyState title="No drops with this tag yet" body="Be the first to use it." />;
   }
 
-  return (
-    <ul>
-      {drops.map(drop => {
-        return (
-          <li key={drop.id}>
-            <Drop drop={drop} />
-          </li>
-        );
-      })}
-    </ul>
-  );
+  return <DropList drops={drops} />;
 }

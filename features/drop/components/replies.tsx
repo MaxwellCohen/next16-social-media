@@ -1,5 +1,5 @@
 import { EmptyState } from '@/components/ui/empty-state';
-import { Drop } from '@/features/drop/components/drop';
+import { DropList } from '@/features/drop/components/drop';
 import { getReplies } from '@/features/drop/drop-queries';
 
 export async function Replies({ id }: { id: string }) {
@@ -12,15 +12,7 @@ export async function Replies({ id }: { id: string }) {
       {replies.length === 0 ? (
         <EmptyState title="No replies yet" body="Be the first to reply." />
       ) : (
-        <ul>
-          {replies.map(reply => {
-            return (
-              <li key={reply.id}>
-                <Drop drop={reply} compact />
-              </li>
-            );
-          })}
-        </ul>
+        <DropList drops={replies} />
       )}
     </section>
   );

@@ -1,8 +1,11 @@
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import type { Route } from 'next';
 
 type Props = {
   label: string;
   icon: React.ReactNode;
+  href?: Route;
   active?: boolean;
   activeColor?: string;
   hoverColor?: string;
@@ -10,7 +13,29 @@ type Props = {
   children?: React.ReactNode;
 };
 
-export function IconButton({ label, icon, active, activeColor, hoverColor, onClick, children }: Props) {
+export function IconButton({ label, icon, href, active, activeColor, hoverColor, onClick, children }: Props) {
+  const className = cn(
+    'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
+    active && activeColor,
+    hoverColor ?? 'hover:bg-card dark:hover:bg-card-dark hover:text-black dark:hover:text-white',
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        aria-label={label}
+        onClick={e => {
+          e.stopPropagation();
+        }}
+        className={className}
+      >
+        {icon}
+        {children}
+      </Link>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -25,11 +50,7 @@ export function IconButton({ label, icon, active, activeColor, hoverColor, onCli
             }
           : undefined
       }
-      className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
-        active && activeColor,
-        hoverColor ?? 'hover:bg-card dark:hover:bg-card-dark hover:text-black dark:hover:text-white',
-      )}
+      className={className}
     >
       {icon}
       {children}

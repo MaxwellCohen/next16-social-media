@@ -1,7 +1,6 @@
 'use client';
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
-import Link from 'next/link';
 import { use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { IconButton } from '@/components/ui/icon-button';
@@ -52,17 +51,13 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
 
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
-      <Link
+      <IconButton
+        label="Reply"
+        icon={<MessageCircle className="h-4 w-4" />}
         href={`/drop/${parentId ?? dropId}` as Route}
-        aria-label="Reply"
-        onClick={e => {
-          e.stopPropagation();
-        }}
-        className="hover:bg-card dark:hover:bg-card-dark inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors hover:text-black dark:hover:text-white"
       >
-        <MessageCircle className="h-4 w-4" />
         <span>{formatCount(replies)}</span>
-      </Link>
+      </IconButton>
       <IconButton
         label="Repost"
         icon={<Repeat2 className="h-4 w-4" />}

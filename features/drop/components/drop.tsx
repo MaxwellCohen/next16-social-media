@@ -88,6 +88,20 @@ export function DropSkeleton() {
   );
 }
 
+export function DropList({ drops, repostedBy }: { drops: DropT[]; repostedBy?: (drop: DropT) => string | undefined }) {
+  return (
+    <ul>
+      {drops.map(drop => {
+        return (
+          <li key={drop.id}>
+            <Drop drop={drop} repostedBy={repostedBy?.(drop)} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function DropListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <ul aria-hidden>

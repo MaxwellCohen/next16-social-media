@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
-import { Drop, DropListSkeleton } from '@/features/drop/components/drop';
+import { DropList, DropListSkeleton } from '@/features/drop/components/drop';
 import { getBookmarkedDrops } from '@/features/drop/drop-queries';
 import { getCurrentUser } from '@/features/user/user-queries';
 import type { Metadata } from 'next';
@@ -43,15 +43,5 @@ async function BookmarksFeed() {
     return <EmptyState title="Nothing saved yet" body="Bookmark a drop to find it here later." />;
   }
 
-  return (
-    <ul>
-      {drops.map(drop => {
-        return (
-          <li key={drop.id}>
-            <Drop drop={drop} />
-          </li>
-        );
-      })}
-    </ul>
-  );
+  return <DropList drops={drops} />;
 }
