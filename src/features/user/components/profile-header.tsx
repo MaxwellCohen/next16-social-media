@@ -18,7 +18,7 @@ export async function ProfileHeader({ handle }: { handle: string }) {
           <UserAvatar handle={user.handle} size="lg" />
           <div className="flex h-20 items-end sm:h-24">
             <Suspense fallback={<Skeleton className="h-8 w-28 rounded-full" />}>
-              <ProfileFollowButton handle={user.handle} />
+              <ProfileFollowButton handle={handle} />
             </Suspense>
           </div>
         </div>
@@ -40,6 +40,12 @@ export async function ProfileHeader({ handle }: { handle: string }) {
       </div>
     </header>
   );
+}
+
+async function ProfileFollowButton({ handle }: { handle: string }) {
+  const currentHandle = await getCurrentUserHandle();
+  if (currentHandle === handle) return null;
+  return <FollowButton targetHandle={handle} followingPromise={isFollowing(currentHandle, handle)} />;
 }
 
 export function ProfileHeaderSkeleton() {
@@ -69,11 +75,4 @@ export function ProfileHeaderSkeleton() {
       </div>
     </header>
   );
-}
-
-async function ProfileFollowButton({ handle }: { handle: string }) {
-  const currentHandle = await getCurrentUserHandle();
-  if (currentHandle === handle) return null;
-  const following = await isFollowing(currentHandle, handle);
-  return <FollowButton targetHandle={handle} initialFollowing={following} />;
 }
