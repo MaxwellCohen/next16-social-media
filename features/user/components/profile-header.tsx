@@ -15,7 +15,9 @@ export async function ProfileHeader({ handle }: { handle: string }) {
       />
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <UserAvatar handle={user.handle} size="lg" />
+          <div className="rounded-full bg-white dark:bg-black">
+            <UserAvatar handle={user.handle} size="lg" />
+          </div>
           <div className="flex h-20 items-end sm:h-24">
             <Suspense fallback={<Skeleton className="h-8 w-28 rounded-full" />}>
               <ProfileFollowButton handle={handle} />
