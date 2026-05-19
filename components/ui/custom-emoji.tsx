@@ -16,14 +16,14 @@ function lucide(Icon: React.FC<{ size?: number; className?: string }>, color: st
 
 export const CUSTOM_EMOJIS: CustomEmoji[] = [
   { icon: lucide(Droplet, 'text-accent'), label: 'Drop', name: 'drop', shortcode: ':drop:' },
-  { icon: lucide(Rocket, 'text-warning'), label: 'Ship it', name: 'shipit', shortcode: ':shipit:' },
+  { icon: lucide(Rocket, 'text-accent'), label: 'Ship it', name: 'shipit', shortcode: ':shipit:' },
   { icon: lucide(Check, 'text-success'), label: 'LGTM', name: 'lgtm', shortcode: ':lgtm:' },
-  { icon: lucide(GitMerge, 'text-accent'), label: 'Merged', name: 'merge', shortcode: ':merge:' },
-  { icon: lucide(Zap, 'text-warning'), label: 'Zap', name: 'zap', shortcode: ':zap:' },
+  { icon: lucide(GitMerge, 'text-success'), label: 'Merged', name: 'merge', shortcode: ':merge:' },
+  { icon: lucide(Zap, 'text-accent'), label: 'Zap', name: 'zap', shortcode: ':zap:' },
   { icon: lucide(Flame, 'text-danger'), label: 'Fire', name: 'fire', shortcode: ':fire:' },
-  { icon: lucide(Bug, 'text-success'), label: 'Bug', name: 'bug', shortcode: ':bug:' },
+  { icon: lucide(Bug, 'text-danger'), label: 'Bug', name: 'bug', shortcode: ':bug:' },
   { icon: lucide(Cloud, 'text-accent'), label: 'Deploy', name: 'deploy', shortcode: ':deploy:' },
-  { icon: lucide(Wrench, 'text-danger'), label: 'Hotfix', name: 'hotfix', shortcode: ':hotfix:' },
+  { icon: lucide(Wrench, 'text-gray'), label: 'Hotfix', name: 'hotfix', shortcode: ':hotfix:' },
   { icon: lucide(Terminal, 'text-gray'), label: 'Terminal', name: 'terminal', shortcode: ':terminal:' },
 ];
 
