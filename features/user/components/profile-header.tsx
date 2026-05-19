@@ -15,7 +15,7 @@ export async function ProfileHeader({ handle }: { handle: string }) {
       />
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <div className="rounded-full bg-white dark:bg-black">
+          <div className="rounded-full bg-white p-1 dark:bg-black">
             <UserAvatar handle={user.handle} size="lg" />
           </div>
           <div className="flex h-20 items-end sm:h-24">
@@ -56,7 +56,7 @@ export function ProfileHeaderSkeleton() {
       <div className="bg-card dark:bg-card-dark h-32 w-full sm:h-40" aria-hidden />
       <div className="px-5 pb-4">
         <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <div className="rounded-full bg-white dark:bg-black">
+          <div className="rounded-full bg-white p-1 dark:bg-black">
             <UserAvatarSkeleton size="lg" />
           </div>
           <div className="flex h-20 items-end sm:h-24">

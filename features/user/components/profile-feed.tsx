@@ -8,6 +8,7 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: 'drops
     if (replies.length === 0) {
       return <EmptyState title="No replies yet" body="When they reply to a drop, it'll show up here." />;
     }
+
     return (
       <ul>
         {replies.map(reply => {
@@ -25,6 +26,7 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: 'drops
   if (items.length === 0) {
     return <EmptyState title="No drops yet" body="When they post something, it'll show up here." />;
   }
+
   return (
     <ul>
       {items.map(item => {

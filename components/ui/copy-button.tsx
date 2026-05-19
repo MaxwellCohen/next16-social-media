@@ -19,6 +19,7 @@ export function CopyButton({ code }: { code: string }) {
       /* ignore */
     }
   }
+
   return (
     <button
       type="button"

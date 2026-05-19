@@ -2,7 +2,7 @@
 
 import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
-import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { useActionState, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EmojiPicker } from '@/components/ui/emoji-picker';
@@ -19,17 +19,18 @@ const INITIAL: State = { error: null, submittedAt: 0 };
 
 export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const dialog = Ariakit.useDialogStore();
-  const [state, formAction, pending] = useActionState(submit, INITIAL);
+  const [state, formAction, pending] = useActionState(async (_: State, formData: FormData) => {
+    const result = await postDrop(formData);
+    if (!result.ok) {
+      toast.error(result.error);
+      return { error: result.error, submittedAt: 0 };
+    }
+    dialog.hide();
+    return { error: null, submittedAt: Date.now() };
+  }, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    if (state.submittedAt > 0) dialog.hide();
-  }, [state.submittedAt, dialog]);
-
-  useEffect(() => {
-    if (state.error) toast.error(state.error);
-  }, [state.error]);
   return (
     <>
       {onOpenTrigger ? (
@@ -108,10 +109,4 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       </Ariakit.Dialog>
     </>
   );
-}
-
-async function submit(_: State, formData: FormData): Promise<State> {
-  const result = await postDrop(formData);
-  if (!result.ok) return { error: result.error, submittedAt: 0 };
-  return { error: null, submittedAt: Date.now() };
 }

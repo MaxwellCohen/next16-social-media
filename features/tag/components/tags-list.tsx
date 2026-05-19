@@ -10,6 +10,7 @@ export async function TagsList() {
   if (tags.length === 0) {
     return <p className="text-gray p-6 text-sm">No tags yet.</p>;
   }
+
   return (
     <ul>
       {tags.map(tag => {

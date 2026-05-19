@@ -42,6 +42,7 @@ async function BookmarksFeed() {
   if (drops.length === 0) {
     return <EmptyState title="Nothing saved yet" body="Bookmark a drop to find it here later." />;
   }
+
   return (
     <ul>
       {drops.map(drop => {

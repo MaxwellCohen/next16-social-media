@@ -7,6 +7,7 @@ export async function TagFeed({ tag }: { tag: string }) {
   if (drops.length === 0) {
     return <EmptyState title="No drops with this tag yet" body="Be the first to use it." />;
   }
+
   return (
     <ul>
       {drops.map(drop => {
