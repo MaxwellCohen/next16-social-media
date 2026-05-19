@@ -2,8 +2,8 @@
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
-import { use } from 'react';
-import { ActionButton } from '@/components/ui/action-button';
+import { use, useOptimistic, useTransition } from 'react';
+import { IconButton } from '@/components/ui/icon-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
 import type { DropUserState } from '@/features/user/user-queries';
@@ -19,8 +19,32 @@ type Props = {
   userStatePromise: Promise<DropUserState>;
 };
 
+type OptimisticState = DropUserState & { repostsDelta: number; likesDelta: number };
+type Toggle = 'liked' | 'reposted' | 'bookmarked';
+
+function reduce(state: OptimisticState, toggle: Toggle): OptimisticState {
+  switch (toggle) {
+    case 'liked':
+      return { ...state, liked: !state.liked, likesDelta: state.likesDelta + (state.liked ? -1 : 1) };
+    case 'reposted':
+      return { ...state, reposted: !state.reposted, repostsDelta: state.repostsDelta + (state.reposted ? -1 : 1) };
+    case 'bookmarked':
+      return { ...state, bookmarked: !state.bookmarked };
+  }
+}
+
 export function DropActions({ dropId, parentId, replies, reposts, likes, userStatePromise }: Props) {
-  const { liked, reposted, bookmarked } = use(userStatePromise);
+  const userState = use(userStatePromise);
+  const [optimistic, addOptimistic] = useOptimistic({ ...userState, likesDelta: 0, repostsDelta: 0 }, reduce);
+  const [, startTransition] = useTransition();
+
+  function toggle(field: Toggle, action: () => Promise<unknown>) {
+    startTransition(async () => {
+      addOptimistic(field);
+      await action();
+    });
+  }
+
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <Link
@@ -34,42 +58,44 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         <MessageCircle className="h-4 w-4" />
         <span>{formatCount(replies)}</span>
       </Link>
-      <ActionButton
+      <IconButton
         label="Repost"
-        icon={() => {
-          return <Repeat2 className="h-4 w-4" />;
-        }}
-        count={reposts}
-        active={reposted}
+        icon={<Repeat2 className="h-4 w-4" />}
+        active={optimistic.reposted}
         activeColor="text-success"
         hoverColor="hover:bg-success/10 hover:text-success"
-        action={async () => {
-          await toggleRepost(dropId);
+        onClick={() => {
+          toggle('reposted', () => {
+            return toggleRepost(dropId);
+          });
         }}
-      />
-      <ActionButton
+      >
+        <span>{formatCount(reposts + optimistic.repostsDelta)}</span>
+      </IconButton>
+      <IconButton
         label="Like"
-        icon={on => {
-          return <Heart className={cn('h-4 w-4', on && 'fill-current')} />;
-        }}
-        count={likes}
-        active={liked}
+        icon={<Heart className={cn('h-4 w-4', optimistic.liked && 'fill-current')} />}
+        active={optimistic.liked}
         activeColor="text-danger"
         hoverColor="hover:bg-danger/10 hover:text-danger"
-        action={async () => {
-          await toggleLike(dropId);
+        onClick={() => {
+          toggle('liked', () => {
+            return toggleLike(dropId);
+          });
         }}
-      />
-      <ActionButton
+      >
+        <span>{formatCount(likes + optimistic.likesDelta)}</span>
+      </IconButton>
+      <IconButton
         label="Bookmark"
-        icon={on => {
-          return <Bookmark className={cn('h-4 w-4', on && 'fill-current')} />;
-        }}
-        active={bookmarked}
+        icon={<Bookmark className={cn('h-4 w-4', optimistic.bookmarked && 'fill-current')} />}
+        active={optimistic.bookmarked}
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
-        action={async () => {
-          await toggleBookmark(dropId);
+        onClick={() => {
+          toggle('bookmarked', () => {
+            return toggleBookmark(dropId);
+          });
         }}
       />
     </div>

@@ -99,7 +99,7 @@ export async function toggleLike(dropId: string) {
     ]);
   }
   updateTag(`drop-${dropId}`);
-  updateTag(`liked-${me}-${dropId}`);
+  updateTag(`user-state-${dropId}`);
   return { ok: true as const };
 }
 
@@ -119,7 +119,7 @@ export async function toggleRepost(dropId: string) {
     ]);
   }
   updateTag(`drop-${dropId}`);
-  updateTag(`reposted-${me}-${dropId}`);
+  updateTag(`user-state-${dropId}`);
   updateTag(`user-drops-${me}`);
   updateTag('feed');
   return { ok: true as const };
@@ -134,7 +134,7 @@ export async function toggleBookmark(dropId: string) {
   } else {
     await prisma.bookmark.create({ data: { dropId, userHandle: me } });
   }
-  updateTag(`bookmarked-${me}-${dropId}`);
+  updateTag(`user-state-${dropId}`);
   updateTag(`bookmarks-${me}`);
   return { ok: true as const };
 }
