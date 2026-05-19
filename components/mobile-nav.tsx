@@ -1,7 +1,7 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import { Suspense } from 'react';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
-import { MobileTabLink, MobileTabLinkSkeleton } from './sidebar-nav-link';
+import { MobileTabLink } from './sidebar-nav-link';
 import type { Route } from 'next';
 
 export function MobileTabBar() {
@@ -12,14 +12,8 @@ export function MobileTabBar() {
     >
       <Suspense>
         <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-      </Suspense>
-      <Suspense>
         <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
-      </Suspense>
-      <Suspense>
         <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-      </Suspense>
-      <Suspense fallback={<MobileTabLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
         <MobileProfileTab />
       </Suspense>
     </nav>

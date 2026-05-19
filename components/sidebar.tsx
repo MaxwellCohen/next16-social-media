@@ -1,13 +1,12 @@
-import { Bookmark, Hash, Home, User } from 'lucide-react';
+import { Bookmark, Hash, Home } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
-import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
+import { getCurrentUser } from '@/features/user/user-queries';
 import { SidebarNavLink } from './sidebar-nav-link';
-import type { Route } from 'next';
 
 export function Sidebar() {
   return (
@@ -23,14 +22,7 @@ export function Sidebar() {
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
         <Suspense>
           <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-        </Suspense>
-        <Suspense>
-          <SidebarProfileLink />
-        </Suspense>
-        <Suspense>
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-        </Suspense>
-        <Suspense>
           <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
       </nav>
@@ -42,11 +34,6 @@ export function Sidebar() {
       </div>
     </aside>
   );
-}
-
-async function SidebarProfileLink() {
-  const handle = await getCurrentUserHandle();
-  return <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
 }
 
 async function SidebarProfilePill() {
