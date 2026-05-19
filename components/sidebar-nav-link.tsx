@@ -27,7 +27,7 @@ export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
       aria-label={label}
       className={cn(
         'flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3',
-        active ? 'bg-accent/10 text-accent dark:bg-accent/15' : 'hover:bg-card dark:hover:bg-card-dark',
+        active ? 'bg-accent/10 text-accent dark:bg-accent/15 dark:text-blue-400' : 'hover:bg-card dark:hover:bg-card-dark',
       )}
     >
       {icon}
