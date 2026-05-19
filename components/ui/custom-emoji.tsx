@@ -15,16 +15,16 @@ function lucide(Icon: React.FC<{ size?: number; className?: string }>, color: st
 }
 
 export const CUSTOM_EMOJIS: CustomEmoji[] = [
-  { icon: lucide(Droplet, 'text-indigo-500'), label: 'Drop', name: 'drop', shortcode: ':drop:' },
-  { icon: lucide(Rocket, 'text-amber-500'), label: 'Ship it', name: 'shipit', shortcode: ':shipit:' },
-  { icon: lucide(Check, 'text-green-500'), label: 'LGTM', name: 'lgtm', shortcode: ':lgtm:' },
-  { icon: lucide(GitMerge, 'text-violet-400'), label: 'Merged', name: 'merge', shortcode: ':merge:' },
-  { icon: lucide(Zap, 'text-amber-400'), label: 'Zap', name: 'zap', shortcode: ':zap:' },
-  { icon: lucide(Flame, 'text-orange-500'), label: 'Fire', name: 'fire', shortcode: ':fire:' },
-  { icon: lucide(Bug, 'text-emerald-500'), label: 'Bug', name: 'bug', shortcode: ':bug:' },
-  { icon: lucide(Cloud, 'text-sky-400'), label: 'Deploy', name: 'deploy', shortcode: ':deploy:' },
-  { icon: lucide(Wrench, 'text-rose-400'), label: 'Hotfix', name: 'hotfix', shortcode: ':hotfix:' },
-  { icon: lucide(Terminal, 'text-violet-400'), label: 'Terminal', name: 'terminal', shortcode: ':terminal:' },
+  { icon: lucide(Droplet, 'text-accent'), label: 'Drop', name: 'drop', shortcode: ':drop:' },
+  { icon: lucide(Rocket, 'text-warning'), label: 'Ship it', name: 'shipit', shortcode: ':shipit:' },
+  { icon: lucide(Check, 'text-success'), label: 'LGTM', name: 'lgtm', shortcode: ':lgtm:' },
+  { icon: lucide(GitMerge, 'text-accent'), label: 'Merged', name: 'merge', shortcode: ':merge:' },
+  { icon: lucide(Zap, 'text-warning'), label: 'Zap', name: 'zap', shortcode: ':zap:' },
+  { icon: lucide(Flame, 'text-danger'), label: 'Fire', name: 'fire', shortcode: ':fire:' },
+  { icon: lucide(Bug, 'text-success'), label: 'Bug', name: 'bug', shortcode: ':bug:' },
+  { icon: lucide(Cloud, 'text-accent'), label: 'Deploy', name: 'deploy', shortcode: ':deploy:' },
+  { icon: lucide(Wrench, 'text-danger'), label: 'Hotfix', name: 'hotfix', shortcode: ':hotfix:' },
+  { icon: lucide(Terminal, 'text-gray'), label: 'Terminal', name: 'terminal', shortcode: ':terminal:' },
 ];
 
 const EMOJI_MAP = new Map(

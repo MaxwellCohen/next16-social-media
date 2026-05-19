@@ -24,7 +24,7 @@ export const getAllTags = cache(async () => {
 });
 
 async function countTags(limit?: number) {
-  const rows = await prisma.drop.findMany({ select: { tags: true } });
+  const rows = await prisma.drop.findMany({ select: { tags: true }, where: { parentId: null } });
   const counts = new Map<string, number>();
   for (const row of rows) {
     if (!row.tags) continue;

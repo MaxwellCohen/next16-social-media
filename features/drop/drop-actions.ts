@@ -83,7 +83,7 @@ export async function postReply(parentId: string, formData: FormData) {
   return { ok: true as const, reply };
 }
 
-const idSchema = z.uuid();
+const idSchema = z.string().min(1).max(30);
 
 export async function toggleLike(dropId: string) {
   await delay(300);
