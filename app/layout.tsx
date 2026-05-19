@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
+import { Toaster } from 'sonner';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </aside>
           </div>
           <MobileTabBar />
+          <Toaster theme="system" position="bottom-center" />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

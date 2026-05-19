@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useRef, type ReactNode } from 'react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EmojiPicker } from '@/components/ui/emoji-picker';
 import { postReply } from '@/features/drop/drop-actions';
@@ -17,6 +18,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
+    if (!result.ok) toast.error(result.error);
     return { error: result.ok ? null : result.error };
   }, INITIAL);
   return (

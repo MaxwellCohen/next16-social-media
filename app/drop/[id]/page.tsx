@@ -31,7 +31,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
-      <PageHeader>
+      <PageHeader back>
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </PageHeader>
       <Suspense fallback={<DropDetailSkeleton />}>

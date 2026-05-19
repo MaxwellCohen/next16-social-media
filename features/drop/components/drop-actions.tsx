@@ -3,6 +3,7 @@
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { use, useOptimistic, useTransition } from 'react';
+import { toast } from 'sonner';
 import { IconButton } from '@/components/ui/icon-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
@@ -41,7 +42,11 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   function toggle(field: Toggle, action: () => Promise<unknown>) {
     startTransition(async () => {
       addOptimistic(field);
-      await action();
+      try {
+        await action();
+      } catch {
+        toast.error('Something went wrong. Try again.');
+      }
     });
   }
 

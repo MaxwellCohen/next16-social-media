@@ -5,7 +5,7 @@ import { getDropsByTag } from '@/features/drop/drop-queries';
 export async function TagHeader({ tag }: { tag: string }) {
   const drops = await getDropsByTag(tag);
   return (
-    <PageHeader>
+    <PageHeader back>
       <div className="text-gray font-mono text-[11px] tracking-wide uppercase">Tag</div>
       <h1 className="text-lg font-bold tracking-tight">#{tag}</h1>
       <div className="text-gray font-mono text-xs">{drops.length} drops</div>

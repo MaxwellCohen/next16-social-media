@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useOptimistic, useTransition } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { toggleFollow } from '@/features/user/user-actions';
 
@@ -22,7 +23,11 @@ export function FollowButton({ targetHandle, followingPromise }: Props) {
       onClick={() => {
         startTransition(async () => {
           setOptimistic(!following);
-          await toggleFollow(targetHandle);
+          try {
+            await toggleFollow(targetHandle);
+          } catch {
+            toast.error('Something went wrong. Try again.');
+          }
         });
       }}
     >

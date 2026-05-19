@@ -3,6 +3,7 @@
 import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EmojiPicker } from '@/components/ui/emoji-picker';
 import { postDrop } from '@/features/drop/drop-actions';
@@ -25,6 +26,10 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   useEffect(() => {
     if (state.submittedAt > 0) dialog.hide();
   }, [state.submittedAt, dialog]);
+
+  useEffect(() => {
+    if (state.error) toast.error(state.error);
+  }, [state.error]);
   return (
     <>
       {onOpenTrigger ? (

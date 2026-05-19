@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { PageHeader } from '@/components/ui/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { ProfileFeed } from '@/features/user/components/profile-feed';
@@ -32,6 +33,9 @@ export const unstable_prefetch = 'force-runtime';
 export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return (
     <div>
+      <PageHeader back>
+        <h1 className="text-lg font-bold tracking-tight">Profile</h1>
+      </PageHeader>
       <Suspense fallback={<ProfileHeaderSkeleton />}>
         {params.then(({ handle }) => {
           return <ProfileHeader handle={handle} />;
