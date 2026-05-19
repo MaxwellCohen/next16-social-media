@@ -42,7 +42,7 @@ const USERS: SeedUser[] = [
     id: 'u1',
   },
   {
-    avatarColor: 'from-violet-500 to-purple-700',
+    avatarColor: 'from-cyan-400 to-blue-600',
     bio: 'Backend, infra, the occasional bug hunt. Berlin.',
     displayName: 'Vex',
     followers: 8_300,
@@ -51,7 +51,7 @@ const USERS: SeedUser[] = [
     id: 'u2',
   },
   {
-    avatarColor: 'from-cyan-400 to-blue-600',
+    avatarColor: 'from-violet-500 to-blue-500',
     bio: 'Design engineer. Building components and patterns.',
     displayName: 'Quill',
     followers: 4_120,
@@ -60,7 +60,7 @@ const USERS: SeedUser[] = [
     id: 'u3',
   },
   {
-    avatarColor: 'from-purple-500 to-violet-700',
+    avatarColor: 'from-sky-400 to-blue-700',
     bio: 'Staff engineer on performance. Loves a good flame graph.',
     displayName: 'Onyx',
     followers: 6_840,
@@ -69,7 +69,7 @@ const USERS: SeedUser[] = [
     id: 'u4',
   },
   {
-    avatarColor: 'from-sky-400 to-blue-600',
+    avatarColor: 'from-blue-400 to-blue-700',
     bio: "Frontend lead. Reading source code so you don't have to.",
     displayName: 'Wren',
     followers: 2_900,
@@ -78,7 +78,7 @@ const USERS: SeedUser[] = [
     id: 'u5',
   },
   {
-    avatarColor: 'from-fuchsia-500 to-purple-600',
+    avatarColor: 'from-teal-400 to-blue-600',
     bio: 'DX and dev tools at a small shop. Coffee enthusiast.',
     displayName: 'Cinder',
     followers: 5_330,
@@ -87,7 +87,7 @@ const USERS: SeedUser[] = [
     id: 'u6',
   },
   {
-    avatarColor: 'from-blue-400 to-indigo-600',
+    avatarColor: 'from-sky-500 to-blue-600',
     bio: 'Full-stack. Building things on the side, mostly tools.',
     displayName: 'Halo',
     followers: 1_870,
@@ -96,7 +96,7 @@ const USERS: SeedUser[] = [
     id: 'u7',
   },
   {
-    avatarColor: 'from-violet-400 to-indigo-600',
+    avatarColor: 'from-indigo-500 to-blue-700',
     bio: 'CTO at a startup. Hiring is hard. Shipping is harder.',
     displayName: 'Echo',
     followers: 2_140,
