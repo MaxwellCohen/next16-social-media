@@ -154,3 +154,19 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
     return toDrop(r.drop);
   });
 });
+
+export const searchDrops = cache(async (query: string) => {
+  'use cache';
+  cacheTag('drops', `search-${query}`);
+  cacheLife('seconds');
+
+  await delay(300);
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: {
+      body: { contains: query, mode: 'insensitive' },
+      parentId: null,
+    },
+  });
+  return rows.map(toDrop);
+});

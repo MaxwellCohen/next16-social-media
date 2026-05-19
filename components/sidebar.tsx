@@ -1,11 +1,13 @@
-import { Bookmark, Hash, Home } from 'lucide-react';
+import { Bookmark, Hash, Home, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser } from '@/features/user/user-queries';
+import { prisma } from '@/lib/db';
 import { SidebarNavLink } from './sidebar-nav-link';
 
 export function Sidebar() {
@@ -22,6 +24,7 @@ export function Sidebar() {
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
         <Suspense>
           <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
+          <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
           <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
@@ -37,18 +40,22 @@ export function Sidebar() {
 }
 
 async function SidebarProfilePill() {
-  const user = await getCurrentUser();
+  const [user, allUsers] = await Promise.all([
+    getCurrentUser(),
+    prisma.user.findMany({
+      orderBy: { handle: 'asc' },
+      select: { avatarColor: true, displayName: true, handle: true },
+    }),
+  ]);
+
   return (
-    <Link
-      href={`/u/${user.handle}`}
-      className="hover:bg-card dark:hover:bg-card-dark flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors"
-    >
+    <UserSwitcher currentHandle={user.handle} users={allUsers}>
       <CurrentUserAvatar size="sm" />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
         <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
       </div>
-    </Link>
+    </UserSwitcher>
   );
 }
 

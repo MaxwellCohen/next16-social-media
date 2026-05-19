@@ -1,12 +1,21 @@
 'use server';
 
 import { updateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { verifyUser } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 const handleSchema = z.string().min(1).max(30).regex(/^\w+$/);
+const SESSION_COOKIE = 'drop-user';
+
+export async function switchUser(handle: string) {
+  const target = handleSchema.parse(handle);
+  const store = await cookies();
+  store.set(SESSION_COOKIE, target, { path: '/', sameSite: 'lax' });
+  updateTag('current-user');
+}
 
 export async function toggleFollow(targetHandle: string) {
   await delay(300);

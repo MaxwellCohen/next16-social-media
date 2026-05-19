@@ -4,7 +4,6 @@ import * as Ariakit from '@ariakit/react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { EmojiPicker } from '@/components/ui/emoji-picker';
 import { Modal } from '@/components/ui/modal';
 import { postDrop } from '@/features/drop/drop-actions';
 
@@ -82,14 +81,11 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
               {state.error}
             </p>
           ) : null}
-          <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between gap-2 border-t px-5 py-3">
-            <EmojiPicker textareaRef={textareaRef} />
-            <div className="flex shrink-0 items-center gap-2">
-              <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-              <Button type="submit" disabled={pending}>
-                {pending ? 'Dropping…' : 'Drop it'}
-              </Button>
-            </div>
+          <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
+            <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
+            <Button type="submit" disabled={pending}>
+              {pending ? 'Dropping…' : 'Drop it'}
+            </Button>
           </footer>
         </form>
       </Modal>

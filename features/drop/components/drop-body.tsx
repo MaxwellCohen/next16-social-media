@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { CodeBlock } from '@/components/ui/code-block';
-import { renderCustomEmojis } from '@/components/ui/custom-emoji';
 
 type Props = {
   body: string;
@@ -96,7 +95,7 @@ function renderText(text: string) {
             </a>
           );
         }
-        return <span key={`${lineIdx}-${i}`}>{renderCustomEmojis(part)}</span>;
+        return <span key={`${lineIdx}-${i}`}>{part}</span>;
       });
     if (lineIdx < lines.length - 1) {
       parts.push(<br key={`br-${lineIdx}`} />);

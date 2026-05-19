@@ -139,7 +139,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'Just launched the redesign of my portfolio :shipit: Three years overdue, finally honest about what I actually do. Less hero copy, more screenshots of the work.',
+    body: 'Just launched the redesign of my portfolio Three years overdue, finally honest about what I actually do. Less hero copy, more screenshots of the work.',
     createdAt: new Date(now - 1 * hour),
     id: 'd4',
     likes: 540,
@@ -149,7 +149,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Released Drop today :drop: — the demo I'll be using at React Summit next week. It's a small social network built from scratch over two weeks. Everything in this feed is real.",
+    body: "Released Drop today — the demo I'll be using at React Summit next week. It's a small social network built from scratch over two weeks. Everything in this feed is real.",
     createdAt: new Date(now - 2 * hour),
     id: 'd5',
     likes: 1_980,
@@ -159,7 +159,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Shipped a Slack bot for our team that finds the oldest open PR every Monday and just posts it :merge: No reminders, no escalation. The PR usually gets reviewed by Tuesday.',
+    body: 'Shipped a Slack bot for our team that finds the oldest open PR every Monday and just posts it No reminders, no escalation. The PR usually gets reviewed by Tuesday.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
@@ -179,7 +179,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "Finally pushed v1.0 of the design tokens library we've been using internally. 200 stars overnight :fire: Did not see that coming on a Tuesday.",
+    body: "Finally pushed v1.0 of the design tokens library we've been using internally. 200 stars overnight Did not see that coming on a Tuesday.",
     createdAt: new Date(now - 5 * hour),
     id: 'd8',
     likes: 720,
@@ -189,7 +189,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Today's small ship :shipit: an RSS feed for my talks. I keep forgetting which conferences I said yes to. Now I just subscribe to myself.",
+    body: "Today's small ship an RSS feed for my talks. I keep forgetting which conferences I said yes to. Now I just subscribe to myself.",
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
     likes: 1_180,
@@ -219,7 +219,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Just shipped a side-by-side comparison view to our app :deploy: Two engineers asked for it independently within a week, which I've learned is the actual signal.",
+    body: "Just shipped a side-by-side comparison view to our app Two engineers asked for it independently within a week, which I've learned is the actual signal.",
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
@@ -329,7 +329,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Vibe-coded a tiny CRM for the dog walker my building hired. Took an evening, costs $0/mo, replaces a spreadsheet that was making her stop walking :hotfix: Shipping doesn't need a roadmap.",
+    body: "Vibe-coded a tiny CRM for the dog walker my building hired. Took an evening, costs $0/mo, replaces a spreadsheet that was making her stop walking Shipping doesn't need a roadmap.",
     createdAt: new Date(now - 7 * hour),
     id: 'd23',
     likes: 880,
@@ -359,7 +359,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Encouragement nobody asked for: ship the thing that has one user :lgtm: It teaches you more than the thing with the polished pitch deck.',
+    body: 'Encouragement nobody asked for: ship the thing that has one user It teaches you more than the thing with the polished pitch deck.',
     createdAt: new Date(now - 28 * hour),
     id: 'd26',
     likes: 1_640,
@@ -439,7 +439,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "Built a tiny CLI for our team that scaffolds a new server action with the tags wired up automatically :bug: Saved everyone the 'wait, which tag do I invalidate' question.",
+    body: "Built a tiny CLI for our team that scaffolds a new server action with the tags wired up automatically Saved everyone the 'wait, which tag do I invalidate' question.",
     createdAt: new Date(now - 16 * hour),
     embeddedCode: {
       code: 'npx @onyx/action new toggleBookmark --tag bookmarks',
@@ -478,7 +478,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Cloning this tonight :terminal: I have a Notes folder named 'someday' that has wanted to be a site for years.",
+    body: "Cloning this tonight I have a Notes folder named 'someday' that has wanted to be a site for years.",
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -489,7 +489,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Forking this immediately :shipit: We've been about to build this kit internally for six months.",
+    body: "Forking this immediately We've been about to build this kit internally for six months.",
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
@@ -511,7 +511,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'A 200-star Tuesday is the dream :fire: Congrats on the v1.0 — the docs feel really cared for. :lgtm:',
+    body: 'A 200-star Tuesday is the dream Congrats on the v1.0 — the docs feel really cared for.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -643,7 +643,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Replicating Drop tonight just to have something to point my team at :drop: The shipping-to-talk pipeline is what I want to start doing.',
+    body: 'Replicating Drop tonight just to have something to point my team at The shipping-to-talk pipeline is what I want to start doing.',
     createdAt: new Date(now - 18 * hour),
     id: 'r18',
     likes: 280,
@@ -665,7 +665,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'The PR bot is genius and shameful. We need this :zap: Will steal.',
+    body: 'The PR bot is genius and shameful. We need this Will steal.',
     createdAt: new Date(now - 26 * hour),
     id: 'r20',
     likes: 220,
