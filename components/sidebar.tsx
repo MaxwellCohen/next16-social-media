@@ -23,7 +23,7 @@ export function Sidebar() {
         <span className="hidden lg:inline">drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
-        <Suspense>
+        <Suspense fallback={<SidebarNavFallback />}>
           <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
           <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
@@ -76,5 +76,16 @@ function SidebarProfilePillSkeleton() {
         <Skeleton className="h-[15px] w-14 rounded" />
       </div>
     </div>
+  );
+}
+
+function SidebarNavFallback() {
+  return (
+    <>
+      <SidebarNavLinkSkeleton icon={<Home className="h-5 w-5" />} label="Home" />
+      <SidebarNavLinkSkeleton icon={<Search className="h-5 w-5" />} label="Search" />
+      <SidebarNavLinkSkeleton icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
+      <SidebarNavLinkSkeleton icon={<Hash className="h-5 w-5" />} label="Tags" />
+    </>
   );
 }
