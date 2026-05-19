@@ -3,11 +3,11 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
-import { MobileHeader, MobileTabBar } from '@/components/MobileNav';
-import { Sidebar } from '@/components/Sidebar';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/TrendingTags';
-import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/WhoToFollow';
+import { MobileHeader, MobileTabBar } from '@/components/mobile-nav';
+import { Sidebar } from '@/components/sidebar';
+import { ThemeProvider } from '@/components/theme/theme-provider';
+import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/trending-tags';
+import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/who-to-follow';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 

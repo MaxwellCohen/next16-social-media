@@ -1,6 +1,6 @@
-import { getFeed } from '@/data/queries/drop';
-import { Drop } from '@/features/drop/components/Drop';
-import { FeedList } from '@/features/drop/components/FeedList';
+import { Drop } from '@/features/drop/components/drop';
+import { FeedList } from '@/features/drop/components/feed-list';
+import { getFeed } from '@/features/drop/drop-queries';
 
 export async function Feed() {
   const { drops, nextCursor } = await getFeed();

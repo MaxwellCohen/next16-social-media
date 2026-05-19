@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { DropListSkeleton } from '@/features/drop/components/Drop';
-import { DropComposer } from '@/features/drop/components/DropComposer';
-import { Feed } from '@/features/drop/components/Feed';
+import { PageHeader } from '@/components/ui/page-header';
+import { DropComposer } from '@/features/drop/components/composer';
+import { DropListSkeleton } from '@/features/drop/components/drop';
+import { Feed } from '@/features/drop/components/feed';
 
 export const unstable_prefetch = 'force-runtime';
 

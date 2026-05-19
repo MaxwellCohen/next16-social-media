@@ -1,4 +1,4 @@
-import { DropMark } from '@/components/ui/DropMark';
+import { DropMark } from '@/components/ui/drop-mark';
 
 export default function NotFound() {
   return (

@@ -1,8 +1,8 @@
 'use client';
 
 import { useActionState, useRef, type ReactNode } from 'react';
-import { Button } from '@/components/ui/Button';
-import { postReply } from '@/data/actions/drop';
+import { Button } from '@/components/ui/button';
+import { postReply } from '@/features/drop/drop-actions';
 
 type Props = {
   dropId: string;

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useTransition, type ReactNode } from 'react';
-import { Button } from '@/components/ui/Button';
-import { loadMoreFeed } from '@/data/actions/feed';
+import { Button } from '@/components/ui/button';
+import { loadMoreFeed } from '@/features/drop/feed-actions';
 
 type Props = {
   children: ReactNode;

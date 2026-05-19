@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { RelativeTime } from '@/components/ui/RelativeTime';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getDrop, getDropUserState } from '@/data/queries/drop';
-import { getUserByHandle } from '@/data/queries/user';
-import { CodeBlock } from '@/features/drop/components/CodeBlock';
-import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
-import { DropBody } from '@/features/drop/components/DropBody';
-import { TagPill } from '@/features/tag/components/TagPill';
-import { UserAvatar } from '@/features/user/components/UserAvatar';
+import { CodeBlock } from '@/components/ui/code-block';
+import { RelativeTime } from '@/components/ui/relative-time';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DropActions, DropActionsSkeleton } from '@/features/drop/components/drop-actions';
+import { DropBody } from '@/features/drop/components/drop-body';
+import { getDrop, getDropUserState } from '@/features/drop/drop-queries';
+import { TagPill } from '@/features/tag/components/tag-pill';
+import { UserAvatar } from '@/features/user/components/user-avatar';
+import { getUserByHandle } from '@/features/user/user-queries';
 
 export async function DropDetail({ id }: { id: string }) {
   const drop = await getDrop(id);

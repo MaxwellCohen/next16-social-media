@@ -1,7 +1,7 @@
 import { Hash } from 'lucide-react';
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getAllTags } from '@/data/queries/tag';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getAllTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 

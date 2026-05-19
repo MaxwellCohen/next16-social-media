@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { NewDropModal } from '@/features/drop/components/NewDropModal';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { NewDropModal } from '@/features/drop/components/composer-modal';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 
 export function DropComposer() {
   return (

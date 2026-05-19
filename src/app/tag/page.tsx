@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { TagsList, TagsListSkeleton } from '@/features/tag/components/TagsList';
+import { PageHeader } from '@/components/ui/page-header';
+import { TagsList, TagsListSkeleton } from '@/features/tag/components/tags-list';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

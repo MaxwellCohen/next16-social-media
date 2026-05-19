@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { getDrop } from '@/data/queries/drop';
-import { getUserByHandle } from '@/data/queries/user';
-import { DropListSkeleton } from '@/features/drop/components/Drop';
-import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/DropDetail';
-import { Replies } from '@/features/drop/components/Replies';
-import { ReplyComposerForm } from '@/features/drop/components/ReplyComposerForm';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { PageHeader } from '@/components/ui/page-header';
+import { DropListSkeleton } from '@/features/drop/components/drop';
+import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
+import { Replies } from '@/features/drop/components/replies';
+import { ReplyComposerForm } from '@/features/drop/components/reply-form';
+import { getDrop } from '@/features/drop/drop-queries';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { getUserByHandle } from '@/features/user/user-queries';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Promise<Metadata> {

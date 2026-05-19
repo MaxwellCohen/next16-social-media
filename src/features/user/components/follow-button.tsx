@@ -1,8 +1,8 @@
 'use client';
 
 import { useOptimistic, useTransition } from 'react';
-import { Button } from '@/components/ui/Button';
-import { toggleFollow } from '@/data/actions/drop';
+import { Button } from '@/components/ui/button';
+import { toggleFollow } from '@/features/user/user-actions';
 
 type Props = {
   targetHandle: string;

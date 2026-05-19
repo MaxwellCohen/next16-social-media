@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
-import { DropListSkeleton } from '@/features/drop/components/Drop';
-import { TagFeed, TagHeader, TagHeaderSkeleton } from '@/features/tag/components/TagFeed';
+import { DropListSkeleton } from '@/features/drop/components/drop';
+import { TagFeed } from '@/features/tag/components/tag-feed';
+import { TagHeader, TagHeaderSkeleton } from '@/features/tag/components/tag-header';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Promise<Metadata> {
@@ -19,15 +20,18 @@ export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Pro
 
 export const unstable_prefetch = 'force-runtime';
 
-export default async function TagPage({ params }: PageProps<'/tag/[tag]'>) {
-  const { tag } = await params;
+export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
   return (
     <div>
       <Suspense fallback={<TagHeaderSkeleton />}>
-        <TagHeader tag={tag} />
+        {params.then(({ tag }) => {
+          return <TagHeader tag={tag} />;
+        })}
       </Suspense>
       <Suspense fallback={<DropListSkeleton count={4} />}>
-        <TagFeed tag={tag} />
+        {params.then(({ tag }) => {
+          return <TagFeed tag={tag} />;
+        })}
       </Suspense>
     </div>
   );

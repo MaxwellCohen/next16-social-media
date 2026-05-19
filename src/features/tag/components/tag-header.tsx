@@ -1,8 +1,6 @@
-import { EmptyState } from '@/components/ui/EmptyState';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getDropsByTag } from '@/data/queries/drop';
-import { Drop } from '@/features/drop/components/Drop';
+import { PageHeader } from '@/components/ui/page-header';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getDropsByTag } from '@/features/drop/drop-queries';
 
 export async function TagHeader({ tag }: { tag: string }) {
   const drops = await getDropsByTag(tag);
@@ -12,24 +10,6 @@ export async function TagHeader({ tag }: { tag: string }) {
       <h1 className="text-lg font-bold tracking-tight">#{tag}</h1>
       <div className="text-gray font-mono text-xs">{drops.length} drops</div>
     </PageHeader>
-  );
-}
-
-export async function TagFeed({ tag }: { tag: string }) {
-  const drops = await getDropsByTag(tag);
-  if (drops.length === 0) {
-    return <EmptyState title="No drops with this tag yet" body="Be the first to use it." />;
-  }
-  return (
-    <ul>
-      {drops.map(drop => {
-        return (
-          <li key={drop.id}>
-            <Drop drop={drop} />
-          </li>
-        );
-      })}
-    </ul>
   );
 }
 

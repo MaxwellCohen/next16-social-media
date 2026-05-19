@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DropMark } from '@/components/ui/DropMark';
+import { DropMark } from '@/components/ui/drop-mark';
 
 export default function DropNotFound() {
   return (

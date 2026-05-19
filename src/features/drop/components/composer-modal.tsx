@@ -3,8 +3,8 @@
 import * as Ariakit from '@ariakit/react';
 import { X } from 'lucide-react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
-import { Button } from '@/components/ui/Button';
-import { postDrop } from '@/data/actions/drop';
+import { Button } from '@/components/ui/button';
+import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
   avatar: ReactNode;

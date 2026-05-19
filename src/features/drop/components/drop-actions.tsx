@@ -3,10 +3,10 @@
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
 import { use } from 'react';
-import { ActionButton } from '@/components/ui/ActionButton';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
-import type { DropUserState } from '@/data/queries/drop';
+import { ActionButton } from '@/components/ui/action-button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
+import type { DropUserState } from '@/features/drop/drop-queries';
 import { cn, formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 

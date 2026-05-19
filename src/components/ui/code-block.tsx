@@ -1,5 +1,5 @@
-import { CopyButton } from '@/features/drop/components/CopyButton';
 import { highlight } from '@/lib/syntax';
+import { CopyButton } from './copy-button';
 
 type Props = {
   lang: string;

@@ -1,12 +1,12 @@
 import { Bookmark, Hash, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { DropMark } from '@/components/ui/DropMark';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getCurrentUser, getCurrentUserHandle } from '@/data/queries/user';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
-import { SidebarNavLink } from './SidebarNavLink';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { DropMark } from '@/components/ui/drop-mark';
+import { Skeleton } from '@/components/ui/skeleton';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
+import { SidebarNavLink } from './sidebar-nav-link';
 import type { Route } from 'next';
 
 export function Sidebar() {

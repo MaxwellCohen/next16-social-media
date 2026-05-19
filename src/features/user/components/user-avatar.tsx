@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getCurrentUserHandle, getUserByHandle } from '@/data/queries/user';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getCurrentUserHandle, getUserByHandle } from '@/features/user/user-queries';
 import { cn } from '@/lib/utils';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -17,7 +17,8 @@ const sizes: Record<Size, string> = {
 };
 
 export async function UserAvatar({ handle, size = 'md', className }: Props) {
-  const user = await getUserByHandle(handle ?? (await getCurrentUserHandle()));
+  const resolvedHandle = handle ?? (await getCurrentUserHandle());
+  const user = await getUserByHandle(resolvedHandle);
   return (
     <div
       aria-hidden

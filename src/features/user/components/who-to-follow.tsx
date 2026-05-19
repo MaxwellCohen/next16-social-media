@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getWhoToFollow } from '@/data/queries/user';
-import { getCurrentUserHandle } from '@/data/queries/user';
-import { FollowButton } from '@/features/user/components/FollowButton';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { FollowButton } from '@/features/user/components/follow-button';
+import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { getWhoToFollow } from '@/features/user/user-queries';
+import { getCurrentUserHandle } from '@/features/user/user-queries';
 
 export async function WhoToFollow() {
-  const users = await getWhoToFollow(await getCurrentUserHandle());
+  const handle = await getCurrentUserHandle();
+  const users = await getWhoToFollow(handle);
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
       <header className="px-4 pt-4 pb-3">

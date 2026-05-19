@@ -1,7 +1,7 @@
 'use server';
 
-import { getFeed } from '@/data/queries/drop';
-import { Drop } from '@/features/drop/components/Drop';
+import { Drop } from '@/features/drop/components/drop';
+import { getFeed } from '@/features/drop/drop-queries';
 
 export async function loadMoreFeed(cursor: string | null) {
   const { drops, nextCursor } = await getFeed(cursor);

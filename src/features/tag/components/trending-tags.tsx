@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { getTrendingTags } from '@/data/queries/tag';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getTrendingTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
 
 export async function TrendingTags() {

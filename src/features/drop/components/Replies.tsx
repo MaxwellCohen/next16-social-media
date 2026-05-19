@@ -1,6 +1,6 @@
-import { EmptyState } from '@/components/ui/EmptyState';
-import { getReplies } from '@/data/queries/drop';
-import { Drop } from '@/features/drop/components/Drop';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Drop } from '@/features/drop/components/drop';
+import { getReplies } from '@/features/drop/drop-queries';
 
 export async function Replies({ id }: { id: string }) {
   const replies = await getReplies(id);
