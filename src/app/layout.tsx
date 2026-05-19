@@ -8,8 +8,12 @@ import { Sidebar } from '@/components/Sidebar';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/TrendingTags';
 import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/WhoToFollow';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   description: 'A dev-flavored social network.',
@@ -39,12 +43,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="h-screen overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
+      <body className="flex h-screen flex-col overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
           <MobileHeader />
-          <div className="mx-auto grid h-full max-w-7xl grid-cols-1 sm:grid-cols-[17.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
+          <div className="mx-auto grid min-h-0 w-full max-w-7xl flex-1 grid-cols-1 sm:grid-cols-[17.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
             <Sidebar />
-            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 h-full min-w-0 overflow-y-auto overscroll-y-contain pb-14 sm:border-x sm:pb-0">
+            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-h-0 min-w-0 overflow-y-auto overscroll-y-contain pb-16 sm:border-x sm:pb-0">
               {children}
             </main>
             <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-y-none px-4 py-5 lg:flex">

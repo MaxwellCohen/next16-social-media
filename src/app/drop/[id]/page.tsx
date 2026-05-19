@@ -43,10 +43,9 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
 
 async function DropPageBody({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const drop = await getDrop(id);
   return (
     <>
-      <DropDetail drop={drop} />
+      <DropDetail id={id} />
       <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
         <ReplyComposerForm
           dropId={id}

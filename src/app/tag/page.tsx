@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { getAllTags } from '@/data/queries/tag';
 import { formatCount } from '@/lib/utils';
+import type { Route } from 'next';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -41,7 +42,7 @@ async function TagsList() {
         return (
           <li key={tag.name}>
             <Link
-              href={`/tag/${tag.name}` as never}
+              href={`/tag/${tag.name}` as Route}
               className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-center gap-3 border-b px-4 py-3 transition-colors sm:px-5"
             >
               <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />

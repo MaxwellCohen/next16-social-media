@@ -2,25 +2,29 @@
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { use } from 'react';
 import { ActionButton } from '@/components/design/ActionButton';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/data/actions/drop';
 import type { DropUserState } from '@/data/queries/drop';
 import { cn, formatCount } from '@/lib/utils';
-import type { Drop } from '@/types/drop';
 
 type Props = {
-  drop: Drop;
+  dropId: string;
+  parentId?: string;
+  replies: number;
+  reposts: number;
+  likes: number;
   userStatePromise: Promise<DropUserState>;
 };
 
-export function DropActions({ drop, userStatePromise }: Props) {
+export function DropActions({ dropId, parentId, replies, reposts, likes, userStatePromise }: Props) {
   const { liked, reposted, bookmarked } = use(userStatePromise);
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <Link
-        href={`/drop/${drop.parentId ?? drop.id}`}
+        href={`/drop/${parentId ?? dropId}` as Route}
         aria-label="Reply"
         onClick={e => {
           e.stopPropagation();
@@ -28,19 +32,19 @@ export function DropActions({ drop, userStatePromise }: Props) {
         className="hover:bg-card dark:hover:bg-card-dark inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors hover:text-black dark:hover:text-white"
       >
         <MessageCircle className="h-4 w-4" />
-        <span>{formatCount(drop.replies)}</span>
+        <span>{formatCount(replies)}</span>
       </Link>
       <ActionButton
         label="Repost"
         icon={() => {
           return <Repeat2 className="h-4 w-4" />;
         }}
-        count={drop.reposts}
+        count={reposts}
         active={reposted}
         activeColor="text-success"
         hoverColor="hover:bg-success/10 hover:text-success"
         action={async () => {
-          await toggleRepost(drop.id);
+          await toggleRepost(dropId);
         }}
       />
       <ActionButton
@@ -48,12 +52,12 @@ export function DropActions({ drop, userStatePromise }: Props) {
         icon={on => {
           return <Heart className={cn('h-4 w-4', on && 'fill-current')} />;
         }}
-        count={drop.likes}
+        count={likes}
         active={liked}
         activeColor="text-danger"
         hoverColor="hover:bg-danger/10 hover:text-danger"
         action={async () => {
-          await toggleLike(drop.id);
+          await toggleLike(dropId);
         }}
       />
       <ActionButton
@@ -65,7 +69,7 @@ export function DropActions({ drop, userStatePromise }: Props) {
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
         action={async () => {
-          await toggleBookmark(drop.id);
+          await toggleBookmark(dropId);
         }}
       />
     </div>

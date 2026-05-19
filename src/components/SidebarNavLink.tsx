@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import type { Route } from 'next';
 
 type CommonProps = {
-  href: string;
+  href: Route;
   icon: React.ReactNode;
   label: string;
   children?: React.ReactNode;
@@ -16,32 +17,18 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const sidebarBase = 'flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight transition-colors';
-const sidebarInactive = 'hover:bg-card dark:hover:bg-card-dark';
-const sidebarActive = 'bg-accent/10 text-accent dark:bg-accent/15';
-
-const mobileBase = 'flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors';
-const mobileInactive = 'text-gray hover:text-black dark:hover:text-white';
-const mobileActive = 'text-accent';
-
 export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
   const pathname = usePathname();
   const active = isActive(pathname, href);
   return (
     <Link
-      href={href as never}
+      href={href}
       aria-current={active ? 'page' : undefined}
-      className={cn(sidebarBase, active ? sidebarActive : sidebarInactive)}
+      className={cn(
+        'flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight transition-colors',
+        active ? 'bg-accent/10 text-accent dark:bg-accent/15' : 'hover:bg-card dark:hover:bg-card-dark',
+      )}
     >
-      {icon}
-      <span>{children ?? label}</span>
-    </Link>
-  );
-}
-
-export function SidebarNavLinkFallback({ href, icon, label, children }: CommonProps) {
-  return (
-    <Link href={href as never} className={cn(sidebarBase, sidebarInactive)}>
       {icon}
       <span>{children ?? label}</span>
     </Link>
@@ -53,10 +40,13 @@ export function MobileTabLink({ href, icon, label }: CommonProps) {
   const active = isActive(pathname, href);
   return (
     <Link
-      href={href as never}
+      href={href}
       aria-current={active ? 'page' : undefined}
       aria-label={label}
-      className={cn(mobileBase, active ? mobileActive : mobileInactive)}
+      className={cn(
+        'flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors',
+        active ? 'text-accent' : 'text-gray hover:text-black dark:hover:text-white',
+      )}
     >
       {icon}
       <span>{label}</span>
@@ -64,11 +54,11 @@ export function MobileTabLink({ href, icon, label }: CommonProps) {
   );
 }
 
-export function MobileTabLinkFallback({ href, icon, label }: CommonProps) {
+export function MobileTabLinkSkeleton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <Link href={href as never} aria-label={label} className={cn(mobileBase, mobileInactive)}>
+    <span className="text-gray flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium">
       {icon}
       <span>{label}</span>
-    </Link>
+    </span>
   );
 }

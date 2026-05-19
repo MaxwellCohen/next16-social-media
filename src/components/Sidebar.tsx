@@ -4,9 +4,10 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { DropMark } from '@/components/ui/DropMark';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { getCurrentUser } from '@/data/queries/user';
+import { getCurrentUser, getCurrentUserHandle } from '@/data/queries/user';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/UserAvatar';
-import { SidebarNavLink, SidebarNavLinkFallback } from './SidebarNavLink';
+import { SidebarNavLink } from './SidebarNavLink';
+import type { Route } from 'next';
 
 export function Sidebar() {
   return (
@@ -20,26 +21,20 @@ export function Sidebar() {
         <span>drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
-        <Suspense fallback={<SidebarNavLinkFallback href="/" icon={<Home className="h-5 w-5" />} label="Home" />}>
+        <Suspense>
           <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
         </Suspense>
-        <Suspense fallback={<SidebarNavLinkFallback href="/" icon={<User className="h-5 w-5" />} label="Profile" />}>
+        <Suspense>
           <SidebarProfileLink />
         </Suspense>
-        <Suspense
-          fallback={
-            <SidebarNavLinkFallback href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-          }
-        >
+        <Suspense>
           <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
         </Suspense>
-        <Suspense
-          fallback={<SidebarNavLinkFallback href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />}
-        >
+        <Suspense>
           <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         </Suspense>
       </nav>
-      <div className="border-divider dark:border-divider-dark mt-auto -mx-4 -mb-5 flex items-center gap-1 border-t px-2 py-3 sm:-mx-6 sm:px-4">
+      <div className="border-divider dark:border-divider-dark -mx-4 mt-auto -mb-5 flex items-center gap-1 border-t px-2 py-3 sm:-mx-6 sm:px-4">
         <Suspense fallback={<SidebarProfilePillSkeleton />}>
           <SidebarProfilePill />
         </Suspense>
@@ -50,8 +45,8 @@ export function Sidebar() {
 }
 
 async function SidebarProfileLink() {
-  const user = await getCurrentUser();
-  return <SidebarNavLink href={`/u/${user.handle}`} icon={<User className="h-5 w-5" />} label="Profile" />;
+  const handle = await getCurrentUserHandle();
+  return <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
 }
 
 async function SidebarProfilePill() {
@@ -61,7 +56,7 @@ async function SidebarProfilePill() {
       href={`/u/${user.handle}`}
       className="hover:bg-card dark:hover:bg-card-dark flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors"
     >
-      <UserAvatar handle={user.handle} size="sm" />
+      <UserAvatar size="sm" />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
         <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>

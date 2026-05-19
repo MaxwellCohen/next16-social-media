@@ -58,7 +58,14 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
           ) : null}
           <div className="relative z-20">
             <Suspense fallback={<DropActionsSkeleton />}>
-              <DropActions drop={drop} userStatePromise={getDropUserState(drop.id)} />
+              <DropActions
+                dropId={drop.id}
+                parentId={drop.parentId}
+                replies={drop.replies}
+                reposts={drop.reposts}
+                likes={drop.likes}
+                userStatePromise={getDropUserState(drop.id)}
+              />
             </Suspense>
           </div>
         </div>

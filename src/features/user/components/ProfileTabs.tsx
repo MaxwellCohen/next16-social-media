@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useOptimistic, useTransition } from 'react';
 import { cn } from '@/lib/utils';
+import type { Route } from 'next';
 
 type Tab = 'drops' | 'replies';
 
@@ -25,15 +26,12 @@ export function ProfileTabs({ handle, active }: Props) {
     if (value === optimisticActive) return;
     startTransition(() => {
       setOptimisticActive(value);
-      router.push(`/u/${handle}${value === 'drops' ? '' : `?tab=${value}`}` as never);
+      router.push(`/u/${handle}${value === 'drops' ? '' : `?tab=${value}`}` as Route);
     });
   }
 
   return (
-    <nav
-      className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
-      aria-label="Profile sections"
-    >
+    <nav className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-label="Profile sections">
       {TABS.map(t => {
         const isActive = optimisticActive === t.value;
         return (
@@ -52,10 +50,7 @@ export function ProfileTabs({ handle, active }: Props) {
           >
             {t.label}
             {isActive ? (
-              <span
-                className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white"
-                aria-hidden
-              />
+              <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
             ) : null}
           </button>
         );

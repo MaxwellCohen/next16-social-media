@@ -4,14 +4,14 @@ import { CodeBlock } from '@/components/ui/CodeBlock';
 import { RelativeTime } from '@/components/ui/RelativeTime';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { TagPill } from '@/components/ui/TagPill';
-import { getDropUserState } from '@/data/queries/drop';
+import { getDrop, getDropUserState } from '@/data/queries/drop';
 import { getUserByHandle } from '@/data/queries/user';
 import { DropActions, DropActionsSkeleton } from '@/features/drop/components/DropActions';
 import { DropBody } from '@/features/drop/components/DropBody';
 import { UserAvatar } from '@/features/user/components/UserAvatar';
-import type { Drop } from '@/types/drop';
 
-export async function DropDetail({ drop }: { drop: Drop }) {
+export async function DropDetail({ id }: { id: string }) {
+  const drop = await getDrop(id);
   const author = await getUserByHandle(drop.authorHandle);
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
@@ -47,7 +47,14 @@ export async function DropDetail({ drop }: { drop: Drop }) {
       </div>
       <div className="pt-2">
         <Suspense fallback={<DropActionsSkeleton />}>
-          <DropActions drop={drop} userStatePromise={getDropUserState(drop.id)} />
+          <DropActions
+            dropId={drop.id}
+            parentId={drop.parentId}
+            replies={drop.replies}
+            reposts={drop.reposts}
+            likes={drop.likes}
+            userStatePromise={getDropUserState(drop.id)}
+          />
         </Suspense>
       </div>
     </article>
