@@ -24,13 +24,14 @@ export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
     <Link
       href={href}
       aria-current={active ? 'page' : undefined}
+      aria-label={label}
       className={cn(
-        'flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight transition-colors',
+        'flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3',
         active ? 'bg-accent/10 text-accent dark:bg-accent/15' : 'hover:bg-card dark:hover:bg-card-dark',
       )}
     >
       {icon}
-      <span>{children ?? label}</span>
+      <span className="hidden lg:inline">{children ?? label}</span>
     </Link>
   );
 }
@@ -56,9 +57,9 @@ export function MobileTabLink({ href, icon, label }: CommonProps) {
 
 export function SidebarNavLinkSkeleton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <span className="text-gray flex items-center gap-4 rounded-lg px-3 py-2.5 text-base tracking-tight opacity-50">
+    <span className="text-gray flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight opacity-50 lg:justify-start lg:px-3">
       {icon}
-      <span>{label}</span>
+      <span className="hidden lg:inline">{label}</span>
     </span>
   );
 }

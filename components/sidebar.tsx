@@ -13,14 +13,14 @@ import type { Route } from 'next';
 
 export function Sidebar() {
   return (
-    <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-y-none px-4 py-5 sm:flex sm:px-6">
+    <aside className="hidden h-full flex-col items-center gap-4 overflow-hidden overscroll-y-none px-2 py-5 sm:flex lg:items-stretch lg:px-6">
       <Link
         href="/"
         className="inline-flex items-center gap-2 px-2 pb-2 text-2xl font-bold tracking-tight text-black dark:text-white"
         aria-label="Drop home"
       >
         <DropMark size={28} className="text-black dark:text-white" />
-        <span>drop</span>
+        <span className="hidden lg:inline">drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
         <Suspense>
@@ -37,7 +37,7 @@ export function Sidebar() {
           })}
         </Suspense>
       </nav>
-      <div className="border-divider dark:border-divider-dark -mx-4 mt-auto -mb-5 flex items-center gap-1 border-t px-2 py-3 sm:-mx-6 sm:px-4">
+      <div className="border-divider dark:border-divider-dark -mx-2 mt-auto -mb-5 hidden items-center gap-1 border-t px-2 py-3 lg:-mx-6 lg:flex lg:px-4">
         <Suspense fallback={<SidebarProfilePillSkeleton />}>
           <SidebarProfilePill />
         </Suspense>
