@@ -159,7 +159,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Shipped a Slack bot for our team that finds the oldest open PR every Monday and just posts it. No reminders, no escalation. The PR usually gets reviewed by Tuesday.',
+    body: 'Shipped a Slack bot for our team that finds the oldest open PR every Monday and just posts it :merge: No reminders, no escalation. The PR usually gets reviewed by Tuesday.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
@@ -219,7 +219,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Just shipped a side-by-side comparison view to our app. Two engineers asked for it independently within a week, which I've learned is the actual signal.",
+    body: "Just shipped a side-by-side comparison view to our app :deploy: Two engineers asked for it independently within a week, which I've learned is the actual signal.",
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
@@ -329,7 +329,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Vibe-coded a tiny CRM for the dog walker my building hired. Took an evening, costs $0/mo, replaces a spreadsheet that was making her stop walking. Shipping doesn't need a roadmap.",
+    body: "Vibe-coded a tiny CRM for the dog walker my building hired. Took an evening, costs $0/mo, replaces a spreadsheet that was making her stop walking :hotfix: Shipping doesn't need a roadmap.",
     createdAt: new Date(now - 7 * hour),
     id: 'd23',
     likes: 880,
@@ -439,7 +439,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "Built a tiny CLI for our team that scaffolds a new server action with the tags wired up automatically. Saved everyone the 'wait, which tag do I invalidate' question.",
+    body: "Built a tiny CLI for our team that scaffolds a new server action with the tags wired up automatically :bug: Saved everyone the 'wait, which tag do I invalidate' question.",
     createdAt: new Date(now - 16 * hour),
     embeddedCode: {
       code: 'npx @onyx/action new toggleBookmark --tag bookmarks',
@@ -478,7 +478,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Cloning this tonight :mindblown: I have a Notes folder named 'someday' that has wanted to be a site for years.",
+    body: "Cloning this tonight :terminal: I have a Notes folder named 'someday' that has wanted to be a site for years.",
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,

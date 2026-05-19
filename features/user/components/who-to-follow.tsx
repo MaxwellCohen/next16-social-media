@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { UserRow } from '@/features/user/components/user-row';
 import { getCurrentUserHandle, getWhoToFollow } from '@/features/user/user-queries';
 
 export async function WhoToFollow() {
@@ -25,25 +24,12 @@ export async function WhoToFollow() {
         <ul className="pb-2">
           {users.map(user => {
             return (
-              <li
-                key={user.handle}
-                className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
-              >
-                <Link href={`/u/${user.handle}`} className="shrink-0">
-                  <Suspense fallback={<UserAvatarSkeleton size="sm" />}>
-                    <UserAvatar handle={user.handle} size="sm" />
-                  </Suspense>
-                </Link>
-                <div className="min-w-0 flex-1">
-                  <Link
-                    href={`/u/${user.handle}`}
-                    className="block truncate text-sm font-semibold tracking-tight hover:underline"
-                  >
-                    {user.displayName}
-                  </Link>
-                  <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
-                </div>
-                <FollowButton targetHandle={user.handle} followingPromise={Promise.resolve(false)} />
+              <li key={user.handle}>
+                <UserRow
+                  handle={user.handle}
+                  displayName={user.displayName}
+                  action={<FollowButton targetHandle={user.handle} followingPromise={Promise.resolve(false)} />}
+                />
               </li>
             );
           })}

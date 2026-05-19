@@ -11,9 +11,7 @@ export function DropComposer() {
       <div className="flex flex-1 items-center justify-between gap-3">
         <NewDropModal
           onOpenTrigger={
-            <span className="text-gray flex-1 cursor-pointer text-left text-sm">
-              What did you build today?
-            </span>
+            <span className="text-gray flex-1 cursor-pointer text-left text-sm">What did you build today?</span>
           }
           avatar={
             <Suspense fallback={<UserAvatarSkeleton size="md" />}>

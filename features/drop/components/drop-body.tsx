@@ -71,30 +71,33 @@ const TOKEN_RE = new RegExp(`${URL_RE.source}|${TAG_RE.source}`, 'g');
 function renderText(text: string) {
   const lines = text.split('\n');
   return lines.flatMap((line, lineIdx) => {
-    const parts = line.split(TOKEN_RE).filter(Boolean).map((part, i) => {
-      if (part.startsWith('#')) {
-        const tag = part.slice(1);
-        return (
-          <Link key={`${lineIdx}-${i}`} href={`/tag/${tag}`} className="text-accent relative z-20 hover:underline">
-            {part}
-          </Link>
-        );
-      }
-      if (part.match(/^https?:\/\//)) {
-        return (
-          <a
-            key={`${lineIdx}-${i}`}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent relative z-20 break-all hover:underline"
-          >
-            {part.replace(/^https?:\/\//, '')}
-          </a>
-        );
-      }
-      return <span key={`${lineIdx}-${i}`}>{renderCustomEmojis(part)}</span>;
-    });
+    const parts = line
+      .split(TOKEN_RE)
+      .filter(Boolean)
+      .map((part, i) => {
+        if (part.startsWith('#')) {
+          const tag = part.slice(1);
+          return (
+            <Link key={`${lineIdx}-${i}`} href={`/tag/${tag}`} className="text-accent relative z-20 hover:underline">
+              {part}
+            </Link>
+          );
+        }
+        if (part.match(/^https?:\/\//)) {
+          return (
+            <a
+              key={`${lineIdx}-${i}`}
+              href={part}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent relative z-20 break-all hover:underline"
+            >
+              {part.replace(/^https?:\/\//, '')}
+            </a>
+          );
+        }
+        return <span key={`${lineIdx}-${i}`}>{renderCustomEmojis(part)}</span>;
+      });
     if (lineIdx < lines.length - 1) {
       parts.push(<br key={`br-${lineIdx}`} />);
     }

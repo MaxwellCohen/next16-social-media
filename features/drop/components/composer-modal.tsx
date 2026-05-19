@@ -1,11 +1,11 @@
 'use client';
 
 import * as Ariakit from '@ariakit/react';
-import { X } from 'lucide-react';
-import { useActionState, useRef, type ReactNode } from 'react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EmojiPicker } from '@/components/ui/emoji-picker';
+import { Modal } from '@/components/ui/modal';
 import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
@@ -25,11 +25,14 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       toast.error(result.error);
       return { error: result.error, submittedAt: 0 };
     }
-    dialog.hide();
     return { error: null, submittedAt: Date.now() };
   }, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (state.submittedAt > 0) dialog.hide();
+  }, [state.submittedAt, dialog]);
 
   return (
     <>
@@ -50,24 +53,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       >
         New drop
       </Button>
-      <Ariakit.Dialog
-        store={dialog}
-        backdrop={<div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />}
-        className="border-divider dark:border-divider-dark fixed top-16 left-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 rounded-2xl border bg-white shadow-2xl outline-none dark:bg-black"
-        unmountOnHide
-        initialFocus={textareaRef}
-      >
-        <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3">
-          <Ariakit.DialogDismiss
-            aria-label="Close"
-            className="text-gray -ml-1.5 rounded-full p-1 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </Ariakit.DialogDismiss>
-          <Ariakit.VisuallyHidden>
-            <Ariakit.DialogHeading>New drop</Ariakit.DialogHeading>
-          </Ariakit.VisuallyHidden>
-        </header>
+      <Modal store={dialog} title="New drop" initialFocus={textareaRef}>
         <form ref={formRef} action={formAction}>
           <div className="flex items-start gap-3 px-5 pt-4 pb-3">
             {avatar}
@@ -98,7 +84,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
           ) : null}
           <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between gap-2 border-t px-5 py-3">
             <EmojiPicker textareaRef={textareaRef} />
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
               <Button type="submit" disabled={pending}>
                 {pending ? 'Dropping…' : 'Drop it'}
@@ -106,7 +92,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
             </div>
           </footer>
         </form>
-      </Ariakit.Dialog>
+      </Modal>
     </>
   );
 }
