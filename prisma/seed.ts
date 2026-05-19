@@ -96,7 +96,7 @@ const USERS: SeedUser[] = [
     id: 'u7',
   },
   {
-    avatarColor: 'from-indigo-500 to-blue-700',
+    avatarColor: 'from-indigo-400 to-blue-500',
     bio: 'CTO at a startup. Hiring is hard. Shipping is harder.',
     displayName: 'Echo',
     followers: 2_140,
