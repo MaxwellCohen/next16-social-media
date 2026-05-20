@@ -23,12 +23,39 @@ export const getFeed = cache(async (cursor: string | null = null): Promise<FeedP
     select: { targetHandle: true },
     where: { followerHandle: handle },
   });
-  const followedHandles = [handle, ...following.map(f => f.targetHandle)];
+  const followedHandles = [
+    handle,
+    ...following.map(f => {
+      return f.targetHandle;
+    }),
+  ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     take: FEED_PAGE_SIZE + 1,
     where: {
       authorHandle: { in: followedHandles },
+      parentId: null,
+      ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
+    },
+  });
+  const hasMore = rows.length > FEED_PAGE_SIZE;
+  const page = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  return {
+    drops: page.map(toDrop),
+    nextCursor: hasMore ? page[page.length - 1].createdAt.toISOString() : null,
+  };
+});
+
+export const getPublicFeed = cache(async (cursor: string | null = null): Promise<FeedPage> => {
+  'use cache';
+  cacheTag('feed');
+  cacheLife('seconds');
+
+  await delay(500);
+  const rows = await prisma.drop.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: FEED_PAGE_SIZE + 1,
+    where: {
       parentId: null,
       ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
     },
