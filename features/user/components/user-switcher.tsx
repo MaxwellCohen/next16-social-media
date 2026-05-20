@@ -32,11 +32,11 @@ export function UserSwitcher({ currentHandle, users, children }: Props) {
   }
 
   return (
-    <div data-pending={isPending ? '' : undefined}>
+    <div className="min-w-0 flex-1" data-pending={isPending ? '' : undefined}>
       <Ariakit.PopoverDisclosure
         store={popover}
         disabled={isPending}
-        className="hover:bg-card dark:hover:bg-card-dark flex min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors disabled:opacity-50"
+        className="hover:bg-card dark:hover:bg-card-dark flex w-full min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors disabled:opacity-50"
       >
         {children}
         <ChevronsUpDown className="text-gray ml-auto h-4 w-4 shrink-0" />
