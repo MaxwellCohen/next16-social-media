@@ -44,16 +44,27 @@ export const getFeed = cache(async (handle: string, cursor: string | null = null
   };
 });
 
-export const getPublicFeed = cache(async (cursor: string | null = null): Promise<FeedPage> => {
+export const getDiscoverFeed = cache(async (handle: string, cursor: string | null = null): Promise<FeedPage> => {
   'use cache';
-  cacheTag('feed');
+  cacheTag('feed', `discover-${handle}`);
   cacheLife('seconds');
 
   await delay(500);
+  const following = await prisma.follow.findMany({
+    select: { targetHandle: true },
+    where: { followerHandle: handle },
+  });
+  const excludeHandles = [
+    handle,
+    ...following.map(f => {
+      return f.targetHandle;
+    }),
+  ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     take: FEED_PAGE_SIZE + 1,
     where: {
+      authorHandle: { notIn: excludeHandles },
       parentId: null,
       ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
     },
