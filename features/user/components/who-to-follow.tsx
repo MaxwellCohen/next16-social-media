@@ -15,7 +15,7 @@ export async function WhoToFollow() {
       {users.length === 0 ? (
         <p className="text-gray px-4 pb-4 text-xs">
           You&apos;re following everyone we can think of.{' '}
-          <Link href="/tag/nextjs" className="text-accent hover:underline">
+          <Link href="/tag" className="text-accent hover:underline">
             Browse tags
           </Link>{' '}
           to find more people.
