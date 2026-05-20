@@ -20,7 +20,9 @@ export function FollowButton({ targetHandle, followingPromise }: Props) {
       variant={following ? 'secondary' : 'primary'}
       size="sm"
       className="min-w-[7rem]"
-      onClick={() => {
+      onClick={e => {
+        e.stopPropagation();
+        e.preventDefault();
         startTransition(async () => {
           setOptimistic(!following);
           try {
