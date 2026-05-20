@@ -13,7 +13,7 @@ import type { Route } from 'next';
 
 export function Sidebar() {
   return (
-    <aside className="hidden h-full flex-col items-center gap-4 overflow-hidden overscroll-y-none px-2 py-5 sm:flex lg:items-stretch lg:px-6">
+    <aside style={{ viewTransitionName: 'sidebar' }} className="hidden h-full flex-col items-center gap-4 overflow-hidden overscroll-y-none px-2 py-5 sm:flex lg:items-stretch lg:px-6">
       <Link
         href="/"
         className="inline-flex items-center gap-2 px-2 pb-2 text-2xl font-bold tracking-tight text-black dark:text-white"

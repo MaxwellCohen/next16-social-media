@@ -8,6 +8,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary"
+      style={{ viewTransitionName: 'mobile-nav' }}
       className="border-divider/70 dark:border-divider-dark/70 flex shrink-0 border-t bg-white pb-[env(safe-area-inset-bottom)] sm:hidden dark:bg-black"
     >
       <Suspense>

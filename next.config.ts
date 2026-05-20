@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     prefetchInlining: true,
     useOffline: true,
     varyParams: true,
+    viewTransition: true,
   },
   typedRoutes: true,
 };

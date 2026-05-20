@@ -1,3 +1,4 @@
+import { ViewTransition } from 'react';
 import { Drop } from '@/features/drop/components/drop';
 import { FeedList } from '@/features/drop/components/feed-list';
 import { getDiscoverFeed, getFeed } from '@/features/drop/drop-queries';
@@ -10,9 +11,11 @@ export async function Feed() {
     <FeedList initialCursor={nextCursor} feedType="following">
       {drops.map(drop => {
         return (
-          <li key={drop.id}>
-            <Drop drop={drop} />
-          </li>
+          <ViewTransition key={drop.id}>
+            <li>
+              <Drop drop={drop} />
+            </li>
+          </ViewTransition>
         );
       })}
     </FeedList>
@@ -26,9 +29,11 @@ export async function DiscoverFeed() {
     <FeedList initialCursor={nextCursor} feedType="discover">
       {drops.map(drop => {
         return (
-          <li key={drop.id}>
-            <Drop drop={drop} />
-          </li>
+          <ViewTransition key={drop.id}>
+            <li>
+              <Drop drop={drop} />
+            </li>
+          </ViewTransition>
         );
       })}
     </FeedList>

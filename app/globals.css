@@ -101,3 +101,31 @@
   background-color: transparent !important;
   /* Optional: font-style/weight could also be swapped if needed */
 }
+
+/* --- View Transitions --- */
+
+/* Persistent element isolation */
+::view-transition-group(sidebar),
+::view-transition-group(mobile-nav) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(sidebar),
+::view-transition-old(mobile-nav) {
+  display: none;
+}
+
+::view-transition-new(sidebar),
+::view-transition-new(mobile-nav) {
+  animation: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0.01ms !important;
+  }
+}
