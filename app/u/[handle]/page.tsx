@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { ProfileFeed } from '@/features/user/components/profile-feed';
 import { ProfileHeader, ProfileHeaderSkeleton } from '@/features/user/components/profile-header';
@@ -41,7 +41,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
           return <ProfileHeader handle={handle} />;
         })}
       </Suspense>
-      <Suspense fallback={<ProfileTabsSkeleton />}>
+      <Suspense fallback={<TabsSkeleton />}>
         {Promise.all([params, searchParams]).then(([{ handle }, sp]) => {
           return <ProfileTabs handle={handle} active={parseTab(sp.tab)} />;
         })}
@@ -51,20 +51,6 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
           return <ProfileFeed handle={handle} tab={parseTab(sp.tab)} />;
         })}
       </Suspense>
-    </div>
-  );
-}
-
-function ProfileTabsSkeleton() {
-  return (
-    <div className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-hidden>
-      {Array.from({ length: 2 }).map((_, i) => {
-        return (
-          <span key={i} className="flex-1 px-4 py-4 text-center">
-            <Skeleton className="inline-block h-5 w-16 rounded align-middle" />
-          </span>
-        );
-      })}
     </div>
   );
 }

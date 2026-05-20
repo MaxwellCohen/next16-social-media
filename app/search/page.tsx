@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
-import { DropList, DropListSkeleton } from '@/features/drop/components/drop';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DropListSkeleton } from '@/features/drop/components/drop';
 import { SearchInput } from '@/features/drop/components/search-input';
-import { searchDrops } from '@/features/drop/drop-queries';
+import { SearchResults } from '@/features/drop/components/search-results';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
         <h1 className="text-lg font-bold tracking-tight">Search</h1>
       </PageHeader>
       <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 sm:px-5">
-        <Suspense>
+        <Suspense fallback={<Skeleton className="h-[42px] w-full rounded-lg" />}>
           <SearchInput />
         </Suspense>
       </div>
@@ -32,13 +33,4 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
       </Suspense>
     </div>
   );
-}
-
-async function SearchResults({ query }: { query: string }) {
-  const drops = await searchDrops(query);
-  if (drops.length === 0) {
-    return <EmptyState title="No results" body={`Nothing matched "${query}".`} />;
-  }
-
-  return <DropList drops={drops} />;
 }

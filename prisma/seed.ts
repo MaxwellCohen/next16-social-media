@@ -821,13 +821,13 @@ const REPLIES: SeedDrop[] = [
 
 const FOLLOWS: Record<string, string[]> = {
   aurora: ['vex', 'quill'],
-  cinder: ['aurora', 'vex', 'quill'],
-  echo: ['aurora'],
-  halo: ['aurora', 'vex', 'echo'],
-  onyx: ['aurora', 'vex'],
-  quill: ['aurora', 'wren'],
-  vex: ['aurora', 'onyx', 'cinder'],
-  wren: ['aurora', 'quill'],
+  cinder: ['halo', 'echo'],
+  echo: ['onyx', 'wren'],
+  halo: ['cinder', 'echo'],
+  onyx: ['wren', 'halo'],
+  quill: ['cinder', 'onyx'],
+  vex: ['aurora', 'quill'],
+  wren: ['echo', 'vex'],
 };
 
 const LIKES: Record<string, string[]> = {

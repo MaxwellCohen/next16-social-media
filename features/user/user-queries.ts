@@ -79,6 +79,23 @@ export const isFollowing = cache(async (followerHandle: string, targetHandle: st
   return row !== null;
 });
 
+export const searchUsers = cache(async (query: string) => {
+  'use cache';
+  cacheTag('users', `search-users-${query}`);
+  cacheLife('seconds');
+
+  await delay(200);
+  return prisma.user.findMany({
+    take: 5,
+    where: {
+      OR: [
+        { handle: { contains: query, mode: 'insensitive' } },
+        { displayName: { contains: query, mode: 'insensitive' } },
+      ],
+    },
+  });
+});
+
 export type DropUserState = {
   liked: boolean;
   reposted: boolean;
