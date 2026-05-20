@@ -32,7 +32,7 @@ export function UserSwitcher({ currentHandle, users, children }: Props) {
   }
 
   return (
-    <>
+    <div data-pending={isPending ? '' : undefined}>
       <Ariakit.PopoverDisclosure
         store={popover}
         disabled={isPending}
@@ -78,6 +78,6 @@ export function UserSwitcher({ currentHandle, users, children }: Props) {
           })}
         </div>
       </Ariakit.Popover>
-    </>
+    </div>
   );
 }
