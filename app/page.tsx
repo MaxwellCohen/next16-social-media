@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <div>
       <PageHeader>
-        <h1 className="text-lg font-bold tracking-tight">Home</h1>
+        <h1 className="text-lg font-bold tracking-tight">Following</h1>
       </PageHeader>
       <DropComposer />
       <Suspense fallback={<DropListSkeleton />}>
