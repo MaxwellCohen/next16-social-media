@@ -1,37 +1,29 @@
 'use client';
 
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { use } from 'react';
+import { Tabs } from '@/components/ui/tabs';
+import type { Route } from 'next';
 
-type Props = {
-  active: 'following' | 'foryou';
-};
+export type FeedTab = 'following' | 'discover';
 
-export function FeedTabs({ active }: Props) {
+const FEED_TABS: { label: string; value: FeedTab }[] = [
+  { label: 'Following', value: 'following' },
+  { label: 'Discover', value: 'discover' },
+];
+
+export function FeedTabs({ tabPromise }: { tabPromise: Promise<FeedTab> }) {
+  const active = use(tabPromise);
+  const router = useRouter();
+
   return (
-    <div className="border-divider/70 dark:border-divider-dark/70 flex border-b">
-      <Link
-        href="/"
-        className={cn(
-          'flex-1 py-3 text-center text-sm font-semibold transition-colors',
-          active === 'following'
-            ? 'border-accent border-b-2 text-black dark:text-white'
-            : 'text-gray hover:text-black dark:hover:text-white',
-        )}
-      >
-        Following
-      </Link>
-      <Link
-        href="/?tab=foryou"
-        className={cn(
-          'flex-1 py-3 text-center text-sm font-semibold transition-colors',
-          active === 'foryou'
-            ? 'border-accent border-b-2 text-black dark:text-white'
-            : 'text-gray hover:text-black dark:hover:text-white',
-        )}
-      >
-        For you
-      </Link>
-    </div>
+    <Tabs
+      tabs={FEED_TABS}
+      active={active}
+      action={value => {
+        router.push((value === 'following' ? '/' : '/?tab=discover') as Route);
+      }}
+      label="Feed sections"
+    />
   );
 }

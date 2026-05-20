@@ -2,9 +2,11 @@
 
 import { Drop } from '@/features/drop/components/drop';
 import { getFeed, getPublicFeed } from '@/features/drop/drop-queries';
+import { getCurrentUserHandle } from '@/features/user/user-queries';
 
 export async function loadMoreFeed(cursor: string | null) {
-  const { drops, nextCursor } = await getFeed(cursor);
+  const handle = await getCurrentUserHandle();
+  const { drops, nextCursor } = await getFeed(handle, cursor);
   return {
     items: drops.map(drop => {
       return (

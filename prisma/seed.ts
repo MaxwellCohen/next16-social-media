@@ -37,7 +37,7 @@ const USERS: SeedUser[] = [
     bio: 'DX Engineer. Building with Next.js and React.',
     displayName: 'Aurora',
     followers: 4_911,
-    following: 584,
+    following: 2,
     handle: 'aurora',
     id: 'u1',
   },
@@ -820,7 +820,7 @@ const REPLIES: SeedDrop[] = [
 ];
 
 const FOLLOWS: Record<string, string[]> = {
-  aurora: ['vex', 'quill', 'onyx', 'wren', 'cinder'],
+  aurora: ['vex', 'quill'],
   cinder: ['aurora', 'vex', 'quill'],
   echo: ['aurora'],
   halo: ['aurora', 'vex', 'echo'],

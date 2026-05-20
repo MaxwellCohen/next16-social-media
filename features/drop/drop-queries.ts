@@ -3,7 +3,6 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
@@ -12,13 +11,12 @@ const FEED_PAGE_SIZE = 10;
 
 export type FeedPage = { drops: Drop[]; nextCursor: string | null };
 
-export const getFeed = cache(async (cursor: string | null = null): Promise<FeedPage> => {
-  'use cache: private';
-  cacheTag('feed');
+export const getFeed = cache(async (handle: string, cursor: string | null = null): Promise<FeedPage> => {
+  'use cache';
+  cacheTag('feed', `feed-${handle}`);
   cacheLife('seconds');
 
   await delay(500);
-  const handle = await getCurrentUserHandle();
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },

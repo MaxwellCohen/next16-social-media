@@ -2,14 +2,15 @@
 
 import { useState, useTransition, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { loadMoreFeed } from '@/features/drop/feed-actions';
+import { loadMoreFeed, loadMorePublicFeed } from '@/features/drop/feed-actions';
 
 type Props = {
   children: ReactNode;
+  feedType: 'following' | 'discover';
   initialCursor: string | null;
 };
 
-export function FeedList({ children, initialCursor }: Props) {
+export function FeedList({ children, initialCursor, feedType }: Props) {
   const [more, setMore] = useState<ReactNode[]>([]);
   const [cursor, setCursor] = useState(initialCursor);
   const [pending, startTransition] = useTransition();
@@ -17,7 +18,8 @@ export function FeedList({ children, initialCursor }: Props) {
   function loadMore() {
     if (!cursor) return;
     startTransition(async () => {
-      const next = await loadMoreFeed(cursor);
+      const loader = feedType === 'discover' ? loadMorePublicFeed : loadMoreFeed;
+      const next = await loader(cursor);
       setMore(prev => {
         return [...prev, ...next.items];
       });
