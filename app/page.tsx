@@ -22,10 +22,10 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
       <PageHeader>
         <h1 className="text-lg font-bold tracking-tight">Home</h1>
       </PageHeader>
+      <DropComposer />
       <Suspense fallback={<FeedTabsSkeleton />}>
         <FeedTabs tabPromise={tabPromise} />
       </Suspense>
-      <DropComposer />
       <Suspense fallback={<DropListSkeleton />}>
         {tabPromise.then(tab => {
           return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
