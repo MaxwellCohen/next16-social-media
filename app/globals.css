@@ -102,8 +102,6 @@
   /* Optional: font-style/weight could also be swapped if needed */
 }
 
-/* --- View Transitions --- */
-
 /* Persistent element isolation */
 ::view-transition-group(sidebar),
 ::view-transition-group(mobile-nav) {
