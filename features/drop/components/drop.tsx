@@ -19,8 +19,8 @@ type Props = {
 
 export function Drop({ drop, compact = false, repostedBy }: Props) {
   return (
-    <article className="group/drop border-divider/70 hover:bg-card/40 dark:border-divider-dark/70 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
+    <article className={`group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors ${compact ? '' : 'hover:bg-card/40 dark:hover:bg-card-dark/40'}`}>
+      {!compact && <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />}
       {repostedBy ? (
         <Suspense fallback={null}>
           <Reposter handle={repostedBy} />
@@ -88,14 +88,14 @@ export function DropSkeleton() {
   );
 }
 
-export function DropList({ drops, repostedBy }: { drops: DropT[]; repostedBy?: (drop: DropT) => string | undefined }) {
+export function DropList({ drops, compact, repostedBy }: { drops: DropT[]; compact?: boolean; repostedBy?: (drop: DropT) => string | undefined }) {
   return (
     <ul>
       {drops.map(drop => {
         return (
           <ViewTransition key={drop.id}>
             <li>
-              <Drop drop={drop} repostedBy={repostedBy?.(drop)} />
+              <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
             </li>
           </ViewTransition>
         );

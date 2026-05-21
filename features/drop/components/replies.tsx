@@ -12,7 +12,7 @@ export async function Replies({ id }: { id: string }) {
       {replies.length === 0 ? (
         <EmptyState title="No replies yet" body="Be the first to reply." />
       ) : (
-        <DropList drops={replies} />
+        <DropList drops={replies} compact />
       )}
     </section>
   );
