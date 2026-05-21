@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropComposer } from '@/features/drop/components/composer';
@@ -27,9 +27,11 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
         <FeedTabs tabPromise={tabPromise} />
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>
-        {tabPromise.then(tab => {
-          return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
-        })}
+        <ViewTransition enter="auto" default="none">
+          {tabPromise.then(tab => {
+            return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
+          })}
+        </ViewTransition>
       </Suspense>
     </div>
   );
