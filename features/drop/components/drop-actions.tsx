@@ -50,7 +50,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   }
 
   return (
-    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
+    <div className="fade-in text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <IconButton
         label="Reply"
         icon={<MessageCircle className="h-4 w-4" />}
@@ -107,9 +107,8 @@ export function DropActionsSkeleton() {
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5" aria-hidden>
       {Array.from({ length: 4 }).map((_, i) => {
         return (
-          <span key={i} className="inline-flex items-center gap-1 px-2 py-1.5">
-            <Skeleton className="h-4 w-4 rounded" />
-            {i < 3 ? <Skeleton className="h-3 w-6 rounded" /> : null}
+          <span key={i} className="inline-flex items-center px-2 py-1.5">
+            <Skeleton className="h-4 w-4 rounded-full" />
           </span>
         );
       })}
