@@ -45,15 +45,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="flex h-[100dvh] flex-col overflow-hidden overscroll-y-none bg-white text-black antialiased dark:bg-black dark:text-white">
+      <body className="min-h-[100dvh] bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
           <OfflineIndicator />
-          <div className="group mx-auto grid min-h-0 w-full max-w-7xl flex-1 grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
+          <div className="group mx-auto grid w-full max-w-7xl grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
             <Sidebar />
-            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-h-0 min-w-0 overflow-y-auto overscroll-y-contain transition-opacity group-has-data-pending:opacity-50 sm:border-x">
+            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity group-has-data-pending:opacity-50 sm:border-x">
               {children}
             </main>
-            <aside className="hidden h-full flex-col gap-4 overflow-hidden overscroll-y-none px-4 py-5 xl:flex">
+            <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex">
               <Suspense fallback={<TrendingTagsSkeleton />}>
                 <TrendingTags />
               </Suspense>
