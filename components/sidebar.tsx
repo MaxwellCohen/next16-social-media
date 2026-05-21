@@ -23,12 +23,10 @@ export function Sidebar() {
         <span className="hidden lg:inline">drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
-        <Suspense fallback={<SidebarNavFallback />}>
-          <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-          <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
-          <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-          <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
-        </Suspense>
+        <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
+        <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
+        <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
+        <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
           {getCurrentUserHandle().then(handle => {
             return (
