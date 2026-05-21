@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ViewTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserRow } from '@/features/user/components/user-row';
@@ -25,15 +24,13 @@ export async function WhoToFollow() {
         <ul className="pb-2">
           {users.map(user => {
             return (
-              <ViewTransition key={user.handle}>
-                <li>
-                  <UserRow
+              <li key={user.handle}>
+                <UserRow
                     handle={user.handle}
                     displayName={user.displayName}
                     action={<FollowButton targetHandle={user.handle} followingPromise={Promise.resolve(false)} />}
                   />
-                </li>
-              </ViewTransition>
+              </li>
             );
           })}
         </ul>
