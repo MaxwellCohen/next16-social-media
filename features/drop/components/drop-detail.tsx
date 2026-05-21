@@ -13,7 +13,7 @@ import { getDropUserState, getUserByHandle } from '@/features/user/user-queries'
 export async function DropDetail({ id }: { id: string }) {
   const drop = await getDrop(id);
   return (
-    <article className="fade-in border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
+    <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
       <DropAuthor handle={drop.authorHandle} />
       <div className="mt-3 flex flex-col gap-3">
         <DropBody body={drop.body} detail />

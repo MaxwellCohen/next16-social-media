@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
@@ -35,37 +35,41 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </PageHeader>
       <Suspense fallback={<DropDetailSkeleton />}>
-        {params.then(({ id }) => {
-          return (
-            <>
-              <DropDetail id={id} />
-              <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
-                <ReplyComposerForm
-                  dropId={id}
-                  avatar={
-                    <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                      <CurrentUserAvatar />
-                    </Suspense>
-                  }
-                />
-              </section>
-              <section>
-                <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 text-sm font-semibold tracking-tight sm:px-5">
-                  Replies
-                </h2>
-                <Suspense
-                  fallback={
-                    <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
-                      <Skeleton className="h-10 w-10 rounded-full" />
-                    </div>
-                  }
-                >
-                  <Replies id={id} />
-                </Suspense>
-              </section>
-            </>
-          );
-        })}
+        <ViewTransition enter="auto" default="none">
+          {params.then(({ id }) => {
+            return (
+              <>
+                <DropDetail id={id} />
+                <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
+                  <ReplyComposerForm
+                    dropId={id}
+                    avatar={
+                      <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+                        <CurrentUserAvatar />
+                      </Suspense>
+                    }
+                  />
+                </section>
+                <section>
+                  <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 text-sm font-semibold tracking-tight sm:px-5">
+                    Replies
+                  </h2>
+                  <Suspense
+                    fallback={
+                      <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                      </div>
+                    }
+                  >
+                    <ViewTransition enter="auto" default="none">
+                      <Replies id={id} />
+                    </ViewTransition>
+                  </Suspense>
+                </section>
+              </>
+            );
+          })}
+        </ViewTransition>
       </Suspense>
     </div>
   );

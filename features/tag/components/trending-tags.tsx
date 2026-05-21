@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTrendingTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
@@ -11,7 +11,9 @@ export function TrendingTags() {
         <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
       </header>
       <Suspense fallback={<TrendingTagsListSkeleton />}>
-        <TrendingTagsList />
+        <ViewTransition enter="auto" default="none">
+          <TrendingTagsList />
+        </ViewTransition>
       </Suspense>
     </section>
   );
@@ -20,7 +22,7 @@ export function TrendingTags() {
 async function TrendingTagsList() {
   const tags = await getTrendingTags();
   return (
-    <ul className="fade-in pb-2">
+    <ul className="pb-2">
       {tags.map(tag => {
         return (
           <li key={tag.name}>

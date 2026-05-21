@@ -8,7 +8,7 @@ export async function Replies({ id }: { id: string }) {
     return <EmptyState title="No replies yet" body="Be the first to reply." />;
   }
   return (
-    <div className="fade-in">
+    <div>
       <DropList drops={replies} compact />
     </div>
   );

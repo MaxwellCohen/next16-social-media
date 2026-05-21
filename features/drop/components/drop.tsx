@@ -20,11 +20,9 @@ type Props = {
 export function Drop({ drop, compact = false, repostedBy }: Props) {
   return (
     <article
-      className={`group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors ${compact ? '' : 'hover:bg-card/40 dark:hover:bg-card-dark/40'}`}
+      className="group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors hover:bg-card/40 dark:hover:bg-card-dark/40"
     >
-      {!compact && (
-        <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
-      )}
+      <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
       {repostedBy ? (
         <Suspense fallback={null}>
           <Reposter handle={repostedBy} />

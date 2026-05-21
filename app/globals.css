@@ -87,19 +87,6 @@
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fade-in 200ms ease-out;
-}
-
 /* Shiki — dual-theme output (github-light + github-dark) using CSS variables.
    The defaultColor is "light"; in dark mode we swap to the --shiki-dark-* vars. */
 .shiki-block pre,

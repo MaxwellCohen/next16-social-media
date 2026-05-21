@@ -12,7 +12,9 @@ export function WhoToFollow() {
         <h3 className="text-sm font-semibold tracking-tight">Who to follow</h3>
       </header>
       <Suspense fallback={<WhoToFollowListSkeleton />}>
-        <WhoToFollowList />
+        <ViewTransition enter="auto" default="none">
+          <WhoToFollowList />
+        </ViewTransition>
       </Suspense>
     </section>
   );
@@ -33,7 +35,7 @@ async function WhoToFollowList() {
     );
   }
   return (
-    <ul className="fade-in pb-2">
+    <ul className="pb-2">
       {users.map(user => {
         return (
           <ViewTransition key={user.handle}>

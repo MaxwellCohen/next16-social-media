@@ -50,7 +50,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   }
 
   return (
-    <div className="fade-in text-gray -ml-2 flex items-center gap-1 pt-0.5">
+    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       <IconButton
         label="Reply"
         icon={<MessageCircle className="h-4 w-4" />}
