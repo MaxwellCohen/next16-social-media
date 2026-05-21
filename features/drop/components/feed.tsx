@@ -31,13 +31,11 @@ async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
   const { drops, hasMore } = await getFeed(handle, page);
   return (
     <>
-      {drops.map(drop => {
-        return (
+      {drops.map(drop => (
           <li key={drop.id}>
             <Drop drop={drop} />
           </li>
-        );
-      })}
+        ))}
       {isLast && hasMore ? (
         <li className="flex justify-center p-6">
           <LoadMore href={`/?page=${page + 1}` as Route} />
@@ -72,13 +70,11 @@ async function DiscoverFeedPage({ page, isLast }: { page: number; isLast: boolea
   const { drops, hasMore } = await getDiscoverFeed(handle, page);
   return (
     <>
-      {drops.map(drop => {
-        return (
+      {drops.map(drop => (
           <li key={drop.id}>
             <Drop drop={drop} />
           </li>
-        );
-      })}
+        ))}
       {isLast && hasMore ? (
         <li className="flex justify-center p-6">
           <LoadMore href={`/?tab=discover&page=${page + 1}` as Route} />

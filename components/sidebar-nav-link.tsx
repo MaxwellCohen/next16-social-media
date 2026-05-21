@@ -15,13 +15,11 @@ export function SidebarNavLink({ href, icon, label, children }: CommonProps) {
     <NavLink
       href={href}
       aria-label={label}
-      className={({ isActive }) => {
-        return `flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3 ${
+      className={({ isActive }) => `flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3 ${
           isActive
             ? 'bg-accent/10 text-accent dark:bg-accent/15 dark:text-blue-400'
             : 'hover:bg-card dark:hover:bg-card-dark'
-        }`;
-      }}
+        }`}
     >
       {icon}
       <span className="hidden lg:inline">{children ?? label}</span>
@@ -34,11 +32,9 @@ export function MobileTabLink({ href, icon, label }: CommonProps) {
     <NavLink
       href={href}
       aria-label={label}
-      className={({ isActive }) => {
-        return `flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
+      className={({ isActive }) => `flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
           isActive ? 'text-accent' : 'text-gray hover:text-black dark:hover:text-white'
-        }`;
-      }}
+        }`}
     >
       {icon}
       <span>{label}</span>

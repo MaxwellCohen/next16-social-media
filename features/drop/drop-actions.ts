@@ -23,9 +23,7 @@ const postDropSchema = z.object({
     .string()
     .min(1, 'Say something')
     .max(1000, '1000 characters max')
-    .transform(s => {
-      return s.replace(/\r\n/g, '\n');
-    }),
+    .transform(s => s.replace(/\r\n/g, '\n')),
 });
 
 export async function postDrop(formData: FormData) {

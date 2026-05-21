@@ -33,8 +33,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
       <PageHeader back title="Drop" />
       <Suspense fallback={<DropDetailSkeleton />}>
         <Crossfade>
-          {params.then(({ id }) => {
-            return (
+          {params.then(({ id }) => (
               <>
                 <DropDetail id={id} />
                 <Section className="p-4 sm:p-5">
@@ -56,8 +55,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                   </Suspense>
                 </section>
               </>
-            );
-          })}
+            ))}
         </Crossfade>
       </Suspense>
     </div>

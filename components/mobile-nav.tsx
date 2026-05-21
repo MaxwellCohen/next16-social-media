@@ -15,9 +15,7 @@ export function MobileTabBar() {
       <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
       <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
       <Suspense>
-        {getCurrentUserHandle().then(handle => {
-          return <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />;
-        })}
+        {getCurrentUserHandle().then(handle => <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />)}
       </Suspense>
     </nav>
   );

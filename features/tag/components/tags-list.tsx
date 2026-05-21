@@ -13,8 +13,7 @@ export async function TagsList() {
 
   return (
     <ul>
-      {tags.map(tag => {
-        return (
+      {tags.map(tag => (
           <li key={tag.name}>
             <Link
               href={`/tag/${tag.name}` as Route}
@@ -29,8 +28,7 @@ export async function TagsList() {
               </div>
             </Link>
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }
@@ -38,8 +36,7 @@ export async function TagsList() {
 export function TagsListSkeleton() {
   return (
     <ul aria-hidden>
-      {Array.from({ length: 5 }).map((_, i) => {
-        return (
+      {Array.from({ length: 5 }).map((_, i) => (
           <li
             key={i}
             className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-5 sm:px-5"
@@ -47,8 +44,7 @@ export function TagsListSkeleton() {
             <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
             <Skeleton className="h-4 w-24 rounded" />
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }

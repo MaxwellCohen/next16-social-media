@@ -47,9 +47,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
           ) : null}
           {drop.tags.length > 0 ? (
             <div className="relative z-20 flex flex-wrap gap-1.5">
-              {drop.tags.map(t => {
-                return <TagPill key={t} tag={t} />;
-              })}
+              {drop.tags.map(t => <TagPill key={t} tag={t} />)}
             </div>
           ) : null}
           <div className="relative z-20">
@@ -89,13 +87,11 @@ export function DropList({
 }) {
   return (
     <ul>
-      {drops.map((drop, i) => {
-        return (
+      {drops.map((drop, i) => (
           <li key={`${drop.id}-${i}`}>
             <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }
@@ -103,13 +99,11 @@ export function DropList({
 export function DropListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <ul aria-hidden>
-      {Array.from({ length: count }).map((_, i) => {
-        return (
+      {Array.from({ length: count }).map((_, i) => (
           <li key={i}>
             <DropSkeleton />
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }

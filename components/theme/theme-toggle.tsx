@@ -7,18 +7,12 @@ import { cn } from '@/lib/utils';
 
 type Props = { variant?: 'pill' | 'inline' };
 
-const subscribe = () => {
-  return () => {};
-};
+const subscribe = () => () => {};
 function useIsMounted() {
   return useSyncExternalStore(
     subscribe,
-    () => {
-      return true;
-    },
-    () => {
-      return false;
-    },
+    () => true,
+    () => false,
   );
 }
 
@@ -37,27 +31,21 @@ export function ThemeToggle({ variant = 'pill' }: Props) {
       <ToggleButton
         active={active === 'light'}
         label="Light mode"
-        onClick={() => {
-          return setTheme('light');
-        }}
+        onClick={() => setTheme('light')}
       >
         <Sun className="size-4" />
       </ToggleButton>
       <ToggleButton
         active={active === 'dark'}
         label="Dark mode"
-        onClick={() => {
-          return setTheme('dark');
-        }}
+        onClick={() => setTheme('dark')}
       >
         <Moon className="size-4" />
       </ToggleButton>
       <ToggleButton
         active={active === 'system'}
         label="System theme"
-        onClick={() => {
-          return setTheme('system');
-        }}
+        onClick={() => setTheme('system')}
       >
         <Monitor className="size-4" />
       </ToggleButton>

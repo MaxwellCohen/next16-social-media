@@ -33,11 +33,7 @@ async function countTags(limit?: number) {
     }
   }
   const sorted = Array.from(counts.entries())
-    .map(([name, count]) => {
-      return { count, name };
-    })
-    .sort((a, b) => {
-      return b.count - a.count;
-    });
+    .map(([name, count]) => ({ count, name }))
+    .sort((a, b) => b.count - a.count);
   return limit ? sorted.slice(0, limit) : sorted;
 }

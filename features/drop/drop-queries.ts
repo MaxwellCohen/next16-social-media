@@ -23,9 +23,7 @@ export const getFeed = cache(async (handle: string, page: number = 1): Promise<F
   });
   const followedHandles = [
     handle,
-    ...following.map(f => {
-      return f.targetHandle;
-    }),
+    ...following.map(f => f.targetHandle),
   ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
@@ -56,9 +54,7 @@ export const getDiscoverFeed = cache(async (handle: string, page: number = 1): P
   });
   const excludeHandles = [
     handle,
-    ...following.map(f => {
-      return f.targetHandle;
-    }),
+    ...following.map(f => f.targetHandle),
   ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
@@ -105,14 +101,10 @@ export const getReplies = cache(async (dropId: string) => {
   // Twitter-style: pin the original author's replies first, then newest-first for everyone else.
   const authorHandle = parent?.authorHandle;
   const authorReplies = authorHandle
-    ? rows.filter(r => {
-        return r.authorHandle === authorHandle;
-      })
+    ? rows.filter(r => r.authorHandle === authorHandle)
     : [];
   const otherReplies = authorHandle
-    ? rows.filter(r => {
-        return r.authorHandle !== authorHandle;
-      })
+    ? rows.filter(r => r.authorHandle !== authorHandle)
     : rows;
   return [...authorReplies, ...otherReplies].map(toDrop);
 });
@@ -138,21 +130,15 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
   ]);
 
   const items: ProfileFeedItem[] = [
-    ...authored.map(d => {
-      return { drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() };
-    }),
-    ...reposts.map(r => {
-      return {
+    ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
+    ...reposts.map(r => ({
         drop: toDrop(r.drop),
         kind: 'repost' as const,
         pinnedAt: r.drop.createdAt.getTime() + 1,
         repostedBy: handle,
-      };
-    }),
+      })),
   ];
-  return items.sort((a, b) => {
-    return b.pinnedAt - a.pinnedAt;
-  });
+  return items.sort((a, b) => b.pinnedAt - a.pinnedAt);
 });
 
 export const getRepliesByAuthor = cache(async (handle: string) => {
@@ -178,9 +164,7 @@ export const getDropsByTag = cache(async (tag: string) => {
     orderBy: { createdAt: 'desc' },
     where: { parentId: null, tags: { contains: tag } },
   });
-  return rows.map(toDrop).filter(d => {
-    return d.tags.includes(tag);
-  });
+  return rows.map(toDrop).filter(d => d.tags.includes(tag));
 });
 
 export const getBookmarkedDrops = cache(async (userHandle: string) => {
@@ -194,9 +178,7 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
     orderBy: { createdAt: 'desc' },
     where: { drop: { parentId: null }, userHandle },
   });
-  return rows.map(r => {
-    return toDrop(r.drop);
-  });
+  return rows.map(r => toDrop(r.drop));
 });
 
 export const searchDrops = cache(async (query: string) => {

@@ -32,7 +32,7 @@ const eslintConfig = [
           prefer: 'type-imports',
         },
       ],
-      'arrow-body-style': ['warn', 'always'],
+      'arrow-body-style': ['warn', 'as-needed'],
       'autofix/no-unused-vars': [
         'warn',
         {

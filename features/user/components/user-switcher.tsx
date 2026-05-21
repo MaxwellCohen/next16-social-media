@@ -50,14 +50,11 @@ export function UserSwitcher({ currentHandle, users, children }: Props) {
           <p className="text-xs font-semibold tracking-tight">Switch account</p>
         </div>
         <div className="max-h-72 overflow-auto py-1">
-          {users.map(u => {
-            return (
+          {users.map(u => (
               <button
                 key={u.handle}
                 type="button"
-                onClick={() => {
-                  return handleSelect(u.handle);
-                }}
+                onClick={() => handleSelect(u.handle)}
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-black/5 dark:hover:bg-white/5"
               >
                 <div
@@ -74,8 +71,7 @@ export function UserSwitcher({ currentHandle, users, children }: Props) {
                 </div>
                 <Check className={cn('h-4 w-4 shrink-0', u.handle === selected ? 'text-accent' : 'opacity-0')} />
               </button>
-            );
-          })}
+            ))}
         </div>
       </Ariakit.Popover>
     </div>

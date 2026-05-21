@@ -26,16 +26,12 @@ export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
       <PageHeader back title="Tag" />
       <Suspense fallback={<TagHeaderSkeleton />}>
         <Crossfade>
-          {params.then(({ tag }) => {
-            return <TagHeader tag={tag} />;
-          })}
+          {params.then(({ tag }) => <TagHeader tag={tag} />)}
         </Crossfade>
       </Suspense>
       <Suspense fallback={<DropListSkeleton count={4} />}>
         <Crossfade>
-          {params.then(({ tag }) => {
-            return <TagFeed tag={tag} />;
-          })}
+          {params.then(({ tag }) => <TagFeed tag={tag} />)}
         </Crossfade>
       </Suspense>
     </div>

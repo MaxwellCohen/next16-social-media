@@ -19,13 +19,9 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: 'drops
 
   return (
     <DropList
-      drops={items.map(i => {
-        return i.drop;
-      })}
+      drops={items.map(i => i.drop)}
       repostedBy={drop => {
-        const item = items.find(i => {
-          return i.drop.id === drop.id;
-        });
+        const item = items.find(i => i.drop.id === drop.id);
         return item?.kind === 'repost' ? item.repostedBy : undefined;
       }}
     />

@@ -31,11 +31,9 @@ export function Sidebar() {
         <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
         <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
-          {getCurrentUserHandle().then(handle => {
-            return (
+          {getCurrentUserHandle().then(handle => (
               <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
-            );
-          })}
+            ))}
         </Suspense>
       </nav>
       <div className="mt-auto hidden lg:block">

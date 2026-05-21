@@ -7,8 +7,7 @@ export async function TrendingTagsList() {
   const tags = await getTrendingTags();
   return (
     <ul className="pb-2">
-      {tags.map(tag => {
-        return (
+      {tags.map(tag => (
           <li key={tag.name}>
             <Link
               href={`/tag/${tag.name}`}
@@ -18,8 +17,7 @@ export async function TrendingTagsList() {
               <span className="text-gray font-mono text-xs">{formatCount(tag.count)}</span>
             </Link>
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }
@@ -27,13 +25,11 @@ export async function TrendingTagsList() {
 export function TrendingTagsListSkeleton() {
   return (
     <ul className="pb-2">
-      {Array.from({ length: 6 }).map((_, i) => {
-        return (
+      {Array.from({ length: 6 }).map((_, i) => (
           <li key={i} className="px-4 py-2.5">
             <Skeleton className="h-5 w-24 rounded" />
           </li>
-        );
-      })}
+        ))}
     </ul>
   );
 }

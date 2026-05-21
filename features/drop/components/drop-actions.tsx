@@ -63,9 +63,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         activeColor="text-success"
         hoverColor="hover:bg-success/10 hover:text-success"
         onClick={() => {
-          toggle('reposted', () => {
-            return toggleRepost(dropId);
-          });
+          toggle('reposted', () => toggleRepost(dropId));
         }}
       >
         <span>{formatCount(reposts + optimistic.repostsDelta)}</span>
@@ -77,9 +75,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         activeColor="text-danger"
         hoverColor="hover:bg-danger/10 hover:text-danger"
         onClick={() => {
-          toggle('liked', () => {
-            return toggleLike(dropId);
-          });
+          toggle('liked', () => toggleLike(dropId));
         }}
       >
         <span>{formatCount(likes + optimistic.likesDelta)}</span>
@@ -91,9 +87,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         activeColor="text-accent"
         hoverColor="hover:bg-accent/10 hover:text-accent"
         onClick={() => {
-          toggle('bookmarked', () => {
-            return toggleBookmark(dropId);
-          });
+          toggle('bookmarked', () => toggleBookmark(dropId));
         }}
       />
     </div>

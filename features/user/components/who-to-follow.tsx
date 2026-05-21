@@ -21,8 +21,7 @@ export async function WhoToFollowList() {
   }
   return (
     <ul className="pb-2">
-      {users.map(user => {
-        return (
+      {users.map(user => (
           <ViewTransition key={user.handle}>
             <li>
               <UserRow
@@ -32,8 +31,7 @@ export async function WhoToFollowList() {
               />
             </li>
           </ViewTransition>
-        );
-      })}
+        ))}
     </ul>
   );
 }
