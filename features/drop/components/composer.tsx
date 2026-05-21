@@ -28,7 +28,7 @@ export function DropComposer() {
       <div className="fixed right-4 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.75rem)] z-40 sm:hidden">
         <NewDropModal
           onOpenTrigger={
-            <span className="bg-accent hover:bg-accent-hover flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg">
+            <span aria-label="New drop" className="bg-accent hover:bg-accent-hover flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg">
               <Plus className="h-6 w-6" />
             </span>
           }

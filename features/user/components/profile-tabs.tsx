@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { Tabs } from '@/components/ui/tabs';
 import type { Route } from 'next';
 
-type Tab = 'drops' | 'replies';
+export type ProfileTab = 'drops' | 'replies';
 
-const PROFILE_TABS: { label: string; value: Tab }[] = [
+const PROFILE_TABS: { label: string; value: ProfileTab }[] = [
   { label: 'Drops', value: 'drops' },
   { label: 'Replies', value: 'replies' },
 ];
 
-export function ProfileTabs({ handle, active }: { handle: string; active: Tab }) {
+export function ProfileTabs({ handle, active }: { handle: string; active: ProfileTab }) {
   const router = useRouter();
 
   return (

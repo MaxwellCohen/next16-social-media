@@ -26,6 +26,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
         {avatar}
         <textarea
           name="body"
+          aria-label="Reply"
           rows={1}
           required
           maxLength={1000}
@@ -39,10 +40,10 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
           className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] leading-10 focus:ring-0 focus:outline-none"
         />
       </div>
-      {state.error ? <p className="text-danger text-xs">{state.error}</p> : null}
+      {state.error ? <p role="alert" className="text-danger text-xs">{state.error}</p> : null}
       <div className="flex justify-end">
-        <Button type="submit" size="sm" disabled={pending}>
-          {pending ? 'Replying…' : 'Reply'}
+        <Button type="submit" size="sm">
+          Reply
         </Button>
       </div>
     </form>

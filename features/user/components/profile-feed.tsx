@@ -2,7 +2,9 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { DropList } from '@/features/drop/components/drop';
 import { getDropsByAuthor, getRepliesByAuthor } from '@/features/drop/drop-queries';
 
-export async function ProfileFeed({ handle, tab }: { handle: string; tab: 'drops' | 'replies' }) {
+import type { ProfileTab } from '@/features/user/components/profile-tabs';
+
+export async function ProfileFeed({ handle, tab }: { handle: string; tab: ProfileTab }) {
   if (tab === 'replies') {
     const replies = await getRepliesByAuthor(handle);
     if (replies.length === 0) {

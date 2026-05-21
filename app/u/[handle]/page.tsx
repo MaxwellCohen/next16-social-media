@@ -5,13 +5,11 @@ import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { ProfileFeed } from '@/features/user/components/profile-feed';
 import { ProfileHeader, ProfileHeaderSkeleton } from '@/features/user/components/profile-header';
-import { ProfileTabs } from '@/features/user/components/profile-tabs';
+import { ProfileTabs, type ProfileTab } from '@/features/user/components/profile-tabs';
 import { getUserByHandle } from '@/features/user/user-queries';
 import type { Metadata } from 'next';
 
-type Tab = 'drops' | 'replies';
-
-function parseTab(value: string | string[] | undefined): Tab {
+function parseTab(value: string | string[] | undefined): ProfileTab {
   return value === 'replies' ? 'replies' : 'drops';
 }
 

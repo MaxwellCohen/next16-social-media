@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
@@ -32,8 +32,8 @@ export function Sidebar() {
         <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
         <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
           {getCurrentUserHandle().then(handle => (
-              <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
-            ))}
+            <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
+          ))}
         </Suspense>
       </nav>
       <div className="mt-auto hidden lg:block">
@@ -57,15 +57,7 @@ async function SidebarProfilePill() {
     }),
   ]);
 
-  return (
-    <UserSwitcher currentHandle={user.handle} users={allUsers}>
-      <CurrentUserAvatar size="sm" />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="truncate text-sm font-semibold tracking-tight">{user.displayName}</div>
-        <div className="text-gray truncate font-mono text-[11px]">@{user.handle}</div>
-      </div>
-    </UserSwitcher>
-  );
+  return <UserSwitcher currentHandle={user.handle} users={allUsers} />;
 }
 
 function SidebarProfilePillSkeleton() {

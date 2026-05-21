@@ -1,13 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-4 px-4 py-24 text-center">
-      <h2 className="text-lg font-bold tracking-tight uppercase">Something went wrong</h2>
-      <p className="text-gray text-sm">We couldn&apos;t load this page. Please try again.</p>
+    <EmptyState title="Something went wrong" body="We couldn't load this page. Please try again.">
       <Button onClick={reset}>Try again</Button>
-    </div>
+    </EmptyState>
   );
 }

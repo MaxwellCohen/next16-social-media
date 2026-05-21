@@ -84,8 +84,8 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
           ) : null}
           <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
             <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-            <Button type="submit" disabled={pending}>
-              {pending ? 'Dropping…' : 'Drop it'}
+            <Button type="submit">
+              Drop it
             </Button>
           </footer>
         </form>

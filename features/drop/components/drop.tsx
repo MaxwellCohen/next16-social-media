@@ -58,6 +58,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
               reposts={drop.reposts}
               likes={drop.likes}
               userState={userState}
+              compact={compact}
             />
           </div>
         </div>

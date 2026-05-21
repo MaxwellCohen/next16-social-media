@@ -30,6 +30,7 @@ export function SearchInput() {
         ref={inputRef}
         type="search"
         name="q"
+        aria-label="Search drops"
         placeholder="Search drops…"
         defaultValue={q}
         onChange={e => {

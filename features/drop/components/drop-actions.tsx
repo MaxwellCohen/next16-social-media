@@ -16,6 +16,7 @@ type Props = {
   reposts: number;
   likes: number;
   userState: DropUserState;
+  compact?: boolean;
 };
 
 type OptimisticState = DropUserState & { repostsDelta: number; likesDelta: number };
@@ -32,7 +33,7 @@ function reduce(state: OptimisticState, toggle: Toggle): OptimisticState {
   }
 }
 
-export function DropActions({ dropId, parentId, replies, reposts, likes, userState }: Props) {
+export function DropActions({ dropId, parentId, replies, reposts, likes, userState, compact }: Props) {
   const [optimistic, addOptimistic] = useOptimistic({ ...userState, likesDelta: 0, repostsDelta: 0 }, reduce);
   const [, startTransition] = useTransition();
 
@@ -49,13 +50,15 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
 
   return (
     <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
-      <IconButton
-        label="Reply"
-        icon={<MessageCircle className="h-4 w-4" />}
-        href={`/drop/${parentId ?? dropId}` as Route}
-      >
-        <span>{formatCount(replies)}</span>
-      </IconButton>
+      {!compact && (
+        <IconButton
+          label="Reply"
+          icon={<MessageCircle className="h-4 w-4" />}
+          href={`/drop/${parentId ?? dropId}` as Route}
+        >
+          <span>{formatCount(replies)}</span>
+        </IconButton>
+      )}
       <IconButton
         label="Repost"
         icon={<Repeat2 className="h-4 w-4" />}
