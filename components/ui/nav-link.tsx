@@ -1,59 +1,67 @@
 'use client';
 
 import Link from 'next/link';
-import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { Suspense } from 'react';
 import type { Route } from 'next';
+
+type RenderProps = { isActive: boolean };
 
 type Props = {
   href: Route;
-  className?: string;
-  activeClassName?: string;
-  children: React.ReactNode;
+  className: string | ((props: RenderProps) => string);
+  children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
   exact?: boolean;
-} & Omit<React.ComponentProps<typeof Link>, 'className'>;
+} & Omit<React.ComponentProps<typeof Link>, 'className' | 'children'>;
 
-function isActive(pathname: string, href: string, exact: boolean): boolean {
+function checkActive(pathname: string, href: string, exact: boolean): boolean {
   if (exact || href === '/') return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps): T {
+  return typeof value === 'function' ? (value as (props: RenderProps) => T)(props) : value;
+}
+
 /**
- * A Link that adds active styling without blocking prerendering.
+ * A Link with active-state detection that doesn't block prerendering.
  *
- * Renders the <Link> immediately (clickable from the static shell).
- * The active class applies after hydration — no Suspense fallback visible
- * because the link itself IS the fallback.
+ * Accepts className and children as either a value or a render prop:
+ *   className={({ isActive }) => isActive ? 'active' : ''}
+ *   children={({ isActive }) => <>{isActive && <Dot />} Home</>}
+ *
+ * During prerendering, renders as a plain <Link> with isActive=false.
+ * After hydration, usePathname() resolves and the active state applies.
  */
-export function NavLink({ href, className, activeClassName, children, exact = false, ...rest }: Props) {
+export function NavLink({ href, className, children, exact = false, ...rest }: Props) {
+  const inactive: RenderProps = { isActive: false };
   return (
     <Suspense
       fallback={
-        <Link href={href} className={className} {...rest}>
-          {children}
+        <Link href={href} className={resolve(className, inactive)} {...rest}>
+          {resolve(children, inactive)}
         </Link>
       }
     >
-      <NavLinkInner href={href} className={className} activeClassName={activeClassName} exact={exact} {...rest}>
+      <NavLinkInner href={href} className={className} exact={exact} {...rest}>
         {children}
       </NavLinkInner>
     </Suspense>
   );
 }
 
-function NavLinkInner({ href, className, activeClassName, children, exact = false, ...rest }: Props) {
+function NavLinkInner({ href, className, children, exact = false, ...rest }: Props) {
   const pathname = usePathname();
-  const active = isActive(pathname, href, exact);
+  const props: RenderProps = { isActive: checkActive(pathname, href, exact) };
 
   return (
     <Link
       href={href}
-      aria-current={active ? 'page' : undefined}
-      className={cn(className, active && activeClassName)}
+      aria-current={props.isActive ? 'page' : undefined}
+      className={resolve(className, props)}
       {...rest}
     >
-      {children}
+      {resolve(children, props)}
     </Link>
   );
 }
