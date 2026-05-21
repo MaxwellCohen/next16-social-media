@@ -61,7 +61,7 @@ export function ProfileHeaderSkeleton() {
           </div>
           <div className="flex h-20 items-end sm:h-24" />
         </div>
-        <div className="mt-3 flex flex-col gap-4 pb-2">
+        <div className="mt-5 flex flex-col gap-4 pb-4.5">
           <Skeleton className="h-6 w-28 rounded" />
           <Skeleton className="h-3 w-48 rounded" />
           <Skeleton className="h-3 w-32 rounded" />
