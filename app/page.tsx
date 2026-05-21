@@ -28,9 +28,7 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
 
   return (
     <div>
-      <PageHeader>
-        <h1 className="text-lg font-bold tracking-tight">Home</h1>
-      </PageHeader>
+      <PageHeader title="Home" />
       <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
         <Crossfade>

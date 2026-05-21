@@ -17,9 +17,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
-      <PageHeader>
-        <h1 className="text-lg font-bold tracking-tight">Search</h1>
-      </PageHeader>
+      <PageHeader title="Search" />
       <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 sm:px-5">
         <Suspense fallback={<Skeleton className="h-[42px] w-full rounded-lg" />}>
           <SearchInput />

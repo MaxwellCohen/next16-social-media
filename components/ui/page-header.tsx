@@ -4,11 +4,12 @@ import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  children: React.ReactNode;
+  title?: string;
+  children?: React.ReactNode;
   back?: boolean;
 };
 
-export function PageHeader({ children, back }: Props) {
+export function PageHeader({ title, children, back }: Props) {
   const router = useRouter();
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 flex items-center gap-3 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70">
@@ -24,7 +25,7 @@ export function PageHeader({ children, back }: Props) {
           <ArrowLeft className="h-5 w-5" />
         </button>
       ) : null}
-      {children}
+      {title ? <h1 className="text-lg font-bold tracking-tight">{title}</h1> : children}
     </header>
   );
 }

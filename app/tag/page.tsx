@@ -15,9 +15,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function TagsPage() {
   return (
     <div>
-      <PageHeader>
-        <h1 className="text-lg font-bold tracking-tight">Tags</h1>
-      </PageHeader>
+      <PageHeader title="Tags" />
       <Suspense fallback={<TagsListSkeleton />}>
         <Crossfade>
           <TagsList />

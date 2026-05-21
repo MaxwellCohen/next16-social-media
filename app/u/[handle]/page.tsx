@@ -33,9 +33,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return (
     <div>
-      <PageHeader back>
-        <h1 className="text-lg font-bold tracking-tight">Profile</h1>
-      </PageHeader>
+      <PageHeader back title="Profile" />
       <Suspense fallback={<ProfileHeaderSkeleton />}>
         <Crossfade>
           {params.then(({ handle }) => {

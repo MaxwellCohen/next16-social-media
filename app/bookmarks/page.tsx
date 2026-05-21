@@ -19,9 +19,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function BookmarksPage() {
   return (
     <div>
-      <PageHeader>
-        <h1 className="text-lg font-bold tracking-tight">Bookmarks</h1>
-      </PageHeader>
+      <PageHeader title="Bookmarks" />
       <Suspense fallback={<DropListSkeleton count={3} />}>
         <Crossfade>
           <BookmarksFeed />
