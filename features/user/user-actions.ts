@@ -18,7 +18,7 @@ export async function switchUser(handle: string) {
 }
 
 export async function toggleFollow(targetHandle: string) {
-  await delay(300);
+  await delay(100);
   const target = handleSchema.parse(targetHandle);
   const me = await verifyUser();
   if (target === me) {
