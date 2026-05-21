@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
+
 import { CodeBlock } from '@/components/ui/code-block';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DropActions, DropActionsSkeleton } from '@/features/drop/components/drop-actions';
+import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
 import { getDrop } from '@/features/drop/drop-queries';
 import { TagPill } from '@/features/tag/components/tag-pill';
@@ -30,16 +30,14 @@ export async function DropDetail({ id }: { id: string }) {
         <RelativeTime date={drop.createdAt} verbose />
       </div>
       <div className="pt-2">
-        <Suspense fallback={<DropActionsSkeleton />}>
-          <DropActions
-            dropId={drop.id}
-            parentId={drop.parentId}
-            replies={drop.replies}
-            reposts={drop.reposts}
-            likes={drop.likes}
-            userStatePromise={getDropUserState(drop.id)}
-          />
-        </Suspense>
+        <DropActions
+          dropId={drop.id}
+          parentId={drop.parentId}
+          replies={drop.replies}
+          reposts={drop.reposts}
+          likes={drop.likes}
+          userStatePromise={getDropUserState(drop.id)}
+        />
       </div>
     </article>
   );

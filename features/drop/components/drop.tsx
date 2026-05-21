@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DropActions, DropActionsSkeleton } from '@/features/drop/components/drop-actions';
+import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
 import { TagPill } from '@/features/tag/components/tag-pill';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
@@ -60,16 +60,14 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
             </div>
           ) : null}
           <div className="relative z-20">
-            <Suspense fallback={<DropActionsSkeleton />}>
-              <DropActions
-                dropId={drop.id}
-                parentId={drop.parentId}
-                replies={drop.replies}
-                reposts={drop.reposts}
-                likes={drop.likes}
-                userStatePromise={getDropUserState(drop.id)}
-              />
-            </Suspense>
+            <DropActions
+              dropId={drop.id}
+              parentId={drop.parentId}
+              replies={drop.replies}
+              reposts={drop.reposts}
+              likes={drop.likes}
+              userStatePromise={getDropUserState(drop.id)}
+            />
           </div>
         </div>
       </div>
