@@ -10,7 +10,7 @@ export const getTrendingTags = cache(async () => {
   cacheTag('trending');
   cacheLife('minutes');
 
-  await delay(350);
+  await delay(600);
   return countTags(6);
 });
 
@@ -19,7 +19,7 @@ export const getAllTags = cache(async () => {
   cacheTag('trending');
   cacheLife('minutes');
 
-  await delay(400);
+  await delay(700);
   return countTags();
 });
 

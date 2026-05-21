@@ -16,7 +16,7 @@ export const getFeed = cache(async (handle: string, cursor: string | null = null
   cacheTag('feed', `feed-${handle}`);
   cacheLife('seconds');
 
-  await delay(500);
+  await delay(800);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
@@ -49,7 +49,7 @@ export const getDiscoverFeed = cache(async (handle: string, cursor: string | nul
   cacheTag('feed', `discover-${handle}`);
   cacheLife('seconds');
 
-  await delay(500);
+  await delay(800);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
@@ -82,7 +82,7 @@ export const getDrop = cache(async (id: string) => {
   cacheTag('drops', `drop-${id}`);
   cacheLife('seconds');
 
-  await delay(300);
+  await delay(600);
   const row = await prisma.drop.findUnique({ where: { id } });
   if (!row) notFound();
   return toDrop(row);
@@ -93,7 +93,7 @@ export const getReplies = cache(async (dropId: string) => {
   cacheTag(`replies-${dropId}`);
   cacheLife('seconds');
 
-  await delay(800);
+  await delay(1200);
   const parent = await prisma.drop.findUnique({
     select: { authorHandle: true },
     where: { id: dropId },

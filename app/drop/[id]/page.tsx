@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
-import { DropListSkeleton } from '@/features/drop/components/drop';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
 import { Replies } from '@/features/drop/components/replies';
 import { ReplyComposerForm } from '@/features/drop/components/reply-form';
@@ -49,9 +48,14 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                   }
                 />
               </section>
-              <Suspense fallback={<DropListSkeleton count={1} />}>
-                <Replies id={id} />
-              </Suspense>
+              <section>
+                <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 text-sm font-semibold tracking-tight sm:px-5">
+                  Replies
+                </h2>
+                <Suspense>
+                  <Replies id={id} />
+                </Suspense>
+              </section>
             </>
           );
         })}

@@ -67,13 +67,17 @@ async function DropAuthor({ handle }: { handle: string }) {
 
 export function DropDetailSkeleton() {
   return (
-    <article
-      aria-busy
-      className="border-divider/70 dark:border-divider-dark/70 min-h-[260px] border-b px-4 pt-4 pb-3 sm:px-5"
-    >
+    <article aria-busy className="px-4 pt-4 pb-3 sm:px-5">
       <header className="flex items-center gap-3">
         <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <Skeleton className="h-4 w-28 rounded" />
+          <Skeleton className="h-3 w-20 rounded" />
+        </div>
       </header>
+      <div className="mt-4">
+        <Skeleton className="h-3 w-1/2 rounded" />
+      </div>
     </article>
   );
 }

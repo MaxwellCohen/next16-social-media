@@ -36,7 +36,7 @@ export const getUserByHandle = cache(async (handle: string) => {
   cacheTag('users', `user-${handle}`);
   cacheLife('minutes');
 
-  await delay(250);
+  await delay(500);
   const user = await prisma.user.findUnique({ where: { handle } });
   if (!user) notFound();
   return user;
@@ -47,7 +47,7 @@ export const getWhoToFollow = cache(async (handle: string) => {
   cacheTag(`who-to-follow-${handle}`);
   cacheLife('seconds');
 
-  await delay(400);
+  await delay(700);
   const followed = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
@@ -108,7 +108,7 @@ export const getDropUserState = cache(async (dropId: string): Promise<DropUserSt
   cacheLife('seconds');
 
   const handle = await getCurrentUserHandle();
-  await delay(120);
+  await delay(300);
   const [like, repost, bookmark] = await Promise.all([
     prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
     prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),

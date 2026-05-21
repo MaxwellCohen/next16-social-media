@@ -2,14 +2,13 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
-import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
-import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/trending-tags';
-import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/who-to-follow';
+import { TrendingTags } from '@/features/tag/components/trending-tags';
+import { WhoToFollow } from '@/features/user/components/who-to-follow';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
@@ -54,12 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex">
-              <Suspense fallback={<TrendingTagsSkeleton />}>
-                <TrendingTags />
-              </Suspense>
-              <Suspense fallback={<WhoToFollowSkeleton />}>
-                <WhoToFollow />
-              </Suspense>
+              <TrendingTags />
+              <WhoToFollow />
             </aside>
           </div>
           <MobileTabBar />
