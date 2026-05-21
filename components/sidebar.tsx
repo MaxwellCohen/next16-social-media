@@ -1,6 +1,7 @@
 import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { PrefetchToggle } from '@/components/demo/prefetch-toggle';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -38,7 +39,12 @@ export function Sidebar() {
           })}
         </Suspense>
       </nav>
-      <div className="border-divider dark:border-divider-dark -mx-2 mt-auto -mb-5 hidden items-center gap-1 border-t px-2 py-3 lg:-mx-6 lg:flex lg:px-4">
+      <div className="mt-auto hidden lg:block">
+        <Suspense>
+          <PrefetchToggle />
+        </Suspense>
+      </div>
+      <div className="border-divider dark:border-divider-dark -mx-2 -mb-5 hidden items-center gap-1 border-t px-2 py-3 lg:-mx-6 lg:flex lg:px-4">
         <Suspense fallback={<SidebarProfilePillSkeleton />}>
           <SidebarProfilePill />
         </Suspense>
