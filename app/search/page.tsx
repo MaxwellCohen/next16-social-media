@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
+import { Section } from '@/components/ui/section';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { SearchInput } from '@/features/drop/components/search-input';
@@ -18,11 +19,11 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
       <PageHeader title="Search" />
-      <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 sm:px-5">
+      <Section className="px-4 py-3 sm:px-5">
         <Suspense fallback={<Skeleton className="h-[42px] w-full rounded-lg" />}>
           <SearchInput />
         </Suspense>
-      </div>
+      </Section>
       <Suspense fallback={<DropListSkeleton count={3} />}>
         <Crossfade>
           {searchParams.then(sp => {

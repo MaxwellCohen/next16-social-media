@@ -11,8 +11,8 @@ import { UserAvatar } from '@/features/user/components/user-avatar';
 import { getDropUserState, getUserByHandle } from '@/features/user/user-queries';
 
 export async function DropDetail({ id }: { id: string }) {
-  const drop = await getDrop(id);
-  const userState = await getDropUserState(drop.id);
+  const [drop, userState] = await Promise.all([getDrop(id), getDropUserState(id)]);
+
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
       <DropAuthor handle={drop.authorHandle} />
@@ -68,7 +68,7 @@ async function DropAuthor({ handle }: { handle: string }) {
 
 export function DropDetailSkeleton() {
   return (
-    <article aria-busy className="border-divider/70 dark:border-divider-dark/70 min-h-[204px] border-b px-4 pt-4 pb-6 sm:px-5">
+    <article className="border-divider/70 dark:border-divider-dark/70 min-h-[204px] border-b px-4 pt-4 pb-6 sm:px-5">
       <header className="flex items-center gap-3">
         <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
         <div className="flex min-w-0 flex-col gap-1.5">

@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Section, SectionHeader } from '@/components/ui/section';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
-import { Replies } from '@/features/drop/components/replies';
+import { Replies, RepliesSkeleton } from '@/features/drop/components/replies';
 import { ReplyComposerForm } from '@/features/drop/components/reply-form';
 import { getDrop } from '@/features/drop/drop-queries';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
@@ -17,9 +17,8 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   const snippet = drop.body.length > 60 ? `${drop.body.slice(0, 57).trimEnd()}…` : drop.body;
   const title = `${author.displayName}: ${snippet}`;
   const description = drop.body.length > 160 ? `${drop.body.slice(0, 157)}…` : drop.body;
-  const url = `/drop/${id}`;
   return {
-    alternates: { canonical: url },
+    alternates: { canonical: `/drop/${id}` },
     description,
     openGraph: { authors: [author.displayName], type: 'article' },
     title,
@@ -38,7 +37,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
             return (
               <>
                 <DropDetail id={id} />
-                <section className="border-divider/70 dark:border-divider-dark/70 border-b p-4 sm:p-5">
+                <Section className="p-4 sm:p-5">
                   <ReplyComposerForm
                     dropId={id}
                     avatar={
@@ -47,18 +46,10 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                       </Suspense>
                     }
                   />
-                </section>
+                </Section>
                 <section>
-                  <h2 className="text-gray border-divider/70 dark:border-divider-dark/70 border-b px-4 py-3 text-sm font-semibold tracking-tight sm:px-5">
-                    Replies
-                  </h2>
-                  <Suspense
-                    fallback={
-                      <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
-                        <Skeleton className="h-10 w-10 rounded-full" />
-                      </div>
-                    }
-                  >
+                  <SectionHeader>Replies</SectionHeader>
+                  <Suspense fallback={<RepliesSkeleton />}>
                     <Crossfade>
                       <Replies id={id} />
                     </Crossfade>

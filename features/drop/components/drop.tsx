@@ -20,9 +20,7 @@ type Props = {
 export async function Drop({ drop, compact = false, repostedBy }: Props) {
   const userState = await getDropUserState(drop.id);
   return (
-    <article
-      className="group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors hover:bg-card/40 dark:hover:bg-card-dark/40"
-    >
+    <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
       <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
       {repostedBy ? (
         <Suspense fallback={null}>
@@ -72,7 +70,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
 
 function DropSkeleton() {
   return (
-    <div aria-busy className="border-divider/70 dark:border-divider-dark/70 min-h-[120px] border-b px-4 py-4 sm:px-5">
+    <div className="border-divider/70 dark:border-divider-dark/70 min-h-[120px] border-b px-4 py-4 sm:px-5">
       <div className="flex gap-3">
         <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
       </div>
