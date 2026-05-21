@@ -1,7 +1,6 @@
 'use client';
 
 import { Zap, ZapOff } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useOptimistic } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +11,6 @@ export function PrefetchToggleClient({
   enabled: boolean;
   toggleAction: (enable: boolean) => Promise<void>;
 }) {
-  const router = useRouter();
   const [optimisticEnabled, setOptimisticEnabled] = useOptimistic(enabled);
 
   return (
@@ -20,7 +18,7 @@ export function PrefetchToggleClient({
       action={async () => {
         setOptimisticEnabled(!optimisticEnabled);
         await toggleAction(!optimisticEnabled);
-        router.refresh();
+        window.location.reload();
       }}
       className="fixed right-4 bottom-4 z-50 sm:bottom-6 sm:right-6"
     >
