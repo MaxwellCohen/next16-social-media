@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
 import { TagPill } from '@/features/tag/components/tag-pill';
-import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { UserAvatar } from '@/features/user/components/user-avatar';
 import { getCurrentUserHandle, getDropUserState, getUserByHandle } from '@/features/user/user-queries';
 import type { Drop as DropT } from '@/types/drop';
 
@@ -32,15 +32,11 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
       ) : null}
       <div className="relative flex gap-3 px-4 py-4 sm:px-5">
         <Link href={`/u/${drop.authorHandle}`} className="relative z-20 shrink-0">
-          <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-            <UserAvatar handle={drop.authorHandle} size="md" />
-          </Suspense>
+          <UserAvatar handle={drop.authorHandle} size="md" />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <header className="flex flex-wrap items-baseline gap-x-1.5 text-sm">
-            <Suspense fallback={<AuthorNameSkeleton />}>
-              <AuthorName handle={drop.authorHandle} />
-            </Suspense>
+            <AuthorName handle={drop.authorHandle} />
             <span className="text-gray font-mono text-[12px]">·</span>
             <span className="text-gray font-mono text-[12px]">
               <RelativeTime date={drop.createdAt} />
@@ -134,15 +130,6 @@ async function AuthorName({ handle }: { handle: string }) {
       <Link href={`/u/${author.handle}`} className="text-gray relative z-20 font-mono text-[12px]">
         @{author.handle}
       </Link>
-    </>
-  );
-}
-
-function AuthorNameSkeleton() {
-  return (
-    <>
-      <Skeleton className="h-4 w-24 rounded" />
-      <Skeleton className="h-3 w-16 rounded" />
     </>
   );
 }

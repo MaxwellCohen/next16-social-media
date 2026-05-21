@@ -53,7 +53,7 @@ async function WhoToFollowList() {
 
 function WhoToFollowListSkeleton() {
   return (
-    <div className="px-4 py-3.5 sm:px-5">
+    <div className="px-4 py-5 sm:px-5">
       <Skeleton className="h-8 w-8 rounded-full" />
     </div>
   );
