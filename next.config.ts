@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   experimental: {
     cachedNavigations: true,
+    exposeTestingApiInProductionBuild: true,
     instantInsights: {
       validationLevel: 'warning',
     },

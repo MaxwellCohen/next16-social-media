@@ -19,22 +19,23 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 app/                    Pages and layouts
-components/             Shared UI (sidebar, theme, primitives)
+components/
+  ui/                   Visual primitives (Section, Crossfade, PageHeader, etc.)
 features/
   drop/                 Queries, actions, and components for drops
   user/                 Queries, actions, and components for users
   tag/                  Queries and components for tags
 types/                  Shared types
-lib/                    Prisma client, utilities, syntax helpers
-prisma/                 Schema and seed data
+lib/                    Prisma client, utilities
+tests/                  Playwright E2E tests
 ```
 
 - **components/ui** — Visual primitives with no domain logic
 - **features/** — Feature-sliced modules; each has queries, actions, and components
 
-Every route folder should contain everything it needs. Components and functions live at the nearest shared space in the hierarchy.
+### Page Composition
 
-**Naming:** PascalCase for components, kebab-case for filenames, camelCase for functions/hooks.
+Pages define layout and loading states. Feature components own their data fetching and presentation. Skeletons are co-located with their feature components and exported alongside them.
 
 ## Key Patterns
 
@@ -48,6 +49,17 @@ Every route folder should contain everything it needs. Components and functions 
 - **Mutating data** — Server Actions in feature `*-actions.ts` files with `"use server"`. Invalidate with `updateTag()`. Use `useOptimistic` for instant feedback.
 - **Caching** — Add `"use cache"` with `cacheTag()` and `cacheLife()` to pages, components, or functions to include them in the static shell. Use `'use cache: private'` for per-user queries that read cookies.
 - **Errors** — `error.tsx` for boundaries, `not-found.tsx` + `notFound()` for 404s.
+
+## E2E Tests
+
+Uses `@next/playwright` with the `instant()` API to lock in loading states:
+
+```bash
+pnpm build
+pnpm test:e2e
+```
+
+Inside `instant()`, only the prefetched shell renders — Suspense fallbacks are visible, dynamic content is deferred. After `instant()` exits, dynamic content streams in. Tests are per-page in `tests/`.
 
 ## Database
 

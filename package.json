@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write .",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prisma.push": "prisma db push",
@@ -37,6 +38,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@next/playwright": "^16.2.6",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
