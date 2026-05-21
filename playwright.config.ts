@@ -17,8 +17,9 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'pnpm start',
-    reuseExistingServer: !process.env.CI,
+    command: 'pnpm dev',
+    reuseExistingServer: true,
+    stdout: 'pipe',
     url: 'http://localhost:3000',
   },
   workers: process.env.CI ? 1 : undefined,

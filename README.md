@@ -35,7 +35,17 @@ tests/                  Playwright E2E tests
 
 ### Page Composition
 
-Pages define layout and loading states. Feature components own their data fetching and presentation. Skeletons are co-located with their feature components and exported alongside them.
+Pages and layouts define loading states. Feature components own their data fetching and presentation. Skeletons are co-located with their feature components and exported alongside them.
+
+```tsx
+// app/bookmarks/page.tsx
+<PageHeader title="Bookmarks" />
+<Suspense fallback={<DropListSkeleton />}>
+  <Crossfade>
+    <BookmarksFeed />
+  </Crossfade>
+</Suspense>
+```
 
 ## Key Patterns
 
