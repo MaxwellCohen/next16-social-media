@@ -79,7 +79,7 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
 
 export function DropSkeleton() {
   return (
-    <div aria-busy className="border-divider/70 dark:border-divider-dark/70 min-h-[140px] border-b px-4 py-4 sm:px-5">
+    <div aria-busy className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
       <div className="flex gap-3">
         <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
       </div>
