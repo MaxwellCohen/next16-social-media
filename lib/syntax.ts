@@ -1,6 +1,5 @@
 import 'server-only';
 
-import DOMPurify from 'isomorphic-dompurify';
 import { createHighlighter, type Highlighter, type ThemeRegistrationRaw } from 'shiki';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 import vercelDarkRaw from './themes/vercel-dark.json';
@@ -64,8 +63,5 @@ export async function highlight(code: string, lang: string | undefined) {
   } catch {
     html = `<pre class="shiki"><code>${escapeHtml(code)}</code></pre>`;
   }
-  return DOMPurify.sanitize(html, {
-    ALLOWED_ATTR: ['class', 'style', 'tabindex'],
-    ALLOWED_TAGS: ['pre', 'code', 'span', 'div', 'br'],
-  });
+  return html;
 }
