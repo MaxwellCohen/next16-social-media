@@ -19,8 +19,12 @@ type Props = {
 
 export function Drop({ drop, compact = false, repostedBy }: Props) {
   return (
-    <article className={`group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors ${compact ? '' : 'hover:bg-card/40 dark:hover:bg-card-dark/40'}`}>
-      {!compact && <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />}
+    <article
+      className={`group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors ${compact ? '' : 'hover:bg-card/40 dark:hover:bg-card-dark/40'}`}
+    >
+      {!compact && (
+        <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
+      )}
       {repostedBy ? (
         <Suspense fallback={null}>
           <Reposter handle={repostedBy} />
@@ -75,20 +79,23 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
 
 export function DropSkeleton() {
   return (
-    <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
+    <div aria-busy className="border-divider/70 dark:border-divider-dark/70 min-h-[88px] border-b px-4 py-4 sm:px-5">
       <div className="flex gap-3">
         <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2">
-          <Skeleton className="h-3 w-40" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
       </div>
     </div>
   );
 }
 
-export function DropList({ drops, compact, repostedBy }: { drops: DropT[]; compact?: boolean; repostedBy?: (drop: DropT) => string | undefined }) {
+export function DropList({
+  drops,
+  compact,
+  repostedBy,
+}: {
+  drops: DropT[];
+  compact?: boolean;
+  repostedBy?: (drop: DropT) => string | undefined;
+}) {
   return (
     <ul>
       {drops.map(drop => {

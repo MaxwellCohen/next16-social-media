@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/skeleton';
 import { getTrendingTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
 
 export async function TrendingTags() {
   const tags = await getTrendingTags();
   return (
-    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
+    <section className="fade-in border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 min-h-[280px] rounded-xl border">
       <header className="px-4 pt-4 pb-3">
         <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
       </header>
@@ -31,17 +30,11 @@ export async function TrendingTags() {
 
 export function TrendingTagsSkeleton() {
   return (
-    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border p-4">
-      <h3 className="mb-3 text-sm font-semibold tracking-tight">Trending now</h3>
-      <ul className="flex flex-col gap-2.5">
-        {Array.from({ length: 5 }).map((_, i) => {
-          return (
-            <li key={i}>
-              <Skeleton className="h-4 w-32" />
-            </li>
-          );
-        })}
-      </ul>
+    <section
+      aria-busy
+      className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 min-h-[280px] rounded-xl border p-4"
+    >
+      <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
     </section>
   );
 }

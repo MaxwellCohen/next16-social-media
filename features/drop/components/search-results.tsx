@@ -24,9 +24,7 @@ export async function SearchResults({ query }: { query: string }) {
       {drops.length > 0 && (
         <div>
           {users.length > 0 && (
-            <h2 className="text-gray px-4 pt-4 pb-2 text-xs font-semibold tracking-wide sm:px-5">
-              Drops
-            </h2>
+            <h2 className="text-gray px-4 pt-4 pb-2 text-xs font-semibold tracking-wide sm:px-5">Drops</h2>
           )}
           <DropList drops={drops} />
         </div>

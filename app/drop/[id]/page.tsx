@@ -49,7 +49,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                   }
                 />
               </section>
-              <Suspense fallback={<DropListSkeleton count={2} />}>
+              <Suspense fallback={<DropListSkeleton count={1} />}>
                 <Replies id={id} />
               </Suspense>
             </>
