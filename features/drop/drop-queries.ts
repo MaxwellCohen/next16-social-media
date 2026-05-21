@@ -93,7 +93,7 @@ export const getReplies = cache(async (dropId: string) => {
   cacheTag(`replies-${dropId}`);
   cacheLife('seconds');
 
-  await delay(1200);
+  await delay(1800);
   const parent = await prisma.drop.findUnique({
     select: { authorHandle: true },
     where: { id: dropId },
