@@ -4,9 +4,14 @@ import { Zap, ZapOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useOptimistic } from 'react';
 import { cn } from '@/lib/utils';
-import { togglePrefetch } from './prefetch-toggle-action';
 
-export function PrefetchToggleClient({ enabled }: { enabled: boolean }) {
+export function PrefetchToggleClient({
+  enabled,
+  toggleAction,
+}: {
+  enabled: boolean;
+  toggleAction: (enable: boolean) => Promise<void>;
+}) {
   const router = useRouter();
   const [optimisticEnabled, setOptimisticEnabled] = useOptimistic(enabled);
 
@@ -14,7 +19,7 @@ export function PrefetchToggleClient({ enabled }: { enabled: boolean }) {
     <form
       action={async () => {
         setOptimisticEnabled(!optimisticEnabled);
-        await togglePrefetch(!optimisticEnabled);
+        await toggleAction(!optimisticEnabled);
         router.refresh();
       }}
     >
