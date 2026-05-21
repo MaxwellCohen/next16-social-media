@@ -1,26 +1,11 @@
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
+import { ViewTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserRow } from '@/features/user/components/user-row';
 import { getCurrentUserHandle, getWhoToFollow } from '@/features/user/user-queries';
 
-export function WhoToFollow() {
-  return (
-    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
-      <header className="px-4 pt-4 pb-3">
-        <h3 className="text-sm font-semibold tracking-tight">Who to follow</h3>
-      </header>
-      <Suspense fallback={<WhoToFollowListSkeleton />}>
-        <ViewTransition enter="auto" default="none">
-          <WhoToFollowList />
-        </ViewTransition>
-      </Suspense>
-    </section>
-  );
-}
-
-async function WhoToFollowList() {
+export async function WhoToFollowList() {
   const handle = await getCurrentUserHandle();
   const users = await getWhoToFollow(handle);
   if (users.length === 0) {
@@ -53,7 +38,7 @@ async function WhoToFollowList() {
   );
 }
 
-function WhoToFollowListSkeleton() {
+export function WhoToFollowListSkeleton() {
   return (
     <div className="px-4 py-5 sm:px-5">
       <Skeleton className="h-8 w-8 rounded-full" />
@@ -61,13 +46,13 @@ function WhoToFollowListSkeleton() {
   );
 }
 
-export function WhoToFollowSkeleton() {
+export function WhoToFollowShell({ children }: { children: React.ReactNode }) {
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
       <header className="px-4 pt-4 pb-3">
         <h3 className="text-sm font-semibold tracking-tight">Who to follow</h3>
       </header>
-      <WhoToFollowListSkeleton />
+      {children}
     </section>
   );
 }

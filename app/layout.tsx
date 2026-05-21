@@ -2,13 +2,16 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
+import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
-import { TrendingTags } from '@/features/tag/components/trending-tags';
-import { WhoToFollow } from '@/features/user/components/who-to-follow';
+import { PrefetchToggle } from '@/components/demo/prefetch-toggle';
+import { Crossfade } from '@/components/ui/crossfade';
+import { TrendingTagsList, TrendingTagsListSkeleton, TrendingTagsShell } from '@/features/tag/components/trending-tags';
+import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/features/user/components/who-to-follow';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
@@ -25,19 +28,12 @@ export const metadata: Metadata = {
         : 'http://localhost:3000'),
   ),
   openGraph: {
-    description: 'A dev-flavored social network.',
     siteName: 'Drop',
-    title: 'Drop',
     type: 'website',
   },
   title: {
     default: 'Drop',
     template: '%s · Drop',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    description: 'A dev-flavored social network.',
-    title: 'Drop',
   },
 };
 
@@ -47,22 +43,59 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-[100dvh] bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
           <OfflineIndicator />
-          <div className="group mx-auto grid w-full max-w-7xl grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
+          <AppGrid>
             <Sidebar />
-            <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity group-has-data-pending:opacity-50 sm:border-x">
-              {children}
-            </main>
-            <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex">
-              <TrendingTags />
-              <WhoToFollow />
-            </aside>
-          </div>
+            <MainColumn>{children}</MainColumn>
+            <RightSidebar>
+              <TrendingTagsShell>
+                <Suspense fallback={<TrendingTagsListSkeleton />}>
+                  <Crossfade>
+                    <TrendingTagsList />
+                  </Crossfade>
+                </Suspense>
+              </TrendingTagsShell>
+              <WhoToFollowShell>
+                <Suspense fallback={<WhoToFollowListSkeleton />}>
+                  <Crossfade>
+                    <WhoToFollowList />
+                  </Crossfade>
+                </Suspense>
+              </WhoToFollowShell>
+            </RightSidebar>
+          </AppGrid>
           <MobileTabBar />
+          <Suspense>
+            <PrefetchToggle />
+          </Suspense>
           <Toaster theme="system" position="bottom-center" />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
     </html>
+  );
+}
+
+function AppGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="group mx-auto grid w-full max-w-7xl grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
+      {children}
+    </div>
+  );
+}
+
+function MainColumn({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity group-has-data-pending:opacity-50 sm:border-x">
+      {children}
+    </main>
+  );
+}
+
+function RightSidebar({ children }: { children: React.ReactNode }) {
+  return (
+    <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex">
+      {children}
+    </aside>
   );
 }

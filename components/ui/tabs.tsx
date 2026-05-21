@@ -59,8 +59,8 @@ export function TabsSkeleton({ count = 2 }: { count?: number }) {
     <div className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-hidden>
       {Array.from({ length: count }).map((_, i) => {
         return (
-          <span key={i} className="flex-1 px-4 py-4 text-center leading-5">
-            <Skeleton className="inline-block h-4 w-16 rounded align-middle" />
+          <span key={i} className="flex-1 px-4 py-4 text-center">
+            <Skeleton className="inline-block h-5 w-16 rounded align-middle" />
           </span>
         );
       })}

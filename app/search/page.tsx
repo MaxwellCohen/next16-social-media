@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Crossfade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,11 +26,13 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
         </Suspense>
       </div>
       <Suspense fallback={<DropListSkeleton count={3} />}>
-        {searchParams.then(sp => {
-          const q = typeof sp.q === 'string' ? sp.q : '';
-          if (!q) return <EmptyState title="Search drops" body="Type something to search." />;
-          return <SearchResults query={q} />;
-        })}
+        <Crossfade>
+          {searchParams.then(sp => {
+            const q = typeof sp.q === 'string' ? sp.q : '';
+            if (!q) return <EmptyState title="Search drops" body="Type something to search." />;
+            return <SearchResults query={q} />;
+          })}
+        </Crossfade>
       </Suspense>
     </div>
   );

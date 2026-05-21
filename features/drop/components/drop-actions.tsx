@@ -4,7 +4,6 @@ import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import { use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { IconButton } from '@/components/ui/icon-button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
 import type { DropUserState } from '@/features/user/user-queries';
 import { cn, formatCount } from '@/lib/utils';
@@ -98,20 +97,6 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
           });
         }}
       />
-    </div>
-  );
-}
-
-export function DropActionsSkeleton() {
-  return (
-    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5" aria-hidden>
-      {Array.from({ length: 4 }).map((_, i) => {
-        return (
-          <span key={i} className="inline-flex items-center px-2 py-1.5">
-            <Skeleton className="h-4 w-4 rounded-full" />
-          </span>
-        );
-      })}
     </div>
   );
 }

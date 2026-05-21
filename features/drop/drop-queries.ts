@@ -9,9 +9,9 @@ import { toDrop, type Drop } from '@/types/drop';
 
 const FEED_PAGE_SIZE = 10;
 
-export type FeedPage = { drops: Drop[]; nextCursor: string | null };
+export type FeedPage = { drops: Drop[]; hasMore: boolean };
 
-export const getFeed = cache(async (handle: string, cursor: string | null = null): Promise<FeedPage> => {
+export const getFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
   'use cache';
   cacheTag('feed', `feed-${handle}`);
   cacheLife('seconds');
@@ -29,22 +29,22 @@ export const getFeed = cache(async (handle: string, cursor: string | null = null
   ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
+    skip: (page - 1) * FEED_PAGE_SIZE,
     take: FEED_PAGE_SIZE + 1,
     where: {
       authorHandle: { in: followedHandles },
       parentId: null,
-      ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
     },
   });
   const hasMore = rows.length > FEED_PAGE_SIZE;
-  const page = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  const items = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
   return {
-    drops: page.map(toDrop),
-    nextCursor: hasMore ? page[page.length - 1].createdAt.toISOString() : null,
+    drops: items.map(toDrop),
+    hasMore,
   };
 });
 
-export const getDiscoverFeed = cache(async (handle: string, cursor: string | null = null): Promise<FeedPage> => {
+export const getDiscoverFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
   'use cache';
   cacheTag('feed', `discover-${handle}`);
   cacheLife('seconds');
@@ -62,18 +62,18 @@ export const getDiscoverFeed = cache(async (handle: string, cursor: string | nul
   ];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
+    skip: (page - 1) * FEED_PAGE_SIZE,
     take: FEED_PAGE_SIZE + 1,
     where: {
       authorHandle: { notIn: excludeHandles },
       parentId: null,
-      ...(cursor ? { createdAt: { lt: new Date(cursor) } } : {}),
     },
   });
   const hasMore = rows.length > FEED_PAGE_SIZE;
-  const page = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  const items = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
   return {
-    drops: page.map(toDrop),
-    nextCursor: hasMore ? page[page.length - 1].createdAt.toISOString() : null,
+    drops: items.map(toDrop),
+    hasMore,
   };
 });
 

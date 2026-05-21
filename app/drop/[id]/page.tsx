@@ -1,4 +1,5 @@
-import { Suspense, ViewTransition } from 'react';
+import { Suspense } from 'react';
+import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
@@ -20,9 +21,8 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   return {
     alternates: { canonical: url },
     description,
-    openGraph: { authors: [author.displayName], description, title, type: 'article', url },
+    openGraph: { authors: [author.displayName], type: 'article' },
     title,
-    twitter: { card: 'summary_large_image', creator: `@${author.handle}`, description, title },
   };
 }
 
@@ -35,7 +35,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
         <h1 className="text-lg font-bold tracking-tight">Drop</h1>
       </PageHeader>
       <Suspense fallback={<DropDetailSkeleton />}>
-        <ViewTransition enter="auto" default="none">
+        <Crossfade>
           {params.then(({ id }) => {
             return (
               <>
@@ -61,15 +61,15 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
                       </div>
                     }
                   >
-                    <ViewTransition enter="auto" default="none">
+                    <Crossfade>
                       <Replies id={id} />
-                    </ViewTransition>
+                    </Crossfade>
                   </Suspense>
                 </section>
               </>
             );
           })}
-        </ViewTransition>
+        </Crossfade>
       </Suspense>
     </div>
   );

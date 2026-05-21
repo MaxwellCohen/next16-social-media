@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
 import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropListSkeleton } from '@/features/drop/components/drop';
@@ -22,9 +23,8 @@ export async function generateMetadata({ params }: PageProps<'/u/[handle]'>): Pr
   return {
     alternates: { canonical: url },
     description: user.bio,
-    openGraph: { description: user.bio, title, type: 'profile', url, username: user.handle },
+    openGraph: { type: 'profile', username: user.handle },
     title,
-    twitter: { card: 'summary', creator: `@${user.handle}`, description: user.bio, title },
   };
 }
 
@@ -37,19 +37,25 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
         <h1 className="text-lg font-bold tracking-tight">Profile</h1>
       </PageHeader>
       <Suspense fallback={<ProfileHeaderSkeleton />}>
-        {params.then(({ handle }) => {
-          return <ProfileHeader handle={handle} />;
-        })}
+        <Crossfade>
+          {params.then(({ handle }) => {
+            return <ProfileHeader handle={handle} />;
+          })}
+        </Crossfade>
       </Suspense>
       <Suspense fallback={<TabsSkeleton />}>
-        {Promise.all([params, searchParams]).then(([{ handle }, sp]) => {
-          return <ProfileTabs handle={handle} active={parseTab(sp.tab)} />;
-        })}
+        <Crossfade>
+          {Promise.all([params, searchParams]).then(([{ handle }, sp]) => {
+            return <ProfileTabs handle={handle} active={parseTab(sp.tab)} />;
+          })}
+        </Crossfade>
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>
-        {Promise.all([params, searchParams]).then(([{ handle }, sp]) => {
-          return <ProfileFeed handle={handle} tab={parseTab(sp.tab)} />;
-        })}
+        <Crossfade>
+          {Promise.all([params, searchParams]).then(([{ handle }, sp]) => {
+            return <ProfileFeed handle={handle} tab={parseTab(sp.tab)} />;
+          })}
+        </Crossfade>
       </Suspense>
     </div>
   );

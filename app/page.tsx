@@ -1,4 +1,5 @@
-import { Suspense, ViewTransition } from 'react';
+import { Suspense } from 'react';
+import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
 import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropComposer } from '@/features/drop/components/composer';
@@ -12,9 +13,17 @@ function parseTab(value: string | string[] | undefined): FeedTab {
   return value === 'discover' ? 'discover' : 'following';
 }
 
+function parsePage(value: string | string[] | undefined): number {
+  const n = Number(value);
+  return n > 0 && Number.isInteger(n) ? n : 1;
+}
+
 export default function HomePage({ searchParams }: PageProps<'/'>) {
   const tabPromise = searchParams.then(sp => {
     return parseTab(sp.tab);
+  });
+  const pagePromise = searchParams.then(sp => {
+    return parsePage(sp.page);
   });
 
   return (
@@ -24,14 +33,16 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
       </PageHeader>
       <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
-        <FeedTabs tabPromise={tabPromise} />
+        <Crossfade>
+          <FeedTabs tabPromise={tabPromise} />
+        </Crossfade>
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>
-        <ViewTransition enter="auto" default="none">
-          {tabPromise.then(tab => {
-            return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
+        <Crossfade>
+          {Promise.all([tabPromise, pagePromise]).then(([tab, page]) => {
+            return tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />;
           })}
-        </ViewTransition>
+        </Crossfade>
       </Suspense>
     </div>
   );

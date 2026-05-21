@@ -69,7 +69,7 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
   );
 }
 
-export function DropSkeleton() {
+function DropSkeleton() {
   return (
     <div aria-busy className="border-divider/70 dark:border-divider-dark/70 min-h-[120px] border-b px-4 py-4 sm:px-5">
       <div className="flex gap-3">
@@ -90,9 +90,9 @@ export function DropList({
 }) {
   return (
     <ul>
-      {drops.map(drop => {
+      {drops.map((drop, i) => {
         return (
-          <li key={drop.id}>
+          <li key={`${drop.id}-${i}`}>
             <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
           </li>
         );

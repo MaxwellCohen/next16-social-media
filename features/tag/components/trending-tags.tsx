@@ -1,25 +1,9 @@
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTrendingTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
 
-export function TrendingTags() {
-  return (
-    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
-      <header className="px-4 pt-4 pb-3">
-        <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
-      </header>
-      <Suspense fallback={<TrendingTagsListSkeleton />}>
-        <ViewTransition enter="auto" default="none">
-          <TrendingTagsList />
-        </ViewTransition>
-      </Suspense>
-    </section>
-  );
-}
-
-async function TrendingTagsList() {
+export async function TrendingTagsList() {
   const tags = await getTrendingTags();
   return (
     <ul className="pb-2">
@@ -40,7 +24,7 @@ async function TrendingTagsList() {
   );
 }
 
-function TrendingTagsListSkeleton() {
+export function TrendingTagsListSkeleton() {
   return (
     <ul className="pb-2">
       {Array.from({ length: 6 }).map((_, i) => {
@@ -51,5 +35,16 @@ function TrendingTagsListSkeleton() {
         );
       })}
     </ul>
+  );
+}
+
+export function TrendingTagsShell({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
+      <header className="px-4 pt-4 pb-3">
+        <h3 className="text-sm font-semibold tracking-tight">Trending now</h3>
+      </header>
+      {children}
+    </section>
   );
 }

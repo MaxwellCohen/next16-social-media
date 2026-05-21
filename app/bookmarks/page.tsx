@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Crossfade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
 import { DropList, DropListSkeleton } from '@/features/drop/components/drop';
@@ -9,15 +10,8 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   alternates: { canonical: '/bookmarks' },
   description: 'Drops you bookmarked.',
-  openGraph: {
-    description: 'Drops you bookmarked.',
-    title: 'Bookmarks',
-    type: 'website',
-    url: '/bookmarks',
-  },
   robots: { follow: false, index: false },
   title: 'Bookmarks',
-  twitter: { card: 'summary', description: 'Drops you bookmarked.', title: 'Bookmarks' },
 };
 
 export const unstable_prefetch = 'force-runtime';
@@ -29,7 +23,9 @@ export default function BookmarksPage() {
         <h1 className="text-lg font-bold tracking-tight">Bookmarks</h1>
       </PageHeader>
       <Suspense fallback={<DropListSkeleton count={3} />}>
-        <BookmarksFeed />
+        <Crossfade>
+          <BookmarksFeed />
+        </Crossfade>
       </Suspense>
     </div>
   );
