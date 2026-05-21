@@ -13,7 +13,10 @@ import type { Route } from 'next';
 
 export function Sidebar() {
   return (
-    <aside style={{ viewTransitionName: 'sidebar' }} className="hidden h-full flex-col items-center gap-4 overflow-hidden overscroll-y-none px-2 py-5 sm:flex lg:items-stretch lg:px-6">
+    <aside
+      style={{ viewTransitionName: 'sidebar' }}
+      className="hidden h-full flex-col items-center gap-4 overflow-hidden overscroll-y-none px-2 py-5 sm:flex lg:items-stretch lg:px-6"
+    >
       <Link
         href="/"
         className="inline-flex items-center gap-2 px-2 pb-2 text-2xl font-bold tracking-tight text-black dark:text-white"
@@ -23,10 +26,12 @@ export function Sidebar() {
         <span className="hidden lg:inline">drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
-        <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-        <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
-        <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-        <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        <Suspense fallback={<SidebarNavFallback />}>
+          <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
+          <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
+          <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
+          <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        </Suspense>
         <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
           {getCurrentUserHandle().then(handle => {
             return (
