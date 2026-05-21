@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
+import { PageHeader } from '@/components/ui/page-header';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { TagFeed } from '@/features/tag/components/tag-feed';
 import { TagHeader, TagHeaderSkeleton } from '@/features/tag/components/tag-header';
@@ -22,6 +23,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
   return (
     <div>
+      <PageHeader back title="Tag" />
       <Suspense fallback={<TagHeaderSkeleton />}>
         <Crossfade>
           {params.then(({ tag }) => {

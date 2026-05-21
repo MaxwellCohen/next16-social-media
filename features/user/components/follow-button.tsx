@@ -1,17 +1,16 @@
 'use client';
 
-import { use, useOptimistic, useTransition } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { toggleFollow } from '@/features/user/user-actions';
 
 type Props = {
   targetHandle: string;
-  followingPromise: Promise<boolean>;
+  following: boolean;
 };
 
-export function FollowButton({ targetHandle, followingPromise }: Props) {
-  const initialFollowing = use(followingPromise);
+export function FollowButton({ targetHandle, following: initialFollowing }: Props) {
   const [following, setOptimistic] = useOptimistic(initialFollowing);
   const [, startTransition] = useTransition();
 

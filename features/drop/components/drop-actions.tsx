@@ -1,7 +1,7 @@
 'use client';
 
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
-import { use, useOptimistic, useTransition } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { IconButton } from '@/components/ui/icon-button';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
@@ -15,7 +15,7 @@ type Props = {
   replies: number;
   reposts: number;
   likes: number;
-  userStatePromise: Promise<DropUserState>;
+  userState: DropUserState;
 };
 
 type OptimisticState = DropUserState & { repostsDelta: number; likesDelta: number };
@@ -32,8 +32,7 @@ function reduce(state: OptimisticState, toggle: Toggle): OptimisticState {
   }
 }
 
-export function DropActions({ dropId, parentId, replies, reposts, likes, userStatePromise }: Props) {
-  const userState = use(userStatePromise);
+export function DropActions({ dropId, parentId, replies, reposts, likes, userState }: Props) {
   const [optimistic, addOptimistic] = useOptimistic({ ...userState, likesDelta: 0, repostsDelta: 0 }, reduce);
   const [, startTransition] = useTransition();
 

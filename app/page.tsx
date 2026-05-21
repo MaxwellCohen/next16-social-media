@@ -32,7 +32,9 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
       <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
         <Crossfade>
-          <FeedTabs tabPromise={tabPromise} />
+          {tabPromise.then(tab => {
+            return <FeedTabs active={tab} />;
+          })}
         </Crossfade>
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>

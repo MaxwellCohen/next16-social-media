@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { use } from 'react';
 import { Tabs } from '@/components/ui/tabs';
 import type { Route } from 'next';
 
@@ -12,8 +11,7 @@ const FEED_TABS: { label: string; value: FeedTab }[] = [
   { label: 'Discover', value: 'discover' },
 ];
 
-export function FeedTabs({ tabPromise }: { tabPromise: Promise<FeedTab> }) {
-  const active = use(tabPromise);
+export function FeedTabs({ active }: { active: FeedTab }) {
   const router = useRouter();
 
   return (

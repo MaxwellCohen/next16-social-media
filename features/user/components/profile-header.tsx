@@ -47,7 +47,8 @@ export async function ProfileHeader({ handle }: { handle: string }) {
 async function ProfileFollowButton({ handle }: { handle: string }) {
   const currentHandle = await getCurrentUserHandle();
   if (currentHandle === handle) return null;
-  return <FollowButton targetHandle={handle} followingPromise={isFollowing(currentHandle, handle)} />;
+  const following = await isFollowing(currentHandle, handle);
+  return <FollowButton targetHandle={handle} following={following} />;
 }
 
 export function ProfileHeaderSkeleton() {

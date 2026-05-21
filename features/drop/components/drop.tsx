@@ -17,7 +17,8 @@ type Props = {
   repostedBy?: string;
 };
 
-export function Drop({ drop, compact = false, repostedBy }: Props) {
+export async function Drop({ drop, compact = false, repostedBy }: Props) {
+  const userState = await getDropUserState(drop.id);
   return (
     <article
       className="group/drop border-divider/70 dark:border-divider-dark/70 relative border-b transition-colors hover:bg-card/40 dark:hover:bg-card-dark/40"
@@ -60,7 +61,7 @@ export function Drop({ drop, compact = false, repostedBy }: Props) {
               replies={drop.replies}
               reposts={drop.reposts}
               likes={drop.likes}
-              userStatePromise={getDropUserState(drop.id)}
+              userState={userState}
             />
           </div>
         </div>

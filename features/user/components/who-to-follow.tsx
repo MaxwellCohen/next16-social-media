@@ -28,7 +28,7 @@ export async function WhoToFollowList() {
               <UserRow
                 handle={user.handle}
                 displayName={user.displayName}
-                action={<FollowButton targetHandle={user.handle} followingPromise={Promise.resolve(false)} />}
+                action={<FollowButton targetHandle={user.handle} following={false} />}
               />
             </li>
           </ViewTransition>

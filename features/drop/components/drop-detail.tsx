@@ -12,6 +12,7 @@ import { getDropUserState, getUserByHandle } from '@/features/user/user-queries'
 
 export async function DropDetail({ id }: { id: string }) {
   const drop = await getDrop(id);
+  const userState = await getDropUserState(drop.id);
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
       <DropAuthor handle={drop.authorHandle} />
@@ -36,7 +37,7 @@ export async function DropDetail({ id }: { id: string }) {
           replies={drop.replies}
           reposts={drop.reposts}
           likes={drop.likes}
-          userStatePromise={getDropUserState(drop.id)}
+          userState={userState}
         />
       </div>
     </article>
