@@ -1,6 +1,6 @@
 import { Repeat2 } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, ViewTransition } from 'react';
+import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -93,11 +93,9 @@ export function DropList({ drops, compact, repostedBy }: { drops: DropT[]; compa
     <ul>
       {drops.map(drop => {
         return (
-          <ViewTransition key={drop.id}>
-            <li>
-              <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
-            </li>
-          </ViewTransition>
+          <li key={drop.id}>
+            <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
+          </li>
         );
       })}
     </ul>

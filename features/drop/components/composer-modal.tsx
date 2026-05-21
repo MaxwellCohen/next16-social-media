@@ -44,14 +44,15 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
         >
           {onOpenTrigger}
         </button>
-      ) : null}
-      <Button
-        onClick={() => {
-          dialog.show();
-        }}
-      >
-        New drop
-      </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            dialog.show();
+          }}
+        >
+          New drop
+        </Button>
+      )}
       <Modal store={dialog} title="New drop" initialFocus={textareaRef}>
         <form ref={formRef} action={formAction}>
           <div className="flex items-start gap-3 px-5 pt-4 pb-3">
