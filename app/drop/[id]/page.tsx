@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
+import ErrorBoundary from '@/components/ui/error-boundary';
 import { PageHeader } from '@/components/ui/page-header';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
@@ -48,11 +49,13 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
               </Section>
               <section>
                 <SectionHeader>Replies</SectionHeader>
-                <Suspense fallback={<RepliesSkeleton />}>
-                  <Crossfade>
-                    <Replies id={id} />
-                  </Crossfade>
-                </Suspense>
+                <ErrorBoundary title="Failed to load replies">
+                  <Suspense fallback={<RepliesSkeleton />}>
+                    <Crossfade>
+                      <Replies id={id} />
+                    </Crossfade>
+                  </Suspense>
+                </ErrorBoundary>
               </section>
             </>
           ))}
