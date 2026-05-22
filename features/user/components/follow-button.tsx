@@ -14,25 +14,22 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
   const [following, setOptimistic] = useOptimistic(initialFollowing);
   const [, startTransition] = useTransition();
 
+  const toggleAction = () => {
+    startTransition(async () => {
+      setOptimistic(!following);
+      try {
+        await toggleFollow(targetHandle);
+      } catch {
+        toast.error('Something went wrong. Try again.');
+      }
+    });
+  };
+
   return (
-    <Button
-      variant={following ? 'secondary' : 'primary'}
-      size="sm"
-      className="min-w-[7rem]"
-      onClick={e => {
-        e.stopPropagation();
-        e.preventDefault();
-        startTransition(async () => {
-          setOptimistic(!following);
-          try {
-            await toggleFollow(targetHandle);
-          } catch {
-            toast.error('Something went wrong. Try again.');
-          }
-        });
-      }}
-    >
-      {following ? 'Following' : 'Follow'}
-    </Button>
+    <form action={toggleAction} onClick={e => e.stopPropagation()} className="contents">
+      <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]">
+        {following ? 'Following' : 'Follow'}
+      </Button>
+    </form>
   );
 }
