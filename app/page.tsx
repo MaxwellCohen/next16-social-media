@@ -28,12 +28,16 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
       <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
         <Crossfade>
-          {tabPromise.then(tab => <FeedTabs active={tab} />)}
+          {tabPromise.then(tab => (
+            <FeedTabs active={tab} />
+          ))}
         </Crossfade>
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>
         <Crossfade>
-          {Promise.all([tabPromise, pagePromise]).then(([tab, page]) => tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />)}
+          {Promise.all([tabPromise, pagePromise]).then(([tab, page]) =>
+            tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />,
+          )}
         </Crossfade>
       </Suspense>
     </div>

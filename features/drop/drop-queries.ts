@@ -21,10 +21,7 @@ export const getFeed = cache(async (handle: string, page: number = 1): Promise<F
     select: { targetHandle: true },
     where: { followerHandle: handle },
   });
-  const followedHandles = [
-    handle,
-    ...following.map(f => f.targetHandle),
-  ];
+  const followedHandles = [handle, ...following.map(f => f.targetHandle)];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     skip: (page - 1) * FEED_PAGE_SIZE,
@@ -52,10 +49,7 @@ export const getDiscoverFeed = cache(async (handle: string, page: number = 1): P
     select: { targetHandle: true },
     where: { followerHandle: handle },
   });
-  const excludeHandles = [
-    handle,
-    ...following.map(f => f.targetHandle),
-  ];
+  const excludeHandles = [handle, ...following.map(f => f.targetHandle)];
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     skip: (page - 1) * FEED_PAGE_SIZE,
@@ -100,12 +94,8 @@ export const getReplies = cache(async (dropId: string) => {
   });
   // Twitter-style: pin the original author's replies first, then newest-first for everyone else.
   const authorHandle = parent?.authorHandle;
-  const authorReplies = authorHandle
-    ? rows.filter(r => r.authorHandle === authorHandle)
-    : [];
-  const otherReplies = authorHandle
-    ? rows.filter(r => r.authorHandle !== authorHandle)
-    : rows;
+  const authorReplies = authorHandle ? rows.filter(r => r.authorHandle === authorHandle) : [];
+  const otherReplies = authorHandle ? rows.filter(r => r.authorHandle !== authorHandle) : rows;
   return [...authorReplies, ...otherReplies].map(toDrop);
 });
 
@@ -132,11 +122,11 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
   const items: ProfileFeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
     ...reposts.map(r => ({
-        drop: toDrop(r.drop),
-        kind: 'repost' as const,
-        pinnedAt: r.drop.createdAt.getTime() + 1,
-        repostedBy: handle,
-      })),
+      drop: toDrop(r.drop),
+      kind: 'repost' as const,
+      pinnedAt: r.drop.createdAt.getTime() + 1,
+      repostedBy: handle,
+    })),
   ];
   return items.sort((a, b) => b.pinnedAt - a.pinnedAt);
 });

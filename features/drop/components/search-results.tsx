@@ -16,7 +16,9 @@ export async function SearchResults({ query }: { query: string }) {
       {users.length > 0 && (
         <div>
           <h2 className="text-gray px-4 pt-5 pb-2 text-xs font-semibold tracking-wide sm:px-5">People</h2>
-          {users.map(u => <UserRow key={u.handle} handle={u.handle} displayName={u.displayName} />)}
+          {users.map(u => (
+            <UserRow key={u.handle} handle={u.handle} displayName={u.displayName} />
+          ))}
         </div>
       )}
       {drops.length > 0 && (

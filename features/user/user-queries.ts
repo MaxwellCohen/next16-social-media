@@ -56,10 +56,7 @@ export const getWhoToFollow = cache(async (handle: string) => {
     take: 3,
     where: {
       handle: {
-        notIn: [
-          handle,
-          ...followed.map(f => f.targetHandle),
-        ],
+        notIn: [handle, ...followed.map(f => f.targetHandle)],
       },
     },
   });

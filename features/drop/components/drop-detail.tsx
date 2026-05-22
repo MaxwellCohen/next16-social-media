@@ -21,7 +21,9 @@ export async function DropDetail({ id }: { id: string }) {
         {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
         {drop.tags.length > 0 ? (
           <div className="flex flex-wrap gap-1.5">
-            {drop.tags.map(t => <TagPill key={t} tag={t} />)}
+            {drop.tags.map(t => (
+              <TagPill key={t} tag={t} />
+            ))}
           </div>
         ) : null}
       </div>

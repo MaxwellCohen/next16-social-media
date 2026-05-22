@@ -14,7 +14,7 @@ const INITIAL = { error: null as string | null };
 
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, pending] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
+  const [state, formAction, ] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
     if (!result.ok) toast.error(result.error);
     return { error: result.ok ? null : result.error };
@@ -40,7 +40,11 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
           className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] leading-10 focus:ring-0 focus:outline-none"
         />
       </div>
-      {state.error ? <p role="alert" className="text-danger text-xs">{state.error}</p> : null}
+      {state.error ? (
+        <p role="alert" className="text-danger text-xs">
+          {state.error}
+        </p>
+      ) : null}
       <div className="flex justify-end">
         <Button type="submit" size="sm">
           Reply

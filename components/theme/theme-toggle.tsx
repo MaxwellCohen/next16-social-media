@@ -28,25 +28,13 @@ export function ThemeToggle({ variant = 'pill' }: Props) {
 
   return (
     <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass}>
-      <ToggleButton
-        active={active === 'light'}
-        label="Light mode"
-        onClick={() => setTheme('light')}
-      >
+      <ToggleButton active={active === 'light'} label="Light mode" onClick={() => setTheme('light')}>
         <Sun className="size-4" />
       </ToggleButton>
-      <ToggleButton
-        active={active === 'dark'}
-        label="Dark mode"
-        onClick={() => setTheme('dark')}
-      >
+      <ToggleButton active={active === 'dark'} label="Dark mode" onClick={() => setTheme('dark')}>
         <Moon className="size-4" />
       </ToggleButton>
-      <ToggleButton
-        active={active === 'system'}
-        label="System theme"
-        onClick={() => setTheme('system')}
-      >
+      <ToggleButton active={active === 'system'} label="System theme" onClick={() => setTheme('system')}>
         <Monitor className="size-4" />
       </ToggleButton>
     </div>

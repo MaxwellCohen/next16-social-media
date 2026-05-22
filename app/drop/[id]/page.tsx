@@ -34,28 +34,28 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
       <Suspense fallback={<DropDetailSkeleton />}>
         <Crossfade>
           {params.then(({ id }) => (
-              <>
-                <DropDetail id={id} />
-                <Section className="p-4 sm:p-5">
-                  <ReplyComposerForm
-                    dropId={id}
-                    avatar={
-                      <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                        <CurrentUserAvatar />
-                      </Suspense>
-                    }
-                  />
-                </Section>
-                <section>
-                  <SectionHeader>Replies</SectionHeader>
-                  <Suspense fallback={<RepliesSkeleton />}>
-                    <Crossfade>
-                      <Replies id={id} />
-                    </Crossfade>
-                  </Suspense>
-                </section>
-              </>
-            ))}
+            <>
+              <DropDetail id={id} />
+              <Section className="p-4 sm:p-5">
+                <ReplyComposerForm
+                  dropId={id}
+                  avatar={
+                    <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+                      <CurrentUserAvatar />
+                    </Suspense>
+                  }
+                />
+              </Section>
+              <section>
+                <SectionHeader>Replies</SectionHeader>
+                <Suspense fallback={<RepliesSkeleton />}>
+                  <Crossfade>
+                    <Replies id={id} />
+                  </Crossfade>
+                </Suspense>
+              </section>
+            </>
+          ))}
         </Crossfade>
       </Suspense>
     </div>

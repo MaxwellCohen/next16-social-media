@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const noPrefetch = request.cookies.has('no-prefetch');
   if (noPrefetch) {
     const url = request.nextUrl.clone();

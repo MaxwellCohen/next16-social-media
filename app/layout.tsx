@@ -10,6 +10,7 @@ import { OfflineIndicator } from '@/components/offline-indicator';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Crossfade } from '@/components/ui/crossfade';
+import ErrorBoundary from '@/components/ui/error-boundary';
 import { TrendingTagsList, TrendingTagsListSkeleton, TrendingTagsShell } from '@/features/tag/components/trending-tags';
 import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/features/user/components/who-to-follow';
 import type { Metadata, Viewport } from 'next';
@@ -48,18 +49,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MainColumn>{children}</MainColumn>
             <RightSidebar>
               <TrendingTagsShell>
-                <Suspense fallback={<TrendingTagsListSkeleton />}>
-                  <Crossfade>
-                    <TrendingTagsList />
-                  </Crossfade>
-                </Suspense>
+                <ErrorBoundary title="Failed to load" compact>
+                  <Suspense fallback={<TrendingTagsListSkeleton />}>
+                    <Crossfade>
+                      <TrendingTagsList />
+                    </Crossfade>
+                  </Suspense>
+                </ErrorBoundary>
               </TrendingTagsShell>
               <WhoToFollowShell>
-                <Suspense fallback={<WhoToFollowListSkeleton />}>
-                  <Crossfade>
-                    <WhoToFollowList />
-                  </Crossfade>
-                </Suspense>
+                <ErrorBoundary title="Failed to load" compact>
+                  <Suspense fallback={<WhoToFollowListSkeleton />}>
+                    <Crossfade>
+                      <WhoToFollowList />
+                    </Crossfade>
+                  </Suspense>
+                </ErrorBoundary>
               </WhoToFollowShell>
             </RightSidebar>
           </AppGrid>

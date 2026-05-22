@@ -22,16 +22,16 @@ export async function WhoToFollowList() {
   return (
     <ul className="pb-2">
       {users.map(user => (
-          <ViewTransition key={user.handle}>
-            <li>
-              <UserRow
-                handle={user.handle}
-                displayName={user.displayName}
-                action={<FollowButton targetHandle={user.handle} following={false} />}
-              />
-            </li>
-          </ViewTransition>
-        ))}
+        <ViewTransition key={user.handle}>
+          <li>
+            <UserRow
+              handle={user.handle}
+              displayName={user.displayName}
+              action={<FollowButton targetHandle={user.handle} following={false} />}
+            />
+          </li>
+        </ViewTransition>
+      ))}
     </ul>
   );
 }

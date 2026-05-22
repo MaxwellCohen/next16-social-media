@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { timeAgo } from '@/lib/utils';
 
 export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: boolean }) {
-  const [label, setLabel] = useState(() => verbose ? formatAbsolute(date) : timeAgo(date));
+  const [label, setLabel] = useState(() => (verbose ? formatAbsolute(date) : timeAgo(date)));
   useEffect(() => {
     const update = () => {
       setLabel(verbose ? formatAbsolute(date) : timeAgo(date));

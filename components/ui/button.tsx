@@ -35,12 +35,7 @@ export function Button({
   ...props
 }: Props) {
   return (
-    <button
-      type={type}
-      disabled={disabled}
-      className={cn(base, sizes[size], variants[variant], className)}
-      {...props}
-    >
+    <button type={type} disabled={disabled} className={cn(base, sizes[size], variants[variant], className)} {...props}>
       {children}
     </button>
   );
