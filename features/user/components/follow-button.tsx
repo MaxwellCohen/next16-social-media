@@ -26,8 +26,13 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
   };
 
   return (
-    <form action={toggleAction} onClick={e => e.stopPropagation()} className="contents">
-      <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]">
+    <form action={toggleAction} className="contents">
+      <Button
+        variant={following ? 'secondary' : 'primary'}
+        size="sm"
+        className="min-w-[7rem]"
+        onClick={e => e.stopPropagation()}
+      >
         {following ? 'Following' : 'Follow'}
       </Button>
     </form>
