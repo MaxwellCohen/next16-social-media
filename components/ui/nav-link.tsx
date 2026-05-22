@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Suspense } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Suspense, useTransition } from 'react';
 import type { Route } from 'next';
 
-type RenderProps = { isActive: boolean };
+type RenderProps = { isActive: boolean; isPending: boolean };
 
 type Props = {
   href: Route;
@@ -34,7 +34,7 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
  * After hydration, usePathname() resolves and the active state applies.
  */
 export function NavLink({ href, className, children, exact = false, ...rest }: Props) {
-  const inactive: RenderProps = { isActive: false };
+  const inactive: RenderProps = { isActive: false, isPending: false };
   return (
     <Suspense
       fallback={
@@ -52,13 +52,22 @@ export function NavLink({ href, className, children, exact = false, ...rest }: P
 
 function NavLinkInner({ href, className, children, exact = false, ...rest }: Props) {
   const pathname = usePathname();
-  const props: RenderProps = { isActive: checkActive(pathname, href, exact) };
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const isActive = checkActive(pathname, href, exact);
+  const props: RenderProps = { isActive, isPending };
 
   return (
     <Link
       href={href}
-      aria-current={props.isActive ? 'page' : undefined}
+      aria-current={isActive ? 'page' : undefined}
       className={resolve(className, props)}
+      onClick={e => {
+        e.preventDefault();
+        startTransition(() => {
+          router.push(href);
+        });
+      }}
       {...rest}
     >
       {resolve(children, props)}
