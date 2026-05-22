@@ -14,7 +14,7 @@ const INITIAL = { error: null as string | null };
 
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, ] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
+  const [state, formAction] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
     if (!result.ok) toast.error(result.error);
     return { error: result.ok ? null : result.error };

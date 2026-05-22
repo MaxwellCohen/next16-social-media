@@ -18,7 +18,7 @@ const INITIAL: State = { error: null, submittedAt: 0 };
 
 export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const dialog = Ariakit.useDialogStore();
-  const [state, formAction, ] = useActionState(async (_: State, formData: FormData) => {
+  const [state, formAction] = useActionState(async (_: State, formData: FormData) => {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
