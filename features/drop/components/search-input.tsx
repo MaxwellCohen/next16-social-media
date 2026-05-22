@@ -2,27 +2,15 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useTransition } from 'react';
+import { useRef, useTransition } from 'react';
+import { useSyncInputFromSearchParam } from '@/hooks/use-sync-input-from-search-param';
 import type { Route } from 'next';
 
 export function SearchInput() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Sync the input from the URL on mount and on back/forward navigation, but
-  // never clobber a value the user typed during/before hydration.
-  useEffect(() => {
-    const sync = () => {
-      const el = inputRef.current;
-      if (!el) return;
-      const q = new URLSearchParams(window.location.search).get('q') ?? '';
-      if (el.value === '' && q !== '') el.value = q;
-    };
-    sync();
-    window.addEventListener('popstate', sync);
-    return () => window.removeEventListener('popstate', sync);
-  }, []);
+  useSyncInputFromSearchParam(inputRef, 'q');
 
   return (
     <div className="relative">
