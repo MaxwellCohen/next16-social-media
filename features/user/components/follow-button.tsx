@@ -14,7 +14,9 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
   const [following, setOptimistic] = useOptimistic(initialFollowing);
   const [, startTransition] = useTransition();
 
-  const toggleAction = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     startTransition(async () => {
       setOptimistic(!following);
       try {
@@ -26,16 +28,8 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
   };
 
   return (
-    <form
-      action={toggleAction}
-      onSubmit={e => {
-        e.stopPropagation();
-      }}
-      className="contents"
-    >
-      <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]">
-        {following ? 'Following' : 'Follow'}
-      </Button>
-    </form>
+    <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]" onClick={handleClick}>
+      {following ? 'Following' : 'Follow'}
+    </Button>
   );
 }

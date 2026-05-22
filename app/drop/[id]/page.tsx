@@ -49,7 +49,7 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
               </Section>
               <section>
                 <SectionHeader>Replies</SectionHeader>
-                <ErrorBoundary title="Failed to load replies">
+                <ErrorBoundary title="Replies didn’t load">
                   <Suspense fallback={<RepliesSkeleton />}>
                     <Crossfade>
                       <Replies id={id} />

@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MainColumn>{children}</MainColumn>
             <RightSidebar>
               <TrendingTagsShell>
-                <ErrorBoundary title="Failed to load" compact>
+                <ErrorBoundary title="Tags unavailable" compact>
                   <Suspense fallback={<TrendingTagsListSkeleton />}>
                     <Crossfade>
                       <TrendingTagsList />
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </ErrorBoundary>
               </TrendingTagsShell>
               <WhoToFollowShell>
-                <ErrorBoundary title="Failed to load" compact>
+                <ErrorBoundary title="No suggestions" compact>
                   <Suspense fallback={<WhoToFollowListSkeleton />}>
                     <Crossfade>
                       <WhoToFollowList />

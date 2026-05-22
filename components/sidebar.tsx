@@ -39,7 +39,7 @@ export function Sidebar() {
       </nav>
       <div className="mt-auto hidden lg:block">
         <div className="border-divider dark:border-divider-dark -mx-6 flex items-center gap-1 border-t px-4 py-3">
-          <ErrorBoundary compact>
+          <ErrorBoundary title="Your profile is offline" compact>
             <Suspense fallback={<SidebarProfilePillSkeleton />}>
               <SidebarProfilePill />
             </Suspense>

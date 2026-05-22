@@ -25,7 +25,7 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
           <SearchInput />
         </Suspense>
       </Section>
-      <ErrorBoundary title="Failed to load results">
+      <ErrorBoundary title="Search is taking a breather">
         <Suspense fallback={<DropListSkeleton count={3} />}>
           <Crossfade>
             {searchParams.then(sp => {
