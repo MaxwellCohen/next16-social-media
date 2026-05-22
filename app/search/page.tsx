@@ -4,7 +4,6 @@ import { EmptyState } from '@/components/ui/empty-state';
 import ErrorBoundary from '@/components/ui/error-boundary';
 import { PageHeader } from '@/components/ui/page-header';
 import { Section } from '@/components/ui/section';
-import { Skeleton } from '@/components/ui/skeleton';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { SearchInput } from '@/features/drop/components/search-input';
 import { SearchResults } from '@/features/drop/components/search-results';
@@ -15,15 +14,14 @@ export const metadata: Metadata = {
 };
 
 export const unstable_prefetch = 'force-runtime';
+export const unstable_instant = false;
 
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
       <PageHeader title="Search" />
       <Section className="px-4 py-3 sm:px-5">
-        <Suspense fallback={<Skeleton className="h-[42px] w-full rounded-lg" />}>
-          <SearchInput />
-        </Suspense>
+        <SearchInput />
       </Section>
       <ErrorBoundary title="Search is taking a breather">
         <Suspense fallback={<DropListSkeleton count={3} />}>

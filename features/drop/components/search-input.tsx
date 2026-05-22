@@ -12,7 +12,7 @@ export function SearchInput() {
   const inputRef = useRef<HTMLInputElement>(null);
   const q = searchParams.get('q') ?? '';
 
-  // Reset input when URL changes externally (Activity restore, back nav).
+  // Sync input when the URL changes externally (back/forward, Activity restore).
   useLayoutEffect(() => {
     if (inputRef.current && inputRef.current.value !== q) {
       inputRef.current.value = q;
