@@ -10,6 +10,7 @@ export function SearchInput() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+
   useSyncInputFromSearchParam(inputRef, 'q');
 
   return (
