@@ -4,30 +4,27 @@ import { useEffect, type RefObject } from 'react';
 
 /**
  * Keep an uncontrolled input in sync with a URL search param without clobbering
- * any value the user typed during/before hydration. Reads `window.location` so
- * the parent route can stay statically prerendered.
+ * a value the user typed during/before hydration or one preserved by React
+ * Activity. Reads `window.location` so the parent route stays statically
+ * prerendered.
  *
- * Resyncs on:
- *  - mount (handles initial render + Activity restore re-mount)
- *  - back/forward navigation (`popstate`)
- *  - client-side `router.push`/`router.replace` (`navigate` event)
+ *  - On mount (incl. Activity restore): only seed from the URL if the input is
+ *    currently empty. Preserves pre-hydration keystrokes and Activity state.
+ *  - On back/forward (`popstate`): always sync to the URL.
  */
 export function useSyncInputFromSearchParam(ref: RefObject<HTMLInputElement | null>, key: string) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const apply = () => {
-      const value = new URLSearchParams(window.location.search).get(key) ?? '';
-      if (el.value !== value) el.value = value;
-    };
+    const read = () => new URLSearchParams(window.location.search).get(key) ?? '';
 
-    apply();
-    window.addEventListener('popstate', apply);
-    window.addEventListener('navigate', apply);
-    return () => {
-      window.removeEventListener('popstate', apply);
-      window.removeEventListener('navigate', apply);
+    if (el.value === '') el.value = read();
+
+    const onPopState = () => {
+      el.value = read();
     };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
   }, [ref, key]);
 }
