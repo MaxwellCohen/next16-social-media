@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs } from '@/components/ui/tabs';
 import type { Route } from 'next';
 
@@ -11,8 +11,14 @@ const FEED_TABS: { label: string; value: FeedTab }[] = [
   { label: 'Discover', value: 'discover' },
 ];
 
-export function FeedTabs({ active }: { active: FeedTab }) {
+function parseTab(value: string | null): FeedTab {
+  return value === 'discover' ? 'discover' : 'following';
+}
+
+export function FeedTabs() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const active = parseTab(searchParams.get('tab'));
 
   return (
     <Tabs

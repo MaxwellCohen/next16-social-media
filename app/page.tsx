@@ -5,11 +5,11 @@ import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropComposer } from '@/features/drop/components/composer';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { Feed, DiscoverFeed } from '@/features/drop/components/feed';
-import { FeedTabs, type FeedTab } from '@/features/drop/components/feed-tabs';
+import { FeedTabs } from '@/features/drop/components/feed-tabs';
 
 export const unstable_prefetch = 'force-runtime';
 
-function parseTab(value: string | string[] | undefined): FeedTab {
+function parseTab(value: string | string[] | undefined): 'following' | 'discover' {
   return value === 'discover' ? 'discover' : 'following';
 }
 
@@ -19,25 +19,20 @@ function parsePage(value: string | string[] | undefined): number {
 }
 
 export default function HomePage({ searchParams }: PageProps<'/'>) {
-  const tabPromise = searchParams.then(sp => parseTab(sp.tab));
-  const pagePromise = searchParams.then(sp => parsePage(sp.page));
-
   return (
     <div>
       <PageHeader title="Home" />
       <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
-        <Crossfade>
-          {tabPromise.then(tab => (
-            <FeedTabs active={tab} />
-          ))}
-        </Crossfade>
+        <FeedTabs />
       </Suspense>
       <Suspense fallback={<DropListSkeleton />}>
         <Crossfade>
-          {Promise.all([tabPromise, pagePromise]).then(([tab, page]) =>
-            tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />,
-          )}
+          {searchParams.then(sp => {
+            const tab = parseTab(sp.tab);
+            const page = parsePage(sp.page);
+            return tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />;
+          })}
         </Crossfade>
       </Suspense>
     </div>
