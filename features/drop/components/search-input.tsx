@@ -1,23 +1,28 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useLayoutEffect, useRef, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useTransition } from 'react';
 import type { Route } from 'next';
 
 export function SearchInput() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
-  const q = searchParams.get('q') ?? '';
 
-  // Sync input when the URL changes externally (back/forward, Activity restore).
-  useLayoutEffect(() => {
-    if (inputRef.current && inputRef.current.value !== q) {
-      inputRef.current.value = q;
-    }
-  }, [q]);
+  // Sync the input from the URL on mount and on back/forward navigation, but
+  // never clobber a value the user typed during/before hydration.
+  useEffect(() => {
+    const sync = () => {
+      const el = inputRef.current;
+      if (!el) return;
+      const q = new URLSearchParams(window.location.search).get('q') ?? '';
+      if (el.value === '' && q !== '') el.value = q;
+    };
+    sync();
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
 
   return (
     <div className="relative">
@@ -32,7 +37,7 @@ export function SearchInput() {
         name="q"
         aria-label="Search drops"
         placeholder="Search drops…"
-        defaultValue={q}
+        defaultValue=""
         onChange={e => {
           const value = e.target.value;
           startTransition(() => {

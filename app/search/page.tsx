@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 };
 
 export const unstable_prefetch = 'force-runtime';
-export const unstable_instant = false;
 
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
