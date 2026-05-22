@@ -2,16 +2,17 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useRef, useTransition } from 'react';
-import { useSyncInputFromSearchParam } from '@/hooks/use-sync-input-from-search-param';
+import { useId, useRef, useTransition } from 'react';
+import { useSyncInputToSearchParam } from '@/hooks/use-sync-input-to-search-param';
 import type { Route } from 'next';
 
 export function SearchInput() {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
+  const [isPending, startTransition] = useTransition();
 
-  useSyncInputFromSearchParam(inputRef, 'q');
+  useSyncInputToSearchParam(inputRef, 'q');
 
   return (
     <div className="relative">
@@ -22,11 +23,12 @@ export function SearchInput() {
       )}
       <input
         ref={inputRef}
+        id={inputId}
         type="search"
         name="q"
         aria-label="Search drops"
         placeholder="Search drops…"
-        defaultValue=""
+        suppressHydrationWarning
         onChange={e => {
           const value = e.target.value;
           startTransition(() => {
@@ -35,6 +37,25 @@ export function SearchInput() {
         }}
         className="bg-card dark:bg-card-dark placeholder-gray w-full rounded-lg py-2.5 pr-3 pl-9 text-sm outline-none"
       />
+      <SeedFromSearchParam targetId={inputId} />
     </div>
+  );
+}
+
+// Hard navigation: seed the input during HTML parse, before paint.
+// type="text/plain" on the client makes it inert on soft navigations.
+function SeedFromSearchParam({ targetId }: { targetId: string }) {
+  const html = `(function(){
+  var el = document.getElementById(${JSON.stringify(targetId)});
+  if (!el) return;
+  var v = new URLSearchParams(location.search).get("q");
+  if (v) el.value = v;
+})()`;
+  return (
+    <script
+      type={typeof window === 'undefined' ? 'text/javascript' : 'text/plain'}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
