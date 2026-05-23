@@ -1,0 +1,48 @@
+'use client';
+
+import { NavLink } from '@/components/ui/nav-link';
+import type { Route } from 'next';
+
+type CommonProps = {
+  href: Route;
+  icon: React.ReactNode;
+  label: string;
+};
+
+export function SidebarNavLink({ href, icon, label }: CommonProps) {
+  return (
+    <NavLink
+      href={href}
+      aria-label={label}
+      className={({ isActive }) =>
+        `flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3 ${
+          isActive
+            ? 'bg-accent/10 text-accent font-bold [&_svg]:stroke-[2.5] dark:bg-accent/15 dark:text-blue-400'
+            : 'hover:bg-card dark:hover:bg-card-dark'
+        }`
+      }
+    >
+      {icon}
+      <span className="hidden lg:inline">{label}</span>
+    </NavLink>
+  );
+}
+
+export function MobileTabLink({ href, icon, label }: CommonProps) {
+  return (
+    <NavLink
+      href={href}
+      aria-label={label}
+      className={({ isActive }) =>
+        `flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] transition-colors ${
+          isActive
+            ? 'text-accent font-bold [&_svg]:stroke-[2.5]'
+            : 'text-gray font-medium hover:text-black dark:hover:text-white'
+        }`
+      }
+    >
+      {icon}
+      <span>{label}</span>
+    </NavLink>
+  );
+}
