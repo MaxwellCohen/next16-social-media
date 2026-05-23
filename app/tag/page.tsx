@@ -6,8 +6,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/tag' },
-  description: 'All tags used on Drop.',
-  title: 'Tags',
+  description: 'Trending tags on Drop.',
+  title: 'Trending Tags',
 };
 
 export const unstable_prefetch = 'force-runtime';
@@ -15,7 +15,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function TagsPage() {
   return (
     <div>
-      <PageHeader title="Tags" />
+      <PageHeader title="Trending Tags" />
       <Suspense fallback={<TagsListSkeleton />}>
         <Crossfade>
           <TagsList />

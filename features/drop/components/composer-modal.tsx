@@ -6,7 +6,6 @@ import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
-import { Spinner } from '@/components/ui/spinner';
 import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
@@ -20,7 +19,7 @@ const INITIAL: State = { error: null, submittedAt: 0 };
 
 export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const dialog = Ariakit.useDialogStore();
-  const [state, formAction, isPending] = useActionState(async (_: State, formData: FormData) => {
+  const [state, formAction] = useActionState(async (_: State, formData: FormData) => {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
@@ -89,10 +88,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
           ) : null}
           <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
             <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-            <Button type="submit" disabled={isPending}>
-              {isPending && <Spinner />}
-              Drop it
-            </Button>
+            <Button type="submit">Drop it</Button>
           </footer>
         </form>
       </Modal>

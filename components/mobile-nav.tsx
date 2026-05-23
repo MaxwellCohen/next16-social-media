@@ -1,4 +1,4 @@
-import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
+import { Bookmark, Home, Search, TrendingUp, User } from 'lucide-react';
 import { Suspense } from 'react';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { MobileTabLink, MobileTabLinkSkeleton } from './nav-link-wrappers';
@@ -13,7 +13,7 @@ export function MobileTabBar() {
     >
       <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
       <MobileTabLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
-      <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
+      <MobileTabLink href="/tag" icon={<TrendingUp className="h-5 w-5" />} label="Trending" />
       <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
       <Suspense fallback={<MobileTabLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
         {getCurrentUserHandle().then(handle => (

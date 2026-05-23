@@ -1,4 +1,4 @@
-import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
+import { Bookmark, Home, Search, TrendingUp, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
@@ -31,7 +31,7 @@ export function Sidebar() {
         <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
         <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
         <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-        <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
+        <SidebarNavLink href="/tag" icon={<TrendingUp className="h-5 w-5" />} label="Trending" />
         <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
           {getCurrentUserHandle().then(handle => (
             <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />

@@ -1,9 +1,8 @@
 'use client';
 
-import { useActionState, useRef } from 'react';
+import { useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
@@ -12,19 +11,19 @@ type Props = {
 
 export function QuickDropForm({ avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [, formAction, isPending] = useActionState(async (_: unknown, formData: FormData) => {
+
+  async function submitAction(formData: FormData) {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
     } else {
       toast.success('Dropped!');
     }
-    return null;
-  }, null);
+  }
 
   return (
     <section className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7">
-      <form ref={formRef} action={formAction} className="flex items-center gap-3">
+      <form ref={formRef} action={submitAction} className="flex items-center gap-3">
         {avatar}
         <textarea
           name="body"
@@ -40,10 +39,7 @@ export function QuickDropForm({ avatar }: Props) {
           }}
           className="placeholder-gray flex-1 resize-none border-0 bg-transparent text-sm focus:ring-0 focus:outline-none"
         />
-        <Button type="submit" disabled={isPending}>
-          {isPending && <Spinner />}
-          Drop it
-        </Button>
+        <Button type="submit">Drop it</Button>
       </form>
     </section>
   );

@@ -1,4 +1,8 @@
+'use client';
+
 import { type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { useFormStatus } from 'react-dom';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 type Variant = 'primary' | 'secondary' | 'ghost';
@@ -34,8 +38,18 @@ export function Button({
   disabled,
   ...props
 }: Props) {
+  const { pending } = useFormStatus();
+  const isSubmit = type === 'submit';
+  const isDisabled = disabled || (isSubmit && pending);
+
   return (
-    <button type={type} disabled={disabled} className={cn(base, sizes[size], variants[variant], className)} {...props}>
+    <button
+      type={type}
+      disabled={isDisabled}
+      className={cn(base, sizes[size], variants[variant], className)}
+      {...props}
+    >
+      {isSubmit && pending && <Spinner />}
       {children}
     </button>
   );
