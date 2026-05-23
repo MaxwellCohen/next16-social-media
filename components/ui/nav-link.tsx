@@ -15,7 +15,7 @@ type Props = {
   fallback?: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, 'className' | 'children'>;
 
-function checkActive(pathname: string, href: string, exact: boolean): boolean {
+function checkActive(pathname: string, href: Route, exact: boolean): boolean {
   if (exact || href === '/') return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
