@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Suspense, useTransition } from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 import type { Route } from 'next';
 
 type RenderProps = { isActive: boolean; isPending: boolean };
@@ -51,8 +52,9 @@ function NavLinkInner<T extends string>({ href, className, children, exact = fal
   const pathname = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const debouncedPending = useDebounce(isPending, 150);
   const isActive = checkActive(pathname, href.toString(), exact);
-  const props: RenderProps = { isActive, isPending };
+  const props: RenderProps = { isActive, isPending: debouncedPending };
 
   return (
     <Link
