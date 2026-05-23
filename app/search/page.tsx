@@ -5,7 +5,7 @@ import ErrorBoundary from '@/components/ui/error-boundary';
 import { PageHeader } from '@/components/ui/page-header';
 import { Section } from '@/components/ui/section';
 import { DropListSkeleton } from '@/features/drop/components/drop';
-import { SearchInput } from '@/features/drop/components/search-input';
+import { SearchInput } from '@/features/search/components/search-input';
 import { SearchResults } from '@/features/search/components/search-results';
 import type { Metadata } from 'next';
 
