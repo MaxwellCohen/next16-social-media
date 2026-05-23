@@ -35,7 +35,7 @@ export function NavLink<T extends string>({ href, className, children, exact = f
     <Suspense
       fallback={
         fallback ?? (
-          <Link href={href as Route} className={resolve(className, inactive)} {...rest}>
+          <Link key="fallback" href={href as Route} className={resolve(className, inactive)} {...rest}>
             {resolve(children, inactive)}
           </Link>
         )
@@ -58,6 +58,7 @@ function NavLinkInner<T extends string>({ href, className, children, exact = fal
 
   return (
     <Link
+      key="active"
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, props)}
