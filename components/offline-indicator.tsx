@@ -1,19 +1,25 @@
 'use client';
 
+import { WifiOff } from 'lucide-react';
 import { useOffline } from 'next/offline';
-import { cn } from '@/lib/utils';
+import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 
 export function OfflineIndicator() {
   const offline = useOffline();
-  if (!offline) return null;
+  const toastId = useRef<string | number | undefined>(undefined);
 
-  return (
-    <div
-      className={cn(
-        'bg-danger fixed inset-x-0 top-0 z-50 flex items-center justify-center py-1.5 text-xs font-medium text-white sm:py-1',
-      )}
-    >
-      You&apos;re offline — reconnecting…
-    </div>
-  );
+  useEffect(() => {
+    if (offline) {
+      toastId.current = toast.error('You\'re offline — reconnecting…', {
+        duration: Infinity,
+        icon: <WifiOff className="h-4 w-4" />,
+      });
+    } else if (toastId.current !== undefined) {
+      toast.dismiss(toastId.current);
+      toastId.current = undefined;
+    }
+  }, [offline]);
+
+  return null;
 }
