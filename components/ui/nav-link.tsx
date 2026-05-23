@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Suspense, useTransition } from 'react';
+import { useClientPathname } from '@/hooks/use-client-pathname';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { Route } from 'next';
 
@@ -16,7 +17,8 @@ type Props<T extends string = string> = {
   fallback?: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, 'href' | 'className' | 'children'>;
 
-function checkActive(pathname: string, href: string, exact: boolean): boolean {
+function checkActive(pathname: string | null, href: string, exact: boolean): boolean {
+  if (pathname === null) return false;
   if (exact || href === '/') return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -26,9 +28,9 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
 }
 
 // `<Link>` with active-state detection. `className` and `children` can be
-// render props that receive `{ isActive, isPending }`. The Suspense wrapper
-// lets the link prerender as inactive without blocking the page; on hydration
-// `usePathname()` resolves and the active state applies.
+// render props that receive `{ isActive, isPending }`. The outer Suspense
+// satisfies cache-components's missing-Suspense-with-CSR-bailout for
+// `usePathname` on dynamic-param routes.
 export function NavLink<T extends string>({ href, className, children, exact = false, fallback, ...rest }: Props<T>) {
   const inactive: RenderProps = { isActive: false, isPending: false };
   return (
@@ -49,7 +51,9 @@ export function NavLink<T extends string>({ href, className, children, exact = f
 }
 
 function NavLinkInner<T extends string>({ href, className, children, exact = false, ...rest }: Props<T>) {
-  const pathname = usePathname();
+  // `useClientPathname` returns null on the server / first client render so
+  // the prerendered HTML matches across rewrites (e.g. `/` → `/noprefetch/`).
+  const pathname = useClientPathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const debouncedPending = useDebounce(isPending, 150);
