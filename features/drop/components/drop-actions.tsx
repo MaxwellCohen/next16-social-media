@@ -49,7 +49,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
       addOptimistic(field);
       try {
         await action();
-        toast(willActivate ? messages[field][0] : messages[field][1]);
+        toast.success(willActivate ? messages[field][0] : messages[field][1]);
       } catch {
         toast.error('Something went wrong. Try again.');
       }

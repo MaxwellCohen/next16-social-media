@@ -16,7 +16,11 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
     const result = await postReply(dropId, formData);
-    if (!result.ok) toast.error(result.error);
+    if (!result.ok) {
+      toast.error(result.error);
+    } else {
+      toast.success('Replied!');
+    }
     return { error: result.ok ? null : result.error };
   }, INITIAL);
 

@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Suspense>
             <PrefetchToggle />
           </Suspense>
-          <Toaster theme="system" position="bottom-center" />
+          <Toaster theme="system" position="bottom-right" />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

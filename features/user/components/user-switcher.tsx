@@ -35,7 +35,7 @@ export function UserSwitcher({ currentHandle, users }: Props) {
     <div className="min-w-0 flex-1" data-pending={isPending ? '' : undefined}>
       <Ariakit.PopoverDisclosure
         store={popover}
-        className="hover:bg-card dark:hover:bg-card-dark flex w-full min-w-0 cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors"
+        className="hover:bg-card dark:hover:bg-card-dark flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-2 py-2 transition-colors"
       >
         <div
           aria-hidden
@@ -46,20 +46,20 @@ export function UserSwitcher({ currentHandle, users }: Props) {
         >
           {selected.displayName.charAt(0).toUpperCase()}
         </div>
-        <div className="hidden min-w-0 flex-1 flex-col lg:flex">
-          <div className="truncate text-sm font-semibold tracking-tight">{selected.displayName}</div>
-          <div className="text-gray truncate font-mono text-[11px]">@{selected.handle}</div>
+        <div className="hidden min-w-0 lg:block">
+          <div className="truncate text-sm leading-tight font-semibold tracking-tight">{selected.displayName}</div>
+          <div className="text-gray truncate font-mono text-[11px] leading-tight">@{selected.handle}</div>
         </div>
-        <ChevronsUpDown className="text-gray ml-auto hidden h-4 w-4 shrink-0 lg:block" />
+        <ChevronsUpDown className="text-gray ml-auto hidden h-3.5 w-3.5 shrink-0 lg:block" />
       </Ariakit.PopoverDisclosure>
       <Ariakit.Popover
         store={popover}
-        gutter={8}
-        shift={-8}
+        gutter={4}
+        shift={-4}
         className="border-divider dark:border-divider-dark z-50 w-64 overflow-hidden rounded-xl border bg-white shadow-xl dark:bg-black"
       >
-        <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-2.5">
-          <p className="text-xs font-semibold tracking-tight">Switch account</p>
+        <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-2">
+          <p className="text-gray text-[11px] font-medium tracking-wider uppercase">Switch account</p>
         </div>
         <div className="max-h-72 overflow-auto py-1">
           {users.map(u => (
@@ -67,21 +67,24 @@ export function UserSwitcher({ currentHandle, users }: Props) {
               key={u.handle}
               type="button"
               onClick={() => handleSelect(u.handle)}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+              className={cn(
+                'flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-black/5 dark:hover:bg-white/5',
+                u.handle === optimisticHandle && 'bg-black/[0.03] dark:bg-white/[0.03]',
+              )}
             >
               <div
                 className={cn(
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-semibold text-white uppercase',
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-[10px] font-semibold text-white uppercase',
                   u.avatarColor,
                 )}
               >
                 {u.displayName.charAt(0)}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="truncate text-sm font-semibold tracking-tight">{u.displayName}</div>
+                <div className="truncate text-sm font-medium">{u.displayName}</div>
                 <div className="text-gray truncate font-mono text-[11px]">@{u.handle}</div>
               </div>
-              <Check className={cn('h-4 w-4 shrink-0', u.handle === optimisticHandle ? 'text-accent' : 'opacity-0')} />
+              {u.handle === optimisticHandle && <Check className="text-accent h-4 w-4 shrink-0" />}
             </button>
           ))}
         </div>

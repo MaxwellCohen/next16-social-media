@@ -15,6 +15,8 @@ export function QuickDropForm({ avatar }: Props) {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
+    } else {
+      toast.success('Dropped!');
     }
     return null;
   }, null);

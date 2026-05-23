@@ -26,6 +26,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       toast.error(result.error);
       return { error: result.error, submittedAt: 0 };
     }
+    toast.success('Dropped!');
     return { error: null, submittedAt: Date.now() };
   }, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
@@ -48,13 +49,13 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
         </button>
       ) : (
         <Button
-          className="w-full"
+          className="w-full py-3"
           onClick={() => {
             dialog.show();
           }}
         >
+          <Plus className="h-5 w-5" />
           <span className="hidden lg:inline">New drop</span>
-          <Plus className="h-5 w-5 lg:hidden" />
         </Button>
       )}
       <Modal store={dialog} title="New drop" initialFocus={textareaRef}>

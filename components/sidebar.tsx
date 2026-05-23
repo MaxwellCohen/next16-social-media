@@ -38,21 +38,25 @@ export function Sidebar() {
           ))}
         </Suspense>
       </nav>
-      <NewDropModal
-        avatar={
-          <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-            <CurrentUserAvatar />
-          </Suspense>
-        }
-      />
-      <div className="mt-auto hidden lg:block">
-        <div className="border-divider dark:border-divider-dark -mx-6 flex items-center gap-1 border-t px-4 py-3">
+      <div className="hidden pt-2 lg:block">
+        <NewDropModal
+          avatar={
+            <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+              <CurrentUserAvatar />
+            </Suspense>
+          }
+        />
+      </div>
+      <div className="mt-auto hidden lg:flex lg:flex-col">
+        <div className="flex justify-center px-2 pb-3 lg:justify-start">
+          <ThemeToggle variant="inline" />
+        </div>
+        <div className="border-divider dark:border-divider-dark -mx-6 border-t px-4 py-3">
           <ErrorBoundary title="Your profile is offline" compact>
             <Suspense fallback={<SidebarProfilePillSkeleton />}>
               <SidebarProfilePill />
             </Suspense>
           </ErrorBoundary>
-          <ThemeToggle variant="inline" />
         </div>
       </div>
     </aside>
