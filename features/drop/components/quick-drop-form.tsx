@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -11,6 +11,7 @@ type Props = {
 };
 
 export function QuickDropForm({ avatar }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [, formAction, isPending] = useActionState(async (_: unknown, formData: FormData) => {
     const result = await postDrop(formData);
     if (!result.ok) {
@@ -22,16 +23,22 @@ export function QuickDropForm({ avatar }: Props) {
   }, null);
 
   return (
-    <section className="border-divider/70 dark:border-divider-dark/70 hidden items-center gap-3 border-b p-4 sm:flex sm:p-5">
-      {avatar}
-      <form action={formAction} className="flex flex-1 items-center gap-2">
-        <input
-          type="text"
+    <section className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7">
+      <form ref={formRef} action={formAction} className="flex items-center gap-3">
+        {avatar}
+        <textarea
           name="body"
           required
           maxLength={1000}
+          rows={2}
           placeholder="What did you build today?"
-          className="placeholder-gray border-divider focus:border-accent dark:border-divider-dark dark:focus:border-accent flex-1 rounded-full border bg-transparent px-4 py-2 text-sm focus:ring-0 focus:outline-none"
+          onKeyDown={e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+              e.preventDefault();
+              formRef.current?.requestSubmit();
+            }
+          }}
+          className="placeholder-gray flex-1 resize-none border-0 bg-transparent text-sm focus:ring-0 focus:outline-none"
         />
         <Button type="submit" disabled={isPending}>
           {isPending && <Spinner />}

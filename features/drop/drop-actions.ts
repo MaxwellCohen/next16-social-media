@@ -27,7 +27,7 @@ const postDropSchema = z.object({
 });
 
 export async function postDrop(formData: FormData) {
-  await delay(600);
+  await delay(300);
 
   const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {

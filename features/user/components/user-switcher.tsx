@@ -35,7 +35,7 @@ export function UserSwitcher({ currentHandle, users }: Props) {
     <div className="min-w-0 flex-1" data-pending={isPending ? '' : undefined}>
       <Ariakit.PopoverDisclosure
         store={popover}
-        className="hover:bg-card dark:hover:bg-card-dark flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-2 py-2 transition-colors"
+        className="hover:bg-card dark:hover:bg-card-dark flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-2 py-2.5 transition-colors"
       >
         <div
           aria-hidden
@@ -54,12 +54,14 @@ export function UserSwitcher({ currentHandle, users }: Props) {
       </Ariakit.PopoverDisclosure>
       <Ariakit.Popover
         store={popover}
-        gutter={4}
-        shift={-4}
-        className="border-divider dark:border-divider-dark z-50 w-64 overflow-hidden rounded-xl border bg-white shadow-xl dark:bg-black"
+        portal
+        gutter={8}
+        overflowPadding={16}
+        sameWidth
+        className="border-divider dark:border-divider-dark z-50 overflow-hidden rounded-xl border bg-white shadow-xl dark:bg-black"
       >
         <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-2">
-          <p className="text-gray text-[11px] font-medium tracking-wider uppercase">Switch account</p>
+          <p className="text-gray text-xs font-medium">Switch account</p>
         </div>
         <div className="max-h-72 overflow-auto py-1">
           {users.map(u => (
