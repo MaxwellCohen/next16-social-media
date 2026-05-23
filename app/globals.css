@@ -31,6 +31,13 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
+
+  --animate-pending: pending 1.2s ease-in-out 150ms infinite both;
+}
+
+@keyframes pending {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

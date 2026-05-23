@@ -22,10 +22,10 @@ export function SidebarNavLink({ href, icon, label }: CommonProps) {
       className={({ isActive, isPending }) =>
         `${sidebarLinkBase} ${
           isPending
-            ? 'opacity-50'
+            ? 'animate-pending'
             : isActive
-            ? 'bg-accent/10 text-accent dark:bg-accent/15 font-bold dark:text-blue-400 [&_svg]:stroke-[2.5]'
-            : 'hover:bg-card dark:hover:bg-card-dark'
+              ? 'bg-accent/10 text-accent dark:bg-accent/15 font-bold dark:text-blue-400 [&_svg]:stroke-[2.5]'
+              : 'hover:bg-card dark:hover:bg-card-dark'
         }`
       }
     >
