@@ -1,6 +1,7 @@
 import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { NavLink } from '@/components/ui/nav-link';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
@@ -9,8 +10,16 @@ import { UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
-import { SidebarNavLink, SidebarNavLinkSkeleton } from './sidebar-nav-link';
 import type { Route } from 'next';
+
+const sidebarLinkBase =
+  'flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight transition-colors lg:justify-start lg:px-3';
+const sidebarLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `${sidebarLinkBase} ${
+    isActive
+      ? 'bg-accent/10 text-accent font-bold [&_svg]:stroke-[2.5] dark:bg-accent/15 dark:text-blue-400'
+      : 'hover:bg-card dark:hover:bg-card-dark'
+  }`;
 
 export function Sidebar() {
   return (
@@ -27,13 +36,28 @@ export function Sidebar() {
         <span className="hidden lg:inline">drop</span>
       </Link>
       <nav className="flex flex-col gap-1.5 text-sm font-medium">
-        <SidebarNavLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-        <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
-        <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
-        <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
-        <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
+        <NavLink href="/" aria-label="Home" className={sidebarLinkClass}>
+          <Home className="h-5 w-5" />
+          <span className="hidden lg:inline">Home</span>
+        </NavLink>
+        <NavLink href="/search" aria-label="Search" className={sidebarLinkClass}>
+          <Search className="h-5 w-5" />
+          <span className="hidden lg:inline">Search</span>
+        </NavLink>
+        <NavLink href="/bookmarks" aria-label="Bookmarks" className={sidebarLinkClass}>
+          <Bookmark className="h-5 w-5" />
+          <span className="hidden lg:inline">Bookmarks</span>
+        </NavLink>
+        <NavLink href="/tag" aria-label="Tags" className={sidebarLinkClass}>
+          <Hash className="h-5 w-5" />
+          <span className="hidden lg:inline">Tags</span>
+        </NavLink>
+        <Suspense fallback={<ProfileLinkSkeleton />}>
           {getCurrentUserHandle().then(handle => (
-            <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
+            <NavLink href={`/u/${handle}` as Route} aria-label="Profile" className={sidebarLinkClass}>
+              <User className="h-5 w-5" />
+              <span className="hidden lg:inline">Profile</span>
+            </NavLink>
           ))}
         </Suspense>
       </nav>
@@ -48,6 +72,15 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
+  );
+}
+
+function ProfileLinkSkeleton() {
+  return (
+    <span className={`${sidebarLinkBase} text-gray opacity-50`}>
+      <User className="h-5 w-5" />
+      <span className="hidden lg:inline">Profile</span>
+    </span>
   );
 }
 
