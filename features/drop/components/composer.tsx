@@ -25,7 +25,7 @@ export function DropComposer() {
         </div>
       </section>
       {/* Mobile: floating action button */}
-      <div className="fixed right-4 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.75rem)] z-40 sm:hidden">
+      <div className="fixed right-4 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.75rem)] z-50 sm:hidden">
         <NewDropModal
           onOpenTrigger={
             <span
