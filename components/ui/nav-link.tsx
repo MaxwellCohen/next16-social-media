@@ -31,15 +31,6 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
 
 /**
  * A Link with active-state detection that doesn't block prerendering.
- *
- * Accepts className and children as either a value or a render prop:
- *   className={({ isActive }) => isActive ? 'active' : ''}
- *   children={({ isActive }) => <>{isActive && <Dot />} Home</>}
- *
- * During prerendering, renders the `fallback` — defaults to the same `<Link>`
- * with `isActive: false` styling, which guarantees identical layout. Pass an
- * explicit fallback (e.g. `<NavLinkSkeleton>`) for a visually distinct loading
- * state.
  */
 export function NavLink({ href, className, children, exact = false, fallback, ...rest }: Props) {
   const inactive: RenderProps = { isActive: false, isPending: false };
@@ -82,13 +73,5 @@ function NavLinkInner({ href, className, children, exact = false, ...rest }: Pro
     >
       {resolve(children, props)}
     </Link>
-  );
-}
-
-export function NavLinkSkeleton({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <span aria-hidden className={`text-gray opacity-50 ${className ?? ''}`}>
-      {children}
-    </span>
   );
 }
