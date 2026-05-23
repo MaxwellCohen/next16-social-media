@@ -1,7 +1,6 @@
 import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { NavLinkSkeleton } from '@/components/ui/nav-link';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
@@ -10,7 +9,7 @@ import { UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
-import { SidebarNavLink } from './nav-link-wrappers';
+import { SidebarNavLink, SidebarNavLinkSkeleton } from './nav-link-wrappers';
 import type { Route } from 'next';
 
 export function Sidebar() {
@@ -32,7 +31,7 @@ export function Sidebar() {
         <SidebarNavLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
         <SidebarNavLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Bookmarks" />
         <SidebarNavLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
-        <Suspense fallback={<ProfileLinkSkeleton />}>
+        <Suspense fallback={<SidebarNavLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
           {getCurrentUserHandle().then(handle => (
             <SidebarNavLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
           ))}
@@ -49,15 +48,6 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
-  );
-}
-
-function ProfileLinkSkeleton() {
-  return (
-    <NavLinkSkeleton className="flex items-center justify-center gap-4 rounded-lg p-2.5 text-base tracking-tight lg:justify-start lg:px-3">
-      <User className="h-5 w-5" />
-      <span className="hidden lg:inline">Profile</span>
-    </NavLinkSkeleton>
   );
 }
 

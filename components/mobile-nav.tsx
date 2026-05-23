@@ -1,8 +1,7 @@
 import { Bookmark, Hash, Home, Search, User } from 'lucide-react';
 import { Suspense } from 'react';
-import { NavLinkSkeleton } from '@/components/ui/nav-link';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
-import { MobileTabLink } from './nav-link-wrappers';
+import { MobileTabLink, MobileTabLinkSkeleton } from './nav-link-wrappers';
 import type { Route } from 'next';
 
 export function MobileTabBar() {
@@ -16,20 +15,11 @@ export function MobileTabBar() {
       <MobileTabLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
       <MobileTabLink href="/tag" icon={<Hash className="h-5 w-5" />} label="Tags" />
       <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-      <Suspense fallback={<ProfileTabSkeleton />}>
+      <Suspense fallback={<MobileTabLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
         {getCurrentUserHandle().then(handle => (
           <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
         ))}
       </Suspense>
     </nav>
-  );
-}
-
-function ProfileTabSkeleton() {
-  return (
-    <NavLinkSkeleton className="flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium">
-      <User className="h-5 w-5" />
-      <span>Profile</span>
-    </NavLinkSkeleton>
   );
 }

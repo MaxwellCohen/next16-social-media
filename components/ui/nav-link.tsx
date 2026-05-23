@@ -12,11 +12,6 @@ type Props = {
   className: string | ((props: RenderProps) => string);
   children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
   exact?: boolean;
-  /**
-   * Optional prerender fallback. Defaults to the same `<Link>` rendered with
-   * `isActive: false` (guarantees identical layout, brief styling flash). Pass
-   * a `<NavLinkSkeleton>` for an explicitly muted loading state.
-   */
   fallback?: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, 'className' | 'children'>;
 
@@ -29,9 +24,10 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
   return typeof value === 'function' ? (value as (props: RenderProps) => T)(props) : value;
 }
 
-/**
- * A Link with active-state detection that doesn't block prerendering.
- */
+// `<Link>` with active-state detection. `className` and `children` can be
+// render props that receive `{ isActive, isPending }`. The Suspense wrapper
+// lets the link prerender as inactive without blocking the page; on hydration
+// `usePathname()` resolves and the active state applies.
 export function NavLink({ href, className, children, exact = false, fallback, ...rest }: Props) {
   const inactive: RenderProps = { isActive: false, isPending: false };
   return (
@@ -73,5 +69,13 @@ function NavLinkInner({ href, className, children, exact = false, ...rest }: Pro
     >
       {resolve(children, props)}
     </Link>
+  );
+}
+
+export function NavLinkSkeleton({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span aria-hidden className={`text-gray opacity-50 ${className ?? ''}`}>
+      {children}
+    </span>
   );
 }
