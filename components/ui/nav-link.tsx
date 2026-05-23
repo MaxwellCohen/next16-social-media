@@ -5,11 +5,12 @@ import { Suspense } from 'react';
 import { useClientPathname } from '@/hooks/use-client-pathname';
 import type { Route } from 'next';
 
-type RenderProps = { isActive: boolean; isPending: boolean };
+type ActiveProps = { isActive: boolean };
+type RenderProps = ActiveProps & { isPending: boolean };
 
 type Props<T extends string = string> = {
   href: Route<T> | URL;
-  className: string | ((props: RenderProps) => string);
+  className: string | ((props: ActiveProps) => string);
   children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
   exact?: boolean;
   fallback?: React.ReactNode;
@@ -21,8 +22,8 @@ function checkActive(pathname: string | null, href: string, exact: boolean): boo
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps): T {
-  return typeof value === 'function' ? (value as (props: RenderProps) => T)(props) : value;
+function resolve<T, P>(value: T | ((props: P) => T), props: P): T {
+  return typeof value === 'function' ? (value as (props: P) => T)(props) : value;
 }
 
 // `<Link>` with active-state detection. `className` and `children` can be
@@ -30,13 +31,13 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
 // satisfies cache-components's missing-Suspense-with-CSR-bailout for
 // `usePathname` on dynamic-param routes.
 export function NavLink<T extends string>({ href, className, children, exact = false, fallback, ...rest }: Props<T>) {
-  const inactive: RenderProps = { isActive: false, isPending: false };
+  const inactive: ActiveProps = { isActive: false };
   return (
     <Suspense
       fallback={
         fallback ?? (
           <Link href={href as Route} className={resolve(className, inactive)} {...rest}>
-            {resolve(children, inactive)}
+            {resolve(children, { ...inactive, isPending: false })}
           </Link>
         )
       }
@@ -58,7 +59,7 @@ function NavLinkInner<T extends string>({ href, className, children, exact = fal
     <Link
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
-      className={resolve(className, { isActive, isPending: false })}
+      className={resolve(className, { isActive })}
       {...rest}
     >
       <NavLinkContent isActive={isActive}>{children}</NavLinkContent>
