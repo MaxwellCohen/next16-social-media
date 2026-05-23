@@ -8,6 +8,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary"
+      style={{ viewTransitionName: 'none' }}
       className="border-divider/70 dark:border-divider-dark/70 sticky bottom-0 z-40 flex shrink-0 border-t bg-white pb-[env(safe-area-inset-bottom)] sm:hidden dark:bg-black"
     >
       <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />

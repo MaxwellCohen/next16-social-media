@@ -12,6 +12,7 @@ const DEFAULT_HANDLE = 'aurora';
 
 export const getCurrentUserHandle = cache(async (): Promise<string> => {
   'use cache: private';
+
   const store = await cookies();
   return store.get(SESSION_COOKIE)?.value ?? DEFAULT_HANDLE;
 });
@@ -26,7 +27,6 @@ export async function verifyUser(): Promise<string> {
 export const getCurrentUser = cache(async () => {
   'use cache: private';
   cacheTag('current-user');
-  cacheLife('seconds');
 
   return getUserByHandle(await getCurrentUserHandle());
 });

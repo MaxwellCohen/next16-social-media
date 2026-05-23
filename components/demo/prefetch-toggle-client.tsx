@@ -20,7 +20,7 @@ export function PrefetchToggleClient({
         await toggleAction(!optimisticEnabled);
         window.location.reload();
       }}
-      className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6"
+      className="fixed right-4 bottom-4 z-50 hidden sm:block sm:right-6 sm:bottom-6"
     >
       <button
         type="submit"
