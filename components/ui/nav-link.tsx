@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Suspense, useTransition } from 'react';
+import Link, { useLinkStatus } from 'next/link';
+import { Suspense } from 'react';
 import { useClientPathname } from '@/hooks/use-client-pathname';
-import { useDebounce } from '@/hooks/use-debounce';
 import type { Route } from 'next';
 
 type RenderProps = { isActive: boolean; isPending: boolean };
@@ -54,28 +52,23 @@ function NavLinkInner<T extends string>({ href, className, children, exact = fal
   // `useClientPathname` returns null on the server / first client render so
   // the prerendered HTML matches across rewrites (e.g. `/` → `/noprefetch/`).
   const pathname = useClientPathname();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const debouncedPending = useDebounce(isPending, 150);
   const isActive = checkActive(pathname, href.toString(), exact);
-  const props: RenderProps = { isActive, isPending: debouncedPending };
 
   return (
     <Link
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
-      className={resolve(className, props)}
-      onClick={e => {
-        e.preventDefault();
-        startTransition(() => {
-          router.push(href.toString() as Route);
-        });
-      }}
+      className={resolve(className, { isActive, isPending: false })}
       {...rest}
     >
-      {resolve(children, props)}
+      <NavLinkContent isActive={isActive}>{children}</NavLinkContent>
     </Link>
   );
+}
+
+function NavLinkContent({ isActive, children }: { isActive: boolean; children: Props['children'] }) {
+  const { pending } = useLinkStatus();
+  return <>{resolve(children, { isActive, isPending: pending })}</>;
 }
 
 export function NavLinkSkeleton({ children, className }: { children: React.ReactNode; className?: string }) {
