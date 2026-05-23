@@ -91,6 +91,17 @@
 ::view-transition-group(mobile-nav),
 ::view-transition-group(sidebar) {
   animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(sidebar) {
+  display: none;
+}
+
+::view-transition-new(sidebar),
+::view-transition-old(mobile-nav),
+::view-transition-new(mobile-nav) {
+  animation: none;
 }
 
 /* Shiki — dual-theme output (github-light + github-dark) using CSS variables.
