@@ -35,14 +35,23 @@ function resolve<T>(value: T | ((props: RenderProps) => T), props: RenderProps):
  *   className={({ isActive }) => isActive ? 'active' : ''}
  *   children={({ isActive }) => <>{isActive && <Dot />} Home</>}
  *
- * During prerendering, renders the `fallback` (defaults to a grayed-out
- * skeleton). After hydration, usePathname() resolves and the active state
- * applies.
+ * During prerendering, renders the `fallback` — defaults to the same `<Link>`
+ * with `isActive: false` styling, which guarantees identical layout. Pass an
+ * explicit fallback (e.g. `<NavLinkSkeleton>`) for a visually distinct loading
+ * state.
  */
 export function NavLink({ href, className, children, exact = false, fallback, ...rest }: Props) {
   const inactive: RenderProps = { isActive: false, isPending: false };
   return (
-    <Suspense fallback={fallback ?? <NavLinkSkeleton>{resolve(children, inactive)}</NavLinkSkeleton>}>
+    <Suspense
+      fallback={
+        fallback ?? (
+          <Link href={href} className={resolve(className, inactive)} {...rest}>
+            {resolve(children, inactive)}
+          </Link>
+        )
+      }
+    >
       <NavLinkInner href={href} className={className} exact={exact} {...rest}>
         {children}
       </NavLinkInner>
