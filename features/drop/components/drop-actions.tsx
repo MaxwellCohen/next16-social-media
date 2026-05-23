@@ -38,10 +38,18 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   const [, startTransition] = useTransition();
 
   function toggle(field: Toggle, action: () => Promise<unknown>) {
+    const messages: Record<Toggle, [string, string]> = {
+      bookmarked: ['Added to bookmarks', 'Removed from bookmarks'],
+      liked: ['Liked', 'Unliked'],
+      reposted: ['Reposted', 'Removed repost'],
+    };
+    const willActivate = !optimistic[field];
+
     startTransition(async () => {
       addOptimistic(field);
       try {
         await action();
+        toast(willActivate ? messages[field][0] : messages[field][1]);
       } catch {
         toast.error('Something went wrong. Try again.');
       }

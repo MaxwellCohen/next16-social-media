@@ -119,12 +119,18 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
     }),
   ]);
 
-  const authoredIds = new Set(authored.map(d => d.id));
+  const repostedIds = new Set(reposts.map(r => r.dropId));
 
   const items: ProfileFeedItem[] = [
-    ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
+    ...authored.map(d => ({
+      drop: toDrop(d),
+      kind: 'drop' as const,
+      pinnedAt: repostedIds.has(d.id)
+        ? reposts.find(r => r.dropId === d.id)!.createdAt.getTime()
+        : d.createdAt.getTime(),
+    })),
     ...reposts
-      .filter(r => !authoredIds.has(r.dropId))
+      .filter(r => r.drop.authorHandle !== handle)
       .map(r => ({
         drop: toDrop(r.drop),
         kind: 'repost' as const,
