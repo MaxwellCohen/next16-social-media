@@ -19,9 +19,11 @@ export function SidebarNavLink({ href, icon, label }: CommonProps) {
     <NavLink
       href={href}
       aria-label={label}
-      className={({ isActive }) =>
+      className={({ isActive, isPending }) =>
         `${sidebarLinkBase} ${
-          isActive
+          isPending
+            ? 'opacity-50'
+            : isActive
             ? 'bg-accent/10 text-accent dark:bg-accent/15 font-bold dark:text-blue-400 [&_svg]:stroke-[2.5]'
             : 'hover:bg-card dark:hover:bg-card-dark'
         }`
