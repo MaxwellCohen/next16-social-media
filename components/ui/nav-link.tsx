@@ -13,8 +13,9 @@ type Props = {
   children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
   exact?: boolean;
   /**
-   * Optional prerender fallback. Defaults to a grayed-out `<NavLinkSkeleton>`
-   * that mirrors the children layout.
+   * Optional prerender fallback. Defaults to the same `<Link>` rendered with
+   * `isActive: false` (guarantees identical layout, brief styling flash). Pass
+   * a `<NavLinkSkeleton>` for an explicitly muted loading state.
    */
   fallback?: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, 'className' | 'children'>;
