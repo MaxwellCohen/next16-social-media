@@ -1,10 +1,12 @@
 'use client';
 
 import * as Ariakit from '@ariakit/react';
+import { Plus } from 'lucide-react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { Spinner } from '@/components/ui/spinner';
 import { postDrop } from '@/features/drop/drop-actions';
 
 type Props = {
@@ -18,7 +20,7 @@ const INITIAL: State = { error: null, submittedAt: 0 };
 
 export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const dialog = Ariakit.useDialogStore();
-  const [state, formAction] = useActionState(async (_: State, formData: FormData) => {
+  const [state, formAction, isPending] = useActionState(async (_: State, formData: FormData) => {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
@@ -46,16 +48,18 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
         </button>
       ) : (
         <Button
+          className="w-full"
           onClick={() => {
             dialog.show();
           }}
         >
-          New drop
+          <span className="hidden lg:inline">New drop</span>
+          <Plus className="h-5 w-5 lg:hidden" />
         </Button>
       )}
       <Modal store={dialog} title="New drop" initialFocus={textareaRef}>
-        <form ref={formRef} action={formAction}>
-          <div className="flex items-start gap-3 px-5 pt-4 pb-3">
+        <form ref={formRef} action={formAction} className="flex min-h-0 flex-col overflow-hidden">
+          <div className="flex flex-1 items-start gap-3 overflow-y-auto px-5 pt-4 pb-3">
             {avatar}
             <Ariakit.VisuallyHidden>
               <label htmlFor="new-drop-body">Drop body</label>
@@ -84,7 +88,10 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
           ) : null}
           <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
             <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-            <Button type="submit">Drop it</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Spinner />}
+              Drop it
+            </Button>
           </footer>
         </form>
       </Modal>

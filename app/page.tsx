@@ -22,10 +22,10 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
   return (
     <div>
       <PageHeader title="Home" />
-      <DropComposer />
       <Suspense fallback={<TabsSkeleton />}>
         <FeedTabs />
       </Suspense>
+      <DropComposer />
       <Suspense fallback={<DropListSkeleton />}>
         <Crossfade>
           {searchParams.then(sp => {

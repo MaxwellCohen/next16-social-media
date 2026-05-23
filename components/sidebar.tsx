@@ -5,7 +5,8 @@ import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
 import { Skeleton } from '@/components/ui/skeleton';
-import { UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { NewDropModal } from '@/features/drop/components/composer-modal';
+import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
@@ -37,6 +38,13 @@ export function Sidebar() {
           ))}
         </Suspense>
       </nav>
+      <NewDropModal
+        avatar={
+          <Suspense fallback={<UserAvatarSkeleton size="md" />}>
+            <CurrentUserAvatar />
+          </Suspense>
+        }
+      />
       <div className="mt-auto hidden lg:block">
         <div className="border-divider dark:border-divider-dark -mx-6 flex items-center gap-1 border-t px-4 py-3">
           <ErrorBoundary title="Your profile is offline" compact>

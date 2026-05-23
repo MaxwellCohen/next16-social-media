@@ -3,6 +3,7 @@
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useTransition } from 'react';
+import { Spinner } from '@/components/ui/spinner';
 import { useSyncInputToSearchParam } from '@/hooks/use-sync-input-to-search-param';
 import type { Route } from 'next';
 
@@ -17,7 +18,7 @@ export function SearchInput() {
   return (
     <div className="relative">
       {isPending ? (
-        <div className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-current border-t-transparent opacity-40" />
+        <Spinner className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 opacity-40" />
       ) : (
         <Search className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
       )}

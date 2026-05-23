@@ -96,7 +96,9 @@
 
 /* Exclude persistent elements from view transition animations */
 ::view-transition-group(mobile-nav),
-::view-transition-group(sidebar) {
+::view-transition-group(sidebar),
+::view-transition-group(modal),
+::view-transition-group(modal-backdrop) {
   animation: none;
   z-index: 100;
 }
@@ -107,7 +109,11 @@
 
 ::view-transition-new(sidebar),
 ::view-transition-old(mobile-nav),
-::view-transition-new(mobile-nav) {
+::view-transition-new(mobile-nav),
+::view-transition-old(modal),
+::view-transition-new(modal),
+::view-transition-old(modal-backdrop),
+::view-transition-new(modal-backdrop) {
   animation: none;
 }
 
