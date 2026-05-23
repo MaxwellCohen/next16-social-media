@@ -11,7 +11,7 @@ export function OfflineIndicator() {
 
   useEffect(() => {
     if (offline) {
-      toastId.current = toast.error('You\'re offline — reconnecting…', {
+      toastId.current = toast.error("You're offline — reconnecting…", {
         duration: Infinity,
         icon: <WifiOff className="h-4 w-4" />,
       });
