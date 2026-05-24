@@ -60,6 +60,11 @@ function NavLinkInner<T extends string>({ href, className, children, exact = fal
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive })}
+      data-navlink-href={href.toString()}
+      data-navlink-exact={exact || undefined}
+      data-navlink-active={resolve(className, { isActive: true })}
+      data-navlink-inactive={resolve(className, { isActive: false })}
+      suppressHydrationWarning
       {...rest}
     >
       <NavLinkContent isActive={isActive}>{children}</NavLinkContent>

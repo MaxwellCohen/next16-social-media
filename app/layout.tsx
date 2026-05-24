@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import { PrefetchToggle } from '@/components/demo/prefetch-toggle';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
+import { SeedNavLinksFromPathname } from '@/components/scripts/seed-nav-links-from-pathname';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Crossfade } from '@/components/ui/crossfade';
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </RightSidebar>
           </AppGrid>
           <MobileTabBar />
+          <SeedNavLinksFromPathname />
           <Suspense>
             <PrefetchToggle />
           </Suspense>
