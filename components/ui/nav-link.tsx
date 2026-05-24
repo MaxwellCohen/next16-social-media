@@ -24,11 +24,14 @@ function resolve<T, P>(value: T | ((props: P) => T), props: P): T {
   return typeof value === 'function' ? (value as (props: P) => T)(props) : value;
 }
 
-// `<Link>` with active-state detection. `className` and `children` can be
-// render props that receive `{ isActive, isPending }`.
-// Uses `useSyncExternalStore` internally (via `useClientPathname`) to read
-// `window.location.pathname` on the client and `null` on the server —
-// no `usePathname`, no Suspense boundary needed.
+// `<Link>` with active-state detection. `className` and `children` accept
+// render props `{ isActive, isPending }` for styling and content.
+//
+// Active state is determined by matching `href` against the current browser
+// pathname. On the server the pathname is unknown, so links always prerender
+// in their inactive state. The pre-paint script (`SeedNavLinksFromPathname`)
+// fixes this before the user sees anything, using the `data-navlink-*`
+// attributes to swap to the correct active class.
 export function NavLink<T extends string>({ href, className, children, exact = false, ...rest }: Props<T>) {
   const pathname = useClientPathname();
   const isActive = checkActive(pathname, href.toString(), exact);

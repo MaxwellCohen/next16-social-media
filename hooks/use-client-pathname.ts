@@ -5,12 +5,15 @@ import { useSyncExternalStore } from 'react';
 const emptySubscribe = () => () => {};
 
 /**
- * Returns `window.location.pathname` on the client, `null` on the server.
- * Does not call `usePathname` from Next.js — avoids the "uncached data"
- * error in cache-components mode and the rewrite mismatch issue.
+ * Client-only pathname hook. Returns `window.location.pathname` on the
+ * client and `null` on the server.
  *
- * Uses `useSyncExternalStore` so React can diff server (`null`) vs client
- * (real pathname) without an extra render cycle.
+ * This avoids two problems with Next.js's `usePathname`:
+ * 1. The "uncached data" error in cache-components mode on dynamic routes.
+ * 2. Incorrect pathname during SSR when using rewrites/proxy.
+ *
+ * Ideally Next.js would ship `usePathname({ ssr: false })` natively so
+ * this workaround isn't needed.
  */
 export function useClientPathname(): string | null {
   return useSyncExternalStore(
