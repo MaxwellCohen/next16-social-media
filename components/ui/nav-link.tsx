@@ -1,7 +1,6 @@
 'use client';
 
 import Link, { useLinkStatus } from 'next/link';
-import { Suspense } from 'react';
 import { useClientPathname } from '@/hooks/use-client-pathname';
 import type { Route } from 'next';
 
@@ -13,7 +12,6 @@ type Props<T extends string = string> = {
   className: string | ((props: ActiveProps) => string);
   children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
   exact?: boolean;
-  fallback?: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Link>, 'href' | 'className' | 'children'>;
 
 function checkActive(pathname: string | null, href: string, exact: boolean): boolean {
@@ -27,31 +25,11 @@ function resolve<T, P>(value: T | ((props: P) => T), props: P): T {
 }
 
 // `<Link>` with active-state detection. `className` and `children` can be
-// render props that receive `{ isActive, isPending }`. The outer Suspense
-// satisfies cache-components's missing-Suspense-with-CSR-bailout for
-// `usePathname` on dynamic-param routes.
-export function NavLink<T extends string>({ href, className, children, exact = false, fallback, ...rest }: Props<T>) {
-  const inactive: ActiveProps = { isActive: false };
-  return (
-    <Suspense
-      fallback={
-        fallback ?? (
-          <Link href={href as Route} className={resolve(className, inactive)} {...rest}>
-            {resolve(children, { ...inactive, isPending: false })}
-          </Link>
-        )
-      }
-    >
-      <NavLinkInner href={href} className={className} exact={exact} {...rest}>
-        {children}
-      </NavLinkInner>
-    </Suspense>
-  );
-}
-
-function NavLinkInner<T extends string>({ href, className, children, exact = false, ...rest }: Props<T>) {
-  // `useClientPathname` returns null on the server / first client render so
-  // the prerendered HTML matches across rewrites (e.g. `/` → `/noprefetch/`).
+// render props that receive `{ isActive, isPending }`.
+// Uses `useSyncExternalStore` internally (via `useClientPathname`) to read
+// `window.location.pathname` on the client and `null` on the server —
+// no `usePathname`, no Suspense boundary needed.
+export function NavLink<T extends string>({ href, className, children, exact = false, ...rest }: Props<T>) {
   const pathname = useClientPathname();
   const isActive = checkActive(pathname, href.toString(), exact);
 
