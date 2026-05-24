@@ -80,7 +80,7 @@ function SidebarProfilePillSkeleton() {
     <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5" aria-hidden>
       <UserAvatarSkeleton size="sm" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <Skeleton className="h-[17px] w-20 rounded" />
+        <Skeleton className="h-[19px] w-20 rounded" />
         <Skeleton className="h-[15px] w-14 rounded" />
       </div>
     </div>
