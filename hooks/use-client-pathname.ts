@@ -1,27 +1,24 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const emptySubscribe = () => () => {};
 
 /**
- * Returns the current browser pathname, gated by a `mounted` flag so it's
- * always `null` during prerender and on the very first client render.
+ * Client-only pathname hook. Returns `window.location.pathname` on the
+ * client and `null` on the server.
  *
- * This is the recommended workaround from the Next.js docs for apps that use
- * rewrites in `next.config` or `Proxy`. With rewrites, the prerendered HTML
- * is built for the source pathname, but the browser URL may differ — so
- * `usePathname()` on first paint can return the wrong value.
+ * This avoids two problems with Next.js's `usePathname`:
+ * 1. The "uncached data" error in cache-components mode on dynamic routes.
+ * 2. Incorrect pathname during SSR when using rewrites/proxy.
  *
- * Reference: https://nextjs.org/docs/app/api-reference/functions/use-pathname#avoid-hydration-mismatch-with-rewrites
+ * Ideally Next.js would ship `usePathname({ ssr: false })` natively so
+ * this workaround isn't needed.
  */
 export function useClientPathname(): string | null {
-  const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
-  return mounted ? pathname : null;
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => window.location.pathname,
+    () => null,
+  );
 }
