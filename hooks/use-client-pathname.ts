@@ -2,7 +2,30 @@
 
 import { useSyncExternalStore } from 'react';
 
-const emptySubscribe = () => () => {};
+const listeners = new Set<() => void>();
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+
+  // popstate fires on back/forward navigation
+  window.addEventListener('popstate', callback);
+
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener('popstate', callback);
+  };
+}
+
+// Patch pushState/replaceState once to notify subscribers on soft navigations.
+if (typeof window !== 'undefined') {
+  const original = { pushState: history.pushState, replaceState: history.replaceState };
+  for (const method of ['pushState', 'replaceState'] as const) {
+    history[method] = function (...args: Parameters<typeof history.pushState>) {
+      original[method].apply(this, args);
+      listeners.forEach(fn => fn());
+    };
+  }
+}
 
 /**
  * Client-only pathname hook. Returns `window.location.pathname` on the
@@ -17,7 +40,7 @@ const emptySubscribe = () => () => {};
  */
 export function useClientPathname(): string | null {
   return useSyncExternalStore(
-    emptySubscribe,
+    subscribe,
     () => window.location.pathname,
     () => null,
   );
