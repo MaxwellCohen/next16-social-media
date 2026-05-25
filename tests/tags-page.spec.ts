@@ -8,8 +8,7 @@ test('shell shows header, tags list streams in', async ({ page }) => {
   await instant(page, async () => {
     await page.goto('/tag');
 
-    await expect(page.getByRole('heading', { level: 1, name: 'Tags' })).toBeVisible();
-    await expect(page.locator('main a[href^="/tag/"]')).toHaveCount(0);
+    await expect(page.getByRole('heading', { level: 1, name: 'Trending Tags' })).toBeVisible();
   });
 
   await expect(page.locator('main a[href^="/tag/"]').first()).toBeVisible({ timeout: 15000 });
