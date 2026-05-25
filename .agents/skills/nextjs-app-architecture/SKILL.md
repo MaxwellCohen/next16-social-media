@@ -120,6 +120,8 @@ export function toItem(row: PrismaItem): Item {
 
 Each feature component is a self-contained [async server component](https://react.dev/reference/rsc/server-components) — it fetches its own data, owns its skeleton, and can be composed from any page. Export the skeleton alongside the component.
 
+Feature components receive plain resolved values as props (strings, IDs) — never `Promise<params>` or `searchParams`. The page is responsible for resolving those via `.then()` and passing the extracted values down.
+
 ```tsx
 // features/track/components/most-played.tsx
 export async function MostPlayed() {
