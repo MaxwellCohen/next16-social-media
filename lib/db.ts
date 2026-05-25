@@ -5,10 +5,13 @@ import { PrismaClient } from '@/generated/prisma/client';
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
+const connectionString = process.env.DATABASE_URL!;
+const sslUrl = connectionString.includes('sslmode=') ? connectionString : `${connectionString}${connectionString.includes('?') ? '&' : '?'}sslmode=verify-full`;
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+    adapter: new PrismaPg({ connectionString: sslUrl }),
   });
 
 if (process.env.NODE_ENV !== 'production') {
