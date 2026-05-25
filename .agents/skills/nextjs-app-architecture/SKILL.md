@@ -424,6 +424,7 @@ function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
 [View transitions](https://react.dev/reference/react/ViewTransition) are an enhancement layer — build everything else first. Keep them subtle. The goal is to make navigation feel smooth, not flashy. See the [Next.js View Transitions](https://nextjs.org/docs/app/guides/view-transitions) guide and the [React `<ViewTransition>` reference](https://react.dev/reference/react/ViewTransition) for API details.
 
 Recommended uses:
+
 - **Crossfade on Suspense reveal** — smooth content appearance instead of a hard swap
 - **Shared element morphs** — album art or avatar that transitions between list and detail views
 - **List identity** — items slide out on removal instead of vanishing
