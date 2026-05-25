@@ -4,6 +4,8 @@ A dev-flavored social network demo exploring Async React, Cache Components, and 
 
 Built with Next.js 16, React 19, Tailwind CSS v4, Prisma 7 on Neon Postgres, and Shiki for server-side syntax highlighting.
 
+The architecture follows the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKILL.md) skill — a step-by-step guide for building dynamic App Router applications with Cache Components, Suspense streaming, and feature-sliced design.
+
 ## Getting Started
 
 ```bash
