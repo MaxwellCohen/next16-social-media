@@ -6,7 +6,9 @@ import { PrismaClient } from '@/generated/prisma/client';
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 const connectionString = process.env.DATABASE_URL!;
-const sslUrl = connectionString.includes('sslmode=') ? connectionString : `${connectionString}${connectionString.includes('?') ? '&' : '?'}sslmode=verify-full`;
+const sslUrl = connectionString.includes('sslmode=')
+  ? connectionString
+  : `${connectionString}${connectionString.includes('?') ? '&' : '?'}sslmode=verify-full`;
 
 export const prisma =
   globalForPrisma.prisma ??
