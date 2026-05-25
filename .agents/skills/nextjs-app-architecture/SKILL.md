@@ -33,7 +33,7 @@ This changes how rendering works:
 - **The key constraint**: any component that does async work without `'use cache'` **must** be wrapped in `<Suspense>`, or you get an ["Uncached data was accessed outside of \<Suspense\>"](https://nextjs.org/docs/messages/blocking-route) error during dev and build
 - Pages should stay synchronous — use `params.then()` instead of `await params` to avoid pulling the entire page out of the static shell
 
-The architecture in this skill is designed around this model: feature components fetch their own data, pages wrap them in Suspense, and the static shell renders instantly while dynamic content streams in.
+The architecture in this skill is designed around this model: feature components fetch their own data, pages wrap them in Suspense, and the static shell renders instantly while dynamic content streams in. For the full mental model, see the [Streaming](https://nextjs.org/docs/app/guides/streaming) guide.
 
 ## Step 1: Set Up the Project Structure
 
@@ -187,7 +187,7 @@ A server component like `TrackRow` renders these as children without needing `'u
 
 ### Optimistic updates
 
-Use [`useOptimistic`](https://react.dev/reference/react/useOptimistic) for instant UI feedback on mutations (like toggling a favorite). The optimistic state reverts automatically if the action fails. Name action props with the `Action` suffix to signal they run inside a [transition](https://react.dev/reference/react/useTransition#exposing-action-props-from-components).
+Use [`useOptimistic`](https://react.dev/reference/react/useOptimistic) for instant UI feedback on mutations (like toggling a favorite). The optimistic state reverts automatically if the action fails. Name action props with the `Action` suffix to signal they run inside a [transition](https://react.dev/reference/react/useTransition#exposing-action-props-from-components). For a full walkthrough of optimistic UI, action props, `useActionState`, and `data-pending` patterns, see the [Interactive Apps](https://nextjs.org/docs/app/guides/interactive-apps) guide.
 
 ```tsx
 const [optimisticFavorite, setOptimisticFavorite] = useOptimistic(isFavorite);
@@ -205,7 +205,7 @@ function handleToggle(e: React.MouseEvent) {
 
 Pages define the loading experience. They compose feature components with [Suspense](https://react.dev/reference/react/Suspense) boundaries. Pages never fetch data directly. Section headings belong in pages, not feature components — the same component might need different titles on different pages.
 
-Every page exports `unstable_prefetch = 'force-runtime'` so navigations are backed by fresh server-rendered data.
+Every page exports `unstable_prefetch = 'force-runtime'` so navigations are backed by fresh server-rendered data. See the [Prefetching](https://nextjs.org/docs/app/guides/prefetching) guide for how runtime prefetching works.
 
 ### Skeleton placement rules
 
@@ -397,11 +397,11 @@ function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
 
 ### Active NavLink without Suspense
 
-Use `useClientPathname()` (via [`useSyncExternalStore`](https://react.dev/reference/react/useSyncExternalStore) reading `window.location.pathname`) instead of `usePathname()` to avoid triggering Suspense boundaries. Add an inline pre-paint script (`SeedNavLinksFromPathname`) that sets the correct active class using `data-navlink-*` attributes before the page paints.
+[`usePathname()`](https://nextjs.org/docs/app/api-reference/functions/use-pathname) triggers a Suspense boundary because it reads dynamic request data. Use `useClientPathname()` (via [`useSyncExternalStore`](https://react.dev/reference/react/useSyncExternalStore) reading `window.location.pathname`) instead to avoid this. Add an inline pre-paint script (`SeedNavLinksFromPathname`) that sets the correct active class using `data-navlink-*` attributes before the page paints. See [Preventing flash before hydration](https://nextjs.org/docs/app/guides/preventing-flash-before-hydration) for the general pattern of using inline scripts to update server-rendered HTML with client-specific values before the browser paints.
 
 ### Search input without Suspense
 
-Don't use `useSearchParams()` — it requires a Suspense boundary. Instead:
+[`useSearchParams()`](https://nextjs.org/docs/app/api-reference/functions/use-search-params) also requires a Suspense boundary. Instead:
 
 - `SeedFromSearchParam` inline script to populate the input value from the URL before paint
 - `useSyncInputToSearchParam` hook for soft navigation re-syncing
@@ -409,7 +409,7 @@ Don't use `useSearchParams()` — it requires a Suspense boundary. Instead:
 
 ## Step 8: Add View Transitions (Enhancement)
 
-[View transitions](https://react.dev/reference/react/ViewTransition) are an enhancement layer — build everything else first.
+[View transitions](https://react.dev/reference/react/ViewTransition) are an enhancement layer — build everything else first. See the [Next.js View Transitions](https://nextjs.org/docs/app/guides/view-transitions) guide for framework-specific details.
 
 ### Persistent elements
 
