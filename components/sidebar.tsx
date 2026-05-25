@@ -8,8 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
-import { getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
-import { prisma } from '@/lib/db';
+import { getAllUsers, getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import { SidebarNavLink, SidebarNavLinkSkeleton } from './nav-link-wrappers';
 import type { Route } from 'next';
 
@@ -66,10 +65,7 @@ export function Sidebar() {
 async function SidebarProfilePill() {
   const [user, allUsers] = await Promise.all([
     getCurrentUser(),
-    prisma.user.findMany({
-      orderBy: { handle: 'asc' },
-      select: { avatarColor: true, displayName: true, handle: true },
-    }),
+    getAllUsers(),
   ]);
 
   return <UserSwitcher currentHandle={user.handle} users={allUsers} />;

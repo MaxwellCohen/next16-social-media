@@ -1,10 +1,8 @@
 import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
-import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
-import { DropList, DropListSkeleton } from '@/features/drop/components/drop';
-import { getBookmarkedDrops } from '@/features/drop/drop-queries';
-import { getCurrentUser } from '@/features/user/user-queries';
+import { BookmarksFeed } from '@/features/drop/components/bookmarks-feed';
+import { DropListSkeleton } from '@/features/drop/components/drop';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -27,15 +25,4 @@ export default function BookmarksPage() {
       </Suspense>
     </div>
   );
-}
-
-async function BookmarksFeed() {
-  const user = await getCurrentUser();
-  const drops = await getBookmarkedDrops(user.handle);
-
-  if (drops.length === 0) {
-    return <EmptyState title="Nothing saved yet" body="Bookmark a drop to find it here later." />;
-  }
-
-  return <DropList drops={drops} />;
 }

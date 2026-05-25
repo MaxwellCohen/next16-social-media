@@ -111,3 +111,14 @@ export const getDropUserState = cache(async (dropId: string): Promise<DropUserSt
   ]);
   return { bookmarked: bookmark !== null, liked: like !== null, reposted: repost !== null };
 });
+
+export const getAllUsers = cache(async () => {
+  'use cache';
+  cacheTag('users');
+  cacheLife('minutes');
+
+  return prisma.user.findMany({
+    orderBy: { handle: 'asc' },
+    select: { avatarColor: true, displayName: true, handle: true },
+  });
+});
