@@ -9,7 +9,7 @@ import { toDrop, type Drop } from '@/types/drop';
 
 const FEED_PAGE_SIZE = 10;
 
-export type FeedPage = { drops: Drop[]; hasMore: boolean };
+type FeedPage = { drops: Drop[]; hasMore: boolean };
 
 export const getFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
   'use cache';
@@ -99,7 +99,7 @@ export const getReplies = cache(async (dropId: string) => {
   return [...authorReplies, ...otherReplies].map(toDrop);
 });
 
-export type ProfileFeedItem =
+type ProfileFeedItem =
   | { kind: 'drop'; drop: Drop; pinnedAt: number }
   | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 

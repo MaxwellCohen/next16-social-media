@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs } from '@/components/ui/tabs';
 import type { Route } from 'next';
 
-export type FeedTab = 'following' | 'discover';
+type FeedTab = 'following' | 'discover';
 
 const FEED_TABS: { label: string; value: FeedTab }[] = [
   { label: 'Following', value: 'following' },

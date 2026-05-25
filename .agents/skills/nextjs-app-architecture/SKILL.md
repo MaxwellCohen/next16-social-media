@@ -5,11 +5,11 @@ description: Architecture patterns for building Next.js 16 App Router applicatio
 
 # Next.js App Architecture
 
-A step-by-step guide for building dynamic Next.js 16 App Router applications — the kind where every route is server-rendered with streaming, prefetched at runtime, and feels like a single-page app. This is NOT a guide for static sites or fully cached pages — people already know how to do that. This is for apps where most content is dynamic, data changes frequently, and loading states matter.
+A step-by-step guide for building dynamic Next.js 16+ App Router applications — the kind where every route is server-rendered with streaming, prefetched at runtime, and feels like a single-page app. This is NOT a guide for static sites or fully cached pages — people already know how to do that. This is for apps where most content is dynamic, data changes frequently, and loading states matter.
 
-All pages export `unstable_prefetch = 'force-runtime'` so the server runs the page on prefetch and streams real data into the prefetch cache. This gives instant navigations backed by fresh content.
+This guide targets Next.js 16.2+ with `cacheComponents: true`. Some features (like `unstable_prefetch = 'force-runtime'`) require 16.3+. Check your version and the [bundled docs](https://nextjs.org/docs) to see what's available — API names and stability may differ across minor versions.
 
-Follow these steps in order — each builds on the previous one.
+Follow these steps in order — each builds on the previous one. This guide describes patterns, not specific libraries. When working in an existing codebase, use whatever libraries are already there (ORM, validation, toasts, etc.).
 
 ## Overview
 
@@ -50,8 +50,8 @@ features/
     hooks/               Domain-specific client hooks (optional)
 providers/              Global client-side context (optional, for apps needing shared state)
 hooks/                  Shared client hooks
-types/                  Domain types with toX() mappers from Prisma models
-lib/                    Database client, cn() utility, formatters
+types/                  Domain types with mappers from ORM/database models
+lib/                    Database client, utilities, formatters
 ```
 
 Not every app needs every folder. `providers/` is only needed if you have global client state (audio player, shopping cart). Some apps have none.
@@ -84,34 +84,45 @@ export const getItems = cache(async (): Promise<Item[]> => {
   cacheTag('items');
   cacheLife('seconds');
   await delay(700);
-  const rows = await prisma.item.findMany();
+  const rows = await db.item.findMany();
   return rows.map(toItem);
 });
 ```
 
 ### Actions (`*-actions.ts`)
 
-Mark with [`'use server'`](https://react.dev/reference/rsc/use-server). Validate input with Zod at the boundary. Invalidate with [`updateTag()`](https://nextjs.org/docs/app/api-reference/functions/unstable_updateTag).
+Mark with [`'use server'`](https://react.dev/reference/rsc/use-server). Server actions are reachable via direct POST requests — always verify auth and validate input inside every action, not just in the UI. See the [Data Security](https://nextjs.org/docs/app/guides/data-security) guide for recommended patterns.
+
+- **Authenticate** — verify the user's session before performing any mutation
+- **Validate** — parse and validate input at the boundary (e.g., with a schema validation library like Zod)
+- **Authorize** — check the user has permission (e.g., owns the resource)
+- **Invalidate** — call [`updateTag()`](https://nextjs.org/docs/app/api-reference/functions/unstable_updateTag) to revalidate cached data
 
 React 19 [form actions](https://react.dev/reference/react-dom/components/form#props) reset the form automatically after a successful server action — don't manually reset with `useRef` + `formRef.current?.reset()`.
 
+Return `{ ok, error }` from actions so the client can respond. Use `redirect()` for navigation-on-success. Use `notFound()` for missing resources. For validation failures or domain errors, return an error message — never throw:
+
 ```tsx
 'use server';
-export async function toggleFavorite(trackId: string) {
-  const id = z.string().min(1).parse(trackId);
-  await prisma.track.update({ data: { isFavorite: !track.isFavorite }, where: { id } });
-  updateTag('favorites');
-  updateTag(`track-${id}`);
+export async function createPlaylist(formData: FormData) {
+  const user = await verifyUser(); // auth check in data layer
+
+  const parsed = schema.safeParse({ name: formData.get('name') });
+  if (!parsed.success) return { error: parsed.error.issues[0].message, ok: false as const };
+
+  await db.playlist.create({ data: { name: parsed.data.name, userId: user.id } });
+  updateTag('playlists');
+  return { ok: true as const };
 }
 ```
 
 ### Types (`types/*.ts`)
 
-Define clean domain types and a mapper from Prisma. Keep Prisma types out of components.
+Define clean domain types and a mapper from your database/ORM layer. Keep database-specific types out of components — components should only see your domain types.
 
 ```tsx
 export type Item = { id: string; title: string /* ... */ };
-export function toItem(row: PrismaItem): Item {
+export function toItem(row: DbItem): Item {
   /* map fields */
 }
 ```
@@ -187,20 +198,19 @@ Group related small client components into one file when they're always used tog
 
 A server component like `TrackRow` renders these as children without needing `'use client'` itself.
 
-### Optimistic updates
+### Optimistic updates and toast feedback
 
 Use [`useOptimistic`](https://react.dev/reference/react/useOptimistic) for instant UI feedback on mutations (like toggling a favorite). The optimistic state reverts automatically if the action fails. Name action props with the `Action` suffix to signal they run inside a [transition](https://react.dev/reference/react/useTransition#exposing-action-props-from-components). For a full walkthrough of optimistic UI, action props, `useActionState`, and `data-pending` patterns, see the [Interactive Apps](https://nextjs.org/docs/app/guides/interactive-apps) guide.
 
-```tsx
-const [optimisticFavorite, setOptimisticFavorite] = useOptimistic(isFavorite);
+On the client, use toast notifications to surface the `{ ok, error }` result from server actions. If the project already uses a toast library, use that — otherwise pick one (e.g., sonner, react-hot-toast):
 
-function handleToggle(e: React.MouseEvent) {
-  e.stopPropagation();
-  startTransition(async () => {
-    setOptimisticFavorite(!optimisticFavorite);
-    await toggleFavorite(trackId);
-  });
-}
+```tsx
+startTransition(async () => {
+  setOptimisticFavorite(!optimisticFavorite);
+  const result = await toggleFavorite(trackId);
+  if (result?.ok) toast.success('Updated!');
+  if (result?.error) toast.error(result.error);
+});
 ```
 
 ## Step 5: Compose Pages with Suspense
