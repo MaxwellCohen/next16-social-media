@@ -273,13 +273,19 @@ Detail components can have their own inner Suspense for secondary content (e.g.,
 
 ### Async params and searchParams
 
-Use `.then()` instead of `await` to keep pages synchronous:
+Use `.then()` instead of `await` to keep pages synchronous. Inline the JSX directly in the `.then()` callback — don't create a wrapper component just to receive the resolved params:
 
 ```tsx
-// Single param
-{
-  params.then(({ id }) => <Detail id={id} />);
-}
+// Single param — inline the content directly
+{params.then(({ id }) => (
+  <>
+    <Detail id={id} />
+    <section className="mt-10">
+      <h2>Related</h2>
+      <RelatedItems excludeId={id} />
+    </section>
+  </>
+))}
 
 // Single searchParam
 {
