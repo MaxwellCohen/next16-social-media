@@ -63,10 +63,7 @@ export function Sidebar() {
 }
 
 async function SidebarProfilePill() {
-  const [user, allUsers] = await Promise.all([
-    getCurrentUser(),
-    getAllUsers(),
-  ]);
+  const [user, allUsers] = await Promise.all([getCurrentUser(), getAllUsers()]);
 
   return <UserSwitcher currentHandle={user.handle} users={allUsers} />;
 }
