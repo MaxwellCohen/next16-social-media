@@ -165,10 +165,12 @@ Skeletons represent the shape of the real content. Getting them wrong causes CLS
 
 1. Match the exact layout — same flex direction, gaps, padding, responsive breakpoints as the real component
 2. Responsive skeletons: if the real component uses `flex-col sm:flex-row`, the skeleton must too
-3. Include all structural elements — avatar circles, action button placeholders, image squares
+3. Include all structural elements — avatar circles, action button placeholders, image squares, icon button circles
 4. Use matching size classes — if the real image is `h-40 w-40 sm:h-48 sm:w-48`, the skeleton must be too
-5. Don't include skeletons for inner Suspense content — that's handled by the component's own inner boundary
-6. Skeleton components should be co-located with their real component and exported alongside it
+5. Include placeholder circles for action buttons (favorite, menu, delete) — not just content shapes. A row with a heart button and playlist button needs two skeleton circles at the end
+6. Responsive visibility must match — if play count is `hidden sm:block` in the real component, the skeleton for it must also be `hidden sm:block`
+7. Don't include skeletons for inner Suspense content — that's handled by the component's own inner boundary
+8. Skeleton components should be co-located with their real component and exported alongside it
 
 ## Step 4: Decide Client Boundaries
 
@@ -204,16 +206,72 @@ A server component like `TrackRow` renders these as children without needing `'u
 
 Use [`useOptimistic`](https://react.dev/reference/react/useOptimistic) for instant UI feedback on mutations (like toggling a favorite). The optimistic state reverts automatically if the action fails. Name action props with the `Action` suffix to signal they run inside a [transition](https://react.dev/reference/react/useTransition#exposing-action-props-from-components). For a full walkthrough of optimistic UI, action props, `useActionState`, and `data-pending` patterns, see the [Interactive Apps](https://nextjs.org/docs/app/guides/interactive-apps) guide.
 
-On the client, use toast notifications to surface the `{ ok, error }` result from server actions. If the project already uses a toast library, use that — otherwise pick one (e.g., sonner, react-hot-toast):
+On the client, use toast notifications to surface the `{ ok, error }` result from server actions. If the project already uses a toast library, use that — otherwise pick one (e.g., sonner, react-hot-toast).
+
+**Skip success toasts when optimistic UI already provides feedback.** If a toggle immediately flips via `useOptimistic`, the user can see it worked — a success toast is redundant noise. Only toast on error so the user knows something went wrong:
 
 ```tsx
 startTransition(async () => {
   setOptimisticFavorite(!optimisticFavorite);
   const result = await toggleFavorite(trackId);
-  if (result?.ok) toast.success('Updated!');
   if (result?.error) toast.error(result.error);
 });
 ```
+
+For non-optimistic mutations where the user can't see the result (e.g., creating a resource, deleting with redirect), always toast on success.
+
+### Destructive actions with confirmation
+
+For destructive actions like deleting a resource, use a confirm dialog. Don't use `redirect()` in the server action — it throws and prevents the client from showing a toast or closing the dialog. Instead, return `{ ok: true }` and handle navigation client-side:
+
+```tsx
+// Server action — returns result, no redirect
+export async function deletePlaylist(id: string) {
+  await db.playlist.delete({ where: { id } });
+  updateTag('playlists');
+  return { ok: true as const };
+}
+
+// Client — confirm dialog with toast + router.push
+const router = useRouter();
+async function handleConfirm(): Promise<boolean> {
+  const result = await deletePlaylist(playlistId);
+  if (result?.error) {
+    toast.error(result.error);
+    return false; // keep dialog open
+  }
+  toast.success('Playlist deleted');
+  router.push('/playlists');
+  return true; // close dialog
+}
+```
+
+### Passing promises to client components with `use()`
+
+When a client component needs server data but should own its own loading state (e.g., a popover that fetches on mount), pass the promise from the server and resolve it client-side with [`use()`](https://react.dev/reference/react/use). Wrap the `use()` call in `<Suspense>` for the loading fallback:
+
+```tsx
+// Server component — starts the fetch, passes promise
+<AddToPlaylistMenu trackId={track.id} itemsPromise={getPlaylistMenuItems(track.id)} />
+
+// Client component — resolves with use() inside Suspense
+function AddToPlaylistMenu({ trackId, itemsPromise }: { trackId: string; itemsPromise: Promise<Item[]> }) {
+  return (
+    <Popover>
+      <Suspense fallback={<MenuSkeleton />}>
+        <MenuItems trackId={trackId} itemsPromise={itemsPromise} />
+      </Suspense>
+    </Popover>
+  );
+}
+
+function MenuItems({ trackId, itemsPromise }: { trackId: string; itemsPromise: Promise<Item[]> }) {
+  const items = use(itemsPromise);
+  return <ToggleMenu items={items} toggleAction={...} />;
+}
+```
+
+This avoids creating a thin server component wrapper that does nothing except pass the promise — the caller starts the fetch directly.
 
 ## Step 5: Compose Pages with Suspense
 
@@ -472,4 +530,21 @@ Use matching `<ViewTransition name={unique-id} default="none">` on the same elem
 
 ### List identity
 
-Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wrap content below the list in `<ViewTransition>` too so it slides up when items are removed.
+Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wrap content below the list in `<ViewTransition>` too so it slides up when items are removed:
+
+```tsx
+// List items — each has identity for exit animation
+{tracks.map(track => (
+  <ViewTransition key={track.id}>
+    <TrackRow track={track} />
+  </ViewTransition>
+))}
+
+// Content below — slides up when items are removed
+<ViewTransition>
+  <section className="mt-10">
+    <h2>Related</h2>
+    <RelatedItems />
+  </section>
+</ViewTransition>
+```
