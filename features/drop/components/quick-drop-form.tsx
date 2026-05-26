@@ -22,7 +22,10 @@ export function QuickDropForm({ avatar }: Props) {
   }
 
   return (
-    <section className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7" data-client="QuickDropForm">
+    <section
+      className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7"
+      data-client="QuickDropForm"
+    >
       <form ref={formRef} action={submitAction} className="flex items-center gap-3">
         {avatar}
         <textarea

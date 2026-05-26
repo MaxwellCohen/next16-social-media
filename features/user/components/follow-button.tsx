@@ -28,7 +28,13 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
   };
 
   return (
-    <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]" onClick={handleClick} data-client="FollowButton">
+    <Button
+      variant={following ? 'secondary' : 'primary'}
+      size="sm"
+      className="min-w-[7rem]"
+      onClick={handleClick}
+      data-client="FollowButton"
+    >
       {following ? 'Following' : 'Follow'}
     </Button>
   );

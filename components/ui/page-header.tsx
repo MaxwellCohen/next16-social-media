@@ -12,7 +12,10 @@ type Props = {
 export function PageHeader({ title, children, back }: Props) {
   const router = useRouter();
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 flex items-center gap-3 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70" data-client="PageHeader">
+    <header
+      className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 flex items-center gap-3 border-b bg-white/70 px-4 py-4 backdrop-blur-md backdrop-saturate-150 sm:px-5 dark:bg-black/70"
+      data-client="PageHeader"
+    >
       {back ? (
         <button
           type="button"
