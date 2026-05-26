@@ -18,7 +18,7 @@ export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: 
   }, [date, verbose]);
 
   return (
-    <time dateTime={date.toISOString()} suppressHydrationWarning>
+    <time dateTime={date.toISOString()} suppressHydrationWarning data-client="RelativeTime">
       {label}
     </time>
   );

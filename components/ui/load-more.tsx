@@ -12,6 +12,7 @@ export function LoadMore({ href }: { href: Route }) {
     <button
       type="button"
       disabled={isPending}
+      data-client="LoadMore"
       onClick={() => {
         startTransition(() => {
           router.push(href, { scroll: false });
