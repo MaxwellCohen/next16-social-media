@@ -71,7 +71,7 @@ function BoundaryOverlay() {
 
   return createPortal(
     <>
-      <div className="pointer-events-none fixed inset-0 z-[9997] backdrop-grayscale backdrop-brightness-70" />
+      <div className="pointer-events-none fixed inset-0 z-[9997] backdrop-brightness-70 backdrop-grayscale" />
       <div ref={overlayRef} className="demo-toggles pointer-events-none fixed inset-0 z-[9998]" />
     </>,
     document.body,
