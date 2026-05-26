@@ -25,7 +25,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   }, INITIAL);
 
   return (
-    <form ref={formRef} action={formAction} className="flex flex-col gap-3">
+    <form ref={formRef} action={formAction} className="flex flex-col gap-3" data-client="ReplyForm">
       <div className="flex items-center gap-3">
         {avatar}
         <textarea

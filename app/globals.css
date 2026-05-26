@@ -136,3 +136,9 @@
   background-color: transparent !important;
   /* Optional: font-style/weight could also be swapped if needed */
 }
+
+/* ── Client Boundary Visualizer ── */
+
+html.show-client-boundaries body > *:not(.demo-toggles) {
+  filter: grayscale(1) brightness(0.7);
+}

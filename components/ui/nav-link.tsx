@@ -41,6 +41,7 @@ export function NavLink<T extends string>({ href, className, children, exact = f
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive })}
+      data-client="NavLink"
       data-navlink-href={href.toString()}
       data-navlink-exact={exact || undefined}
       data-navlink-active={resolve(className, { isActive: true })}

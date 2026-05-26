@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
-import { PrefetchToggle } from '@/components/demo/prefetch-toggle';
+import { DemoToggles } from '@/components/demo/demo-toggles';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { SeedNavLinksFromPathname } from '@/components/scripts/seed-nav-links-from-pathname';
@@ -71,9 +71,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </AppGrid>
           <MobileTabBar />
           <SeedNavLinksFromPathname />
-          <Suspense>
-            <PrefetchToggle />
-          </Suspense>
+          <div className="demo-toggles fixed right-4 bottom-4 z-50 flex items-end gap-2 lg:right-6 lg:bottom-6">
+            <Suspense>
+              <DemoToggles />
+            </Suspense>
+          </div>
           <Toaster theme="system" position="bottom-right" />
         </ThemeProvider>
         <Analytics />

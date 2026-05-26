@@ -57,7 +57,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   }
 
   return (
-    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
+    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5" data-client="DropActions">
       {!compact && (
         <IconButton
           label="Reply"

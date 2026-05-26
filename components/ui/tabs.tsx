@@ -26,7 +26,7 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
   }
 
   return (
-    <nav className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-label={label}>
+    <nav className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-label={label} data-client="Tabs">
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
         return (

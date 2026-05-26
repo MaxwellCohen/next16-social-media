@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
-import { PrefetchToggleClient } from './prefetch-toggle-client';
+import { DemoToolbar } from './demo-toolbar';
 
 const COOKIE_NAME = 'no-prefetch';
 
-export async function PrefetchToggle() {
+export async function DemoToggles() {
   const store = await cookies();
   const enabled = !store.has(COOKIE_NAME);
 
@@ -17,5 +17,5 @@ export async function PrefetchToggle() {
     }
   }
 
-  return <PrefetchToggleClient enabled={enabled} toggleAction={toggleAction} />;
+  return <DemoToolbar prefetchEnabled={enabled} togglePrefetchAction={toggleAction} />;
 }
