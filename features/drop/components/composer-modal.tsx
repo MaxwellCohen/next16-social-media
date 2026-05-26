@@ -49,6 +49,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       ) : (
         <Button
           className="w-full py-3"
+          data-client="NewDropModal"
           onClick={() => {
             dialog.show();
           }}
