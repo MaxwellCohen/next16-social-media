@@ -46,6 +46,7 @@ export function Button({
     <button
       type={type}
       disabled={isDisabled}
+      data-client="Button"
       className={cn(base, sizes[size], variants[variant], className)}
       {...props}
     >

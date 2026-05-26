@@ -22,6 +22,7 @@ export function Modal({ store, title, initialFocus, children }: Props) {
       }
       className="border-divider dark:border-divider-dark fixed top-16 left-1/2 z-50 flex max-h-[calc(100dvh-5rem)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 flex-col rounded-2xl border bg-white shadow-2xl outline-none dark:bg-black"
       style={{ viewTransitionName: 'modal' }}
+      data-client="Modal"
       unmountOnHide
       hideOnInteractOutside={false}
       initialFocus={initialFocus}
