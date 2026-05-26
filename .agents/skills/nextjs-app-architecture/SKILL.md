@@ -62,7 +62,9 @@ Feature folders are the core organizational unit. Each domain (track, playlist, 
 
 ### Queries (`*-queries.ts`)
 
-Mark with `import 'server-only'`. Use [`'use cache'`](https://nextjs.org/docs/app/api-reference/directives/use-cache) + [`cacheTag`](https://nextjs.org/docs/app/api-reference/functions/cacheTag) + [`cacheLife`](https://nextjs.org/docs/app/api-reference/functions/cacheLife). Wrap in [`cache()`](https://react.dev/reference/react/cache) for request deduplication. Add `delay()` for demo visibility of loading states.
+Mark with `import 'server-only'`. Use [`'use cache'`](https://nextjs.org/docs/app/api-reference/directives/use-cache) + [`cacheTag`](https://nextjs.org/docs/app/api-reference/functions/cacheTag) + [`cacheLife`](https://nextjs.org/docs/app/api-reference/functions/cacheLife). Add `delay()` for demo visibility of loading states.
+
+**Every query must be wrapped in [`cache()`](https://react.dev/reference/react/cache)** for request deduplication. Without it, the same query called from multiple components in the same render will hit the database multiple times. `cache()` is a React function that memoizes async results per request — if `getTrack('t1')` is called from both a detail component and a sidebar, it only executes once.
 
 Use `'use cache: private'` for queries that read per-user data (cookies, sessions) — this scopes the cache to the individual user.
 
