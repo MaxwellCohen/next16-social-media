@@ -82,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="https://github.com/aurorascharff/next16-social-media"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray hover:text-black dark:hover:text-white fixed bottom-4 left-4 z-50 hidden rounded-full p-2 transition-colors sm:block lg:bottom-6 lg:left-6"
+            className="text-gray fixed bottom-4 left-4 z-50 hidden rounded-full p-2 transition-colors hover:text-black sm:block lg:bottom-6 lg:left-6 dark:hover:text-white"
             aria-label="View source on GitHub"
           >
             <GitHubIcon className="h-6 w-6" />
