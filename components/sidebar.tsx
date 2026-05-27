@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
+import { GitHubIcon } from '@/components/ui/github-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
@@ -47,8 +48,17 @@ export function Sidebar() {
         />
       </div>
       <div className="mt-auto hidden lg:flex lg:flex-col">
-        <div className="flex justify-center px-2 pb-3 lg:justify-start">
+        <div className="flex items-center justify-center gap-2 px-2 pb-3 lg:justify-start">
           <ThemeToggle variant="inline" />
+          <a
+            href="https://github.com/aurorascharff/next16-social-media"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray rounded-full p-1.5 transition-colors hover:text-black dark:hover:text-white"
+            aria-label="View source on GitHub"
+          >
+            <GitHubIcon className="h-4 w-4" />
+          </a>
         </div>
         <div className="border-divider dark:border-divider-dark -mx-6 border-t px-4 py-3">
           <ErrorBoundary title="Your profile is offline" compact>
