@@ -337,15 +337,17 @@ Use `.then()` instead of `await` to keep pages synchronous. Inline the JSX direc
 
 ```tsx
 // Single param — inline the content directly
-{params.then(({ id }) => (
-  <>
-    <Detail id={id} />
-    <section className="mt-10">
-      <h2>Related</h2>
-      <RelatedItems excludeId={id} />
-    </section>
-  </>
-))}
+{
+  params.then(({ id }) => (
+    <>
+      <Detail id={id} />
+      <section className="mt-10">
+        <h2>Related</h2>
+        <RelatedItems excludeId={id} />
+      </section>
+    </>
+  ));
+}
 
 // Single searchParam
 {
@@ -534,11 +536,13 @@ Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wr
 
 ```tsx
 // List items — each has identity for exit animation
-{tracks.map(track => (
-  <ViewTransition key={track.id}>
-    <TrackRow track={track} />
-  </ViewTransition>
-))}
+{
+  tracks.map(track => (
+    <ViewTransition key={track.id}>
+      <TrackRow track={track} />
+    </ViewTransition>
+  ));
+}
 
 // Content below — slides up when items are removed
 <ViewTransition>
@@ -546,5 +550,5 @@ Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wr
     <h2>Related</h2>
     <RelatedItems />
   </section>
-</ViewTransition>
+</ViewTransition>;
 ```
