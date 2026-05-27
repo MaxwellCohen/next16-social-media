@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </AppGrid>
           <MobileTabBar />
           <SeedNavLinksFromPathname />
-          <div className="demo-toggles fixed right-4 bottom-4 z-50 flex items-end gap-2 lg:right-6 lg:bottom-6">
+          <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
             <Suspense>
               <DemoToggles />
             </Suspense>
