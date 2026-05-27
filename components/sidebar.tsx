@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
-import { GitHubIcon } from '@/components/ui/github-icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
@@ -57,17 +56,6 @@ export function Sidebar() {
               <SidebarProfilePill />
             </Suspense>
           </ErrorBoundary>
-        </div>
-        <div className="border-divider dark:border-divider-dark -mx-6 border-t px-4 py-2">
-          <a
-            href="https://github.com/aurorascharff/next16-social-media"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors hover:text-black dark:hover:text-white"
-          >
-            <GitHubIcon className="h-5 w-5" />
-            <span className="hidden lg:inline">View source</span>
-          </a>
         </div>
       </div>
     </aside>
