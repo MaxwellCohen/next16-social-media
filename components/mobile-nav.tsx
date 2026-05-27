@@ -1,8 +1,11 @@
 import { Bookmark, Home, Search, TrendingUp, User } from 'lucide-react';
 import { Suspense } from 'react';
+import { NavLink, NavLinkSkeleton } from '@/components/ui/nav-link';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
-import { MobileTabLink, MobileTabLinkSkeleton } from './nav-link-wrappers';
 import type { Route } from 'next';
+
+const mobileTabClass =
+  'flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors text-gray hover:text-black dark:hover:text-white aria-[current=page]:text-accent aria-[current=page]:font-bold aria-[current=page]:[&_svg]:stroke-[2.5]';
 
 export function MobileTabBar() {
   return (
@@ -11,13 +14,35 @@ export function MobileTabBar() {
       style={{ viewTransitionName: 'mobile-nav' }}
       className="border-divider/70 dark:border-divider-dark/70 sticky bottom-0 z-40 flex shrink-0 border-t bg-white pb-[env(safe-area-inset-bottom)] sm:hidden dark:bg-black"
     >
-      <MobileTabLink href="/" icon={<Home className="h-5 w-5" />} label="Home" />
-      <MobileTabLink href="/search" icon={<Search className="h-5 w-5" />} label="Search" />
-      <MobileTabLink href="/tag" icon={<TrendingUp className="h-5 w-5" />} label="Trending" />
-      <MobileTabLink href="/bookmarks" icon={<Bookmark className="h-5 w-5" />} label="Saved" />
-      <Suspense fallback={<MobileTabLinkSkeleton icon={<User className="h-5 w-5" />} label="Profile" />}>
+      <NavLink href="/" aria-label="Home" className={mobileTabClass}>
+        <Home className="h-5 w-5" />
+        <span>Home</span>
+      </NavLink>
+      <NavLink href="/search" aria-label="Search" className={mobileTabClass}>
+        <Search className="h-5 w-5" />
+        <span>Search</span>
+      </NavLink>
+      <NavLink href="/tag" aria-label="Trending" className={mobileTabClass}>
+        <TrendingUp className="h-5 w-5" />
+        <span>Trending</span>
+      </NavLink>
+      <NavLink href="/bookmarks" aria-label="Saved" className={mobileTabClass}>
+        <Bookmark className="h-5 w-5" />
+        <span>Saved</span>
+      </NavLink>
+      <Suspense
+        fallback={
+          <NavLinkSkeleton className={mobileTabClass}>
+            <User className="h-5 w-5" />
+            <span>Profile</span>
+          </NavLinkSkeleton>
+        }
+      >
         {getCurrentUserHandle().then(handle => (
-          <MobileTabLink href={`/u/${handle}` as Route} icon={<User className="h-5 w-5" />} label="Profile" />
+          <NavLink href={`/u/${handle}` as Route} aria-label="Profile" className={mobileTabClass}>
+            <User className="h-5 w-5" />
+            <span>Profile</span>
+          </NavLink>
         ))}
       </Suspense>
     </nav>
