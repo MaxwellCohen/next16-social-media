@@ -48,17 +48,8 @@ export function Sidebar() {
         />
       </div>
       <div className="mt-auto hidden lg:flex lg:flex-col">
-        <div className="flex items-center justify-center gap-2 px-2 pb-3 lg:justify-start">
+        <div className="flex justify-center px-2 pb-3 lg:justify-start">
           <ThemeToggle variant="inline" />
-          <a
-            href="https://github.com/aurorascharff/next16-social-media"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray rounded-full p-1.5 transition-colors hover:text-black dark:hover:text-white"
-            aria-label="View source on GitHub"
-          >
-            <GitHubIcon className="h-4 w-4" />
-          </a>
         </div>
         <div className="border-divider dark:border-divider-dark -mx-6 border-t px-4 py-3">
           <ErrorBoundary title="Your profile is offline" compact>
@@ -66,6 +57,17 @@ export function Sidebar() {
               <SidebarProfilePill />
             </Suspense>
           </ErrorBoundary>
+        </div>
+        <div className="border-divider dark:border-divider-dark -mx-6 border-t px-4 py-2">
+          <a
+            href="https://github.com/aurorascharff/next16-social-media"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors hover:text-black dark:hover:text-white"
+          >
+            <GitHubIcon className="h-5 w-5" />
+            <span className="hidden lg:inline">View source</span>
+          </a>
         </div>
       </div>
     </aside>
@@ -83,8 +85,8 @@ function SidebarProfilePillSkeleton() {
     <div className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5" aria-hidden>
       <UserAvatarSkeleton size="sm" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <Skeleton className="h-[21px] w-20 rounded" />
-        <Skeleton className="h-[15px] w-14 rounded" />
+        <Skeleton className="h-5.25 w-20 rounded" />
+        <Skeleton className="h-3.75 w-14 rounded" />
       </div>
     </div>
   );
