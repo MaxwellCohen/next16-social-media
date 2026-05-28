@@ -171,6 +171,19 @@ Skeletons represent the shape of the real content. Getting them wrong causes CLS
 6. Responsive visibility must match — if play count is `hidden sm:block` in the real component, the skeleton for it must also be `hidden sm:block`
 7. Don't include skeletons for inner Suspense content — that's handled by the component's own inner boundary
 8. Skeleton components should be co-located with their real component and exported alongside it
+9. Use a flat, non-animated `skeleton-subtle` CSS class for large placeholder areas (album art, cover images). The standard wave animation is distracting at large sizes. Support dark mode with the `.dark` class selector:
+
+```css
+.skeleton-animation.skeleton-subtle {
+  background: rgba(0, 0, 0, 0.06);
+  background-size: unset;
+  animation: none;
+}
+
+:is(.dark) .skeleton-animation.skeleton-subtle {
+  background: rgba(255, 255, 255, 0.06);
+}
+```
 
 ## Step 4: Decide Client Boundaries
 
@@ -551,4 +564,37 @@ Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wr
     <RelatedItems />
   </section>
 </ViewTransition>;
+```
+
+### Toasts and overlays
+
+Third-party toast libraries (sonner, react-hot-toast) render portals that participate in view transitions by default. Add `viewTransitionName: 'none'` to prevent flicker, and raise z-index above persistent bars:
+
+```tsx
+<Toaster
+  theme="system"
+  position="bottom-right"
+  toastOptions={{ style: { viewTransitionName: 'none' } }}
+  style={{ zIndex: 9999 }}
+/>
+```
+
+Apply the same `viewTransitionName: 'none'` to dialog backdrops and confirm modals.
+
+### Confirm dialogs and transitions
+
+Don't wrap the entire server action call in `useTransition` inside a confirm dialog — it triggers view transitions on the background UI even when the action fails and the dialog stays open. Use `useState` for the pending state and only use `startTransition` for hiding the dialog on success:
+
+```tsx
+const [isPending, setIsPending] = useState(false);
+
+async function handleConfirm() {
+  setIsPending(true);
+  try {
+    const ok = await confirmAction();
+    if (ok) startTransition(() => store.hide());
+  } finally {
+    setIsPending(false);
+  }
+}
 ```

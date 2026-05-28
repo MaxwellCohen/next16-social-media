@@ -75,7 +75,11 @@ function BoundaryOverlay() {
   }, [updateBoxes, scheduleUpdate]);
 
   return createPortal(
-    <div ref={overlayRef} className="demo-toggles pointer-events-none fixed inset-0 z-[9998]" style={{ viewTransitionName: 'none' }} />,
+    <div
+      ref={overlayRef}
+      className="demo-toggles pointer-events-none fixed inset-0 z-[9998]"
+      style={{ viewTransitionName: 'none' }}
+    />,
     document.body,
   );
 }
