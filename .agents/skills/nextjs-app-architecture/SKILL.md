@@ -185,6 +185,16 @@ Skeletons represent the shape of the real content. Getting them wrong causes CLS
 }
 ```
 
+### Interactive list spacing
+
+Use a small gap (`gap-0.5` / 2px) on vertical list containers of interactive rows so hover/active backgrounds don't merge into a single block. This is cheaper than adding margin to each item and keeps the list visually dense while giving each row a distinct highlight:
+
+```tsx
+<div className="flex flex-col gap-0.5">
+  {items.map(item => <InteractiveRow key={item.id} item={item} />)}
+</div>
+```
+
 ## Step 4: Decide Client Boundaries
 
 Push [`'use client'`](https://react.dev/reference/rsc/use-client) as deep as possible. Most components stay as server components. Only add `'use client'` when you need hooks, event handlers, or browser APIs. Keep server components focused on data fetching and pass interactive pieces as children to client wrappers.
@@ -297,7 +307,9 @@ Every page exports `unstable_prefetch = 'force-runtime'` so navigations are back
 1. The first section gets its own Suspense with a skeleton fallback — it has a known, predictable height
 2. The second section's heading goes **outside** its Suspense (in the static shell), and the Suspense gets a skeleton fallback for the content
 3. If the second section has variable height, group everything below it **inside the same Suspense** — you can show a skeleton for the variable-height content itself, but you can't show anything below it at a fixed position
-4. Wrap Suspense content in `<Crossfade>` (a [`<ViewTransition>`](https://react.dev/reference/react/ViewTransition) wrapper) for smooth reveal animations
+4. If a section has **fixed height** (deterministic count from a known query like `getTopGenres(6)`, each item a fixed-size card), it's safe to give it its own Suspense boundary — the skeleton will match the resolved height exactly, so content below it won't shift
+5. Wrap Suspense content in `<Crossfade>` (a [`<ViewTransition>`](https://react.dev/reference/react/ViewTransition) wrapper) for smooth reveal animations
+6. Show **fewer skeleton items** than the expected real count for variable-length lists — enough to convey the shape (2–5 items), not the full count. For fixed-count sections, match the count exactly to prevent CLS
 5. Sections that only appear after variable-height content resolves don't need their own skeletons — they stream in together
 
 ```tsx
@@ -576,9 +588,11 @@ Wrap list items in `<ViewTransition key={id}>` for smooth removal animations. Wr
 </ViewTransition>;
 ```
 
-### Toasts and overlays
+### Toasts and floating UI
 
-Third-party toast libraries (sonner, react-hot-toast) render portals that participate in view transitions by default. Add `viewTransitionName: 'none'` to prevent flicker, and raise z-index above persistent bars:
+Apply `viewTransitionName: 'none'` to **all portal/floating-layer elements** — anything that renders outside the main document flow and can be open during a navigation. This includes: toast containers, dialog backdrops, dialog panels, popover panels, dropdown menus, command palettes, and overlays. Without this, they flicker during route view transitions.
+
+For toast libraries, also raise z-index above persistent bars:
 
 ```tsx
 <Toaster
@@ -589,7 +603,13 @@ Third-party toast libraries (sonner, react-hot-toast) render portals that partic
 />
 ```
 
-Apply the same `viewTransitionName: 'none'` to dialog backdrops and confirm modals.
+For Ariakit/Radix popovers and menus:
+
+```tsx
+<Popover style={{ viewTransitionName: 'none' }}>
+  ...
+</Popover>
+```
 
 ### Confirm dialogs and transitions
 
