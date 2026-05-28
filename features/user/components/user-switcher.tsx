@@ -58,6 +58,7 @@ export function UserSwitcher({ currentHandle, users }: Props) {
         gutter={8}
         overflowPadding={16}
         sameWidth
+        style={{ viewTransitionName: 'none' }}
         className="border-divider dark:border-divider-dark z-50 overflow-hidden rounded-xl border bg-white shadow-xl dark:bg-black"
       >
         <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-2">

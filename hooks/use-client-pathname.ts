@@ -1,4 +1,5 @@
 'use client';
+'use no memo';
 
 import { useSyncExternalStore } from 'react';
 
@@ -22,7 +23,7 @@ if (typeof window !== 'undefined') {
   for (const method of ['pushState', 'replaceState'] as const) {
     history[method] = function (...args: Parameters<typeof history.pushState>) {
       original[method].apply(this, args);
-      listeners.forEach(fn => fn());
+      setTimeout(() => listeners.forEach(fn => fn()), 0);
     };
   }
 }
