@@ -294,10 +294,11 @@ Every page exports `unstable_prefetch = 'force-runtime'` so navigations are back
 
 ### Skeleton placement rules
 
-1. Show a skeleton only for the first section — content with a known, predictable height
-2. Below the first section, use `<Suspense>` with no fallback — content streams in without reserving space
-3. If the first section has variable height, group everything below it in the same Suspense to prevent CLS
+1. The first section gets its own Suspense with a skeleton fallback — it has a known, predictable height
+2. The second section's heading goes **outside** its Suspense (in the static shell), and the Suspense gets a skeleton fallback for the content
+3. If the second section has variable height, group everything below it **inside the same Suspense** — you can show a skeleton for the variable-height content itself, but you can't show anything below it at a fixed position
 4. Wrap Suspense content in `<Crossfade>` (a [`<ViewTransition>`](https://react.dev/reference/react/ViewTransition) wrapper) for smooth reveal animations
+5. Sections that only appear after variable-height content resolves don't need their own skeletons — they stream in together
 
 ```tsx
 export const unstable_prefetch = 'force-runtime';
@@ -306,16 +307,25 @@ export default function HomePage() {
   return (
     <div className="px-6 py-6 sm:px-8">
       <h1 className="mb-6 text-3xl font-bold">Good evening</h1>
+      {/* First section — known height, own skeleton */}
       <Suspense fallback={<QuickPlayGridSkeleton />}>
         <Crossfade>
           <QuickPlayGrid />
         </Crossfade>
       </Suspense>
-      <Suspense>
+      {/* Heading outside Suspense — visible in static shell */}
+      <h2 className="mt-10 mb-4">Most Played</h2>
+      {/* Variable-height content with skeleton + everything below grouped together */}
+      <Suspense fallback={<MostPlayedSkeleton />}>
         <Crossfade>
+          <MostPlayed />
           <section className="mt-10">
-            <h2 className="mb-4">Most Played</h2>
-            <MostPlayed />
+            <h2 className="mb-4">Your Playlists</h2>
+            <PlaylistBrowse />
+          </section>
+          <section className="mt-10">
+            <h2 className="mb-4">Browse Genres</h2>
+            <TopGenresGrid />
           </section>
         </Crossfade>
       </Suspense>
