@@ -94,11 +94,7 @@ function AppGrid({ children }: { children: React.ReactNode }) {
 }
 
 function MainColumn({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity group-has-data-pending:opacity-50 sm:border-x">
-      {children}
-    </main>
-  );
+  return <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 sm:border-x">{children}</main>;
 }
 
 function RightSidebar({ children }: { children: React.ReactNode }) {

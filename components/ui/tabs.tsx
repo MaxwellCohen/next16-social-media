@@ -30,6 +30,7 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
       className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
       aria-label={label}
       data-client="Tabs"
+      data-pending={isPending ? '' : undefined}
     >
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
@@ -44,7 +45,6 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
             className={cn(
               'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 transition-colors',
               isActive ? 'font-semibold text-black dark:text-white' : 'text-gray font-medium',
-              isPending && isActive && 'animate-pulse',
             )}
           >
             {t.label}
