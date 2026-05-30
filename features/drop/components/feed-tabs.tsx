@@ -27,6 +27,7 @@ export function FeedTabs() {
       action={value => {
         router.push((value === 'following' ? '/' : '/?tab=discover') as Route);
       }}
+      href={value => (value === 'following' ? '/' : '/?tab=discover')}
       label="Feed sections"
     />
   );

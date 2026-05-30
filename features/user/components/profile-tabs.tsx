@@ -21,6 +21,7 @@ export function ProfileTabs({ handle, active }: { handle: string; active: Profil
       action={value => {
         router.push(`/u/${handle}${value === 'drops' ? '' : `?tab=${value}`}` as Route);
       }}
+      href={value => `/u/${handle}${value === 'drops' ? '' : `?tab=${value}`}`}
       label="Profile sections"
     />
   );

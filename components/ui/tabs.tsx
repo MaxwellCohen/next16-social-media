@@ -10,14 +10,16 @@ type Props<T extends string> = {
   tabs: Tab<T>[];
   active: T;
   action: (value: T) => void | Promise<void>;
+  href: (value: T) => string;
   label?: string;
 };
 
-export function Tabs<T extends string>({ tabs, active, action, label = 'Sections' }: Props<T>) {
+export function Tabs<T extends string>({ tabs, active, action, href, label = 'Sections' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
   const [isPending, startTransition] = useTransition();
 
-  function handleSelect(value: T) {
+  function handleSelect(e: React.MouseEvent, value: T) {
+    e.preventDefault();
     if (value === optimisticActive) return;
     startTransition(async () => {
       setOptimisticActive(value);
@@ -35,15 +37,13 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
         return (
-          <button
+          <a
             key={t.value}
-            type="button"
-            onClick={() => {
-              handleSelect(t.value);
-            }}
+            href={href(t.value)}
+            onClick={e => handleSelect(e, t.value)}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 transition-colors',
+              'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 text-center transition-colors',
               isActive ? 'font-semibold text-black dark:text-white' : 'text-gray font-medium',
             )}
           >
@@ -51,7 +51,7 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
             {isActive ? (
               <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
             ) : null}
-          </button>
+          </a>
         );
       })}
     </nav>
