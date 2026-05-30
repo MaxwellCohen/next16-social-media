@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useOptimistic, useTransition } from 'react';
+import { startTransition, useOptimistic } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
@@ -18,23 +18,12 @@ type Props<T extends string> = {
 
 export function Tabs<T extends string>({ tabs, active, action, href, label = 'Sections' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
-  const [isPending, startTransition] = useTransition();
-
-  function handleSelect(e: React.MouseEvent, value: T) {
-    e.preventDefault();
-    if (value === optimisticActive) return;
-    startTransition(async () => {
-      setOptimisticActive(value);
-      await action(value);
-    });
-  }
 
   return (
     <nav
       className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
       aria-label={label}
       data-client="Tabs"
-      data-pending={isPending ? '' : undefined}
     >
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
@@ -42,7 +31,14 @@ export function Tabs<T extends string>({ tabs, active, action, href, label = 'Se
           <Link
             key={t.value}
             href={href(t.value)}
-            onClick={e => handleSelect(e, t.value)}
+            onClick={e => {
+              e.preventDefault();
+              if (t.value === optimisticActive) return;
+              startTransition(async () => {
+                setOptimisticActive(t.value);
+                await action(t.value);
+              });
+            }}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
               'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 text-center transition-colors',
