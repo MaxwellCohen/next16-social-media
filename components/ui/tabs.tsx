@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import type { Route } from 'next';
 
 type Tab<T extends string> = { label: string; value: T };
 
@@ -10,7 +12,7 @@ type Props<T extends string> = {
   tabs: Tab<T>[];
   active: T;
   action: (value: T) => void | Promise<void>;
-  href: (value: T) => string;
+  href: (value: T) => Route;
   label?: string;
 };
 
@@ -37,7 +39,7 @@ export function Tabs<T extends string>({ tabs, active, action, href, label = 'Se
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
         return (
-          <a
+          <Link
             key={t.value}
             href={href(t.value)}
             onClick={e => handleSelect(e, t.value)}
@@ -51,7 +53,7 @@ export function Tabs<T extends string>({ tabs, active, action, href, label = 'Se
             {isActive ? (
               <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
             ) : null}
-          </a>
+          </Link>
         );
       })}
     </nav>
