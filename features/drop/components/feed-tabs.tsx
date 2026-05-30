@@ -7,9 +7,9 @@ import type { Route } from 'next';
 
 type FeedTab = 'following' | 'discover';
 
-const FEED_TABS: { label: string; value: FeedTab }[] = [
-  { label: 'Following', value: 'following' },
-  { label: 'Discover', value: 'discover' },
+const FEED_TABS: { label: string; value: FeedTab; href: Route }[] = [
+  { label: 'Following', value: 'following', href: '/' as Route },
+  { label: 'Discover', value: 'discover', href: '/?tab=discover' as Route },
 ];
 
 function parseTab(value: string | null): FeedTab {
@@ -32,7 +32,6 @@ export function FeedTabs() {
             router.push((value === 'following' ? '/' : '/?tab=discover') as Route);
           });
         }}
-        href={value => (value === 'following' ? '/' : '/?tab=discover') as Route}
         label="Feed sections"
       />
     </div>

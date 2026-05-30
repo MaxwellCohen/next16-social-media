@@ -6,17 +6,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
 
-type Tab<T extends string> = { label: string; value: T };
+type Tab<T extends string> = { label: string; value: T; href: Route };
 
 type Props<T extends string> = {
   tabs: Tab<T>[];
   active: T;
   action: (value: T) => void | Promise<void>;
-  href: (value: T) => Route;
   label?: string;
 };
 
-export function Tabs<T extends string>({ tabs, active, action, href, label = 'Sections' }: Props<T>) {
+export function Tabs<T extends string>({ tabs, active, action, label = 'Sections' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
 
   return (
@@ -30,9 +29,8 @@ export function Tabs<T extends string>({ tabs, active, action, href, label = 'Se
         return (
           <Link
             key={t.value}
-            href={href(t.value)}
-            onClick={e => {
-              e.preventDefault();
+            href={t.href}
+            onNavigate={() => {
               if (t.value === optimisticActive) return;
               startTransition(async () => {
                 setOptimisticActive(t.value);
