@@ -1,6 +1,5 @@
 import 'server-only';
 
-import { cacheLife, cacheTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -11,7 +10,6 @@ const SESSION_COOKIE = 'drop-user';
 const DEFAULT_HANDLE = 'aurora';
 
 export const getCurrentUserHandle = cache(async (): Promise<string> => {
-  'use cache: private';
 
   const store = await cookies();
   return store.get(SESSION_COOKIE)?.value ?? DEFAULT_HANDLE;
@@ -25,16 +23,11 @@ export async function verifyUser(): Promise<string> {
 }
 
 export const getCurrentUser = cache(async () => {
-  'use cache: private';
-  cacheTag('current-user');
 
   return getUserByHandle(await getCurrentUserHandle());
 });
 
 export const getUserByHandle = cache(async (handle: string) => {
-  'use cache';
-  cacheTag('users', `user-${handle}`);
-  cacheLife('minutes');
 
   await delay(500);
   const user = await prisma.user.findUnique({ where: { handle } });
@@ -43,9 +36,6 @@ export const getUserByHandle = cache(async (handle: string) => {
 });
 
 export const getWhoToFollow = cache(async (handle: string) => {
-  'use cache';
-  cacheTag(`who-to-follow-${handle}`);
-  cacheLife('seconds');
 
   await delay(700);
   const followed = await prisma.follow.findMany({
@@ -63,9 +53,6 @@ export const getWhoToFollow = cache(async (handle: string) => {
 });
 
 export const isFollowing = cache(async (followerHandle: string, targetHandle: string) => {
-  'use cache';
-  cacheTag(`is-following-${targetHandle}`);
-  cacheLife('seconds');
 
   await delay(120);
   const row = await prisma.follow.findUnique({
@@ -75,9 +62,6 @@ export const isFollowing = cache(async (followerHandle: string, targetHandle: st
 });
 
 export const searchUsers = cache(async (query: string) => {
-  'use cache';
-  cacheTag('users', `search-users-${query}`);
-  cacheLife('seconds');
 
   await delay(200);
   return prisma.user.findMany({
@@ -98,9 +82,6 @@ export type DropUserState = {
 };
 
 export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
-  'use cache: private';
-  cacheTag(`user-state-${dropId}`);
-  cacheLife('seconds');
 
   const handle = await getCurrentUserHandle();
   await delay(300);
@@ -113,9 +94,6 @@ export const getDropUserState = cache(async (dropId: string): Promise<DropUserSt
 });
 
 export const getAllUsers = cache(async () => {
-  'use cache';
-  cacheTag('users');
-  cacheLife('minutes');
 
   return prisma.user.findMany({
     orderBy: { handle: 'asc' },

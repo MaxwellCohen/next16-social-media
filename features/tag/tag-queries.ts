@@ -1,23 +1,16 @@
 import 'server-only';
 
-import { cacheLife, cacheTag } from 'next/cache';
 import { cache } from 'react';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 export const getTrendingTags = cache(async () => {
-  'use cache';
-  cacheTag('trending');
-  cacheLife('minutes');
 
   await delay(600);
   return countTags(6);
 });
 
 export const getAllTags = cache(async () => {
-  'use cache';
-  cacheTag('trending');
-  cacheLife('minutes');
 
   await delay(700);
   return countTags();

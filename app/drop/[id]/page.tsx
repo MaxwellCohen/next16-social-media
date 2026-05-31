@@ -1,13 +1,4 @@
-import { Suspense } from 'react';
-import { Crossfade } from '@/components/ui/crossfade';
-import ErrorBoundary from '@/components/ui/error-boundary';
-import { PageHeader } from '@/components/ui/page-header';
-import { Section, SectionHeader } from '@/components/ui/section';
-import { DropDetail, DropDetailSkeleton } from '@/features/drop/components/drop-detail';
-import { Replies, RepliesSkeleton } from '@/features/drop/components/replies';
-import { ReplyComposerForm } from '@/features/drop/components/reply-form';
 import { getDrop } from '@/features/drop/drop-queries';
-import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getUserByHandle } from '@/features/user/user-queries';
 import type { Metadata } from 'next';
 
@@ -26,41 +17,13 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   };
 }
 
-export const unstable_prefetch = 'force-runtime';
-
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
-      <PageHeader back title="Drop" />
-      <Suspense fallback={<DropDetailSkeleton />}>
-        <Crossfade>
-          {params.then(({ id }) => (
-            <>
-              <DropDetail id={id} />
-              <Section className="p-4 sm:p-5">
-                <ReplyComposerForm
-                  dropId={id}
-                  avatar={
-                    <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                      <CurrentUserAvatar />
-                    </Suspense>
-                  }
-                />
-              </Section>
-              <section>
-                <SectionHeader>Replies</SectionHeader>
-                <ErrorBoundary title="Replies didn’t load">
-                  <Suspense fallback={<RepliesSkeleton />}>
-                    <Crossfade>
-                      <Replies id={id} />
-                    </Crossfade>
-                  </Suspense>
-                </ErrorBoundary>
-              </section>
-            </>
-          ))}
-        </Crossfade>
-      </Suspense>
+      {/* Page header */}
+      {/* Drop detail: full post with author info */}
+      {/* Reply composer: input with avatar */}
+      {/* Replies: list of replies */}
     </div>
   );
 }

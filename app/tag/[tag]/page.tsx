@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Pro
   };
 }
 
-export const unstable_prefetch = 'force-runtime';
 
 export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
   return (
