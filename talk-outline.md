@@ -465,10 +465,15 @@ Click around: profile, search, bookmarks, tags. Already built. Same components, 
 
 ### Adding caching + Instant Navigations
 
-**Show the problem first.** Navigate between pages in the starter. Every click hits the server. Skeletons every time. The architecture is good but it doesn't feel like an SPA yet.
+This section has two halves. First we edit the starter to add caching to one feature. Then we switch to the deployed production build to see prefetching and invalidation end-to-end. Each step below says where we are.
+
+**Editor, step 1: show the problem first.** Navigate between pages in the starter. Every click hits the server. Skeletons every time. The architecture is good but it doesn't feel like an SPA yet.
+
 - *Callback: this was the "But..." from section 2*
 
-**Briefly show `'use cache'`.** Open the drop queries file. We're going to add caching to the features we just built with. Show two queries side by side:
+**Editor, step 2: add `'use cache'` to one feature.**
+
+Open the drop queries file. We're going to add caching to the features we just built. Show two queries side by side:
 
 ```ts
 // drop-queries.ts
@@ -492,7 +497,7 @@ export const getReplies = cache(async (dropId: string) => {
 - `<DropDetail>` calls `getDrop`. `<Replies>` calls `getReplies`. Each component owns its data, and each query decides its own caching. The component doesn't know or care whether its data is cached
 - `cacheLife('seconds')` for the feed because it changes often. Open tag-queries.ts briefly: `cacheLife('minutes')` for trending tags because they don't change as fast. Same page, different lifetimes. That's component-level caching
 
-**Add `force-runtime` to the home page and detail page:**
+**Editor, step 3: add `force-runtime` to the home page and detail page.**
 
 ```ts
 export const unstable_prefetch = 'force-runtime';
@@ -500,19 +505,33 @@ export const unstable_prefetch = 'force-runtime';
 
 - This tells the framework to prefetch cached dynamic data ahead of time. But prefetching doesn't work in dev, we need the deployed app to see it
 
-**Switch to the deployed finished app.** Explain what changed since what they saw: I took the same pattern we just showed for `getFeed` and applied it to every query in the app. Each one got `'use cache'` with a `cacheTag` and `cacheLife` that makes sense for that piece of UI. The feed caches for seconds because it changes often, trending tags cache for minutes, user profiles cache for minutes. Every mutation calls `updateTag` to invalidate the right data. And `force-runtime` is on every page. Same app, same architecture, just with caching turned on.
+**Deployed app, step 4: switch over and explain.**
 
-**Prefetch toggle demo:**
+Explain what changed since what they saw in the editor: I took the same pattern we just showed for `getFeed` and applied it to every query in the app. Each one got `'use cache'` with a `cacheTag` and `cacheLife` that makes sense for that piece of UI. The feed caches for seconds because it changes often, trending tags cache for minutes, user profiles cache for minutes. Every mutation calls `updateTag` to invalidate the right data. And `force-runtime` is on every page. Same app, same architecture, just with caching turned on.
+
+**Deployed app, step 5: prefetch toggle.**
+
 - Off: click a drop, skeleton, streams in
 - On: scroll the feed, watch prefetch requests in the network tab. Click a drop, instant, no skeleton
 - Navigate around, cached. Content stays cached until invalidated
 - Post a drop, server action calls `updateTag('feed')`. Navigate back to feed, **new prefetch fires.** Only the invalidated data refetches, everything else stays cached
 - This is the full cycle: `cacheTag` → `'use cache'` → `updateTag`
 
-**Boundary visualizer:**
-- Fuchsia outlines on client components. Everything else is server
+**Deployed app, step 6: watch the cache flip live.**
 
-**Speed Insights:**
+Pick one mutation and make the audience watch the invalidation moment:
+
+1. Open the Bookmarks tab once. It's cached, marked as such in the network tab
+2. Open a drop and bookmark it. The action calls `updateTag('bookmarks-<handle>')`
+3. Navigate to Bookmarks again. **The cached version is gone, fresh data streams in with the new bookmark.** Everything else (sidebar, who-to-follow, trending) is still cached
+4. Land the point: one tag flipped, only the affected piece refetched. The rest of the app didn't move. This is what "cache where you choose, invalidate at the layer that owns the key" actually feels like
+
+**Deployed app, step 7: boundary visualizer.**
+
+Fuchsia outlines on client components. Everything else is server.
+
+**Deployed app, step 8: Speed Insights.**
+
 - Open Vercel Speed Insights for the deployed app. "I've had this deployed on Vercel, let's look at how it's been performing."
 - Show real production data, Core Web Vitals, experience scores
 - Look at the real experience score across different regions. Users in slower networks, different countries, they're getting the same experience because the architecture streams content immediately and prefetches what it can. We're not waiting for a JS bundle to download before anything happens
