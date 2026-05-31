@@ -7,4 +7,5 @@ export type Notification = {
   createdAt: Date;
   dropId?: string;
   body?: string;
+  read: boolean;
 };

@@ -1,4 +1,4 @@
-import { Bell, Bookmark, Home, Search, TrendingUp, User } from 'lucide-react';
+import { Bell, Bookmark, Home, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
@@ -9,7 +9,6 @@ import { NavLink, NavLinkSkeleton } from '@/components/ui/nav-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { NotificationsBadge } from '@/features/notifications/components/notifications-badge';
-import { getNewestNotificationAt } from '@/features/notifications/notifications-queries';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getAllUsers, getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
@@ -52,16 +51,12 @@ export function Sidebar() {
           <Bookmark className="h-5 w-5" />
           <span className="hidden lg:inline">Bookmarks</span>
         </NavLink>
-        <NavLink href="/notifications" aria-label="Notifications" className={sidebarLinkClass}>
+        <NavLink href="/notifications" aria-label="Activity" className={sidebarLinkClass}>
           <Bell className="h-5 w-5" />
-          <span className="hidden lg:inline">Notifications</span>
+          <span className="hidden lg:inline">Activity</span>
           <Suspense>
-            <NotificationsBadge newestAtPromise={getNewestNotificationAt()} />
+            <NotificationsBadge />
           </Suspense>
-        </NavLink>
-        <NavLink href="/tag" aria-label="Trending" className={sidebarLinkClass}>
-          <TrendingUp className="h-5 w-5" />
-          <span className="hidden lg:inline">Trending</span>
         </NavLink>
         <Suspense
           fallback={

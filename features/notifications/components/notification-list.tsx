@@ -54,9 +54,9 @@ export function NotificationListSkeleton() {
         >
           <Skeleton className="h-5 w-5 rounded" />
           <UserAvatarSkeleton size="md" />
-          <div className="flex flex-1 flex-col gap-1.5">
-            <Skeleton className="h-4 w-48 rounded" />
-            <Skeleton className="h-3 w-20 rounded" />
+          <div className="flex flex-1 flex-col gap-1">
+            <Skeleton className="h-5 w-48 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
           </div>
         </li>
       ))}
@@ -74,8 +74,7 @@ async function NotificationRow({ notification }: { notification: Notification })
   return (
     <Link
       href={href}
-      data-notification-at={notification.createdAt.toISOString()}
-      className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-start gap-3 border-b px-4 py-4 transition-colors sm:px-5"
+      className={`border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-start gap-3 border-b px-4 py-4 transition-colors sm:px-5 ${notification.read ? '' : 'flash-in'}`}
     >
       <Icon className={`mt-1 h-5 w-5 shrink-0 ${COLORS[notification.kind]}`} aria-hidden />
       <UserAvatar handle={notification.actorHandle} size="md" />

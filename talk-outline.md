@@ -98,6 +98,7 @@ The pain isn't that caching is hard. The pain is that every piece of data lives 
 - Server Components solve this with one mental model: components, composition, Suspense
 - Next.js is a Suspense-first framework. Every page streams. Async React means the framework coordinates loading for you, no weird loading states, no manual orchestration
 - We extended React's composability to the server, to caching, to infrastructure. The same Lego blocks, but they work across the entire stack
+- Every piece runs where it's best suited. Data fetching on the server. Interactivity on the client. Caching at the layer that knows the cache key. Streaming at the boundary that knows the fallback. You don't fight the runtime to put work in the right place, the architecture puts it there for you
 - We follow React, and that means less work for you. No hydration strategy to manage, no custom streaming setup, no client-side data coordination. We just use React: async components, Suspense, composition. React handles the rendering and streaming out of the box. The framework handles the caching, the prefetching, the invalidation. We write components
 - You don't have to abandon interactivity. This isn't "server-rendered pages" vs "client apps." You compose server and client pieces together. Client interactivity lives exactly where you need it, as leaf nodes in the same tree. The rest stays on the server
 - The patterns are consistent: same tree, same boundaries, same composition. AI agents can work with your codebase the same way you do. No loader chains to trace, no cache coordination to understand
@@ -318,12 +319,13 @@ return (
 
 **Step 5: Suspense.** Design the loading experience:
 
-- Without Suspense, the page blocks until every async component finishes. The user sees nothing. With the old approach you'd add `isLoading` flags inside each component and manage the sequence yourself
-- Suspense flips this: the page decides what to show while things load. You wrap async content in boundaries and provide fallbacks
+- Without Suspense, you're stuck choosing between two bad options. Block the whole page until every async piece resolves (white screen, slow time-to-content), or render each piece independently and watch the layout reflow every time something lands. Both mean writing `isLoading` flags in every component and orchestrating the sequence by hand
+- Suspense flips this. You declare boundaries, you declare fallbacks, and the framework streams content into place. The page describes the loading experience the same way it describes the final UI
+- The structure of the boundaries has to respect what's known and what isn't. We don't know the height of the drop until it's fetched, one line or fifteen. If the drop and replies resolve in sibling boundaries, replies render at one position and jump when the drop fills in. That's layout shift, that hurts CLS, and that's the popcorn UI from the WHY
 
-- **Option A**: one big boundary. Everything waits for the slowest query. Simple but the user stares at a skeleton until replies (the slowest) finish
-- **Option B**: individual boundaries on everything. Better, but things pop in randomly, layout shifts as each piece arrives. This is popcorn UI again, just on the server
-- **Option C**: designed boundaries (what we pick). Group things that should appear together. Detail in one boundary (fast). Replies in a nested boundary (slower, streams in after)
+- **Option A**: one big boundary. Everything waits for the slowest query. Simple but the user stares at a skeleton until replies finish
+- **Option B**: individual boundaries on everything. Better, but pieces arrive in random order and layout shifts as each one slots in
+- **Option C**: designed boundaries (what we pick). Replies nest inside the drop's boundary, so the drop's position is fixed before replies stream in. Detail first, replies after, no jump
 
 ```tsx
 <Suspense fallback={<DropDetailSkeleton />}>
@@ -345,7 +347,22 @@ return (
 - **Visualize it**: open the Suspense panel in the devtools (separate tab) and step through the loading sequence. Each boundary is a node. You can watch which fallbacks render first and confirm the order feels right before moving on. This is how you tune loading states without reloading and guessing
 - *Callback: this is coordinated loading from the WHY. No popcorn UI, no `isLoading` flags. The page composes the loading experience the same way it composes the UI*
 
-**Step 6: ErrorBoundary.** Wrap replies:
+**Step 6: Crossfade.** Animate the reveal:
+
+```tsx
+<Suspense fallback={<DropDetailSkeleton />}>
+  <Crossfade>
+    {params.then(({ id }) => ( ... ))}
+  </Crossfade>
+</Suspense>
+```
+
+- Right now content hard-swaps in when the Suspense boundary resolves. Skeleton one frame, content the next
+- `<Crossfade>` is a thin `<ViewTransition>` wrapper. It picks up the transition between fallback and resolved content and animates it. Same streaming behavior, just polished
+- This is the bigger point: anything driven by Suspense or `useTransition` is already a state change React knows about. With React's View Transitions API you can animate those changes declaratively, without coordinating timers or classnames. The page composes the loading experience, and the same composition gives you the animation for free
+- Composes anywhere. Wrap any Suspense content in it
+
+**Step 7: ErrorBoundary.** Wrap replies:
 
 ```tsx
 <ErrorBoundary title="Replies didn't load">
@@ -358,20 +375,6 @@ return (
 - What happens if replies fail? Without this, the whole page crashes. With an ErrorBoundary, replies show an error message but the detail and composer still work. The user can still read the post
 - In a loader model, one failure takes down the whole page. Here each piece is isolated
 - ErrorBoundary composes the same way as Suspense. Just another wrapper you snap on
-
-**Step 7: Crossfade:**
-
-```tsx
-<Suspense fallback={<DropDetailSkeleton />}>
-  <Crossfade>
-    {params.then(({ id }) => ( ... ))}
-  </Crossfade>
-</Suspense>
-```
-
-- Without this, content hard-swaps in when the Suspense boundary resolves. Skeleton one frame, content the next
-- `<Crossfade>` is a `<ViewTransition>` wrapper. Content fades in smoothly instead. One line, same streaming behavior, just polished
-- This composes too. Wrap any Suspense content in it
 
 **Step 8: client components.** Now add the interactive pieces. Add `<ReplyComposerForm>` between the detail and replies:
 
@@ -521,6 +524,7 @@ export const unstable_prefetch = 'force-runtime';
 
 ### Slide: "What RSCs can do in Next.js today"
 
+- Each piece of your app runs where it's best suited. Server data stays on the server. Interactivity stays on the client. Caching sits at the layer that owns the cache key. The architecture puts the work in the right place, you don't have to wire it there
 - Instant-feeling UX. Prefetched, cached, navigations feel native. No client data layer
 - Streamed UI. Suspense-first. The page designs the loading sequence, not the network
 - Fresh data. One cache primitive, one invalidation call, both caches update
@@ -540,7 +544,7 @@ And Next.js 16 ships a built-in MCP server (via `next-devtools-mcp`). Your agent
 
 You don't need a separate client cache, a separate server cache, and a coordination layer between them. You don't need a different mental model for static pages and dynamic pages. You don't need to switch frameworks when your requirements change.
 
-You need components. The same composability we've always loved about React, extended to data fetching, to caching, to streaming, to infrastructure. We follow React, and that means less work for you. Follow the patterns and it just works.
+You need components that run where they belong. Same composability we've always loved about React, extended across the stack: data fetching, caching, streaming, infrastructure. We follow React, and that means less work for you. Follow the patterns and it just works.
 
 I said at the beginning the model has changed a lot. Now you've seen it.
 
