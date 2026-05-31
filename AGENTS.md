@@ -22,6 +22,7 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 - Demo toggles (prefetch toggle, boundary visualizer) in `components/demo/`
 - User switching via cookie (`drop-user`), `switchUser` action calls `updateTag('current-user')`
 - `use-client-pathname.ts` has `'use no memo'` directive for React Compiler compatibility
+- After adding a model to `prisma/schema.prisma` and running `prisma db push` + `prisma generate`, **restart the dev server**. The `globalThis.prisma` singleton in `lib/db.ts` survives HMR and holds the old client, so the new model will throw "Cannot read properties of undefined" until the process restarts.
 
 ## Navigation
 
