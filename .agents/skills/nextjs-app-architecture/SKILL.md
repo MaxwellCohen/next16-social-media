@@ -1,22 +1,20 @@
 ---
 name: nextjs-app-architecture
-description: Architecture patterns for building Next.js 16 App Router applications with React Server Components, Cache Components, Suspense streaming, and feature-sliced design. Use this skill whenever building a new Next.js app, adding a feature to an existing one, refactoring a page or component, scaffolding pages, designing loading states, structuring feature folders, setting up data fetching with caching, or creating client/server component boundaries. Also use when the user asks about RSC composition, Suspense boundaries, skeleton placement, CLS prevention, cache invalidation, or how to structure a Next.js project.
+description: Architecture patterns for Next.js 16 App Router apps with cacheComponents, Suspense streaming, and feature-sliced design. Use when building a new app, adding or refactoring features, scaffolding pages, designing loading states, structuring feature folders, setting up data fetching with caching, or placing client/server boundaries. Also for RSC composition, Suspense placement, skeleton design, CLS prevention, and cache invalidation.
 ---
 
 # Next.js App Architecture
 
-Use this skill when building a new Next.js 16+ App Router app or adding/refactoring a feature in an existing one. Follow these steps in order.
-
-This targets Next.js 16+ with `cacheComponents: true`.
+Use when building or refactoring Next.js 16+ App Router apps with `cacheComponents: true`. Follow these steps in order.
 
 ## The model
 
-With `cacheComponents: true`, Next.js builds a static shell at build time and streams dynamic content at request time:
+`cacheComponents: true` builds a static shell at build and streams dynamic content per request:
 
-- **Static shell**: synchronous content, `'use cache'` components, and Suspense fallbacks are prerendered at build time
-- **Dynamic holes**: async components that access uncached data stream in at request time behind `<Suspense>` boundaries
-- **The key constraint**: any component that does async work without `'use cache'` must be wrapped in `<Suspense>`, or you get a build error
-- Pages should stay synchronous. Use `params.then()` instead of `await params` to avoid pulling the entire page out of the static shell
+- **Static shell**: synchronous content, `'use cache'` components, and Suspense fallbacks prerender at build
+- **Dynamic holes**: async components without `'use cache'` stream in behind `<Suspense>` at request time
+- **Build constraint**: any async work without `'use cache'` must sit inside `<Suspense>`, or the build fails
+- Pages stay synchronous. Use `params.then()` instead of `await params` to keep the page out of the static-shell exit path
 
 ## Step 1: Locate or create the feature folder
 
@@ -52,7 +50,7 @@ If the query reads cookies or session data, use `'use cache: private'` to scope 
 
 Define clean domain types in `types/` with a mapper from your DB layer. Components should only see domain types, not ORM types.
 
-Persistent per-user state belongs in the database, not `localStorage`. "Last seen" timestamps, read/unread flags, dismissed banners: store them server-side as soon as the state needs to survive across browsers, accounts, or tab switches. `localStorage` is fine for genuinely client-only state (a sidebar collapsed flag, a draft autosave), but the moment another account or device should see the same state, move it to the DB.
+Persistent per-user state (read/unread flags, last-seen timestamps, dismissed banners) belongs in the database. Use `localStorage` only for genuinely client-only state like a collapsed sidebar or a draft autosave.
 
 ## Step 3: Write the actions
 
@@ -73,11 +71,30 @@ export async function createPost(formData: FormData) {
 
 The `cacheTag` in the query and the `updateTag` in the action live in the same feature folder. This is the full cycle: tag, cache, invalidate.
 
+Client components import server actions directly. Don't pass an action as a prop to call it:
+
+```tsx
+// Right
+'use client';
+import { likePost } from '@/features/post/post-actions';
+
+export function LikeButton({ postId }: { postId: string }) {
+  return <button onClick={() => likePost(postId)}>Like</button>;
+}
+
+// Wrong
+async function Post({ id }: { id: string }) {
+  return <LikeButton postId={id} onLike={likePost} />;
+}
+```
+
+Exception: bind a parameterized action when the child shouldn't know about the id: `onAction={deletePost.bind(null, post.id)}`.
+
 ## Step 4: Build the component
 
-Create an async server component in `features/<domain>/components/`. Before building a new component, check if there's already a reusable one in the same feature folder that does what you need. If there is, use it. If not, create one that calls its own query and renders the result. Export a skeleton from the same file.
+Create an async server component in `features/<domain>/components/`. Reuse existing components in the feature folder before adding new ones. Export a skeleton from the same file.
 
-Default to async server components. They `await` their own queries directly. Don't reach for `use()` until you actually need a client component:
+Default to async server components. They `await` their own queries directly:
 
 ```tsx
 import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
@@ -95,7 +112,7 @@ export async function NotificationsBadge() {
 </Suspense>
 ```
 
-Only pass a promise + use `use()` when the consumer must be a client component (it needs hooks, event handlers, or browser APIs). In that case, name promise props with a `Promise` suffix and put a `fallback` on the Suspense matching the resolved UI, unless the component renders nothing in the empty state:
+Pass a promise + `use()` only when the consumer must be a client component (hooks, event handlers, browser APIs). Name promise props with a `Promise` suffix:
 
 ```tsx
 <Suspense fallback={<TagListSkeleton />}>
@@ -109,23 +126,12 @@ import { use } from 'react';
 
 export function TagPicker({ itemsPromise }: { itemsPromise: Promise<Tag[]> }) {
   const items = use(itemsPromise);
-  // ...interactive logic
 }
 ```
 
-This keeps the boundary where it belongs and avoids redundant server wrappers, but only when interactivity actually requires the client.
+Server components take plain values as props (strings, IDs), never promises. When a parent already has the data from its own query, pass it as a prop instead of having the child refetch. For example, `<Feed>` fetches the post list and passes each `post` object to `<Post post={post} />`. There's no reason for `<Post>` to refetch its own row by id when the parent already has it.
 
-Group small related components into one file when they're always used together or one is the natural building block for another. Don't split a card and the grid that renders it into separate files. Examples:
-
-- `genre-card.tsx` exports `GenrePill`, `GenreCard`, `GenreGrid`, `GenreGridSkeleton`
-- `playlist-card.tsx` exports `PlaylistCard`, `PlaylistList`, `PlaylistCardSkeleton`, `PlaylistListSkeleton`
-- `track-interactions.tsx` (a `'use client'` file) exports the small interactive pieces (`PlayButton`, `FavoriteButton`, `TrackIndexCell`) used together by a server-side row component
-
-A new file should hold something with real surface area, not a two-line passthrough. If you find yourself importing a component from a sibling file that's only ever used in one place, move it in.
-
-The server/client boundary blocks some grouping. An async server component and its `'use client'` helper (a poller, an optimistic-input wrapper) cannot share a file. Keep them as siblings in the same feature folder and don't fight the boundary.
-
-Don't extract shared UI primitives prematurely. Two sidebar widgets that happen to look similar but render different data shapes (a pinned-projects row vs a recent-deploys row with status) are not the same component. The visual will diverge as soon as one needs an extra slot. Wait until at least three call sites would use the abstraction with the exact same shape before extracting.
+A list with its skeleton, in one file:
 
 ```tsx
 export async function Feed({ userId }: { userId: string }) {
@@ -152,26 +158,21 @@ export function FeedSkeleton() {
 }
 ```
 
-The server component receives plain values as props (strings, IDs), never promises. It awaits its own queries internally. If it needs the current user or session data, it calls a `'use cache: private'` query rather than receiving it from the page. The component stays self-contained.
+Group related components in one file when they're always used together or one is a natural building block for another. A card and its grid live in the same file. For example, `genre-card.tsx` exports `GenrePill`, `GenreCard`, `GenreGrid`, `GenreGridSkeleton`. Don't split shared UI primitives prematurely though, wait until three call sites need the same shape before extracting. Two sidebar widgets that happen to look similar but render different data shapes are not the same component, the visuals diverge as soon as one needs an extra slot.
 
-Client components are different: when a client component needs server data but should own its loading state (a sidebar badge, a popover that fetches on mount), pass the unresolved promise from the server and resolve it with `use()` on the client. Wrap the consumer in `<Suspense>`.
+Server/client boundary blocks some grouping. An async server component and its `'use client'` helper can't share a file. Keep them as siblings in the same folder.
 
-When a parent component already has the data from its own query, pass it as props instead of having the child refetch. For example, `<Feed>` fetches a list of posts and passes each `post` object to `<Post post={post} />`. There is no reason for `<Post>` to refetch its own row by id when the parent already has it.
-
-The skeleton matches the exact layout of the real component. Show fewer items than expected for variable-length lists.
+When a client component needs server data but should own its loading state (a sidebar badge, a popover that fetches on mount), pass the unresolved promise from the server and resolve it with `use()` on the client. Wrap the consumer in `<Suspense>`.
 
 ### Skeleton design rules
 
-1. Match the exact layout: same flex direction, gaps, padding, responsive breakpoints
-2. If the real component uses `flex-col sm:flex-row`, the skeleton must too
-3. Include all structural elements: avatar circles, action button placeholders, image squares
-4. Use matching size classes
-5. Include placeholder shapes for action buttons, not just content
-6. Responsive visibility must match (`hidden sm:block` in real = same in skeleton)
-7. Don't include skeletons for inner Suspense content
-8. Co-locate with the real component, export alongside it
+1. Match the real component's layout: flex direction, gaps, padding, breakpoints
+2. Include all structural elements: avatar circles, action button placeholders, image squares
+3. Responsive visibility must match (`hidden sm:block` in real = same in skeleton)
+4. Show 2–5 placeholders for variable-length lists, not the real count
+5. Don't include skeletons for inner Suspense content, those have their own boundaries
 
-If the entire component output can be cached (a self-contained widget), put `'use cache'` on the component directly instead of on the query:
+If the entire component output can be cached, put `'use cache'` on the component directly instead of on the query:
 
 ```tsx
 async function TrendingTags() {
@@ -255,12 +256,31 @@ export function Poller({ intervalMs = 5000 }: { intervalMs?: number }) {
 
 ## Step 6: Compose the page
 
-Create or update the page in `app/`. The page composes components from feature folders with Suspense boundaries. It never fetches data directly.
+Create the page in `app/`. The page composes feature components with Suspense boundaries. It never fetches data directly.
 
-Use `params.then()` instead of `await params` to keep the page synchronous. Content above the `.then()` gets pre-rendered into the static shell. Use the generated `PageProps<'/route'>` and `LayoutProps<'/route'>` types for all page and layout function signatures.
+Use `params.then()` instead of `await params` to keep the page synchronous. Content above the `.then()` pre-renders into the static shell. Use generated `PageProps<'/route'>` and `LayoutProps<'/route'>` types.
+
+### The page owns the Suspense boundary, the feature owns the skeleton
+
+The feature exports the async component and a sibling skeleton. The page imports both and places the boundary. Don't pre-wrap the component in `<Suspense>` inside the feature, that hides the boundary and prevents grouping siblings under a shared parent (e.g. detail + replies inside one `params.then()`).
 
 ```tsx
-// Page with params
+// features/post/components/post-detail.tsx
+export async function PostDetail({ id }: { id: string }) {
+  const post = await getPost(id);
+  return <article>{post.body}</article>;
+}
+
+export function PostDetailSkeleton() {
+  return <div className="skeleton h-64 rounded-xl" />;
+}
+```
+
+```tsx
+// app/post/[id]/page.tsx
+import { Suspense } from 'react';
+import { PostDetail, PostDetailSkeleton } from '@/features/post/components/post-detail';
+
 export default function PostPage({ params }: PageProps<'/post/[id]'>) {
   return (
     <div>
@@ -280,8 +300,14 @@ export default function PostPage({ params }: PageProps<'/post/[id]'>) {
     </div>
   );
 }
+```
 
-// Page with searchParams
+Page chrome sits **above** the `params.then()` so it paints instantly. Never wrap the entire page in a Suspense fallback.
+
+For `searchParams` or both, use the same shape:
+
+```tsx
+// searchParams only
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return searchParams.then(sp => {
     const q = typeof sp.q === 'string' ? sp.q : '';
@@ -289,7 +315,7 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   });
 }
 
-// Page with both
+// Both
 export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return Promise.all([params, searchParams]).then(([{ handle }, sp]) => (
     <ProfileFeed handle={handle} tab={parseTab(sp.tab)} />
@@ -297,27 +323,26 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
 }
 ```
 
-Choose boundary placement deliberately:
+Boundary placement:
 
 - Group things that should appear together in one boundary
-- Nest boundaries for slower content that should stream independently
-- Wrap fallible sections in `<ErrorBoundary>` so one failure doesn't crash the page
-- Optional: wrap content in `<ViewTransition>` for smooth reveals on Suspense resolution. See the [React View Transitions skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions) for patterns
+- Nest boundaries for slower content to stream independently
+- Wrap fallible sections in `<ErrorBoundary>`
+- Optional: wrap in `<ViewTransition>` for smooth reveals. See [React View Transitions skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions)
 
 ### Suspense boundary placement rules
 
-1. The first section gets its own Suspense with a skeleton fallback (known, predictable height)
-2. Section headings go outside their Suspense (in the static shell)
-3. If a section has variable height, group everything below it inside the same Suspense
-4. If a section has fixed height (deterministic count), it can have its own boundary safely
-5. Show fewer skeleton items than the expected real count for variable-length lists (2-5 items)
-6. Sections that only appear after variable-height content resolves don't need their own skeletons
-7. Detail components can have inner Suspense for secondary content. The page-level skeleton should NOT include the inner skeleton
+1. First section gets its own Suspense with a known-height skeleton fallback
+2. Section headings stay outside Suspense (in the static shell)
+3. Variable-height sections: group everything below them in the same Suspense
+4. Fixed-height sections: own boundary is safe
+5. Variable-length lists: show 2–5 skeleton items, not the real count
+6. Inner Suspense content stays out of the outer skeleton
 
 ### Layout-level Suspense
 
-Layouts can also compose feature components with Suspense for sidebars and persistent widgets. Wrap each in an error boundary so a failing widget doesn't break the whole page.
+Layouts compose feature components with Suspense the same way pages do. Wrap each in an error boundary.
 
 Add `export const unstable_prefetch = 'force-runtime'` so navigations are backed by prefetched data.
 
-`generateMetadata` can use `await params` since it runs before the page and doesn't affect the static shell.
+`generateMetadata` can use `await params`, it runs before the page.
