@@ -423,37 +423,48 @@ Live code this one too, faster, since the audience already knows the pattern.
 ```tsx
 export default function HomePage({ searchParams }: PageProps) {
   return (
-    <div>
-      {/* Page header */}
-      {/* Tabs: following / discover */}
+    <div className="group/tabs">
+      <div className="sticky top-0 z-30 bg-white/70 backdrop-blur-md dark:bg-black/70">
+        {/* Tabs: following / discover */}
+      </div>
       {/* Composer: new drop form */}
-      {/* Feed: list of drops */}
+      <div className="transition-opacity group-has-data-pending/tabs:opacity-50">
+        {/* Feed: list of drops */}
+      </div>
     </div>
   );
 }
 ```
 
+- The shell is already there: sticky wrapper for the tabs (no separate page header, the tabs are the header on home, Twitter-style), the composer slot, and the feed slot with the pending-state opacity hook. We're just dropping components into three labelled slots
+
 - Same empty blueprint as before. Show it in the browser, just a blank page with the layout around it
 
-**Step 2: drop in components + Suspense.** Do it in one go this time, the audience has seen the pattern:
+**Step 2: drop in components + Suspense.** Do it in one go this time, the audience has seen the pattern. Replace each comment with its component:
 
 ```tsx
-<PageHeader title="Home" />
-<Suspense fallback={<TabsSkeleton />}>
-  <FeedTabs />
-</Suspense>
-<DropComposer />
-<Suspense fallback={<DropListSkeleton />}>
-  <Crossfade>
-    {searchParams.then(sp => {
-      const tab = parseTab(sp.tab);
-      return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
-    })}
-  </Crossfade>
-</Suspense>
+<div className="group/tabs">
+  <div className="sticky top-0 z-30 bg-white/70 backdrop-blur-md dark:bg-black/70">
+    <Suspense fallback={<TabsSkeleton />}>
+      <FeedTabs />
+    </Suspense>
+  </div>
+  <DropComposer />
+  <div className="transition-opacity group-has-data-pending/tabs:opacity-50">
+    <Suspense fallback={<DropListSkeleton />}>
+      <Crossfade>
+        {searchParams.then(sp => {
+          const tab = parseTab(sp.tab);
+          return tab === 'discover' ? <DiscoverFeed /> : <Feed />;
+        })}
+      </Crossfade>
+    </Suspense>
+  </div>
+</div>
 ```
 
-- `<FeedTabs>` reads searchParams to know which tab is active. It's async, gets its own Suspense boundary with `<TabsSkeleton>`. Tabs appear fast at the top
+- The shell didn't change. We just dropped three components into the three labelled slots. That's the whole point: the page is composition
+- `<FeedTabs>` reads searchParams to know which tab is active. It's async, gets its own Suspense boundary with `<TabsSkeleton>`. Note the sticky wrapper surrounds the Suspense so the skeleton sticks too and there's no layout shift when the real tabs resolve
 - `<DropComposer>` is synchronous, it doesn't need a boundary. It passes a server-rendered `<CurrentUserAvatar>` into client forms, same composition pattern we just saw
 - The feed is the main content. `searchParams.then()` is just JavaScript, same idea as `params.then()`. The page stays synchronous. The feed gets `<Crossfade>` for a smooth reveal
 - `<Feed>` and `<DiscoverFeed>` are async components that own their data. Swap between them based on the tab. Either one works on any page

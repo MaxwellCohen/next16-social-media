@@ -9,11 +9,12 @@ function parsePage(value: string | string[] | undefined): number {
 
 export default function HomePage({ searchParams }: PageProps<'/'>) {
   return (
-    <div>
-      {/* Page header */}
-      {/* Tabs: following / discover */}
+    <div className="group/tabs">
+      <div className="sticky top-0 z-30 bg-white/70 backdrop-blur-md backdrop-saturate-150 dark:bg-black/70">
+        {/* Tabs: following / discover */}
+      </div>
       {/* Composer: new drop form */}
-      {/* Feed: list of drops */}
+      <div className="transition-opacity group-has-data-pending/tabs:opacity-50">{/* Feed: list of drops */}</div>
     </div>
   );
 }
