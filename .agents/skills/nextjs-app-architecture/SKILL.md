@@ -75,7 +75,25 @@ The `cacheTag` in the query and the `updateTag` in the action live in the same f
 
 Create an async server component in `features/<domain>/components/`. Before building a new component, check if there's already a reusable one in the same feature folder that does what you need. If there is, use it. If not, create one that calls its own query and renders the result. Export a skeleton from the same file.
 
-Don't create new files for trivial wrappers. If you need a one-line server component that just awaits a query and passes the result to an existing client component, pass the unresolved promise straight to the client component and let it `use()` the value. Name promise props with a `Promise` suffix. Provide a `fallback` on the Suspense (a skeleton matching the resolved UI), unless the component renders nothing in the empty state and would just show blank space anyway:
+Default to async server components. They `await` their own queries directly. Don't reach for `use()` until you actually need a client component:
+
+```tsx
+import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
+
+export async function NotificationsBadge() {
+  const count = await getUnreadNotificationCount();
+  if (count === 0) return null;
+  return <span aria-label={`${count} unread`}>{count}</span>;
+}
+```
+
+```tsx
+<Suspense>
+  <NotificationsBadge />
+</Suspense>
+```
+
+Only pass a promise + use `use()` when the consumer must be a client component (it needs hooks, event handlers, or browser APIs). In that case, name promise props with a `Promise` suffix and put a `fallback` on the Suspense matching the resolved UI, unless the component renders nothing in the empty state:
 
 ```tsx
 <Suspense fallback={<TagListSkeleton />}>
@@ -89,11 +107,11 @@ import { use } from 'react';
 
 export function TagPicker({ itemsPromise }: { itemsPromise: Promise<Tag[]> }) {
   const items = use(itemsPromise);
-  // ...
+  // ...interactive logic
 }
 ```
 
-This keeps the boundary where it belongs (the client component owns the suspending read) and avoids a redundant server wrapper.
+This keeps the boundary where it belongs and avoids redundant server wrappers, but only when interactivity actually requires the client.
 
 Group small related components into one file when they're always used together or one is the natural building block for another. Don't split a card and the grid that renders it into separate files. Examples:
 
@@ -199,6 +217,8 @@ Server content can flow into client components as children:
 The client component doesn't know where the avatar came from. Composition crosses the boundary.
 
 Use `useOptimistic` for instant feedback on mutations. Skip success toasts when the optimistic UI already shows the result. Only toast on error.
+
+For deeper patterns on building interactive client components alongside async React (coordinating `useTransition`, `useOptimistic`, `useActionState`, `data-pending`, Suspense streaming, and caching across server and client in one app), see the [Interactive Apps guide](https://nextjs.org/docs/app/guides/interactive-apps).
 
 ### Live data via polling
 
