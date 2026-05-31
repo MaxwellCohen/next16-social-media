@@ -212,6 +212,12 @@ Switch to editor + browser with the app.
 
 Walk through the app in the editor and browser. The app is already built, but the two main pages start as empty stubs with comment slots. We'll fill them in piece by piece to show how the patterns work in practice and what experience they produce.
 
+### Setting the scene
+
+Before we touch any code, just orient the audience:
+
+*"Okay, so we're in the middle of building an app. Next.js 16, App Router, cache components turned on, React Compiler enabled. The infrastructure pieces are all wired up. What I want to show you is what it actually feels like to build a page in this model. So let's pick one page and build it together."*
+
 ### Starter app
 
 Everything pre-built except the pages. Show the feature folders:
@@ -336,6 +342,7 @@ return (
 - `<Replies>` has its own nested `<Suspense>`. It's the slowest query so it streams in independently. The user can already read the post while replies load
 - `<DropDetailSkeleton>` and `<RepliesSkeleton>` are exported from the same file as their async component. They can't drift apart. The loading state IS part of the component
 - Show the browser: the page streams. Detail appears, then replies fill in. Designed order, not random
+- **Visualize it**: open the Suspense panel in the devtools (separate tab) and step through the loading sequence. Each boundary is a node. You can watch which fallbacks render first and confirm the order feels right before moving on. This is how you tune loading states without reloading and guessing
 - *Callback: this is coordinated loading from the WHY. No popcorn UI, no `isLoading` flags. The page composes the loading experience the same way it composes the UI*
 
 **Step 6: ErrorBoundary.** Wrap replies:
