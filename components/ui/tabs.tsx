@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { startTransition, useOptimistic } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
@@ -11,18 +11,19 @@ type Tab<T extends string> = { label: string; value: T; href: Route };
 type Props<T extends string> = {
   tabs: Tab<T>[];
   active: T;
-  action: (value: T) => void | Promise<void>;
   label?: string;
 };
 
-export function Tabs<T extends string>({ tabs, active, action, label = 'Sections' }: Props<T>) {
+export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
+  const [isPending, startTransition] = useTransition();
 
   return (
     <nav
       className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
       aria-label={label}
       data-client="Tabs"
+      data-pending={isPending ? '' : undefined}
     >
       {tabs.map(t => {
         const isActive = optimisticActive === t.value;
@@ -32,9 +33,8 @@ export function Tabs<T extends string>({ tabs, active, action, label = 'Sections
             href={t.href}
             onNavigate={() => {
               if (t.value === optimisticActive) return;
-              startTransition(async () => {
+              startTransition(() => {
                 setOptimisticActive(t.value);
-                await action(t.value);
               });
             }}
             aria-current={isActive ? 'page' : undefined}
