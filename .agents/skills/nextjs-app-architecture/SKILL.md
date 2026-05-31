@@ -75,6 +75,34 @@ The `cacheTag` in the query and the `updateTag` in the action live in the same f
 
 Create an async server component in `features/<domain>/components/`. Before building a new component, check if there's already a reusable one in the same feature folder that does what you need. If there is, use it. If not, create one that calls its own query and renders the result. Export a skeleton from the same file.
 
+Don't create new files for trivial wrappers. If you need a one-line server component that just awaits a query and passes the result to an existing client component, pass the unresolved promise straight to the client component and let it `use()` the value. Name promise props with a `Promise` suffix. Provide a `fallback` on the Suspense (a skeleton matching the resolved UI), unless the component renders nothing in the empty state and would just show blank space anyway:
+
+```tsx
+<Suspense fallback={<TagListSkeleton />}>
+  <TagPicker itemsPromise={getTags()} />
+</Suspense>
+```
+
+```tsx
+'use client';
+import { use } from 'react';
+
+export function TagPicker({ itemsPromise }: { itemsPromise: Promise<Tag[]> }) {
+  const items = use(itemsPromise);
+  // ...
+}
+```
+
+This keeps the boundary where it belongs (the client component owns the suspending read) and avoids a redundant server wrapper.
+
+Group small related components into one file when they're always used together or one is the natural building block for another. Don't split a card and the grid that renders it into separate files. Examples:
+
+- `genre-card.tsx` exports `GenrePill`, `GenreCard`, `GenreGrid`, `GenreGridSkeleton`
+- `playlist-card.tsx` exports `PlaylistCard`, `PlaylistList`, `PlaylistCardSkeleton`, `PlaylistListSkeleton`
+- `track-interactions.tsx` (a `'use client'` file) exports the small interactive pieces (`PlayButton`, `FavoriteButton`, `TrackIndexCell`) used together by a server-side row component
+
+A new file should hold something with real surface area, not a two-line passthrough. If you find yourself importing a component from a sibling file that's only ever used in one place, move it in.
+
 ```tsx
 export async function Feed({ userId }: { userId: string }) {
   const posts = await getFeed(userId);
@@ -100,7 +128,9 @@ export function FeedSkeleton() {
 }
 ```
 
-The component receives plain values as props (strings, IDs), never promises. If the component needs the current user or session data, it calls a `'use cache: private'` query internally rather than receiving it from the page. The component stays self-contained.
+The server component receives plain values as props (strings, IDs), never promises. It awaits its own queries internally. If it needs the current user or session data, it calls a `'use cache: private'` query rather than receiving it from the page. The component stays self-contained.
+
+Client components are different: when a client component needs server data but should own its loading state (a sidebar badge, a popover that fetches on mount), pass the unresolved promise from the server and resolve it with `use()` on the client. Wrap the consumer in `<Suspense>`.
 
 When a parent component already has the data from its own query, pass it as props instead of having the child refetch. For example, `<Feed>` fetches a list of posts and passes each `post` object to `<Post post={post} />`. There is no reason for `<Post>` to refetch its own row by id when the parent already has it.
 
@@ -170,7 +200,32 @@ The client component doesn't know where the avatar came from. Composition crosse
 
 Use `useOptimistic` for instant feedback on mutations. Skip success toasts when the optimistic UI already shows the result. Only toast on error.
 
-Group related small client components into one file when they're always used together and individually trivial (e.g., a like button, repost button, and bookmark button in one `post-actions.tsx`).
+### Live data via polling
+
+If the feature needs to reflect updates that happen on the server (other users posting, new notifications, vote counts changing), drop a `<Poller>` client component into the page:
+
+```tsx
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+export function Poller({ intervalMs = 5000 }: { intervalMs?: number }) {
+  const router = useRouter();
+  useEffect(() => {
+    const interval = setInterval(() => router.refresh(), intervalMs);
+    const onFocus = () => router.refresh();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [router, intervalMs]);
+  return null;
+}
+```
+
+`router.refresh()` re-renders the server components on the server. Combined with `'use cache'` + `cacheLife('seconds')`, the queries return cached data until they expire, then the next refresh picks up the new data. No WebSockets, no SSE, just the existing cache cycle.
 
 ## Step 6: Compose the page
 
@@ -185,18 +240,16 @@ export default function PostPage({ params }: PageProps<'/post/[id]'>) {
     <div>
       <PageHeader back title="Post" />
       <Suspense fallback={<PostDetailSkeleton />}>
-        <Crossfade>
-          {params.then(({ id }) => (
-            <>
-              <PostDetail id={id} />
-              <ErrorBoundary title="Replies didn't load">
-                <Suspense fallback={<RepliesSkeleton />}>
-                  <Replies postId={id} />
-                </Suspense>
-              </ErrorBoundary>
-            </>
-          ))}
-        </Crossfade>
+        {params.then(({ id }) => (
+          <>
+            <PostDetail id={id} />
+            <ErrorBoundary title="Replies didn't load">
+              <Suspense fallback={<RepliesSkeleton />}>
+                <Replies postId={id} />
+              </Suspense>
+            </ErrorBoundary>
+          </>
+        ))}
       </Suspense>
     </div>
   );
@@ -222,8 +275,8 @@ Choose boundary placement deliberately:
 
 - Group things that should appear together in one boundary
 - Nest boundaries for slower content that should stream independently
-- Wrap content in `<Crossfade>` for smooth reveals
 - Wrap fallible sections in `<ErrorBoundary>` so one failure doesn't crash the page
+- Optional: wrap content in `<ViewTransition>` for smooth reveals on Suspense resolution. See the [React View Transitions skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions) for patterns
 
 ### Suspense boundary placement rules
 
