@@ -217,7 +217,7 @@ Walk through the app in the editor and browser. The app is already built, but th
 
 Before we touch any code, just orient the audience:
 
-*"Okay, so we're in the middle of building an app. Next.js 16, App Router, cache components turned on, React Compiler enabled. The infrastructure pieces are all wired up. What I want to show you is what it actually feels like to build a page in this model. So let's pick one page and build it together."*
+*"Most of the time, you're not starting a Next.js app from scratch, you're adding a page to one that already exists. That's what we're going to do here. Next.js 16, App Router, cache components turned on, React Compiler enabled. The infrastructure pieces are wired up. The feature folders, the layout, the design system are all there. I just need to drop in two pages. So let's actually build them together."*
 
 ### Starter app
 
@@ -484,7 +484,7 @@ This section has two halves. First we edit the starter to add caching to one fea
 
 **Editor, step 2: add `'use cache'` to one feature.**
 
-Open the drop queries file. We're going to add caching to the features we just built. Show two queries side by side:
+Open the drop queries file. For each read, ask one question: *would the next viewer see the same thing?* If yes, cache it. If only this user would, `'use cache: private'`. If it's live, leave it dynamic and let Suspense handle the wait. That's the choice: **stream, cache, or cache-per-viewer.** Show two queries side by side:
 
 ```ts
 // drop-queries.ts
