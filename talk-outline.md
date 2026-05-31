@@ -470,9 +470,17 @@ export default function HomePage({ searchParams }: PageProps) {
 - `<Feed>` and `<DiscoverFeed>` are async components that own their data. Swap between them based on the tab. Either one works on any page
 - Point out: this went faster. Same pattern, second time. That's the point
 
-### Other pages
+### Tour the other pages
 
-Click around: profile, search, bookmarks, tags. Already built. Same components, different pages. `<Drop>` on home AND profile, no duplication.
+Open profile, bookmarks, and search side by side in the editor. Don't read them, just scroll. Point out the reuse:
+
+- **Profile** renders the same `<Drop>` we just put in the home feed. Same component, different page
+- **Bookmarks** also reuses `<Drop>`. Different data source (the user's bookmarks instead of the feed), same row
+- **Search** uses `searchParams.then()` and `<Crossfade>`, the same pattern we just used for the feed's tab state
+
+Each page is twenty lines or fewer. The components carry the weight, the pages just compose.
+
+- *Callback to WHY*: with route-level loaders we'd duplicate the fetch in every page that wanted to render a drop. With useEffect + a client cache we'd hoist props from the page down. Here, `<Drop>` works anywhere because the component owns its data
 
 ### Adding caching + Instant Navigations
 
@@ -527,6 +535,7 @@ Explain what changed since what they saw in the editor: I took the same pattern 
 - Navigate around, cached. Content stays cached until invalidated
 - Post a drop, server action calls `updateTag('feed')`. Navigate back to feed, **new prefetch fires.** Only the invalidated data refetches, everything else stays cached
 - This is the full cycle: `cacheTag` → `'use cache'` → `updateTag`
+- *Callback to WHY*: this is what people reach for React Query for. There's no client cache to configure, no second mental model. The cache lives on the server, the prefetch fills it before the click, and the component never knows
 
 **Deployed app, step 6: watch the cache flip live.**
 
@@ -536,12 +545,25 @@ Pick one mutation and make the audience watch the invalidation moment:
 2. Open a drop and bookmark it. The action calls `updateTag('bookmarks-<handle>')`
 3. Navigate to Bookmarks again. **The cached version is gone, fresh data streams in with the new bookmark.** Everything else (sidebar, who-to-follow, trending) is still cached
 4. Land the point: one tag flipped, only the affected piece refetched. The rest of the app didn't move. This is what "cache where you choose, invalidate at the layer that owns the key" actually feels like
+- *Callback to WHY*: remember "touch one thing, three systems need updating"? Here it's one tag, one place, and both the server cache and the client cache update together. No coordination layer between them
 
-**Deployed app, step 7: boundary visualizer.**
+**Deployed app, step 7: live notifications without a websocket.**
 
-Fuchsia outlines on client components. Everything else is server.
+Open Activity. In a second window, switch user and like a drop. Within seconds the badge updates and the new row flashes in. *"That's `router.refresh()` on an interval, plus a `cacheLife('seconds')` query, plus `<ViewTransition>` on each row. Same primitives as everything else, just composed for live data."*
 
-**Deployed app, step 8: Speed Insights.**
+- *Callback to WHY*: "live" features are usually where you reach for a separate state store, polling library, or WebSocket layer. Here it's the same `'use cache'` query you'd write for static data, plus one client component. No new mental model
+
+**Deployed app, step 8: search as you type.**
+
+Click Search, type slowly. URL updates on each keystroke, spinner shows pending, results crossfade in. Same composition as the home feed, just driven by URL state.
+
+**Deployed app, step 9: boundary visualizer.**
+
+Toggle it. Handful of fuchsia outlines on interactive leaves, everything else is server. This is the ratio you get when you push `'use client'` to the leaves.
+
+- *Callback to WHY*: in the useEffect model every component shipped to the browser. In the loader model the page knew everything its children needed. Here the boundaries are local and tiny, and the browser only gets the JavaScript it needs to be interactive
+
+**Deployed app, step 10: Speed Insights.**
 
 - Open Vercel Speed Insights for the deployed app. "I've had this deployed on Vercel, let's look at how it's been performing."
 - Show real production data, Core Web Vitals, experience scores
