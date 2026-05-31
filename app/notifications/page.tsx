@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/notifications' },
   description: 'Activity on your drops.',
   robots: { follow: false, index: false },
-  title: 'Notifications',
+  title: 'Activity',
 };
 
 export const unstable_prefetch = 'force-runtime';
@@ -18,7 +18,7 @@ export const unstable_prefetch = 'force-runtime';
 export default function NotificationsPage() {
   return (
     <div>
-      <PageHeader title="Notifications" />
+      <PageHeader title="Activity" />
       <Poller intervalMs={5000} />
       <MarkNotificationsRead />
       <Suspense fallback={<NotificationListSkeleton />}>
