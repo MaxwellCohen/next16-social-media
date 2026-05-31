@@ -52,6 +52,8 @@ If the query reads cookies or session data, use `'use cache: private'` to scope 
 
 Define clean domain types in `types/` with a mapper from your DB layer. Components should only see domain types, not ORM types.
 
+Persistent per-user state belongs in the database, not `localStorage`. "Last seen" timestamps, read/unread flags, dismissed banners: store them server-side as soon as the state needs to survive across browsers, accounts, or tab switches. `localStorage` is fine for genuinely client-only state (a sidebar collapsed flag, a draft autosave), but the moment another account or device should see the same state, move it to the DB.
+
 ## Step 3: Write the actions
 
 Create `<domain>-actions.ts`. Mark with `'use server'`. Always verify auth and validate input inside the action. Call `updateTag()` to invalidate the matching cache tags. Return `{ ok, error }`.
@@ -120,6 +122,10 @@ Group small related components into one file when they're always used together o
 - `track-interactions.tsx` (a `'use client'` file) exports the small interactive pieces (`PlayButton`, `FavoriteButton`, `TrackIndexCell`) used together by a server-side row component
 
 A new file should hold something with real surface area, not a two-line passthrough. If you find yourself importing a component from a sibling file that's only ever used in one place, move it in.
+
+The server/client boundary blocks some grouping. An async server component and its `'use client'` helper (a poller, an optimistic-input wrapper) cannot share a file. Keep them as siblings in the same feature folder and don't fight the boundary.
+
+Don't extract shared UI primitives prematurely. Two sidebar widgets that happen to look similar but render different data shapes (a pinned-projects row vs a recent-deploys row with status) are not the same component. The visual will diverge as soon as one needs an extra slot. Wait until at least three call sites would use the abstraction with the exact same shape before extracting.
 
 ```tsx
 export async function Feed({ userId }: { userId: string }) {
