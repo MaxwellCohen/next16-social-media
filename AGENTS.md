@@ -39,7 +39,7 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 
 ## View Transitions
 
-View transitions are an enhancement layer. Keep them subtle. The goal is to make navigation feel smooth, not flashy.
+View transitions are an enhancement layer. Keep them subtle. The goal is to make navigation feel smooth, not flashy. For general patterns and CSS recipes, see the [React View Transitions skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions).
 
 ### Persistent elements
 
