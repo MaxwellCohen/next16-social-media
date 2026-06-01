@@ -343,6 +343,8 @@ Boundary placement:
 
 Layouts compose feature components with Suspense the same way pages do. Wrap each in an error boundary.
 
-Add `export const unstable_prefetch = 'force-runtime'` so navigations are backed by prefetched data.
+### Page exports
+
+Optionally add `export const unstable_prefetch = 'force-runtime'` so navigations are backed by prefetched data. Use this for routes where instant-feeling navigation matters (feed, detail pages). Don't put it on every route, each opt-in page runs a full render in the background for every `<Link>` that enters the viewport, which costs server CPU and database load. Routes that change rarely or aren't navigated to often can stay on the default static prefetch.
 
 `generateMetadata` can use `await params`, it runs before the page.
