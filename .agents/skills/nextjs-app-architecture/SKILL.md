@@ -29,6 +29,21 @@ features/<domain>/
 
 If the code you're working with has domain logic scattered across pages or mixed into other folders, refactor it into this structure first. Move queries into `<domain>-queries.ts`, actions into `<domain>-actions.ts`, and components into `components/`. Pages in `app/` should only compose feature components, never contain domain logic.
 
+### How many features?
+
+Keep the feature list short. One folder per **domain noun a user would recognize**, not per database table or technical concern. Merge aggressively when one concept only exists in service of another:
+
+- A `favorite` or `bookmark` concept that only attaches to one parent entity (events, posts) belongs inside that parent's feature folder, not its own.
+- A `like`, `repost`, `vote`, or `reaction` concept on a piece of content belongs with that content's feature.
+- `auth` / `session` / `current user` belongs in a single `user` folder, not split across multiple folders.
+- A new folder is justified when the concept has its own queries, its own pages or routes, AND is referenced from at least two other features.
+
+If you find yourself making a feature folder with one query, one action, and one button, fold it into the parent feature instead.
+
+### Action file naming
+
+Actions for a feature always go in `<folder>-actions.ts`, matching the folder name — even when the mutation operates on a sub-concept. `toggleFavorite` in `features/event/` lives in `event-actions.ts`, not `favorite-actions.ts`. The folder is the source of truth for the name. Same for queries: `<folder>-queries.ts`.
+
 ## Step 2: Write the queries
 
 Create `<domain>-queries.ts`. Mark it with `import 'server-only'`. Wrap every query in `cache()` from React for request deduplication. Without it, the same query called from multiple components in the same render will hit the database multiple times. Add `'use cache'` + `cacheTag` + `cacheLife`.
@@ -47,10 +62,6 @@ export const getFeed = cache(async (userId: string) => {
 ```
 
 If the query reads cookies or session data, use `'use cache: private'` to scope the cache per user.
-
-Define clean domain types in `types/` with a mapper from your DB layer. Components should only see domain types, not ORM types.
-
-Persistent per-user state (read/unread flags, last-seen timestamps, dismissed banners) belongs in the database. Use `localStorage` only for genuinely client-only state like a collapsed sidebar or a draft autosave.
 
 ## Step 3: Write the actions
 
@@ -159,6 +170,8 @@ export function FeedSkeleton() {
 ```
 
 Group related components in one file when they're always used together or one is a natural building block for another. A card and its grid live in the same file. For example, `genre-card.tsx` exports `GenrePill`, `GenreCard`, `GenreGrid`, `GenreGridSkeleton`. Don't split shared UI primitives prematurely though, wait until three call sites need the same shape before extracting. Two sidebar widgets that happen to look similar but render different data shapes are not the same component, the visuals diverge as soon as one needs an extra slot.
+
+For single-use sub-components (a metadata strip inside one card, a header used only by one detail view, a list item only rendered by its list), inline them as **non-exported** functions in the same file. Don't make them their own file or their own export just because they're a separate JSX block. Exports are for things other files will import. Internal structure is for readability inside one file.
 
 Server/client boundary blocks some grouping. An async server component and its `'use client'` helper can't share a file. Keep them as siblings in the same folder.
 
