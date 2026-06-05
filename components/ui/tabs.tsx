@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,10 +21,11 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
   const [isPending, startTransition] = useTransition();
 
   return (
+    <Boundary label="Tabs">
     <nav
       className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm"
       aria-label={label}
-      data-client="Tabs"
+     
       data-pending={isPending ? '' : undefined}
     >
       {tabs.map(t => {
@@ -51,6 +54,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
         );
       })}
     </nav>
+    </Boundary>
   );
 }
 

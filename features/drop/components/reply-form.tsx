@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { useActionState, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -25,7 +27,8 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   }, INITIAL);
 
   return (
-    <form ref={formRef} action={formAction} className="flex flex-col gap-3" data-client="ReplyForm">
+    <Boundary label="ReplyForm">
+    <form ref={formRef} action={formAction} className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
         {avatar}
         <textarea
@@ -55,5 +58,6 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
         </Button>
       </div>
     </form>
+    </Boundary>
   );
 }

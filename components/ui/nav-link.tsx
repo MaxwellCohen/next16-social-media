@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import Link, { useLinkStatus } from 'next/link';
 import { useClientPathname } from '@/hooks/use-client-pathname';
 import type { Route } from 'next';
@@ -37,11 +39,12 @@ export function NavLink<T extends string>({ href, className, children, exact = f
   const isActive = checkActive(pathname, href.toString(), exact);
 
   return (
+    <Boundary label="NavLink">
     <Link
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive })}
-      data-client="NavLink"
+     
       data-navlink-href={href.toString()}
       data-navlink-exact={exact || undefined}
       data-navlink-active={resolve(className, { isActive: true })}
@@ -51,6 +54,7 @@ export function NavLink<T extends string>({ href, className, children, exact = f
     >
       <NavLinkContent isActive={isActive}>{children}</NavLinkContent>
     </Link>
+    </Boundary>
   );
 }
 

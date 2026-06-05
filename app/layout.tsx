@@ -5,6 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { DemoToggles } from '@/components/demo/demo-toggles';
+import { BoundaryProvider } from '@/components/internal/boundary-provider';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { SeedNavLinksFromPathname } from '@/components/scripts/seed-nav-links-from-pathname';
@@ -44,7 +45,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="flex min-h-[100dvh] flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
-          <OfflineIndicator />
+          <BoundaryProvider>
+            <OfflineIndicator />
           <AppGrid>
             <Sidebar />
             <MainColumn>{children}</MainColumn>
@@ -77,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Suspense>
           </div>
           <Toaster theme="system" position="bottom-right" />
+          </BoundaryProvider>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

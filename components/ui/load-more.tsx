@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import type { Route } from 'next';
@@ -9,10 +11,11 @@ export function LoadMore({ href }: { href: Route }) {
   const [isPending, startTransition] = useTransition();
 
   return (
+    <Boundary label="LoadMore">
     <button
       type="button"
       disabled={isPending}
-      data-client="LoadMore"
+     
       onClick={() => {
         startTransition(() => {
           router.push(href, { scroll: false });
@@ -22,5 +25,6 @@ export function LoadMore({ href }: { href: Route }) {
     >
       {isPending ? 'Loading…' : 'Load more'}
     </button>
+    </Boundary>
   );
 }
