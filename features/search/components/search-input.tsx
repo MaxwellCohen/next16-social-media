@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useTransition } from 'react';
@@ -17,7 +19,8 @@ export function SearchInput() {
   useSyncInputToSearchParam(inputRef, 'q');
 
   return (
-    <div className="relative" data-client="SearchInput">
+    <Boundary label="SearchInput">
+    <div className="relative">
       {isPending ? (
         <Spinner className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 opacity-40" />
       ) : (
@@ -41,5 +44,6 @@ export function SearchInput() {
       />
       <SeedFromSearchParam targetId={inputId} param="q" />
     </div>
+    </Boundary>
   );
 }

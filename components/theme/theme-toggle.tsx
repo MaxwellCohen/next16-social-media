@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
@@ -27,7 +29,8 @@ export function ThemeToggle({ variant = 'pill' }: Props) {
       : 'border-divider dark:border-divider-dark inline-flex items-center rounded-full border p-0.5';
 
   return (
-    <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass} data-client="ThemeToggle">
+    <Boundary label="ThemeToggle">
+    <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass}>
       <ToggleButton active={active === 'light'} label="Light mode" onClick={() => setTheme('light')}>
         <Sun className="size-4" />
       </ToggleButton>
@@ -38,6 +41,7 @@ export function ThemeToggle({ variant = 'pill' }: Props) {
         <Monitor className="size-4" />
       </ToggleButton>
     </div>
+    </Boundary>
   );
 }
 

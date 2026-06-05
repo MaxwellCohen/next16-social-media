@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -22,9 +24,10 @@ export function QuickDropForm({ avatar }: Props) {
   }
 
   return (
+    <Boundary label="QuickDropForm">
     <section
       className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7"
-      data-client="QuickDropForm"
+     
     >
       <form ref={formRef} action={submitAction} className="flex items-center gap-3">
         {avatar}
@@ -45,5 +48,6 @@ export function QuickDropForm({ avatar }: Props) {
         <Button type="submit">Drop it</Button>
       </form>
     </section>
+    </Boundary>
   );
 }

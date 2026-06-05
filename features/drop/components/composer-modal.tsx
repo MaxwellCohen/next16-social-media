@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import * as Ariakit from '@ariakit/react';
 import { Plus } from 'lucide-react';
 import { useActionState, useEffect, useRef, type ReactNode } from 'react';
@@ -36,6 +38,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   }, [state.submittedAt, dialog]);
 
   return (
+    <Boundary label="NewDropModal">
     <>
       {onOpenTrigger ? (
         <button
@@ -49,7 +52,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
       ) : (
         <Button
           className="w-full py-3"
-          data-client="NewDropModal"
+         
           onClick={() => {
             dialog.show();
           }}
@@ -94,5 +97,6 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
         </form>
       </Modal>
     </>
+    </Boundary>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { Boundary } from '@/components/internal/boundary';
+
 import { Bookmark, Heart, MessageCircle, Repeat2 } from 'lucide-react';
 import { useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -57,7 +59,8 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   }
 
   return (
-    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5" data-client="DropActions">
+    <Boundary label="DropActions">
+    <div className="text-gray -ml-2 flex items-center gap-1 pt-0.5">
       {!compact && (
         <IconButton
           label="Reply"
@@ -104,5 +107,6 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         <span className="hidden sm:inline">{optimistic.bookmarked ? 'Saved' : 'Save'}</span>
       </IconButton>
     </div>
+    </Boundary>
   );
 }
