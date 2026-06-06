@@ -1,9 +1,8 @@
 'use client';
 
-import { Boundary } from '@/components/internal/boundary';
-
 import { type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
+import { Boundary } from '@/components/internal/boundary';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
@@ -46,16 +45,15 @@ export function Button({
 
   return (
     <Boundary label="Button">
-    <button
-      type={type}
-      disabled={isDisabled}
-     
-      className={cn(base, sizes[size], variants[variant], className)}
-      {...props}
-    >
-      {isSubmit && pending && <Spinner />}
-      {children}
-    </button>
+      <button
+        type={type}
+        disabled={isDisabled}
+        className={cn(base, sizes[size], variants[variant], className)}
+        {...props}
+      >
+        {isSubmit && pending && <Spinner />}
+        {children}
+      </button>
     </Boundary>
   );
 }

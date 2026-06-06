@@ -1,8 +1,8 @@
 'use client';
 
+import Link, { useLinkStatus } from 'next/link';
 import { Boundary } from '@/components/internal/boundary';
 
-import Link, { useLinkStatus } from 'next/link';
 import { useClientPathname } from '@/hooks/use-client-pathname';
 import type { Route } from 'next';
 
@@ -40,20 +40,19 @@ export function NavLink<T extends string>({ href, className, children, exact = f
 
   return (
     <Boundary label="NavLink">
-    <Link
-      href={href as Route}
-      aria-current={isActive ? 'page' : undefined}
-      className={resolve(className, { isActive })}
-     
-      data-navlink-href={href.toString()}
-      data-navlink-exact={exact || undefined}
-      data-navlink-active={resolve(className, { isActive: true })}
-      data-navlink-inactive={resolve(className, { isActive: false })}
-      suppressHydrationWarning
-      {...rest}
-    >
-      <NavLinkContent isActive={isActive}>{children}</NavLinkContent>
-    </Link>
+      <Link
+        href={href as Route}
+        aria-current={isActive ? 'page' : undefined}
+        className={resolve(className, { isActive })}
+        data-navlink-href={href.toString()}
+        data-navlink-exact={exact || undefined}
+        data-navlink-active={resolve(className, { isActive: true })}
+        data-navlink-inactive={resolve(className, { isActive: false })}
+        suppressHydrationWarning
+        {...rest}
+      >
+        <NavLinkContent isActive={isActive}>{children}</NavLinkContent>
+      </Link>
     </Boundary>
   );
 }

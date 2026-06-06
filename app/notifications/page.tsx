@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
+import { Poller } from '@/components/poller';
 import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
-import { Poller } from '@/components/poller';
 import { MarkNotificationsRead } from '@/features/notifications/components/mark-notifications-read';
 import { NotificationList, NotificationListSkeleton } from '@/features/notifications/components/notification-list';
 import type { Metadata } from 'next';

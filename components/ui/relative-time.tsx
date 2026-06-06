@@ -1,8 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 
-import { useEffect, useState } from 'react';
 import { timeAgo } from '@/lib/utils';
 
 export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: boolean }) {
@@ -21,9 +21,9 @@ export function RelativeTime({ date, verbose = false }: { date: Date; verbose?: 
 
   return (
     <Boundary label="RelativeTime">
-    <time dateTime={date.toISOString()} suppressHydrationWarning>
-      {label}
-    </time>
+      <time dateTime={date.toISOString()} suppressHydrationWarning>
+        {label}
+      </time>
     </Boundary>
   );
 }
