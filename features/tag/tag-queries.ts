@@ -5,13 +5,11 @@ import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 export const getTrendingTags = cache(async () => {
-
   await delay(600);
   return countTags(6);
 });
 
 export const getAllTags = cache(async () => {
-
   await delay(700);
   return countTags();
 });

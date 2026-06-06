@@ -11,7 +11,6 @@ const FEED_PAGE_SIZE = 10;
 type FeedPage = { drops: Drop[]; hasMore: boolean };
 
 export const getFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
-
   await delay(800);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
@@ -36,7 +35,6 @@ export const getFeed = cache(async (handle: string, page: number = 1): Promise<F
 });
 
 export const getDiscoverFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
-
   await delay(800);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
@@ -61,7 +59,6 @@ export const getDiscoverFeed = cache(async (handle: string, page: number = 1): P
 });
 
 export const getDrop = cache(async (id: string) => {
-
   await delay(600);
   const row = await prisma.drop.findUnique({ where: { id } });
   if (!row) notFound();
@@ -69,7 +66,6 @@ export const getDrop = cache(async (id: string) => {
 });
 
 export const getReplies = cache(async (dropId: string) => {
-
   await delay(1800);
   const parent = await prisma.drop.findUnique({
     select: { authorHandle: true },
@@ -91,7 +87,6 @@ type ProfileFeedItem =
   | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 
 export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
-
   await delay(400);
   const [authored, reposts] = await Promise.all([
     prisma.drop.findMany({
@@ -116,7 +111,6 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
 });
 
 export const getRepliesByAuthor = cache(async (handle: string) => {
-
   await delay(400);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
@@ -126,7 +120,6 @@ export const getRepliesByAuthor = cache(async (handle: string) => {
 });
 
 export const getDropsByTag = cache(async (tag: string) => {
-
   await delay(400);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
@@ -136,7 +129,6 @@ export const getDropsByTag = cache(async (tag: string) => {
 });
 
 export const getBookmarkedDrops = cache(async (userHandle: string) => {
-
   await delay(400);
   const rows = await prisma.bookmark.findMany({
     include: { drop: true },
@@ -147,7 +139,6 @@ export const getBookmarkedDrops = cache(async (userHandle: string) => {
 });
 
 export const searchDrops = cache(async (query: string) => {
-
   await delay(300);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },

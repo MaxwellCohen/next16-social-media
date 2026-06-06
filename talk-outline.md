@@ -34,11 +34,11 @@ Let this breathe. Don't rush through it. The audience should nod along before yo
 - This is also why AI agents are so effective with React. Components have clear boundaries, clear inputs, clear outputs. An agent can reason about one component without understanding the whole app
 - That composability is the thing we want to keep. Everything else should follow from it
 
-*Visual: JSX blocks styled like a social media app: `<Header>`, `<Feed>`, `<Post>`, `<LikeButton>`, `<Avatar>`, `<Sidebar>`. Animate them snapping together in different arrangements using Keynote animations. The audience subconsciously recognizes the shape of a Twitter-like app without being told. The blocks rearrange, swap positions, compose into different layouts. The point is they're independent and interchangeable.*
+_Visual: JSX blocks styled like a social media app: `<Header>`, `<Feed>`, `<Post>`, `<LikeButton>`, `<Avatar>`, `<Sidebar>`. Animate them snapping together in different arrangements using Keynote animations. The audience subconsciously recognizes the shape of a Twitter-like app without being told. The blocks rearrange, swap positions, compose into different layouts. The point is they're independent and interchangeable._
 
 ### Slide: "People are already noticing"
 
-- Show @codewithantonio tweet: *"a fun fact i've observed with projects i've built using agentic coding: they all naturally drift toward feature architecture and monorepos... agents seem to perform best when changes have a small blast radius (feature architecture) and clear boundaries"*
+- Show @codewithantonio tweet: _"a fun fact i've observed with projects i've built using agentic coding: they all naturally drift toward feature architecture and monorepos... agents seem to perform best when changes have a small blast radius (feature architecture) and clear boundaries"_
 - People are restructuring their codebases to land on exactly this: self-contained components, feature folders, clear boundaries
 - Composable components aren't just good for developers. They're good for agents, good for teams, good for scaling. And we have a foundation for extending this across the entire stack
 
@@ -52,7 +52,7 @@ But somewhere along the way, we lost that composability. Each step in the evolut
 
 Each solved a problem. Each added a concept. We kept the Lego blocks but lost the composability that made them powerful.
 
-*Visual: three panels, or build up progressively. Each step adds a new layer/arrow/box around the original clean component tree. By step 3 the diagram is cluttered with arrows going in every direction: loaders, caches, state managers wrapping the components. The Lego blocks are still there but buried.*
+_Visual: three panels, or build up progressively. Each step adds a new layer/arrow/box around the original clean component tree. By step 3 the diagram is cluttered with arrows going in every direction: loaders, caches, state managers wrapping the components. The Lego blocks are still there but buried._
 
 ### Slide: "What we actually want"
 
@@ -65,7 +65,7 @@ Pause here. Let the audience read the list and feel each point.
 5. One codebase for the data layer, not a client cache, a server cache, and a coordination layer between them
 6. Components that are truly self-contained. Move them between pages, hand them to an AI agent, refactor freely. No hidden coupling
 
-*Visual: clean numbered list on a dark background. No diagrams. Let the text do the work. Maybe reveal one at a time.*
+_Visual: clean numbered list on a dark background. No diagrams. Let the text do the work. Maybe reveal one at a time._
 
 ### Slide: "What it usually takes"
 
@@ -73,13 +73,13 @@ A client cache with its own mental model. A separate server rendering strategy. 
 
 Dense on purpose. The audience should feel the weight of the pile.
 
-*Visual: a wall of text or a stack of boxes piling up. Deliberately overwhelming. Every item is a separate box/label. The slide should feel heavy.*
+_Visual: a wall of text or a stack of boxes piling up. Deliberately overwhelming. Every item is a separate box/label. The slide should feel heavy._
 
 ### Slide: "The real pain"
 
 The pain isn't that caching is hard. The pain is that every piece of data lives in a different system with different rules. Client state, server state, URL state, cache state. You spend more time coordinating where data lives than building features. The blast radius of any change is unpredictable: touch one thing, three systems need updating.
 
-*Visual: a single sentence centered on screen. "The pain is coordinating where every piece of data lives." Let it sit.*
+_Visual: a single sentence centered on screen. "The pain is coordinating where every piece of data lives." Let it sit._
 
 ---
 
@@ -91,7 +91,7 @@ The pain isn't that caching is hard. The pain is that every piece of data lives 
 - Client-side fetching means the user waits for JS to download and execute before any data request fires. Loaders move the fetch to the server but couple your components to the route. RSCs keep the fetch on the server AND keep components independent
 - This isn't theoretical. The numbers show it
 
-*Visual: screenshot of Nadia's benchmark results. Link: [developerway.com/posts/react-server-components-performance](https://www.developerway.com/posts/react-server-components-performance)*
+_Visual: screenshot of Nadia's benchmark results. Link: [developerway.com/posts/react-server-components-performance](https://www.developerway.com/posts/react-server-components-performance)_
 
 ### Slide: "The answer"
 
@@ -112,7 +112,13 @@ Show simplified code alongside the points. Not the real app, just the shape.
 ```tsx
 async function Feed() {
   const posts = await getFeed();
-  return <ul>{posts.map(p => <Post post={p} />)}</ul>;
+  return (
+    <ul>
+      {posts.map(p => (
+        <Post post={p} />
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -138,7 +144,7 @@ async function Post({ post }) {
   return (
     <article>
       <PostBody body={post.body} />
-      <PostActions userState={userState} />  {/* 'use client' */}
+      <PostActions userState={userState} /> {/* 'use client' */}
     </article>
   );
 }
@@ -166,7 +172,13 @@ async function TrendingTags() {
   cacheLife('minutes');
 
   const tags = await db.tag.findMany();
-  return <ul>{tags.map(t => <li>#{t.name}</li>)}</ul>;
+  return (
+    <ul>
+      {tags.map(t => (
+        <li>#{t.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -203,7 +215,7 @@ async function TrendingTags() {
 
 These complete the story from the WHY section. Every problem we named has an answer now.
 
-*"Let me show you what this looks like in practice. I've built a social media app with these patterns. Let's walk through how it's composed and what kind of experience we get."*
+_"Let me show you what this looks like in practice. I've built a social media app with these patterns. Let's walk through how it's composed and what kind of experience we get."_
 
 Switch to editor + browser with the app.
 
@@ -217,7 +229,7 @@ Walk through the app in the editor and browser. The app is already built, but th
 
 Before we touch any code, just orient the audience:
 
-*"Most of the time, you're not starting a Next.js app from scratch, you're adding a page to one that already exists. That's what we're going to do here. Next.js 16, App Router, cache components turned on, React Compiler enabled. The infrastructure pieces are wired up. The feature folders, the layout, the design system are all there. I just need to drop in two pages. So let's actually build them together."*
+_"Most of the time, you're not starting a Next.js app from scratch, you're adding a page to one that already exists. That's what we're going to do here. Next.js 16, App Router, cache components turned on, React Compiler enabled. The infrastructure pieces are wired up. The feature folders, the layout, the design system are all there. I just need to drop in two pages. So let's actually build them together."_
 
 ### Starter app
 
@@ -257,10 +269,16 @@ export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
 **Step 2: add the first component.** Replace the page header comment:
 
 ```tsx
-<PageHeader back title="Drop" />
-{/* Drop detail: full post with author info */}
-{/* Reply composer: input with avatar */}
-{/* Replies: list of replies */}
+<PageHeader back title="Drop" />;
+{
+  /* Drop detail: full post with author info */
+}
+{
+  /* Reply composer: input with avatar */
+}
+{
+  /* Replies: list of replies */
+}
 ```
 
 - Just a regular component. The page renders it synchronously. Nothing special yet
@@ -304,18 +322,20 @@ return (
 - Fix: use `params.then()` instead. The page stays synchronous. Everything above the `.then()` can be pre-rendered and shared across users. The dynamic content streams in after
 
 ```tsx
-{params.then(({ id }) => (
-  <>
-    <DropDetail id={id} />
-    <Replies id={id} />
-  </>
-))}
+{
+  params.then(({ id }) => (
+    <>
+      <DropDetail id={id} />
+      <Replies id={id} />
+    </>
+  ));
+}
 ```
 
 - Each component owns its data on the server. No loader coupling
 - Now point out the layout: `<TrendingTagsList>` and `<WhoToFollowList>` in the sidebar are the same kind of async components. They fetch their own data. No page wired them. They work on every page: home, profile, detail, search. With loaders, you'd duplicate those fetches on every route
 - In a loader model the page knows what every child needs. Here it doesn't even know what data exists
-- *Callback: this is the answer to the cascade. No useEffect, no client cache, no loader coupling. Components own their data again*
+- _Callback: this is the answer to the cascade. No useEffect, no client cache, no loader coupling. Components own their data again_
 
 **Step 5: Suspense.** Design the loading experience:
 
@@ -345,7 +365,7 @@ return (
 - `<DropDetailSkeleton>` and `<RepliesSkeleton>` are exported from the same file as their async component. They can't drift apart. The loading state IS part of the component
 - Show the browser: the page streams. Detail appears, then replies fill in. Designed order, not random
 - **Visualize it**: open the Suspense panel in the devtools (separate tab) and step through the loading sequence. Each boundary is a node. You can watch which fallbacks render first and confirm the order feels right before moving on. This is how you tune loading states without reloading and guessing
-- *Callback: this is coordinated loading from the WHY. No popcorn UI, no `isLoading` flags. The page composes the loading experience the same way it composes the UI*
+- _Callback: this is coordinated loading from the WHY. No popcorn UI, no `isLoading` flags. The page composes the loading experience the same way it composes the UI_
 
 **Step 6: Crossfade.** Animate the reveal:
 
@@ -412,7 +432,7 @@ return (
 - `<DropActions>` is `'use client'`. It uses `useOptimistic` for instant like/repost/bookmark feedback. But the initial state came from the server, fetched next to the database, not on the client
 - `'use client'` is a boundary marker, not a mode switch. Everything above it stays on the server. Only this leaf ships to the browser
 - Toggle boundary visualizer. Handful of fuchsia outlines, everything else is server. This is the ratio you get when you push `'use client'` to the leaves
-- *Callback: this is what "one codebase" looks like. Server and client in the same tree, composing naturally*
+- _Callback: this is what "one codebase" looks like. Server and client in the same tree, composing naturally_
 
 ### Page 2: Home feed (`app/page.tsx`)
 
@@ -428,9 +448,7 @@ export default function HomePage({ searchParams }: PageProps) {
         {/* Tabs: following / discover */}
       </div>
       {/* Composer: new drop form */}
-      <div className="transition-opacity group-has-data-pending/tabs:opacity-50">
-        {/* Feed: list of drops */}
-      </div>
+      <div className="transition-opacity group-has-data-pending/tabs:opacity-50">{/* Feed: list of drops */}</div>
     </div>
   );
 }
@@ -480,7 +498,7 @@ Open profile, bookmarks, and search side by side in the editor. Don't read them,
 
 Each page is twenty lines or fewer. The components carry the weight, the pages just compose.
 
-- *Callback to WHY*: with route-level loaders we'd duplicate the fetch in every page that wanted to render a drop. With useEffect + a client cache we'd hoist props from the page down. Here, `<Drop>` works anywhere because the component owns its data
+- _Callback to WHY_: with route-level loaders we'd duplicate the fetch in every page that wanted to render a drop. With useEffect + a client cache we'd hoist props from the page down. Here, `<Drop>` works anywhere because the component owns its data
 
 ### Adding caching + Instant Navigations
 
@@ -488,11 +506,11 @@ This section has two halves. First we edit the starter to add caching to one fea
 
 **Editor, step 1: show the problem first.** Navigate between pages in the starter. Every click hits the server. Skeletons every time. The architecture is good but it doesn't feel like an SPA yet.
 
-- *Callback: this was the "But..." from section 2*
+- _Callback: this was the "But..." from section 2_
 
 **Editor, step 2: add `'use cache'` to one feature.**
 
-Open the drop queries file. For each read, ask one question: *would the next viewer see the same thing?* If yes, cache it. If only this user would, `'use cache: private'`. If it's live, leave it dynamic and let Suspense handle the wait. That's the choice: **stream, cache, or cache-per-viewer.** Show two queries side by side:
+Open the drop queries file. For each read, ask one question: _would the next viewer see the same thing?_ If yes, cache it. If only this user would, `'use cache: private'`. If it's live, leave it dynamic and let Suspense handle the wait. That's the choice: **stream, cache, or cache-per-viewer.** Show two queries side by side:
 
 ```ts
 // drop-queries.ts
@@ -535,7 +553,7 @@ Explain what changed since what they saw in the editor: I took the same pattern 
 - Navigate around, cached. Content stays cached until invalidated
 - Post a drop, server action calls `updateTag('feed')`. Navigate back to feed, **new prefetch fires.** Only the invalidated data refetches, everything else stays cached
 - This is the full cycle: `cacheTag` → `'use cache'` → `updateTag`
-- *Callback to WHY*: this is what people reach for React Query for. There's no client cache to configure, no second mental model. The cache lives on the server, the prefetch fills it before the click, and the component never knows
+- _Callback to WHY_: this is what people reach for React Query for. There's no client cache to configure, no second mental model. The cache lives on the server, the prefetch fills it before the click, and the component never knows
 
 **Deployed app, step 6: watch the cache flip live.**
 
@@ -545,13 +563,14 @@ Pick one mutation and make the audience watch the invalidation moment:
 2. Open a drop and bookmark it. The action calls `updateTag('bookmarks-<handle>')`
 3. Navigate to Bookmarks again. **The cached version is gone, fresh data streams in with the new bookmark.** Everything else (sidebar, who-to-follow, trending) is still cached
 4. Land the point: one tag flipped, only the affected piece refetched. The rest of the app didn't move. This is what "cache where you choose, invalidate at the layer that owns the key" actually feels like
-- *Callback to WHY*: remember "touch one thing, three systems need updating"? Here it's one tag, one place, and both the server cache and the client cache update together. No coordination layer between them
+
+- _Callback to WHY_: remember "touch one thing, three systems need updating"? Here it's one tag, one place, and both the server cache and the client cache update together. No coordination layer between them
 
 **Deployed app, step 7: live notifications without a websocket.**
 
-Open Activity. In a second window, switch user and like a drop. Within seconds the badge updates and the new row flashes in. *"That's `router.refresh()` on an interval, plus a `cacheLife('seconds')` query, plus `<ViewTransition>` on each row. Same primitives as everything else, just composed for live data."*
+Open Activity. In a second window, switch user and like a drop. Within seconds the badge updates and the new row flashes in. _"That's `router.refresh()` on an interval, plus a `cacheLife('seconds')` query, plus `<ViewTransition>` on each row. Same primitives as everything else, just composed for live data."_
 
-- *Callback to WHY*: "live" features are usually where you reach for a separate state store, polling library, or WebSocket layer. Here it's the same `'use cache'` query you'd write for static data, plus one client component. No new mental model
+- _Callback to WHY_: "live" features are usually where you reach for a separate state store, polling library, or WebSocket layer. Here it's the same `'use cache'` query you'd write for static data, plus one client component. No new mental model
 
 **Deployed app, step 8: search as you type.**
 
@@ -561,7 +580,7 @@ Click Search, type slowly. URL updates on each keystroke, spinner shows pending,
 
 Toggle it. Handful of fuchsia outlines on interactive leaves, everything else is server. This is the ratio you get when you push `'use client'` to the leaves.
 
-- *Callback to WHY*: in the useEffect model every component shipped to the browser. In the loader model the page knew everything its children needed. Here the boundaries are local and tiny, and the browser only gets the JavaScript it needs to be interactive
+- _Callback to WHY_: in the useEffect model every component shipped to the browser. In the loader model the page knew everything its children needed. Here the boundaries are local and tiny, and the browser only gets the JavaScript it needs to be interactive
 
 **Deployed app, step 10: Speed Insights.**
 
@@ -600,4 +619,4 @@ You need components that run where they belong. Same composability we've always 
 
 I said at the beginning the model has changed a lot. Now you've seen it.
 
-*Visual: QR code linking to github.com/aurorascharff/next16-social-media. Repo URL visible below it. @aurorascharff on socials.*
+_Visual: QR code linking to github.com/aurorascharff/next16-social-media. Repo URL visible below it. @aurorascharff on socials._

@@ -1,9 +1,9 @@
 'use client';
 
-import { Boundary } from '@/components/internal/boundary';
 
 import { useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
+import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { toggleFollow } from '@/features/user/user-actions';
 
@@ -31,15 +31,9 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
 
   return (
     <Boundary label="FollowButton">
-    <Button
-      variant={following ? 'secondary' : 'primary'}
-      size="sm"
-      className="min-w-[7rem]"
-      onClick={handleClick}
-     
-    >
-      {following ? 'Following' : 'Follow'}
-    </Button>
+      <Button variant={following ? 'secondary' : 'primary'} size="sm" className="min-w-[7rem]" onClick={handleClick}>
+        {following ? 'Following' : 'Follow'}
+      </Button>
     </Boundary>
   );
 }

@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   title: 'Search',
 };
 
-
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
