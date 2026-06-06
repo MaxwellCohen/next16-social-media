@@ -45,7 +45,7 @@ export const getUserByHandle = cache(async (handle: string) => {
 export const getWhoToFollow = cache(async (handle: string) => {
   'use cache';
   cacheTag(`who-to-follow-${handle}`);
-  cacheLife('seconds');
+  cacheLife('default');
 
   await delay(700);
   const followed = await prisma.follow.findMany({
@@ -65,7 +65,7 @@ export const getWhoToFollow = cache(async (handle: string) => {
 export const isFollowing = cache(async (followerHandle: string, targetHandle: string) => {
   'use cache';
   cacheTag(`is-following-${targetHandle}`);
-  cacheLife('seconds');
+  cacheLife('default');
 
   await delay(120);
   const row = await prisma.follow.findUnique({
@@ -77,7 +77,7 @@ export const isFollowing = cache(async (followerHandle: string, targetHandle: st
 export const searchUsers = cache(async (query: string) => {
   'use cache';
   cacheTag('users', `search-users-${query}`);
-  cacheLife('seconds');
+  cacheLife('default');
 
   await delay(200);
   return prisma.user.findMany({
@@ -100,7 +100,7 @@ export type DropUserState = {
 export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
   'use cache: private';
   cacheTag(`user-state-${dropId}`);
-  cacheLife('seconds');
+  cacheLife('default');
 
   const handle = await getCurrentUserHandle();
   await delay(300);

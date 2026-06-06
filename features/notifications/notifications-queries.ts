@@ -10,7 +10,7 @@ import type { Notification, NotificationKind } from '@/types/notification';
 export const getNotifications = cache(async (): Promise<Notification[]> => {
   'use cache: private';
   cacheTag('notifications');
-  cacheLife('seconds');
+  cacheLife('default');
 
   await delay(600);
 
@@ -36,7 +36,7 @@ export const getNotifications = cache(async (): Promise<Notification[]> => {
 export const getUnreadNotificationCount = cache(async (): Promise<number> => {
   'use cache: private';
   cacheTag('notifications');
-  cacheLife('seconds');
+  cacheLife('default');
 
   const handle = await getCurrentUserHandle();
   return prisma.notification.count({
