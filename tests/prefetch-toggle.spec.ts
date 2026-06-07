@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Prefetch toggle', () => {
+// Prefetch toggle UI is currently hidden — implementation will change for stable 16.3.
+test.describe.skip('Prefetch toggle', () => {
   test('toggle is visible and shows "Prefetch on" by default', async ({ page }) => {
     await page.goto('/');
     const toggle = page.getByRole('button', { name: /prefetch/i });

@@ -19,20 +19,19 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 - Domain type "drop" is the app's term for a post/tweet
 - Queries use `delay()` calls for demo visibility of loading states
 - All pages export `unstable_prefetch = 'force-runtime'`
-- Demo toggles (prefetch toggle, boundary visualizer) in `components/demo/`
+- Demo toggles (boundary visualizer) in `components/demo/`
 - User switching via cookie (`drop-user`), `switchUser` action calls `updateTag('current-user')`
-- `use-client-pathname.ts` has `'use no memo'` directive for React Compiler compatibility
 - React Compiler enabled — do not use `useCallback` / `useMemo`.
 - After adding a model to `prisma/schema.prisma` and running `prisma db push` + `prisma generate`, **restart the dev server**. The `globalThis.prisma` singleton in `lib/db.ts` survives HMR and holds the old client, so the new model will throw "Cannot read properties of undefined" until the process restarts.
 
 ## Navigation escape hatches
 
-This project replaces Next's `usePathname()` and `useSearchParams()` to avoid Suspense boundaries on top-of-tree UI. The skill describes the general pattern; the concrete helpers are:
+Next's `usePathname()` and `useSearchParams()` require a Suspense boundary in cache-components mode on dynamic routes. To keep top-of-tree UI prerenderable:
 
-- `useClientPathname()` — `useSyncExternalStore` reading `window.location.pathname`. Paired with `SeedNavLinksFromPathname`, an inline pre-paint script that sets `data-navlink-*` attributes before paint.
+- `NavLink` wraps a `usePathname()` read in `<Suspense>` with a fallback that renders the link in its inactive state, so layout stays stable while active state resolves.
 - `useSyncInputToSearchParam` — keeps a search input in sync with the URL across soft navigations. Paired with `SeedFromSearchParam` inline script.
 
-Both replace the Suspense-requiring Next.js hooks for cosmetic reads (active styling, default form values). See `ux-patterns.md` in the architecture skill for the general pattern.
+See `ux-patterns.md` in the architecture skill for the general pattern.
 
 ## View Transitions — project-specific CSS
 
