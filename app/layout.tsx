@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
-import { DemoToggles } from '@/components/demo/demo-toggles';
+import { DemoToolbar } from '@/components/demo/demo-toolbar';
 import { BoundaryProvider } from '@/components/internal/boundary-provider';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
@@ -73,9 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AppGrid>
             <MobileTabBar />
             <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
-              <Suspense>
-                <DemoToggles />
-              </Suspense>
+              <DemoToolbar />
             </div>
             <Toaster theme="system" position="bottom-right" />
             <NavLinkScript />
