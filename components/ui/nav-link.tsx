@@ -16,7 +16,8 @@ type Props<T extends string = string> = Omit<React.ComponentProps<typeof Link>, 
 };
 
 function checkActive(pathname: string, href: string, exact?: boolean): boolean {
-  return exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+  if (exact || href === '/') return pathname === href;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function resolve<T>(value: Renderable<T> | undefined, props: RenderProps): T | undefined {
