@@ -49,7 +49,7 @@ function NavLinkShell<T extends string>({
   href,
   className,
   children,
-  exact: _exact,
+  exact,
   isActive,
   ...rest
 }: Props<T> & { isActive: boolean }) {
@@ -58,6 +58,9 @@ function NavLinkShell<T extends string>({
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive, isPending: false })}
+      data-navlink-href={href.toString()}
+      data-navlink-exact={exact || undefined}
+      suppressHydrationWarning
       {...rest}
     >
       <PendingIndicator isActive={isActive}>{children}</PendingIndicator>

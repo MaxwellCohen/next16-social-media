@@ -8,6 +8,7 @@ import { DemoToggles } from '@/components/demo/demo-toggles';
 import { BoundaryProvider } from '@/components/internal/boundary-provider';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
+import { NavLinkScript } from '@/components/scripts/nav-link-script';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Crossfade } from '@/components/ui/crossfade';
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </WhoToFollowShell>
               </RightSidebar>
             </AppGrid>
+            <NavLinkScript />
             <MobileTabBar />
             <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
               <Suspense>
