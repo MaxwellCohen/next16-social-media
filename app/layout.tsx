@@ -72,13 +72,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </RightSidebar>
             </AppGrid>
             <MobileTabBar />
-            <NavLinkScript />
             <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
               <Suspense>
                 <DemoToggles />
               </Suspense>
             </div>
             <Toaster theme="system" position="bottom-right" />
+            <NavLinkScript />
           </BoundaryProvider>
         </ThemeProvider>
         <Analytics />
