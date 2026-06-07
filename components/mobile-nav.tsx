@@ -1,6 +1,7 @@
 import { Bell, Bookmark, Home, Search, User } from 'lucide-react';
 import { Suspense } from 'react';
-import { NavLink, NavLinkSkeleton } from '@/components/ui/nav-link';
+import { NavLinkSkeleton } from '@/components/ui/nav-link';
+import { NavLinkSegments as NavLink } from '@/components/ui/nav-link-segments';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import type { Route } from 'next';
 
