@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   experimental: {
     appShells: true,
-    cachedNavigations: true,
     inlineCss: true,
     useOffline: true,
     viewTransition: true,
