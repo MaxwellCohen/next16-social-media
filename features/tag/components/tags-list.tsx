@@ -16,6 +16,7 @@ export async function TagsList() {
       {tags.map(tag => (
         <li key={tag.name}>
           <Link
+            prefetch={true}
             href={`/tag/${tag.name}` as Route}
             className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-center gap-3 border-b px-4 py-3 transition-colors sm:px-5"
           >

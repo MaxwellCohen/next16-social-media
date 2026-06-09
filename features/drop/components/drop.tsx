@@ -21,14 +21,14 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
   const userState = await getDropUserState(drop.id);
   return (
     <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      <Link href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
+      <Link prefetch={true} href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
       {repostedBy ? (
         <Suspense fallback={null}>
           <Reposter handle={repostedBy} />
         </Suspense>
       ) : null}
       <div className="relative flex gap-3 px-4 py-4 sm:px-5">
-        <Link href={`/u/${drop.authorHandle}`} className="relative z-20 shrink-0">
+        <Link prefetch={true} href={`/u/${drop.authorHandle}`} className="relative z-20 shrink-0">
           <UserAvatar handle={drop.authorHandle} size="md" />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -116,12 +116,13 @@ async function AuthorName({ handle }: { handle: string }) {
   return (
     <>
       <Link
+        prefetch={true}
         href={`/u/${author.handle}`}
         className="relative z-20 font-semibold tracking-tight text-black hover:underline dark:text-white"
       >
         {author.displayName}
       </Link>
-      <Link href={`/u/${author.handle}`} className="text-gray relative z-20 font-mono text-[12px]">
+      <Link prefetch={true} href={`/u/${author.handle}`} className="text-gray relative z-20 font-mono text-[12px]">
         @{author.handle}
       </Link>
     </>
@@ -132,6 +133,7 @@ async function Reposter({ handle }: { handle: string }) {
   const [reposter, currentHandle] = await Promise.all([getUserByHandle(handle), getCurrentUserHandle()]);
   return (
     <Link
+      prefetch={true}
       href={`/u/${reposter.handle}`}
       className="text-gray hover:text-success relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5"
     >

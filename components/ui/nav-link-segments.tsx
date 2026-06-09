@@ -46,6 +46,7 @@ function NavLinkShell<T extends string>({
 }: Props<T> & { isActive: boolean }) {
   return (
     <Link
+      prefetch={true}
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive, isPending: false })}

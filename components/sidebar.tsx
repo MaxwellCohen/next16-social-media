@@ -25,6 +25,7 @@ export function Sidebar() {
       className="peer group/sidebar sticky top-0 hidden h-dvh flex-col items-center gap-4 overflow-y-auto overscroll-y-contain px-2 py-5 sm:flex lg:items-stretch lg:px-6"
     >
       <Link
+        prefetch={true}
         href="/"
         className="inline-flex items-center gap-2 px-2 pb-2 text-2xl font-bold tracking-tight text-black dark:text-white"
         aria-label="Drop home"

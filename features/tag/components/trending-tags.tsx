@@ -10,6 +10,7 @@ export async function TrendingTagsList() {
       {tags.map(tag => (
         <li key={tag.name}>
           <Link
+            prefetch={true}
             href={`/tag/${tag.name}`}
             className="flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
           >

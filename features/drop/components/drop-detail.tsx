@@ -48,17 +48,18 @@ async function DropAuthor({ handle }: { handle: string }) {
   const author = await getUserByHandle(handle);
   return (
     <header className="flex items-center gap-3">
-      <Link href={`/u/${author.handle}`} className="shrink-0">
+      <Link prefetch={true} href={`/u/${author.handle}`} className="shrink-0">
         <UserAvatar handle={author.handle} size="lg" />
       </Link>
       <div className="flex min-w-0 flex-col">
         <Link
+          prefetch={true}
           href={`/u/${author.handle}`}
           className="font-semibold tracking-tight text-black hover:underline dark:text-white"
         >
           {author.displayName}
         </Link>
-        <Link href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
+        <Link prefetch={true} href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
           @{author.handle}
         </Link>
       </div>

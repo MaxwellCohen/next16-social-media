@@ -30,6 +30,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
           const isActive = optimisticActive === t.value;
           return (
             <Link
+              prefetch={true}
               key={t.value}
               href={t.href}
               onNavigate={() => {
