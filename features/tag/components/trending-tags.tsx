@@ -5,6 +5,9 @@ import { formatCount } from '@/lib/utils';
 
 export async function TrendingTagsList() {
   const tags = await getTrendingTags();
+  if (tags.length === 0) {
+    return <p className="text-gray px-4 pb-4 text-xs">No trending tags yet.</p>;
+  }
   return (
     <ul className="pb-2">
       {tags.map(tag => (

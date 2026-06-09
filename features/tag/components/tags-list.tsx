@@ -1,5 +1,6 @@
 import { Hash } from 'lucide-react';
 import Link from 'next/link';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAllTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
@@ -8,7 +9,7 @@ import type { Route } from 'next';
 export async function TagsList() {
   const tags = await getAllTags();
   if (tags.length === 0) {
-    return <p className="text-gray p-6 text-sm">No tags yet.</p>;
+    return <EmptyState title="No tags yet" body="Drops with #hashtags will show up here." />;
   }
 
   return (
