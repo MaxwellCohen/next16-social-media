@@ -3,6 +3,7 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
@@ -11,9 +12,14 @@ const FEED_PAGE_SIZE = 10;
 
 type FeedPage = { drops: Drop[]; hasMore: boolean };
 
-export const getFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
+export const getFeed = cache(async (page: number = 1): Promise<FeedPage> => {
+  const handle = await getCurrentUserHandle();
+  return getFeedForHandle(handle, page);
+});
+
+async function getFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
-  cacheTag('feed', `feed-${handle}`);
+  cacheTag('feed', `feed:${handle}`);
   cacheLife('default');
 
   await delay(800);
@@ -37,11 +43,16 @@ export const getFeed = cache(async (handle: string, page: number = 1): Promise<F
     drops: items.map(toDrop),
     hasMore,
   };
+}
+
+export const getDiscoverFeed = cache(async (page: number = 1): Promise<FeedPage> => {
+  const handle = await getCurrentUserHandle();
+  return getDiscoverFeedForHandle(handle, page);
 });
 
-export const getDiscoverFeed = cache(async (handle: string, page: number = 1): Promise<FeedPage> => {
+async function getDiscoverFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
-  cacheTag('feed', `discover-${handle}`);
+  cacheTag('feed', `discover:${handle}`);
   cacheLife('default');
 
   await delay(800);
@@ -65,7 +76,7 @@ export const getDiscoverFeed = cache(async (handle: string, page: number = 1): P
     drops: items.map(toDrop),
     hasMore,
   };
-});
+}
 
 export const getDrop = cache(async (id: string) => {
   'use cache';
@@ -157,19 +168,24 @@ export const getDropsByTag = cache(async (tag: string) => {
   return rows.map(toDrop).filter(d => d.tags.includes(tag));
 });
 
-export const getBookmarkedDrops = cache(async (userHandle: string) => {
+export const getBookmarkedDrops = cache(async () => {
+  const handle = await getCurrentUserHandle();
+  return getBookmarkedDropsForHandle(handle);
+});
+
+async function getBookmarkedDropsForHandle(handle: string) {
   'use cache';
-  cacheTag(`bookmarks-${userHandle}`);
+  cacheTag(`bookmarks:${handle}`);
   cacheLife('default');
 
   await delay(400);
   const rows = await prisma.bookmark.findMany({
     include: { drop: true },
     orderBy: { createdAt: 'desc' },
-    where: { drop: { parentId: null }, userHandle },
+    where: { drop: { parentId: null }, userHandle: handle },
   });
   return rows.map(r => toDrop(r.drop));
-});
+}
 
 export const searchDrops = cache(async (query: string) => {
   'use cache';

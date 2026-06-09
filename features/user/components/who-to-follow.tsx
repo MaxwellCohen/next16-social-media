@@ -3,11 +3,10 @@ import { ViewTransition } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserRow } from '@/features/user/components/user-row';
-import { getCurrentUserHandle, getWhoToFollow } from '@/features/user/user-queries';
+import { getWhoToFollow } from '@/features/user/user-queries';
 
 export async function WhoToFollowList() {
-  const handle = await getCurrentUserHandle();
-  const users = await getWhoToFollow(handle);
+  const users = await getWhoToFollow();
   if (users.length === 0) {
     return (
       <p className="text-gray px-4 pb-4 text-xs">

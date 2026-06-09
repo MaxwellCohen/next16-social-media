@@ -3,7 +3,6 @@ import { Crossfade } from '@/components/ui/crossfade';
 import { LoadMore } from '@/components/ui/load-more';
 import { Drop, DropListSkeleton } from '@/features/drop/components/drop';
 import { getDiscoverFeed, getFeed } from '@/features/drop/drop-queries';
-import { getCurrentUserHandle } from '@/features/user/user-queries';
 import type { Route } from 'next';
 
 export async function Feed({ page = 1 }: { page?: number }) {
@@ -27,8 +26,7 @@ export async function Feed({ page = 1 }: { page?: number }) {
 }
 
 async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
-  const handle = await getCurrentUserHandle();
-  const { drops, hasMore } = await getFeed(handle, page);
+  const { drops, hasMore } = await getFeed(page);
   return (
     <>
       {drops.map(drop => (
@@ -66,8 +64,7 @@ export async function DiscoverFeed({ page = 1 }: { page?: number }) {
 }
 
 async function DiscoverFeedPage({ page, isLast }: { page: number; isLast: boolean }) {
-  const handle = await getCurrentUserHandle();
-  const { drops, hasMore } = await getDiscoverFeed(handle, page);
+  const { drops, hasMore } = await getDiscoverFeed(page);
   return (
     <>
       {drops.map(drop => (
