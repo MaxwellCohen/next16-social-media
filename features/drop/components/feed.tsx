@@ -56,7 +56,9 @@ async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
 export async function DiscoverFeed({ page = 1 }: { page?: number }) {
   const { drops } = await getDiscoverFeed(1);
   if (drops.length === 0) {
-    return <EmptyState title="You already follow everyone" body="Nothing new to discover right now. Check back later." />;
+    return (
+      <EmptyState title="You already follow everyone" body="Nothing new to discover right now. Check back later." />
+    );
   }
   return (
     <ul>
