@@ -21,7 +21,12 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
   const userState = await getDropUserState(drop.id);
   return (
     <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      <Link prefetch={true} href={`/drop/${drop.parentId ?? drop.id}`} aria-label="Open drop" className="absolute inset-0 z-10" />
+      <Link
+        prefetch={true}
+        href={`/drop/${drop.parentId ?? drop.id}`}
+        aria-label="Open drop"
+        className="absolute inset-0 z-10"
+      />
       {repostedBy ? (
         <Suspense fallback={null}>
           <Reposter handle={repostedBy} />
