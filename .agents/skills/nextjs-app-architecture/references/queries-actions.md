@@ -2,9 +2,11 @@
 
 The data layer. Every feature has both: queries to read, actions to write.
 
+This page covers the universal data layer that applies to every Next.js App Router app. For the opt-in Cache Components model (`'use cache'`, `cacheTag`, `cacheLife`, `updateTag`), see `references/cache-components.md`.
+
 ## Queries
 
-Create `features/<domain>/<domain>-queries.ts`. Mark it `import 'server-only'`. Wrap every export in `cache()` from React for **request-level deduplication**.
+Create `features/<domain>/<domain>-queries.ts`. Mark it `import 'server-only'`. Wrap every export in [`cache()`](https://react.dev/reference/react/cache) from React for **request-level deduplication** — same query called from multiple components in the same render hits the database once.
 
 ```ts
 import 'server-only';
@@ -15,52 +17,22 @@ export const getFeed = cache(async (userId: string) => {
 });
 ```
 
-Without `cache()`, the same query called from multiple components in the same render hits the database multiple times.
-
-### With Cache Components
-
-If `cacheComponents: true` is enabled, add `'use cache'` + `cacheTag` + `cacheLife` to mark the query as cacheable across requests:
-
-```ts
-import 'server-only';
-import { cacheLife, cacheTag } from 'next/cache';
-import { cache } from 'react';
-
-export const getFeed = cache(async (userId: string) => {
-  'use cache';
-  cacheTag('feed', `feed-${userId}`);
-  cacheLife('seconds');
-  return db.post.findMany({ where: { userId } });
-});
-```
-
-- `cacheTag` lets you invalidate the cache by tag from a mutation. Use both a global tag (`'feed'`) and a scoped one (`` `feed-${userId}` ``) so you can invalidate at either granularity.
-- `cacheLife` sets the staleness profile. `'seconds'`, `'minutes'`, `'hours'`, or a custom profile.
-- `'use cache: private'` scopes the cache per user when the query reads cookies or session data.
-
-See `references/cache-components.md` for the full Cache Components model.
-
-### Without Cache Components
-
-If `cacheComponents` is not enabled, skip `'use cache'`. Keep `cache()` for request-level dedup. Invalidate via `refresh()` from actions instead of `updateTag()`.
+That's the floor: every query is server-only and request-deduplicated. If you turn on Cache Components, you'll also add `'use cache'` + `cacheTag` to share results across requests — see `references/cache-components.md`.
 
 ## Actions
 
 Create `features/<domain>/<domain>-actions.ts`. Mark with `'use server'` at the top. Always:
 
 1. Verify auth.
-2. Validate input (Zod, valibot, etc.).
+2. Validate input with your schema validator.
 3. Run the mutation.
-4. Invalidate cached data.
+4. Invalidate cached data so the next render sees the new state.
 5. Return a result (`{ ok }` or `{ error }`).
 
 ```tsx
 'use server';
 
-import { updateTag } from 'next/cache';
-import { z } from 'zod';
-
-const schema = z.object({ body: z.string().min(1).max(500) });
+import { refresh } from 'next/cache';
 
 export async function createPost(formData: FormData) {
   const user = await verifyUser();
@@ -70,18 +42,12 @@ export async function createPost(formData: FormData) {
   }
 
   await db.post.create({ data: { body: parsed.data.body, userId: user.id } });
-  updateTag('feed');
+  refresh();
   return { ok: true as const };
 }
 ```
 
-The `cacheTag` in the query and the `updateTag` in the action live in the same feature folder. This is the full cycle: **tag, cache, invalidate**.
-
-### `updateTag` vs `revalidateTag` vs `refresh`
-
-- **`updateTag(tag)`** — invalidates immediately and re-renders for read-your-own-writes. Use inside server actions when the user expects to see the result.
-- **`revalidateTag(tag)`** — stale-while-revalidate. Use in route handlers (webhooks, cron) where you don't need an immediate UI update.
-- **`refresh()`** — re-renders the current route for the current user. Use when there's no `cacheTag` to invalidate (e.g. Cache Components is off, or the data is uncached).
+[`refresh()`](https://nextjs.org/docs/app/api-reference/functions/refresh) re-renders the current route for the current user. With Cache Components, you'd swap this for `updateTag('feed')` to invalidate everything tagged `feed` and get read-your-own-writes across users — see `references/cache-components.md`.
 
 ### Action file naming
 
@@ -108,23 +74,13 @@ async function Post({ id }: { id: string }) {
 }
 ```
 
-### Exception: parameter-bound actions
-
-When the child shouldn't know about the parent's id, bind it at the call site:
-
-```tsx
-<DeleteButton onAction={deletePost.bind(null, post.id)} />
-```
-
-This is fine — the action prop now takes no arguments, the child just calls it.
-
 Design components (`<BottomNav>`, `<ToggleGroup>`, `<SubmitButton>`) take this further with the **action-prop pattern** — `action` is a callback wrapped in `useTransition` / `useOptimistic` internally. See `references/ux-patterns.md`.
 
 ## Form actions vs onClick handlers
 
-For mutations from a form, prefer `<form action={serverAction}>`. React wraps the call in a transition automatically and handles pending state.
+Prefer [`<form action={serverAction}>`](https://react.dev/reference/react-dom/components/form#action) for form mutations — React wraps the call in a transition and surfaces pending state automatically.
 
-For one-off buttons, `onClick={() => action(args)}` is fine. Wrap in `startTransition` if you need pending state.
+For one-off buttons, `onClick={() => action(args)}` is fine. Wrap in [`startTransition`](https://react.dev/reference/react/startTransition) if you need pending state.
 
 ## Return shape
 

@@ -1,6 +1,6 @@
 # Cache Components
 
-The model and constraints when `cacheComponents: true` is set in `next.config.ts`.
+The model and constraints when [`cacheComponents: true`](https://nextjs.org/docs/canary/app/api-reference/config/next-config-js/cacheComponents) is set in `next.config.ts`.
 
 ## When to enable it
 
@@ -24,9 +24,7 @@ Without `cacheComponents`, you still get RSC streaming and Suspense — you just
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  experimental: {
-    cacheComponents: true,
-  },
+  cacheComponents: true,
 };
 
 export default nextConfig;
@@ -78,6 +76,37 @@ export const getNotifications = cache(async () => {
   return db.notification.findMany({ where: { userId } });
 });
 ```
+
+### `'use cache: remote'`
+
+For data fetched from a remote service (third-party API, public endpoint) that's safe to cache across users and durable beyond the local edge, use `'use cache: remote'`. Useful for protecting yourself against rate-limited APIs (GitHub, payment providers, geocoders).
+
+```ts
+export const getRepo = cache(async (owner: string, name: string) => {
+  'use cache: remote';
+  cacheTag(`repo-${owner}-${name}`);
+  cacheLife('hours');
+  return fetch(`https://api.github.com/repos/${owner}/${name}`).then(r => r.json());
+});
+```
+
+### Opting back into dynamic with `connection()`
+
+For a single query that must always run per request, call [`connection()`](https://nextjs.org/docs/app/api-reference/functions/connection) from `next/server` first. The surrounding render becomes dynamic, so the calling component must sit inside a `<Suspense>` boundary:
+
+```ts
+import 'server-only';
+
+import { connection } from 'next/server';
+import { cache } from 'react';
+
+export const getUserFavorites = cache(async (userName: string) => {
+  await connection();
+  return db.favorite.findMany({ where: { userName } });
+});
+```
+
+Use it when the data is genuinely per-request and per-user (favorites, draft state, real-time counts) and `'use cache: private'` isn't a fit.
 
 ## `'use cache'` on components
 
@@ -145,9 +174,9 @@ Watch for these errors:
 
 If `cacheComponents` is not enabled:
 
-- Skip `'use cache'`, `cacheTag`, `cacheLife` — they're a no-op or a soft warning.
+- Don't use `'use cache'`, [`cacheTag`](https://nextjs.org/docs/canary/app/api-reference/functions/cacheTag), or [`cacheLife`](https://nextjs.org/docs/canary/app/api-reference/config/next-config-js/cacheLife) — they require the flag.
 - Keep `cache()` from React for per-request dedup.
-- Invalidate via `refresh()` from server actions instead of `updateTag()`. `refresh()` re-renders the route for the current user.
-- Pages can use `await params` or `params.then()` — either works. `params.then()` still helps reads of unrelated chrome paint faster, but there's no build-time prerender to preserve.
+- Invalidate via [`refresh()`](https://nextjs.org/docs/canary/app/api-reference/functions/refresh) from server actions instead of `updateTag()`. `refresh()` re-renders the route for the current user.
+- Pages can use `await params` or `params.then()` — either works. `params.then()` still helps unrelated chrome paint faster, but there's no build-time prerender to preserve.
 
 The rest of the architecture (feature folders, async server components, Suspense at the page) works identically.

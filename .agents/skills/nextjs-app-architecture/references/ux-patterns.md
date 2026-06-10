@@ -4,11 +4,11 @@ UX patterns that work alongside the architecture in the rest of this skill. Thes
 
 ## Feedback via toasts
 
-Use `sonner` (or equivalent) for user-facing feedback from mutations.
+Wire your toast library through a single import so the call sites stay clean. Use it for user-facing feedback from mutations.
 
 ```tsx
 'use client';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast'; // your toast library
 import { createPost } from '@/features/post/post-actions';
 
 async function submitAction(formData: FormData) {
@@ -40,7 +40,7 @@ If the app uses view transitions, portaled/floating elements flicker during rout
 <Dialog style={{ viewTransitionName: 'none' }}>...</Dialog>
 ```
 
-Ariakit, Radix, Headless UI all render portaled content that needs this treatment. shadcn/ui dialogs typically accept a `style` prop on the content element.
+Any UI library that renders portaled content needs this treatment. The fix is the same regardless of which library: pass an inline style with `viewTransitionName: 'none'` on the portal's root element.
 
 For more on view transitions, see the [React View Transitions skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions).
 
@@ -52,7 +52,7 @@ For delete / leave / unsubscribe flows:
 'use client';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast'; // your toast library
 import { deletePost } from '@/features/post/post-actions';
 
 export function DeletePostDialog({ postId }: { postId: string }) {
@@ -85,6 +85,37 @@ export function DeletePostDialog({ postId }: { postId: string }) {
 ### Don't wrap the whole action call in `useTransition` inside a confirm dialog
 
 If view transitions are enabled, wrapping the server action call in `startTransition` will animate the background UI behind the dialog. Use `useState` for the action's pending state and reserve `startTransition` for the post-success navigation only.
+
+## `useOptimistic` for instant feedback
+
+For mutations that are unlikely to fail (favorite, vote, follow), use [`useOptimistic`](https://react.dev/reference/react/useOptimistic) so the UI updates immediately and rolls back if the action throws:
+
+```tsx
+'use client';
+import { useOptimistic, useTransition } from 'react';
+
+export function FavoriteButton({ slug, favorited }: { slug: string; favorited: boolean }) {
+  const [optimisticFavorited, setOptimisticFavorited] = useOptimistic(favorited);
+  const [, startTransition] = useTransition();
+
+  function handleClick() {
+    startTransition(async () => {
+      setOptimisticFavorited(!favorited);
+      await toggleFavorite(slug);
+    });
+  }
+
+  return <button onClick={handleClick}>{optimisticFavorited ? '★' : '☆'}</button>;
+}
+```
+
+Key rules (the rest is in the React docs):
+
+- Call `setOptimistic` inside a [transition](https://react.dev/reference/react/useTransition), not as a free update.
+- Inside `<form action={…}>`, React opens the transition for you — call `setOptimistic` directly in the action body.
+- For counter-style updates, pass a reducer as the second argument so the next value is derived from the current one (vote counts, like counts).
+
+For the deeper picture (coordinating `useTransition`, `useOptimistic`, `useActionState`, Suspense streaming, and caching across server and client), see the [Interactive Apps guide PR](https://github.com/vercel/next.js/pull/94020) — not merged yet, but the canonical reference until it lands at `nextjs.org/docs/app/guides/interactive-apps`.
 
 ## Pending state without `useOptimistic`
 
@@ -122,7 +153,7 @@ Style ancestors with CSS that responds to a descendant's `data-pending`:
 
 Or with Tailwind:
 
-```html
+```tsx
 <div className="group">
   <LabelFilter />
   <div className="group-has-data-pending:opacity-50">{/* content that fades while filter is pending */}</div>
@@ -205,38 +236,11 @@ export async function Feed({ page = 1 }: { page?: number }) {
 }
 ```
 
-The "Load more" button does a soft scroll-preserving navigation:
-
-```tsx
-<Link
-  href={`/?page=${page + 1}`}
-  scroll={false}
-  // or imperatively:
-  // onClick={() => startTransition(() => router.push(`/?page=${page + 1}`, { scroll: false }))}
-/>
-```
-
-Each page is a separate request; the cache layer handles the dedup.
-
-## Active navigation links without Suspense
-
-`usePathname()` from `next/navigation` requires a Suspense boundary above it. For a top-level navigation that paints in the static shell, the boundary cost outweighs the benefit.
-
-Workaround: read the pathname via `useSyncExternalStore` over `window.location.pathname` instead, and seed the initial render with an inline pre-paint script that sets a `data-navlink-active` attribute. The hook subscribes to `popstate` and pushState changes for client-side updates.
-
-Same trick works for `useSearchParams()` — replace it with a hook that reads `window.location.search` via `useSyncExternalStore` plus a pre-paint script that seeds form values from the URL.
-
-This is an escape hatch. Use it only when:
-
-- The component renders in a high-frequency spot (top nav, sidebar, every page)
-- A Suspense boundary at that spot would cover important static content
-- The pathname/searchParams is read for cosmetic purposes (active styling, default form values), not for data fetching
-
-For data fetching that depends on `searchParams`, read it server-side in the page (`searchParams.then(...)`) instead.
+The "Load more" button uses [`<Link scroll={false}>`](https://nextjs.org/docs/app/api-reference/components/link) (or `router.push(url, { scroll: false })` inside `startTransition`). Each page is a separate request; the cache layer handles dedup.
 
 ## Global client state
 
-If the app has truly global client state (audio player, shopping cart, theme that needs to react to system changes), wrap a provider at the root:
+If the app has truly global client state (audio player, shopping cart, theme that needs to react to system changes), wrap a [provider](https://react.dev/reference/react/createContext#provider) with [`useReducer`](https://react.dev/reference/react/useReducer) at the root:
 
 ```tsx
 // providers.tsx
@@ -259,23 +263,9 @@ The provider is `'use client'`, but `children` stays server-rendered. Place the 
 
 **Don't** push server data into global client state. Keep server data in queries; client state is for ephemeral UI (open menus, audio playback position, optimistic drafts).
 
-## Interactive list spacing
-
-When rendering a vertical list of interactive rows with hover backgrounds, add a small gap so hover effects don't merge into a single block:
-
-```html
-<ul className="flex flex-col gap-0.5">
-  {items.map(item => (
-  <li key="{item.id}" className="rounded hover:bg-muted px-2 py-1">...</li>
-  ))}
-</ul>
-```
-
-`gap-0.5` is usually enough — visually negligible but enough to keep hover backgrounds discrete.
-
 ## Form pending state from `useFormStatus`
 
-For inline pending UI on form submits, `useFormStatus` reads the pending state of the **nearest parent form**. It must be called from a component rendered inside `<form>`, not from the form component itself.
+[`useFormStatus`](https://react.dev/reference/react-dom/hooks/useFormStatus) reads the pending state of the **nearest parent form**. It must be called from a component rendered inside `<form>`, not from the form component itself.
 
 ```tsx
 'use client';
@@ -301,4 +291,4 @@ This is the cleanest way to handle "disable + spinner" on submit without lifting
 
 ## Error states in components
 
-When a query throws, `error.tsx` at the route segment catches it. Wrap sub-sections that may fail independently in `<ErrorBoundary>`. For `notFound()` use `not-found.tsx`. See `references/pages-suspense.md` for placement.
+When a query throws, `error.tsx` at the route segment catches it. Wrap sub-sections that may fail independently in an error boundary built on `unstable_catchError` from `next/error`. For `notFound()` use `not-found.tsx`. See `references/pages-suspense.md` for the boundary primitive and placement.

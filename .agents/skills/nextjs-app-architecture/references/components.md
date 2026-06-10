@@ -4,7 +4,7 @@ How to build server and client components inside a feature folder.
 
 ## Default: async server component
 
-Server components await their own queries directly. No `useEffect`, no client-side fetching, no loading state to manage.
+Server components await their own queries directly — no `useEffect`, no client-side fetching, no manual loading state. See the [Server Components docs](https://nextjs.org/docs/app/getting-started/server-and-client-components) for the model.
 
 ```tsx
 // features/notifications/components/notifications-badge.tsx
@@ -155,7 +155,7 @@ async function Post({ id }: { id: string }) {
 
 ## Client components that own their loading state
 
-When a client component needs server data but should manage its own loading (a sidebar badge, a popover that opens on hover), pass an **unresolved promise** from the server and resolve it with `use()` on the client. Wrap the consumer in `<Suspense>`.
+When a client component needs server data but should manage its own loading (a sidebar badge, a popover that opens on hover), pass an **unresolved promise** from the server and resolve it with [`use()`](https://react.dev/reference/react/use) on the client. Wrap the consumer in `<Suspense>`.
 
 ```tsx
 // Server side — don't await the query
@@ -165,7 +165,7 @@ When a client component needs server data but should manage its own loading (a s
 ```
 
 ```tsx
-// 'use client'
+'use client';
 import { use } from 'react';
 
 export function TagPicker({ itemsPromise }: { itemsPromise: Promise<Tag[]> }) {
@@ -174,82 +174,12 @@ export function TagPicker({ itemsPromise }: { itemsPromise: Promise<Tag[]> }) {
 }
 ```
 
-Name promise props with a `Promise` suffix (`itemsPromise`, `userPromise`) so the contract is obvious at the call site.
-
-## Caching a whole component
-
-If the entire component output can be cached, put `'use cache'` on the component directly instead of on the query:
-
-```tsx
-async function TrendingTags() {
-  'use cache';
-  cacheTag('trending');
-  cacheLife('minutes');
-
-  const tags = await db.tag.findMany({ orderBy: { count: 'desc' }, take: 6 });
-  return (
-    <ul>
-      {tags.map(t => (
-        <li key={t.name}>#{t.name}</li>
-      ))}
-    </ul>
-  );
-}
-```
-
-This caches the rendered HTML, not just the query result. Useful for components with expensive rendering or shared content across users. See `references/cache-components.md` for when this is safe.
+The opinionated bit: name promise props with a `Promise` suffix (`itemsPromise`, `userPromise`) so the contract is obvious at the call site.
 
 ## Live data via polling
 
-If the feature needs to reflect server-side updates without user action (other users posting, new notifications, vote counts changing), drop a `<Poller>` client component into the page:
+For features that reflect server-side updates without user action (other users posting, new notifications, vote counts changing), drop a `<Poller>` client component into the page that calls [`router.refresh()`](https://nextjs.org/docs/app/api-reference/functions/use-router) on an interval. The router re-renders the server components for the current user; cached queries (if any) return stale data until they expire.
 
-```tsx
-'use client';
+## Mutations
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-export function Poller({ intervalMs = 5000 }: { intervalMs?: number }) {
-  const router = useRouter();
-  useEffect(() => {
-    const interval = setInterval(() => router.refresh(), intervalMs);
-    const onFocus = () => router.refresh();
-    window.addEventListener('focus', onFocus);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', onFocus);
-    };
-  }, [router, intervalMs]);
-  return null;
-}
-```
-
-`router.refresh()` re-renders the server components on the server. Combined with `'use cache'` + `cacheLife('seconds')`, the queries return cached data until they expire, then the next refresh picks up new data. No WebSockets, no SSE — just the existing cache cycle.
-
-## `useOptimistic` for mutations
-
-For instant feedback on mutations that are unlikely to fail (favorite, vote, follow):
-
-```tsx
-'use client';
-import { useOptimistic } from 'react';
-
-export function FavoriteButton({ slug, favorited }: { slug: string; favorited: boolean }) {
-  const [optimistic, setOptimistic] = useOptimistic(favorited, current => !current);
-
-  return (
-    <form
-      action={async () => {
-        setOptimistic(null);
-        await toggleFavorite(slug);
-      }}
-    >
-      <button type="submit">{optimistic ? '★' : '☆'}</button>
-    </form>
-  );
-}
-```
-
-The form action runs in a transition automatically. `useOptimistic` rolls back on throw.
-
-For non-optimistic pending UI (filters, sort changes, deferred work), use `useTransition` with the `data-pending` pattern in `references/ux-patterns.md`. For success/error feedback rules, see the same reference.
+For client-side reactions to a server mutation (instant feedback, pending state, success/error toasts), see `references/ux-patterns.md`. To cache rendered output across requests, see `references/cache-components.md`.

@@ -7,8 +7,28 @@ How to compose pages, place Suspense boundaries, and prevent layout shift.
 Pages in `app/` import feature components and place `<Suspense>` boundaries. They never:
 
 - Fetch data directly (queries live in feature folders)
-- Define new components except wrappers (e.g. `<NavForward>`)
+- Define new components except thin transition wrappers (e.g. `<ViewTransition>`)
 - Inline route-specific UI (extract it into the feature folder)
+
+## Page function signatures
+
+Type page and layout functions with the generated `PageProps<'/route'>` and `LayoutProps<'/route'>` helpers — they're emitted by [`typedRoutes`](https://nextjs.org/docs/app/api-reference/config/next-config-js/typedRoutes) and give you the correct `params` / `searchParams` / `children` shape for that exact route.
+
+```tsx
+// app/post/[id]/page.tsx
+export default function PostPage({ params }: PageProps<'/post/[id]'>) {
+  /* ... */
+}
+```
+
+```tsx
+// app/post/[id]/layout.tsx
+export default function PostLayout({ children, params }: LayoutProps<'/post/[id]'>) {
+  /* ... */
+}
+```
+
+Don't hand-write `{ params: Promise<{ id: string }> }` — the generated types stay in sync with the route, including catch-all and optional segments. Route handlers have their own `RouteContext<'/api/...'>`. Turn on `typedRoutes: true` in `next.config.ts`.
 
 ## Keep pages synchronous
 
@@ -21,7 +41,7 @@ import { PostDetail, PostDetailSkeleton } from '@/features/post/components/post-
 export default function PostPage({ params }: PageProps<'/post/[id]'>) {
   return (
     <div>
-      <PageHeader back title="Post" />
+      <h1>Post</h1>
       <Suspense fallback={<PostDetailSkeleton />}>
         {params.then(({ id }) => (
           <PostDetail id={id} />
@@ -32,7 +52,11 @@ export default function PostPage({ params }: PageProps<'/post/[id]'>) {
 }
 ```
 
-Page chrome (`<PageHeader>`) sits **above** the `params.then()` so it paints instantly. The `Suspense` fallback covers only the dynamic section.
+The `<h1>` sits **above** the `params.then()` so it paints instantly. The `Suspense` fallback covers only the dynamic section.
+
+### Implicit return inside `.then()`
+
+Use an implicit-return arrow function when the callback just renders JSX — e.g. `({ id }) => <PostDetail id={id} />`. Only switch to a block body with `return` when you need to do work first (destructure with defaults, parse a `searchParams` value, branch on a condition). This keeps the JSX-in-page shape readable and matches how the resolved tree will look.
 
 ### `searchParams` and combined params
 
@@ -55,7 +79,7 @@ export default function ProfilePage({ params, searchParams }: PageProps<'/u/[han
 
 ### `generateMetadata` can await directly
 
-`generateMetadata` runs before the page renders, so `await params` is fine there:
+[`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) runs before the page renders, so `await params` is fine there:
 
 ```tsx
 export async function generateMetadata({ params }: PageProps<'/post/[id]'>): Promise<Metadata> {
@@ -64,6 +88,37 @@ export async function generateMetadata({ params }: PageProps<'/post/[id]'>): Pro
   return { title: post.title, description: post.body.slice(0, 160) };
 }
 ```
+
+### `generateStaticParams` for dynamic routes
+
+For `[slug]`-style routes, export [`generateStaticParams`](https://nextjs.org/docs/app/api-reference/functions/generate-static-params) from the page or layout to pre-build a known set of pages. Combined with `cacheComponents` and `'use cache'` on the queries, every listed slug ends up in the static shell:
+
+```tsx
+import { getEvents } from '@/features/event/event-queries';
+
+export async function generateStaticParams() {
+  const events = await getEvents();
+  return events.map(event => ({ slug: event.slug }));
+}
+```
+
+The gotcha: `generateStaticParams` does **not** change the page function signature. `params` is still a Promise; the page still uses `params.then(...)`. The pre-build only affects which slugs prerender at build time.
+
+### `notFound()` from queries
+
+When a query can't find the resource, call [`notFound()`](https://nextjs.org/docs/app/api-reference/functions/not-found):
+
+```ts
+import { notFound } from 'next/navigation';
+
+export const getEventBySlug = cache(async (slug: string) => {
+  const event = await db.event.findUnique({ where: { slug } });
+  if (!event) notFound();
+  return event;
+});
+```
+
+It bubbles to the nearest [`not-found.tsx`](https://nextjs.org/docs/app/api-reference/file-conventions/not-found). Don't wrap it in a try/catch — use [`unstable_rethrow`](https://nextjs.org/docs/app/api-reference/functions/unstable_rethrow) from `next/navigation` if you need to.
 
 ## The page owns the Suspense boundary
 
@@ -91,7 +146,7 @@ export function PostDetailSkeleton() { ... }
 </Suspense>
 ```
 
-If a page uses a transition wrapper (e.g. `<NavForward>`), place it in the page next to the `<Suspense>` boundary. Feature components render content and skeletons, not transition wrappers.
+If a page uses a transition wrapper (e.g. `<ViewTransition>`), place it in the page next to the `<Suspense>` boundary. Feature components render content and skeletons, not transition wrappers.
 
 ## Don't create page-local wrapper components
 
@@ -136,20 +191,41 @@ Avoid components whose only job is to group boundary content, like `HomeLists` o
 
 ## Error boundaries
 
-Wrap fallible sections in `<ErrorBoundary>` so one failure doesn't take down the page:
+Wrap fallible sections in a Next.js-aware error boundary so one failure doesn't take down the page. Use `unstable_catchError` from `next/error` (Next.js 16.2+) — it knows about Next's control-flow throws (`notFound()`, `redirect()`, `unauthorized()`, `forbidden()`) and re-fetches server data on retry:
 
 ```tsx
-<Suspense fallback={<PostDetailSkeleton />}>
-  <PostDetail id={id} />
-</Suspense>
+// components/ui/error-boundary.tsx
+'use client';
+
+import { unstable_catchError as catchError, type ErrorInfo } from 'next/error';
+
+function ErrorFallback(props: { title?: string }, { unstable_retry: retry }: ErrorInfo) {
+  return (
+    <div>
+      <p>{props.title ?? 'Something went wrong'}</p>
+      <button onClick={() => retry()}>Try again</button>
+    </div>
+  );
+}
+
+export default catchError(ErrorFallback);
+```
+
+Use it around suspending sections:
+
+```tsx
+import ErrorBoundary from '@/components/ui/error-boundary';
+
 <ErrorBoundary title="Replies didn't load">
   <Suspense fallback={<RepliesSkeleton />}>
     <Replies postId={id} />
   </Suspense>
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
-Pair with `error.tsx` at the route segment for unrecoverable errors.
+Why not plain `react-error-boundary`? It catches Next's framework throws (so `notFound()` never reaches `not-found.tsx`), and `resetErrorBoundary` doesn't re-fetch server data. For background, see [Error Handling in Next.js with catchError](https://aurorascharff.no/posts/error-handling-in-nextjs-with-catch-error/).
+
+Pair component-level boundaries with [`error.tsx`](https://nextjs.org/docs/app/api-reference/file-conventions/error) at the route segment for unrecoverable errors. `error.tsx` also receives an `unstable_retry` callback you can wire to a button.
 
 ## Layout-level Suspense
 
@@ -188,15 +264,36 @@ Fixes:
 
 To audit CLS, use React DevTools' Suspense panel to pin each boundary in its loading state and check vertical positions.
 
-## `unstable_prefetch` for instant navigation
+## Opt-in runtime prefetch for high-value routes
 
-For routes where instant-feeling navigation matters (feed, detail pages), opt in to runtime prefetching:
+Next.js 16.3 turns on [**Partial Prefetching**](https://nextjs.org/docs/canary/app/guides/adopting-partial-prefetching) by default: links in the viewport prepare the destination's reusable [App Shell](https://nextjs.org/docs/canary/app/glossary#app-shell) so the navigation commits instantly, even before per-request data lands. For routes where you also want the framework to prefetch per-request data behind `params`, `searchParams`, `cookies()`, `headers()`, or `'use cache: private'`, opt the segment in at the route level:
 
 ```tsx
-export const unstable_prefetch = 'force-runtime';
+// app/feed/page.tsx
+export const prefetch = 'allow-runtime';
 ```
 
-Don't put this on every route. Each opt-in page runs a full render in the background for every `<Link>` that enters the viewport — that costs server CPU and database load. Reserve it for high-value navigation targets. Routes that change rarely or aren't navigated to often stay on the default static prefetch.
+See the [`prefetch` route segment config](https://nextjs.org/docs/canary/app/api-reference/file-conventions/route-segment-config/prefetch) docs for the full option matrix (`'auto'`, `'allow-runtime'`, `'force-static'`, `'force-disabled'`). The export only works when [`cacheComponents`](https://nextjs.org/docs/canary/app/api-reference/config/next-config-js/cacheComponents) is enabled.
+
+### Pair with `<Link prefetch={true}>` at the call site
+
+The route segment config tells Next.js what kind of prefetch a segment _can_ produce; the [`<Link prefetch>` prop](https://nextjs.org/docs/canary/app/api-reference/components/link#prefetch) reflects how _this particular link_ wants to use it.
+
+With Partial Prefetching on, `<Link>`'s default (`'auto'`) only prefetches the per-route App Shell, not the destination's content. To also fetch the cached page body (and, on `allow-runtime` segments, the runtime prerender) ahead of the click, set `prefetch={true}` explicitly:
+
+```tsx
+<Link href="/feed" prefetch={true}>
+  Feed
+</Link>
+```
+
+The pairing is intentional: explicit on the link, explicit on the page. Use `prefetch={false}` to deprioritize links that are rarely clicked even when their destination has a cheap shell.
+
+### Cost and when to reach for it
+
+Each `prefetch = 'allow-runtime'` page runs a full render in the background for every `<Link prefetch={true}>` that enters the viewport, including the runtime data fetch. That costs server CPU and database load. Reserve the opt-in for high-value navigation targets (feed, detail pages) and let the rest of the app ride on the default static shell prefetch.
+
+To validate that the navigation actually feels instant once you've opted in, see the [`instant` route segment config](https://nextjs.org/docs/canary/app/api-reference/file-conventions/route-segment-config/instant) and the [Instant Navigation guide](https://nextjs.org/docs/canary/app/guides/instant-navigation).
 
 ## Never wrap the entire page in a Suspense fallback
 

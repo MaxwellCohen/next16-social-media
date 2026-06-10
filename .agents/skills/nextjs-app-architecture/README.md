@@ -1,42 +1,47 @@
 # Next.js App Architecture Skill
 
-An agent skill for structuring Next.js 16+ App Router apps with feature-sliced design, Suspense streaming, and optional Cache Components.
+An agent skill for Next.js 16+ App Router apps. Packages the patterns from [Component Architecture for React Server Components](https://aurorascharff.no/posts/component-architecture-for-react-server-components/) for AI coding agents.
 
-## What This Skill Covers
+The five principles from the post:
 
-- **Feature folders** — when to create one, when to merge sub-concepts into a parent, file naming
-- **Queries** — `cache()` for dedup, `'use cache'` + `cacheTag` + `cacheLife` for Cache Components
-- **Actions** — `'use server'`, validation, `updateTag()` invalidation, calling from client components
-- **Components** — async server components, skeletons, single-use helpers, the client boundary, `use()` + promise props, live data via polling
-- **Pages** — `params.then()` for static-shell preservation, Suspense boundary placement, CLS prevention
-- **Cache Components** — when to opt in, the static shell model, build constraints
+- Pages are synchronous compositors. They don't fetch, they compose.
+- Async components fetch their own data. Co-locate the read with the JSX.
+- Skeletons live next to their component. Same file, exported alongside it.
+- Suspense boundaries go at the page level. The page designs the loading sequence.
+- Client boundaries are leaf nodes. Push `'use client'` as deep as it can go.
 
-## Skill Structure
+Everything else in the skill is additional.
 
-```
-nextjs-app-architecture-skill/
-├── SKILL.md                        # Decision rules + when to read each reference (always loaded)
-└── references/
-    ├── feature-folders.md          # Folder layout, naming, merging sub-concepts
-    ├── queries-actions.md          # Server-only queries + server actions + invalidation
-    ├── components.md               # Async server components, skeletons, client boundary, promises
-    ├── pages-suspense.md           # Page composition, params.then(), Suspense placement, CLS rules
-    ├── cache-components.md         # cacheComponents: true, 'use cache', static shell model
-    └── ux-patterns.md              # Toasts, pending state, destructive flows, action-prop, pagination
-```
-
-## Installation
-
-Install via [skills.sh](https://skills.sh):
+## Install
 
 ```bash
 npx skills install https://github.com/aurorascharff/nextjs-app-architecture-skill
 ```
 
-## Resources
+## Layout
 
-- [Next.js App Router docs](https://nextjs.org/docs/app)
-- [`cacheComponents` config](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)
-- [`'use cache'` directive](https://nextjs.org/docs/app/api-reference/directives/use-cache)
-- [`updateTag`](https://nextjs.org/docs/app/api-reference/functions/update-tag), [`cacheTag`](https://nextjs.org/docs/app/api-reference/functions/cache-tag), [`cacheLife`](https://nextjs.org/docs/app/api-reference/functions/cache-life)
-- [Interactive Apps guide](https://nextjs.org/docs/app/guides/interactive-apps)
+`SKILL.md` is always loaded. References load on demand.
+
+**Core** — required for any RSC app
+
+- `references/feature-folders.md`
+- `references/queries-actions.md`
+- `references/components.md`
+- `references/pages-suspense.md`
+
+**Instant Apps** — opt-in patterns for making the app feel instant
+
+- `references/cache-components.md`
+- `references/ux-patterns.md`
+
+## Companion
+
+- [React View Transitions](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions)
+
+## Further reading
+
+- [Server and Client Component Composition in Practice](https://aurorascharff.no/posts/server-client-component-composition-in-practice/)
+- [Building Design Components with Action Props using Async React](https://aurorascharff.no/posts/building-design-components-with-action-props-using-async-react/)
+- [Error Handling in Next.js with catchError](https://aurorascharff.no/posts/error-handling-in-nextjs-with-catch-error/)
+- [Avoiding Server Component Waterfall Fetching with React 19 cache()](https://aurorascharff.no/posts/avoiding-server-component-waterfall-fetching-with-react-19-cache/)
+- [next16-social-media](https://github.com/aurorascharff/next16-social-media) — demo app
