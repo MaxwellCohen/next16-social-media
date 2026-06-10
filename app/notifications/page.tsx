@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: 'Activity',
 };
 
-export const unstable_prefetch = 'force-runtime';
+export const prefetch = 'allow-runtime';
 
 export default function NotificationsPage() {
   return (
