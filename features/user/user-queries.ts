@@ -50,7 +50,6 @@ export const getWhoToFollow = cache(async () => {
 async function getWhoToFollowForHandle(handle: string) {
   'use cache';
   cacheTag(`who-to-follow:${handle}`);
-  cacheLife('default');
 
   await delay(700);
   const followed = await prisma.follow.findMany({
@@ -75,7 +74,6 @@ export const isFollowing = cache(async (targetHandle: string) => {
 async function isFollowingForHandle(followerHandle: string, targetHandle: string) {
   'use cache';
   cacheTag(`is-following:${followerHandle}:${targetHandle}`);
-  cacheLife('default');
 
   await delay(120);
   const row = await prisma.follow.findUnique({
@@ -87,7 +85,7 @@ async function isFollowingForHandle(followerHandle: string, targetHandle: string
 export const searchUsers = cache(async (query: string) => {
   'use cache';
   cacheTag('users', `search-users-${query}`);
-  cacheLife('default');
+  cacheLife('hours');
 
   await delay(200);
   return prisma.user.findMany({
@@ -115,7 +113,6 @@ export const getDropUserState = cache(async (dropId: string): Promise<DropUserSt
 async function getDropUserStateForHandle(dropId: string, handle: string): Promise<DropUserState> {
   'use cache';
   cacheTag(`user-state:${handle}:${dropId}`);
-  cacheLife('default');
 
   await delay(300);
   const [like, repost, bookmark] = await Promise.all([

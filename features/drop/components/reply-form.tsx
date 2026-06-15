@@ -28,7 +28,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   return (
     <Boundary label="ReplyForm">
       <form ref={formRef} action={formAction} className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           {avatar}
           <textarea
             name="body"
@@ -43,7 +43,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
                 formRef.current?.requestSubmit();
               }
             }}
-            className="placeholder-gray flex-1 resize-none border-0 bg-transparent p-0 text-[15px] leading-10 focus:ring-0 focus:outline-none"
+            className="placeholder-gray field-sizing-content flex-1 resize-none border-0 bg-transparent p-0 pt-2 text-[15px] leading-6 focus:ring-0 focus:outline-none"
           />
         </div>
         {state.error ? (

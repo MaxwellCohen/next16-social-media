@@ -8,7 +8,7 @@ import { delay } from '@/lib/utils';
 import type { Notification, NotificationKind } from '@/types/notification';
 
 export const getNotifications = cache(async (): Promise<Notification[]> => {
-  'use cache: private';
+  'use cache';
   cacheTag('notifications');
   cacheLife('default');
 
@@ -34,7 +34,7 @@ export const getNotifications = cache(async (): Promise<Notification[]> => {
 });
 
 export const getUnreadNotificationCount = cache(async (): Promise<number> => {
-  'use cache: private';
+  'use cache';
   cacheTag('notifications');
   cacheLife('default');
 

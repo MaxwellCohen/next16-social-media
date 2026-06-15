@@ -47,6 +47,7 @@ export async function postDrop(formData: FormData) {
   updateTag('feed');
   updateTag(`user-drops-${me}`);
   updateTag('trending');
+  for (const tag of tags) updateTag(`tag-${tag}`);
   return { drop, ok: true as const };
 }
 

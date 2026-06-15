@@ -39,7 +39,7 @@ export function QuickDropForm({ avatar }: Props) {
                 formRef.current?.requestSubmit();
               }
             }}
-            className="placeholder-gray flex-1 resize-none border-0 bg-transparent text-sm focus:ring-0 focus:outline-none"
+            className="placeholder-gray field-sizing-content flex-1 resize-none border-0 bg-transparent text-sm focus:ring-0 focus:outline-none"
           />
           <Button type="submit">Drop it</Button>
         </form>

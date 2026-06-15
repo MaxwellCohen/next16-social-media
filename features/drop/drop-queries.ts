@@ -20,7 +20,7 @@ export const getFeed = cache(async (page: number = 1): Promise<FeedPage> => {
 async function getFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
   cacheTag('feed', `feed:${handle}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(800);
   const following = await prisma.follow.findMany({
@@ -53,7 +53,7 @@ export const getDiscoverFeed = cache(async (page: number = 1): Promise<FeedPage>
 async function getDiscoverFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
   cacheTag('feed', `discover:${handle}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(800);
   const following = await prisma.follow.findMany({
@@ -81,7 +81,7 @@ async function getDiscoverFeedForHandle(handle: string, page: number): Promise<F
 export const getDrop = cache(async (id: string) => {
   'use cache';
   cacheTag('drops', `drop-${id}`);
-  cacheLife('default');
+  cacheLife('hours');
 
   await delay(600);
   const row = await prisma.drop.findUnique({ where: { id } });
@@ -92,7 +92,7 @@ export const getDrop = cache(async (id: string) => {
 export const getReplies = cache(async (dropId: string) => {
   'use cache';
   cacheTag(`replies-${dropId}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(1800);
   const parent = await prisma.drop.findUnique({
@@ -117,7 +117,7 @@ type ProfileFeedItem =
 export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(400);
   const [authored, reposts] = await Promise.all([
@@ -145,7 +145,7 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
 export const getRepliesByAuthor = cache(async (handle: string) => {
   'use cache';
   cacheTag('drops', `user-replies-${handle}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(400);
   const rows = await prisma.drop.findMany({
@@ -158,7 +158,7 @@ export const getRepliesByAuthor = cache(async (handle: string) => {
 export const getDropsByTag = cache(async (tag: string) => {
   'use cache';
   cacheTag('drops', `tag-${tag}`);
-  cacheLife('default');
+  cacheLife('minutes');
 
   await delay(400);
   const rows = await prisma.drop.findMany({
@@ -176,7 +176,7 @@ export const getBookmarkedDrops = cache(async () => {
 async function getBookmarkedDropsForHandle(handle: string) {
   'use cache';
   cacheTag(`bookmarks:${handle}`);
-  cacheLife('default');
+  cacheLife('hours');
 
   await delay(400);
   const rows = await prisma.bookmark.findMany({
@@ -190,7 +190,7 @@ async function getBookmarkedDropsForHandle(handle: string) {
 export const searchDrops = cache(async (query: string) => {
   'use cache';
   cacheTag('drops', `search-${query}`);
-  cacheLife('default');
+  cacheLife('hours');
 
   await delay(300);
   const rows = await prisma.drop.findMany({
