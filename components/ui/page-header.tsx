@@ -27,7 +27,8 @@ export function PageHeader({ title, children, back }: Props) {
             <ArrowLeft className="h-5 w-5" />
           </button>
         ) : null}
-        {title ? <h1 className="text-lg font-bold tracking-tight">{title}</h1> : children}
+        {title ? <h1 className="text-lg font-bold tracking-tight">{title}</h1> : null}
+        {children}
       </header>
     </Boundary>
   );
