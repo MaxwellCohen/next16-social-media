@@ -6,7 +6,7 @@ import { getCurrentUserHandle } from '@/features/user/user-queries';
 import type { Route } from 'next';
 
 const mobileTabClass =
-  'flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors text-gray hover:text-black dark:hover:text-white aria-[current=page]:text-accent aria-[current=page]:font-bold aria-[current=page]:[&_svg]:stroke-[2.5]';
+  'flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors text-gray not-aria-[current=page]:hover:text-black dark:not-aria-[current=page]:hover:text-white aria-[current=page]:text-accent aria-[current=page]:font-bold aria-[current=page]:[&_svg]:stroke-[2.5]';
 
 export function MobileTabBar() {
   return (
