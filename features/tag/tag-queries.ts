@@ -7,7 +7,7 @@ import { delay } from '@/lib/utils';
 export async function getTrendingTags() {
   'use cache';
   cacheTag('trending');
-  cacheLife('minutes');
+  cacheLife('days');
 
   await delay(600);
   return countTags(6);
@@ -16,7 +16,7 @@ export async function getTrendingTags() {
 export async function getAllTags() {
   'use cache';
   cacheTag('trending');
-  cacheLife('minutes');
+  cacheLife('days');
 
   await delay(700);
   return countTags();
