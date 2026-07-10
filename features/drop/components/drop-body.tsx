@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { CodeBlock } from '@/components/ui/code-block';
+import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
+import type { Route } from 'next';
 
 type Props = {
   body: string;
@@ -77,14 +78,13 @@ function renderText(text: string) {
         if (part.startsWith('#')) {
           const tag = part.slice(1);
           return (
-            <Link
-              prefetch={true}
+            <HoverPrefetchLink
               key={`${lineIdx}-${i}`}
-              href={`/tag/${tag}`}
+              href={`/tag/${tag}` as Route}
               className="text-accent relative z-20 hover:underline"
             >
               {part}
-            </Link>
+            </HoverPrefetchLink>
           );
         }
         if (part.match(/^https?:\/\//)) {
