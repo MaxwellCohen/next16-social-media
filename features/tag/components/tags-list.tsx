@@ -1,6 +1,6 @@
 import { Hash } from 'lucide-react';
-import Link from 'next/link';
 import { EmptyState } from '@/components/ui/empty-state';
+import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAllTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
@@ -16,8 +16,7 @@ export async function TagsList() {
     <ul>
       {tags.map(tag => (
         <li key={tag.name}>
-          <Link
-            prefetch={true}
+          <HoverPrefetchLink
             href={`/tag/${tag.name}` as Route}
             className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-center gap-3 border-b px-4 py-3 transition-colors sm:px-5"
           >
@@ -28,7 +27,7 @@ export async function TagsList() {
                 {formatCount(tag.count)} {tag.count === 1 ? 'drop' : 'drops'}
               </span>
             </div>
-          </Link>
+          </HoverPrefetchLink>
         </li>
       ))}
     </ul>

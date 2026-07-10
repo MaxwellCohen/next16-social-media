@@ -1,7 +1,8 @@
-import Link from 'next/link';
+import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTrendingTags } from '@/features/tag/tag-queries';
 import { formatCount } from '@/lib/utils';
+import type { Route } from 'next';
 
 export async function TrendingTagsList() {
   const tags = await getTrendingTags();
@@ -12,14 +13,13 @@ export async function TrendingTagsList() {
     <ul className="pb-2">
       {tags.map(tag => (
         <li key={tag.name}>
-          <Link
-            prefetch={true}
-            href={`/tag/${tag.name}`}
+          <HoverPrefetchLink
+            href={`/tag/${tag.name}` as Route}
             className="flex items-center justify-between px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
           >
             <span className="text-sm font-medium text-black dark:text-white">#{tag.name}</span>
             <span className="text-gray font-mono text-xs">{formatCount(tag.count)}</span>
-          </Link>
+          </HoverPrefetchLink>
         </li>
       ))}
     </ul>
