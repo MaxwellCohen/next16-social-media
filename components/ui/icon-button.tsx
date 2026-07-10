@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
 
@@ -22,8 +22,7 @@ export function IconButton({ label, icon, href, active, activeColor, hoverColor,
 
   if (href) {
     return (
-      <Link
-        prefetch={true}
+      <HoverPrefetchLink
         href={href}
         aria-label={label}
         onClick={e => {
@@ -33,7 +32,7 @@ export function IconButton({ label, icon, href, active, activeColor, hoverColor,
       >
         {icon}
         {children}
-      </Link>
+      </HoverPrefetchLink>
     );
   }
 
