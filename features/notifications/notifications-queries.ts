@@ -1,16 +1,14 @@
 import 'server-only';
 
 import { cacheLife, cacheTag } from 'next/cache';
-import { cache } from 'react';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import type { Notification, NotificationKind } from '@/types/notification';
 
-export const getNotifications = cache(async (): Promise<Notification[]> => {
-  const handle = await getCurrentUserHandle();
-  return getNotificationsForHandle(handle);
-});
+export async function getNotifications(): Promise<Notification[]> {
+  return getNotificationsForHandle(await getCurrentUserHandle());
+}
 
 async function getNotificationsForHandle(handle: string): Promise<Notification[]> {
   'use cache';
@@ -36,10 +34,9 @@ async function getNotificationsForHandle(handle: string): Promise<Notification[]
   }));
 }
 
-export const getUnreadNotificationCount = cache(async (): Promise<number> => {
-  const handle = await getCurrentUserHandle();
-  return getUnreadNotificationCountForHandle(handle);
-});
+export async function getUnreadNotificationCount(): Promise<number> {
+  return getUnreadNotificationCountForHandle(await getCurrentUserHandle());
+}
 
 async function getUnreadNotificationCountForHandle(handle: string): Promise<number> {
   'use cache';

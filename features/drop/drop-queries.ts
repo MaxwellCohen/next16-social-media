@@ -2,7 +2,6 @@ import 'server-only';
 
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { cache } from 'react';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
@@ -12,10 +11,9 @@ const FEED_PAGE_SIZE = 10;
 
 type FeedPage = { drops: Drop[]; hasMore: boolean };
 
-export const getFeed = cache(async (page: number = 1): Promise<FeedPage> => {
-  const handle = await getCurrentUserHandle();
-  return getFeedForHandle(handle, page);
-});
+export async function getFeed(page: number = 1): Promise<FeedPage> {
+  return getFeedForHandle(await getCurrentUserHandle(), page);
+}
 
 async function getFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
@@ -45,10 +43,9 @@ async function getFeedForHandle(handle: string, page: number): Promise<FeedPage>
   };
 }
 
-export const getDiscoverFeed = cache(async (page: number = 1): Promise<FeedPage> => {
-  const handle = await getCurrentUserHandle();
-  return getDiscoverFeedForHandle(handle, page);
-});
+export async function getDiscoverFeed(page: number = 1): Promise<FeedPage> {
+  return getDiscoverFeedForHandle(await getCurrentUserHandle(), page);
+}
 
 async function getDiscoverFeedForHandle(handle: string, page: number): Promise<FeedPage> {
   'use cache';
@@ -78,7 +75,7 @@ async function getDiscoverFeedForHandle(handle: string, page: number): Promise<F
   };
 }
 
-export const getDrop = cache(async (id: string) => {
+export async function getDrop(id: string) {
   'use cache';
   cacheTag('drops', `drop-${id}`);
   cacheLife('hours');
@@ -87,9 +84,9 @@ export const getDrop = cache(async (id: string) => {
   const row = await prisma.drop.findUnique({ where: { id } });
   if (!row) notFound();
   return toDrop(row);
-});
+}
 
-export const getReplies = cache(async (dropId: string) => {
+export async function getReplies(dropId: string) {
   'use cache';
   cacheTag(`replies-${dropId}`);
   cacheLife('minutes');
@@ -108,13 +105,13 @@ export const getReplies = cache(async (dropId: string) => {
   const authorReplies = authorHandle ? rows.filter(r => r.authorHandle === authorHandle) : [];
   const otherReplies = authorHandle ? rows.filter(r => r.authorHandle !== authorHandle) : rows;
   return [...authorReplies, ...otherReplies].map(toDrop);
-});
+}
 
 type ProfileFeedItem =
   | { kind: 'drop'; drop: Drop; pinnedAt: number }
   | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 
-export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFeedItem[]> => {
+export async function getDropsByAuthor(handle: string): Promise<ProfileFeedItem[]> {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);
   cacheLife('minutes');
@@ -140,9 +137,9 @@ export const getDropsByAuthor = cache(async (handle: string): Promise<ProfileFee
     })),
   ];
   return items.sort((a, b) => b.pinnedAt - a.pinnedAt);
-});
+}
 
-export const getRepliesByAuthor = cache(async (handle: string) => {
+export async function getRepliesByAuthor(handle: string) {
   'use cache';
   cacheTag('drops', `user-replies-${handle}`);
   cacheLife('minutes');
@@ -153,9 +150,9 @@ export const getRepliesByAuthor = cache(async (handle: string) => {
     where: { authorHandle: handle, parentId: { not: null } },
   });
   return rows.map(toDrop);
-});
+}
 
-export const getDropsByTag = cache(async (tag: string) => {
+export async function getDropsByTag(tag: string) {
   'use cache';
   cacheTag('drops', `tag-${tag}`);
   cacheLife('minutes');
@@ -166,12 +163,11 @@ export const getDropsByTag = cache(async (tag: string) => {
     where: { parentId: null, tags: { contains: tag } },
   });
   return rows.map(toDrop).filter(d => d.tags.includes(tag));
-});
+}
 
-export const getBookmarkedDrops = cache(async () => {
-  const handle = await getCurrentUserHandle();
-  return getBookmarkedDropsForHandle(handle);
-});
+export async function getBookmarkedDrops() {
+  return getBookmarkedDropsForHandle(await getCurrentUserHandle());
+}
 
 async function getBookmarkedDropsForHandle(handle: string) {
   'use cache';
@@ -187,7 +183,7 @@ async function getBookmarkedDropsForHandle(handle: string) {
   return rows.map(r => toDrop(r.drop));
 }
 
-export const searchDrops = cache(async (query: string) => {
+export async function searchDrops(query: string) {
   'use cache';
   cacheTag('drops', `search-${query}`);
   cacheLife('hours');
@@ -201,4 +197,4 @@ export const searchDrops = cache(async (query: string) => {
     },
   });
   return rows.map(toDrop);
-});
+}

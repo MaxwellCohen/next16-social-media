@@ -3,19 +3,18 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { cache } from 'react';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
 const SESSION_COOKIE = 'drop-user';
 const DEFAULT_HANDLE = 'aurora';
 
-export const getCurrentUserHandle = cache(async (): Promise<string> => {
+export async function getCurrentUserHandle(): Promise<string> {
   'use cache: private';
 
   const store = await cookies();
   return store.get(SESSION_COOKIE)?.value ?? DEFAULT_HANDLE;
-});
+}
 
 export async function verifyAuth(): Promise<string> {
   const handle = await getCurrentUserHandle();
@@ -24,14 +23,14 @@ export async function verifyAuth(): Promise<string> {
   return handle;
 }
 
-export const getCurrentUser = cache(async () => {
+export async function getCurrentUser() {
   'use cache: private';
   cacheTag('current-user');
 
   return getUserByHandle(await getCurrentUserHandle());
-});
+}
 
-export const getUserByHandle = cache(async (handle: string) => {
+export async function getUserByHandle(handle: string) {
   'use cache';
   cacheTag('users', `user-${handle}`);
   cacheLife('minutes');
@@ -40,12 +39,11 @@ export const getUserByHandle = cache(async (handle: string) => {
   const user = await prisma.user.findUnique({ where: { handle } });
   if (!user) notFound();
   return user;
-});
+}
 
-export const getWhoToFollow = cache(async () => {
-  const handle = await getCurrentUserHandle();
-  return getWhoToFollowForHandle(handle);
-});
+export async function getWhoToFollow() {
+  return getWhoToFollowForHandle(await getCurrentUserHandle());
+}
 
 async function getWhoToFollowForHandle(handle: string) {
   'use cache';
@@ -66,10 +64,9 @@ async function getWhoToFollowForHandle(handle: string) {
   });
 }
 
-export const isFollowing = cache(async (targetHandle: string) => {
-  const followerHandle = await getCurrentUserHandle();
-  return isFollowingForHandle(followerHandle, targetHandle);
-});
+export async function isFollowing(targetHandle: string) {
+  return isFollowingForHandle(await getCurrentUserHandle(), targetHandle);
+}
 
 async function isFollowingForHandle(followerHandle: string, targetHandle: string) {
   'use cache';
@@ -82,7 +79,7 @@ async function isFollowingForHandle(followerHandle: string, targetHandle: string
   return row !== null;
 }
 
-export const searchUsers = cache(async (query: string) => {
+export async function searchUsers(query: string) {
   'use cache';
   cacheTag('users', `search-users-${query}`);
   cacheLife('hours');
@@ -97,7 +94,7 @@ export const searchUsers = cache(async (query: string) => {
       ],
     },
   });
-});
+}
 
 export type DropUserState = {
   liked: boolean;
@@ -105,25 +102,29 @@ export type DropUserState = {
   bookmarked: boolean;
 };
 
-export const getDropUserState = cache(async (dropId: string): Promise<DropUserState> => {
-  const handle = await getCurrentUserHandle();
-  return getDropUserStateForHandle(dropId, handle);
-});
-
-async function getDropUserStateForHandle(dropId: string, handle: string): Promise<DropUserState> {
-  'use cache';
-  cacheTag(`user-state:${handle}:${dropId}`);
-
-  await delay(300);
-  const [like, repost, bookmark] = await Promise.all([
-    prisma.like.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
-    prisma.repost.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
-    prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId, userHandle: handle } } }),
-  ]);
-  return { bookmarked: bookmark !== null, liked: like !== null, reposted: repost !== null };
+export async function getUserDropInteractions() {
+  return getUserDropInteractionsForHandle(await getCurrentUserHandle());
 }
 
-export const getAllUsers = cache(async () => {
+async function getUserDropInteractionsForHandle(handle: string) {
+  'use cache';
+  cacheTag(`drop-interactions:${handle}`);
+  cacheLife('minutes');
+
+  await delay(300);
+  const [likes, reposts, bookmarks] = await Promise.all([
+    prisma.like.findMany({ select: { dropId: true }, where: { userHandle: handle } }),
+    prisma.repost.findMany({ select: { dropId: true }, where: { userHandle: handle } }),
+    prisma.bookmark.findMany({ select: { dropId: true }, where: { userHandle: handle } }),
+  ]);
+  return {
+    bookmarked: new Set(bookmarks.map(b => b.dropId)),
+    liked: new Set(likes.map(l => l.dropId)),
+    reposted: new Set(reposts.map(r => r.dropId)),
+  };
+}
+
+export async function getAllUsers() {
   'use cache';
   cacheTag('users');
   cacheLife('minutes');
@@ -132,4 +133,4 @@ export const getAllUsers = cache(async () => {
     orderBy: { handle: 'asc' },
     select: { avatarColor: true, displayName: true, handle: true },
   });
-});
+}

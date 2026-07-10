@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
 import { UserAvatar } from '@/features/user/components/user-avatar';
-import { getCurrentUserHandle, getDropUserState, getUserByHandle } from '@/features/user/user-queries';
+import { getCurrentUserHandle, getUserByHandle, getUserDropInteractions } from '@/features/user/user-queries';
 import type { Drop as DropT } from '@/types/drop';
 
 type Props = {
@@ -17,7 +17,12 @@ type Props = {
 };
 
 export async function Drop({ drop, compact = false, repostedBy }: Props) {
-  const userState = await getDropUserState(drop.id);
+  const interactions = await getUserDropInteractions();
+  const userState = {
+    bookmarked: interactions.bookmarked.has(drop.id),
+    liked: interactions.liked.has(drop.id),
+    reposted: interactions.reposted.has(drop.id),
+  };
   return (
     <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
       <Link

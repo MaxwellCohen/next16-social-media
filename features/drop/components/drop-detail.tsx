@@ -7,10 +7,15 @@ import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
 import { getDrop } from '@/features/drop/drop-queries';
 import { UserAvatar } from '@/features/user/components/user-avatar';
-import { getDropUserState, getUserByHandle } from '@/features/user/user-queries';
+import { getUserByHandle, getUserDropInteractions } from '@/features/user/user-queries';
 
 export async function DropDetail({ id }: { id: string }) {
-  const [drop, userState] = await Promise.all([getDrop(id), getDropUserState(id)]);
+  const [drop, interactions] = await Promise.all([getDrop(id), getUserDropInteractions()]);
+  const userState = {
+    bookmarked: interactions.bookmarked.has(id),
+    liked: interactions.liked.has(id),
+    reposted: interactions.reposted.has(id),
+  };
 
   return (
     <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
