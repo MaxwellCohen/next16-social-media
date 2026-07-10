@@ -112,15 +112,6 @@
   animation: flash-in 1.2s ease-out;
 }
 
-/* Keep the page interactive during navigation view transitions.
-   While an `allow-runtime` route resolves, the router's view transition holds
-   the old snapshot on top of the live DOM and swallows pointer events, so fast
-   sidebar clicks get dropped (issue #7). The snapshot overlay is purely visual —
-   letting it ignore pointer events lets clicks reach the live shell underneath. */
-::view-transition {
-  pointer-events: none;
-}
-
 /* Exclude persistent elements from view transition animations */
 ::view-transition-group(mobile-nav),
 ::view-transition-group(sidebar),
