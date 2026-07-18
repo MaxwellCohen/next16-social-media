@@ -1,6 +1,6 @@
 'use server';
 
-import { updateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { verifyAuth } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 
@@ -10,6 +10,6 @@ export async function markAllNotificationsRead() {
     data: { readAt: new Date() },
     where: { readAt: null, recipientHandle: me },
   });
-  updateTag('notifications');
+  revalidateTag(`notifications:${me}`, 'max');
   return { ok: true as const };
 }
