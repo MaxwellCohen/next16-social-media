@@ -72,8 +72,8 @@ export function TabsSkeleton({ count = 2 }: { count?: number }) {
   return (
     <div className="border-divider/70 dark:border-divider-dark/70 flex border-b text-sm" aria-hidden>
       {Array.from({ length: count }).map((_, i) => (
-        <span key={i} className="flex-1 px-4 py-3.5 text-center">
-          <Skeleton className="inline-block h-5 w-16 rounded align-middle" />
+        <span key={i} className="flex flex-1 items-center justify-center py-3.5">
+          <Skeleton className="h-5 w-16 rounded" />
         </span>
       ))}
     </div>
