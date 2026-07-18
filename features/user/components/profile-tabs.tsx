@@ -11,5 +11,5 @@ export function ProfileTabs({ handle, active }: { handle: string; active: Profil
     { href: `/u/${handle}?tab=replies` as Route, label: 'Replies', value: 'replies' },
   ];
 
-  return <Tabs tabs={tabs} active={active} label="Profile sections" />;
+  return <Tabs tabs={tabs} active={active} label="Profile sections" indicatorName="profile-tab-indicator" />;
 }

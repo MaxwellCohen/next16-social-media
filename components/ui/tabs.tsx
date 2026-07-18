@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useOptimistic, useTransition } from 'react';
+import { useOptimistic, useTransition, ViewTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -13,9 +13,10 @@ type Props<T extends string> = {
   tabs: Tab<T>[];
   active: T;
   label?: string;
+  indicatorName?: string;
 };
 
-export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Props<T>) {
+export function Tabs<T extends string>({ tabs, active, label = 'Sections', indicatorName = 'tab-indicator' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
   const [isPending, startTransition] = useTransition();
 
@@ -28,6 +29,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
       >
         {tabs.map(t => {
           const isActive = optimisticActive === t.value;
+          const isCommitted = active === t.value;
           return (
             <Link
               prefetch={true}
@@ -42,13 +44,21 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
               }}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'hover:bg-card dark:hover:bg-card-dark relative flex-1 px-4 py-4 text-center transition-colors',
-                isActive ? 'font-semibold text-black dark:text-white' : 'text-gray font-medium',
+                'group/tab relative flex flex-1 items-center justify-center py-3.5 text-center transition-colors',
+                isActive
+                  ? 'font-semibold text-black dark:text-white'
+                  : 'text-gray font-medium hover:text-black dark:hover:text-white',
               )}
             >
-              {t.label}
-              {isActive ? (
-                <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
+              <span
+                aria-hidden
+                className="group-hover/tab:bg-card dark:group-hover/tab:bg-card-dark absolute inset-x-6 top-2 bottom-0 rounded-t-lg transition-colors"
+              />
+              <span className="relative">{t.label}</span>
+              {isCommitted ? (
+                <ViewTransition name={indicatorName} share="tab-underline">
+                  <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
+                </ViewTransition>
               ) : null}
             </Link>
           );

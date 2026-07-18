@@ -1,4 +1,4 @@
-import { Bell, Bookmark, Home, Search, User } from 'lucide-react';
+import { Bell, Bookmark, Home, LayoutDashboard, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
@@ -25,15 +25,24 @@ export function Sidebar() {
       style={{ viewTransitionName: 'sidebar' }}
       className="peer group/sidebar sticky top-0 hidden h-dvh flex-col items-center gap-4 overflow-y-auto overscroll-y-contain px-2 py-5 sm:flex lg:items-stretch lg:px-6"
     >
-      <Link
-        prefetch={true}
-        href="/"
-        className="inline-flex items-center gap-2 px-2 pb-2 text-2xl font-bold tracking-tight text-black dark:text-white"
-        aria-label="Drop home"
-      >
-        <DropMark size={28} className="text-black dark:text-white" />
-        <span className="hidden lg:inline">drop</span>
-      </Link>
+      <div className="flex items-center justify-between gap-1 px-2 pb-2">
+        <Link
+          prefetch={true}
+          href="/"
+          className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight text-black dark:text-white"
+          aria-label="Drop home"
+        >
+          <DropMark size={28} className="text-black dark:text-white" />
+          <span className="hidden lg:inline">drop</span>
+        </Link>
+        <Link
+          href={'/admin' as Route}
+          aria-label="Admin dashboard"
+          className="text-gray p-1.5 transition-colors hover:text-black dark:hover:text-white"
+        >
+          <LayoutDashboard className="h-5 w-5" />
+        </Link>
+      </div>
       <div className="hidden lg:block">
         <ErrorBoundary title="Your profile is offline" compact>
           <Suspense fallback={<SidebarProfilePillSkeleton />}>

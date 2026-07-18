@@ -3,6 +3,7 @@
 import { revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
 import { verifyAuth } from '@/features/user/user-queries';
+import { publishActivity } from '@/lib/admin-bus';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
@@ -16,6 +17,13 @@ function extractTags(body: string): string[] {
     tags.add(match[1].toLowerCase());
   }
   return Array.from(tags);
+}
+
+const BANNED_WORDS = ['fuck', 'shit', 'asshole', 'bitch', 'bastard', 'dick', 'cunt', 'slut'];
+
+function moderate(body: string): string | null {
+  const hit = BANNED_WORDS.find(word => new RegExp(`\\b${word}\\b`, 'i').test(body));
+  return hit ? 'Keep it friendly — that post looks a little too spicy to publish.' : null;
 }
 
 const postDropSchema = z.object({
@@ -34,6 +42,11 @@ export async function postDrop(formData: FormData) {
     return { error: parsed.error.issues[0].message, ok: false as const };
   }
 
+  const flagged = moderate(parsed.data.body);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
+  }
+
   const me = await verifyAuth();
   const tags = extractTags(parsed.data.body);
   const drop = await prisma.drop.create({
@@ -48,6 +61,7 @@ export async function postDrop(formData: FormData) {
   updateTag(`user-drops-${me}`);
   updateTag('trending');
   for (const tag of tags) updateTag(`tag-${tag}`);
+  publishActivity({ actorHandle: me, dropId: drop.id, kind: 'drop', preview: parsed.data.body.slice(0, 80) });
   return { drop, ok: true as const };
 }
 
@@ -57,6 +71,11 @@ export async function postReply(parentId: string, formData: FormData) {
   const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message, ok: false as const };
+  }
+
+  const flagged = moderate(parsed.data.body);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
   }
 
   const parent = await prisma.drop.findUnique({ where: { id: parentId } });
@@ -91,6 +110,7 @@ export async function postReply(parentId: string, formData: FormData) {
   updateTag(`drop-${parentId}`);
   updateTag(`replies-${parentId}`);
   updateTag(`user-replies-${me}`);
+  publishActivity({ actorHandle: me, dropId: reply.id, kind: 'reply', preview: parsed.data.body.slice(0, 80) });
   return { ok: true as const, reply };
 }
 
@@ -118,6 +138,7 @@ export async function toggleLike(dropId: string) {
       });
       revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
+    publishActivity({ actorHandle: me, dropId: id, kind: 'like' });
   }
   updateTag(`drop-${id}`);
   updateTag(`drop-interactions:${me}`);
@@ -146,6 +167,7 @@ export async function toggleRepost(dropId: string) {
       });
       revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
+    publishActivity({ actorHandle: me, dropId: id, kind: 'repost' });
   }
   updateTag(`drop-${id}`);
   updateTag(`drop-interactions:${me}`);

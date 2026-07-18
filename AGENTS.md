@@ -15,7 +15,8 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 - Tailwind CSS v4 with `group/` and `peer` selectors
 - Ariakit for Dialog/Popover
 - Shiki for server-side syntax highlighting
-- Feature folders: `features/drop/`, `features/user/`, `features/tag/`, `features/search/`
+- Feature folders: `features/drop/`, `features/user/`, `features/tag/`, `features/search/`, `features/mission-control/`
+- `pnpm dev`/`pnpm start` run a custom server (`server.ts`, via `tsx`) embedding Next + a `ws` WebSocketServer for the Mission Control dashboard. `pnpm dev:next` runs stock `next dev`. See `app/api/mission-control/route.md` for the migration to the WebSocket Route Handlers RFC.
 - Domain type "drop" is the app's term for a post/tweet
 - Queries use `delay()` calls for demo visibility of loading states
 - All pages export `unstable_prefetch = 'force-runtime'`

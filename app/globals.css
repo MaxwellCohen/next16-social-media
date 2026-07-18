@@ -112,6 +112,26 @@
   animation: flash-in 1.2s ease-out;
 }
 
+::view-transition-group(.tab-underline) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+::view-transition-old(.tab-underline),
+::view-transition-new(.tab-underline) {
+  animation: none;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 /* Exclude persistent elements from view transition animations */
 ::view-transition-group(mobile-nav),
 ::view-transition-group(sidebar),

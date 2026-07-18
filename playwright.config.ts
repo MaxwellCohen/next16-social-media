@@ -14,6 +14,21 @@ export default defineConfig({
   testDir: './tests',
   use: {
     baseURL: 'http://localhost:3000',
+    storageState: {
+      cookies: [
+        {
+          domain: 'localhost',
+          expires: -1,
+          httpOnly: false,
+          name: 'drop-user',
+          path: '/',
+          sameSite: 'Lax',
+          secure: false,
+          value: 'aurora',
+        },
+      ],
+      origins: [],
+    },
     trace: 'on-first-retry',
   },
   webServer: {

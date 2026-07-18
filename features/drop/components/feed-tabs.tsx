@@ -19,5 +19,5 @@ export function FeedTabs() {
   const searchParams = useSearchParams();
   const active = parseTab(searchParams.get('tab'));
 
-  return <Tabs tabs={FEED_TABS} active={active} label="Feed sections" />;
+  return <Tabs tabs={FEED_TABS} active={active} label="Feed sections" indicatorName="feed-tab-indicator" />;
 }

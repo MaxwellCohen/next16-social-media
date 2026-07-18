@@ -15,6 +15,10 @@ The architecture follows the [Next.js App Architecture](.agents/skills/nextjs-ap
 
 - **Cache Components**: `'use cache'` per query, not per page. A feed caches for seconds, trending tags for minutes, user-specific data with `'use cache: private'`. `cacheTag` names data, `updateTag` invalidates both server and browser cache
 - **Partial Prefetching**: the 16.3 default that prepares the reusable App Shell of each link in viewport so navigations commit instantly. Pages opt into per-request prefetching with `export const prefetch = 'allow-runtime'`, and `<Link>` components pass `prefetch={true}` to also prefetch link-specific data behind params, searchParams, or `'use cache: private'`
+- **Hover-intent prefetching**: [`HoverPrefetchLink`](components/ui/hover-prefetch-link.tsx) keeps `prefetch={null}` until `onMouseEnter`/`onFocus` flips it to `true`, so long lists (e.g. [`TrendingTagsList`](features/tag/components/trending-tags.tsx)) don't wake N servers on render but still warm before the click
+- **Active links under Cache Components**: [`NavLink`](components/ui/nav-link.tsx) wraps its `usePathname()` read in `<Suspense>` so top-of-tree nav stays prerenderable on dynamic routes, with a layout-stable inactive fallback; the segment-aware variant is [`nav-link-segments.tsx`](components/ui/nav-link-segments.tsx), and a pre-paint inline script ([`nav-link-script.tsx`](components/scripts/nav-link-script.tsx)) sets `aria-current` during HTML parse to avoid a hydration flash. See [Building an Active NavLink Component in Next.js](https://aurorascharff.no/posts/building-an-active-navlink-component-in-nextjs/)
+- **View Transitions**: shared-element tab underline that slides between tabs ([`Tabs`](components/ui/tabs.tsx)), per-row list transitions, and `<Crossfade>` on Suspense reveals
+- **WebSockets**: a custom server ([`server.ts`](server.ts)) runs Next alongside a `ws` server so live data streams over a socket, bridged from server actions by an in-process event bus ([`lib/mission-control-bus.ts`](lib/mission-control-bus.ts)) — a stand-in until the [WebSocket Route Handlers RFC](https://github.com/vercel/next.js/discussions/95514) lands. `pnpm dev`/`start` run it via `tsx`; `pnpm dev:next` is stock `next dev`
 
 ## Getting Started
 
@@ -30,15 +34,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure
 
 ```
-app/                    Pages and layouts
+app/                    Pages and layouts (the (app) group is the social app; admin/ is the dashboard)
 components/ui/          Visual primitives
 features/
   drop/                 Queries, actions, and components for drops
   user/                 Queries, actions, and components for users
   tag/                  Queries and components for tags
   search/               Components for search
+  mission-control/      Live dashboard: metrics, socket hook, tiles
 types/                  Shared types
-lib/                    Prisma client, utilities
+lib/                    Prisma client, utilities, mission-control event bus
+server.ts               Custom server: Next + ws WebSocketServer
 tests/                  Playwright E2E tests
 ```
 

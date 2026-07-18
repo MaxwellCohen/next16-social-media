@@ -1,15 +1,21 @@
+import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
-test('trending tags header is static, list streams in', async ({ page }) => {
-  await page.goto('/');
+test.describe('Sidebar', () => {
+  // Nav links are static and trending tags are globally cached, so both are baked into the
+  // static shell — present under instant() — unlike the cookie-gated feeds.
+  test('static shell — nav links and cached trending present', async ({ page }) => {
+    await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 3, name: 'Trending now' })).toBeVisible();
-  await expect(page.locator('aside a[href^="/tag/"]').first()).toBeVisible({ timeout: 15000 });
-});
+    await instant(page, async () => {
+      await page.goto('/');
+      await expect(page.locator('aside a[aria-label="Home"]')).toBeVisible();
+      await expect(page.locator('aside a[aria-label="Search"]')).toBeVisible();
+      await expect(page.locator('aside a[aria-label="Bookmarks"]')).toBeVisible();
+      await expect(page.locator('aside a[aria-label="Activity"]')).toBeVisible();
+      await expect(page.locator('aside a[href^="/tag/"]').first()).toBeVisible();
+    });
 
-test('who to follow header is static, users stream in', async ({ page }) => {
-  await page.goto('/');
-
-  await expect(page.getByRole('heading', { level: 3, name: 'Who to follow' })).toBeVisible();
-  await expect(page.locator('aside a[href^="/u/"]').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('aside a[href^="/u/"]').first()).toBeVisible({ timeout: 15000 });
+  });
 });
