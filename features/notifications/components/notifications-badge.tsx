@@ -1,8 +1,12 @@
-import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
+'use client';
 
-export async function NotificationsBadge() {
-  const count = await getUnreadNotificationCount();
-  if (count === 0) {
+import { use } from 'react';
+import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
+
+export function NotificationsBadge({ countPromise }: { countPromise: Promise<number> }) {
+  const count = use(countPromise);
+  const { seen } = useNotificationsBadge();
+  if (seen || count === 0) {
     return null;
   }
   return (

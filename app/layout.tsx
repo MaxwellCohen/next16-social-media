@@ -13,6 +13,7 @@ import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Crossfade } from '@/components/ui/crossfade';
 import ErrorBoundary from '@/components/ui/error-boundary';
+import { NotificationsBadgeProvider } from '@/features/notifications/components/notifications-badge-provider';
 import { TrendingTagsList, TrendingTagsListSkeleton, TrendingTagsShell } from '@/features/tag/components/trending-tags';
 import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/features/user/components/who-to-follow';
 import type { Metadata, Viewport } from 'next';
@@ -47,31 +48,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <BoundaryProvider>
             <OfflineIndicator />
-            <AppGrid>
-              <Sidebar />
-              <MainColumn>{children}</MainColumn>
-              <RightSidebar>
-                <TrendingTagsShell>
-                  <ErrorBoundary title="Tags unavailable" compact>
-                    <Suspense fallback={<TrendingTagsListSkeleton />}>
-                      <Crossfade>
-                        <TrendingTagsList />
-                      </Crossfade>
-                    </Suspense>
-                  </ErrorBoundary>
-                </TrendingTagsShell>
-                <WhoToFollowShell>
-                  <ErrorBoundary title="No suggestions" compact>
-                    <Suspense fallback={<WhoToFollowListSkeleton />}>
-                      <Crossfade>
-                        <WhoToFollowList />
-                      </Crossfade>
-                    </Suspense>
-                  </ErrorBoundary>
-                </WhoToFollowShell>
-              </RightSidebar>
-            </AppGrid>
-            <MobileTabBar />
+            <NotificationsBadgeProvider>
+              <AppGrid>
+                <Sidebar />
+                <MainColumn>{children}</MainColumn>
+                <RightSidebar>
+                  <TrendingTagsShell>
+                    <ErrorBoundary title="Tags unavailable" compact>
+                      <Suspense fallback={<TrendingTagsListSkeleton />}>
+                        <Crossfade>
+                          <TrendingTagsList />
+                        </Crossfade>
+                      </Suspense>
+                    </ErrorBoundary>
+                  </TrendingTagsShell>
+                  <WhoToFollowShell>
+                    <ErrorBoundary title="No suggestions" compact>
+                      <Suspense fallback={<WhoToFollowListSkeleton />}>
+                        <Crossfade>
+                          <WhoToFollowList />
+                        </Crossfade>
+                      </Suspense>
+                    </ErrorBoundary>
+                  </WhoToFollowShell>
+                </RightSidebar>
+              </AppGrid>
+              <MobileTabBar />
+            </NotificationsBadgeProvider>
             <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
               <DemoToolbar />
             </div>

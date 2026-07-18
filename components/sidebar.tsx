@@ -10,6 +10,7 @@ import { NavLinkSegments as NavLink } from '@/components/ui/nav-link-segments';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { NotificationsBadge } from '@/features/notifications/components/notifications-badge';
+import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
 import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getAllUsers, getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
@@ -57,7 +58,7 @@ export function Sidebar() {
           <Bell className="h-5 w-5" />
           <span className="hidden lg:inline">Activity</span>
           <Suspense>
-            <NotificationsBadge />
+            <NotificationsBadge countPromise={getUnreadNotificationCount()} />
           </Suspense>
         </NavLink>
         <Suspense

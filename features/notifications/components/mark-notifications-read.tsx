@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
 
 export function MarkNotificationsRead() {
+  const { setSeen } = useNotificationsBadge();
   useEffect(() => {
-    // Fire-and-forget: a route handler doesn't trigger a router refresh, so the badge/list
-    // revalidate lazily on next navigation rather than blocking or flashing here.
+    setSeen(true);
     void fetch('/api/notifications/read', { keepalive: true, method: 'POST' }).catch(() => {});
-  }, []);
+  }, [setSeen]);
   return null;
 }
