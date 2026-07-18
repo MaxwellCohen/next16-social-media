@@ -31,6 +31,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections' }: Pro
           return (
             <Link
               prefetch={true}
+              scroll={false}
               key={t.value}
               href={t.href}
               onNavigate={() => {
