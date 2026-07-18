@@ -2,10 +2,10 @@
   "version": 1,
   "skills": {
     "nextjs-app-architecture": {
-      "source": "aurorascharff/nextjs-app-architecture-skill",
+      "source": "aurorascharff/skills",
       "sourceType": "github",
-      "skillPath": "SKILL.md",
-      "computedHash": "5d24cdabc2b06348e6d35a38459ead1cd963acb734cc0e5345b1a9d66b20832c"
+      "skillPath": "skills/nextjs-app-architecture/SKILL.md",
+      "computedHash": "b9a470fbb5ca45f7920b873342d9431f43bb22eb66cceeb388e9303680e4a967"
     }
   }
 }
