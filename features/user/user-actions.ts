@@ -1,6 +1,6 @@
 'use server';
 
-import { updateTag } from 'next/cache';
+import { revalidateTag, updateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { verifyAuth } from '@/features/user/user-queries';
@@ -42,7 +42,7 @@ export async function toggleFollow(targetHandle: string) {
     await prisma.notification.create({
       data: { actorHandle: me, kind: 'follow', recipientHandle: target },
     });
-    updateTag('notifications');
+    revalidateTag(`notifications:${target}`, 'max');
   }
   updateTag(`user-${target}`);
   updateTag(`user-${me}`);

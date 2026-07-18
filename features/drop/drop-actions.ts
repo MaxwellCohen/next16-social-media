@@ -1,6 +1,6 @@
 'use server';
 
-import { updateTag } from 'next/cache';
+import { revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
 import { verifyAuth } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
@@ -86,7 +86,7 @@ export async function postReply(parentId: string, formData: FormData) {
         recipientHandle: parent.authorHandle,
       },
     });
-    updateTag('notifications');
+    revalidateTag(`notifications:${parent.authorHandle}`, 'max');
   }
   updateTag(`drop-${parentId}`);
   updateTag(`replies-${parentId}`);
@@ -116,7 +116,7 @@ export async function toggleLike(dropId: string) {
       await prisma.notification.create({
         data: { actorHandle: me, dropId: id, kind: 'like', recipientHandle: drop.authorHandle },
       });
-      updateTag('notifications');
+      revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
   }
   updateTag(`drop-${id}`);
@@ -144,7 +144,7 @@ export async function toggleRepost(dropId: string) {
       await prisma.notification.create({
         data: { actorHandle: me, dropId: id, kind: 'repost', recipientHandle: drop.authorHandle },
       });
-      updateTag('notifications');
+      revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
   }
   updateTag(`drop-${id}`);

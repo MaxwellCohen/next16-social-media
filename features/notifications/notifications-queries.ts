@@ -12,7 +12,7 @@ export async function getNotifications(): Promise<Notification[]> {
 
 async function getNotificationsForHandle(handle: string): Promise<Notification[]> {
   'use cache';
-  cacheTag('notifications', `notifications:${handle}`);
+  cacheTag(`notifications:${handle}`);
   cacheLife('minutes');
 
   await delay(600);
@@ -40,7 +40,7 @@ export async function getUnreadNotificationCount(): Promise<number> {
 
 async function getUnreadNotificationCountForHandle(handle: string): Promise<number> {
   'use cache';
-  cacheTag('notifications', `notifications:${handle}`);
+  cacheTag(`notifications:${handle}`);
   cacheLife('minutes');
 
   return prisma.notification.count({

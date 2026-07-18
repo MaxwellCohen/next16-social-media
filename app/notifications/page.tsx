@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { Crossfade } from '@/components/ui/crossfade';
 import { PageHeader } from '@/components/ui/page-header';
 import { RefreshButton } from '@/components/ui/refresh-button';
 import { MarkNotificationsRead } from '@/features/notifications/components/mark-notifications-read';
@@ -23,9 +22,7 @@ export default function NotificationsPage() {
       </PageHeader>
       <MarkNotificationsRead />
       <Suspense fallback={<NotificationListSkeleton />}>
-        <Crossfade>
-          <NotificationList />
-        </Crossfade>
+        <NotificationList />
       </Suspense>
     </div>
   );
