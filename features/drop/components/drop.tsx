@@ -1,7 +1,7 @@
 import { Repeat2 } from 'lucide-react';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
-import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
@@ -26,7 +26,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
   };
   return (
     <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
-      <HoverPrefetchLink
+      <Link prefetch={true}
         href={`/drop/${drop.parentId ?? drop.id}` as Route}
         aria-label="Open drop"
         className="absolute inset-0 z-10"
@@ -37,9 +37,9 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
         </Suspense>
       ) : null}
       <div className="relative flex gap-3 px-4 py-4 sm:px-5">
-        <HoverPrefetchLink href={`/u/${drop.authorHandle}` as Route} className="relative z-20 shrink-0">
+        <Link prefetch={true} href={`/u/${drop.authorHandle}` as Route} className="relative z-20 shrink-0">
           <UserAvatar handle={drop.authorHandle} size="md" />
-        </HoverPrefetchLink>
+        </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <header className="flex flex-wrap items-baseline gap-x-1.5 text-sm">
             <AuthorName handle={drop.authorHandle} />
@@ -117,18 +117,18 @@ async function AuthorName({ handle }: { handle: string }) {
   const author = await getUserByHandle(handle);
   return (
     <>
-      <HoverPrefetchLink
+      <Link prefetch={true}
         href={`/u/${author.handle}` as Route}
         className="relative z-20 font-semibold tracking-tight text-black hover:underline dark:text-white"
       >
         {author.displayName}
-      </HoverPrefetchLink>
-      <HoverPrefetchLink
+      </Link>
+      <Link prefetch={true}
         href={`/u/${author.handle}` as Route}
         className="text-gray relative z-20 font-mono text-[12px]"
       >
         @{author.handle}
-      </HoverPrefetchLink>
+      </Link>
     </>
   );
 }
@@ -136,12 +136,12 @@ async function AuthorName({ handle }: { handle: string }) {
 async function Reposter({ handle }: { handle: string }) {
   const [reposter, currentHandle] = await Promise.all([getUserByHandle(handle), getCurrentUserHandle()]);
   return (
-    <HoverPrefetchLink
+    <Link prefetch={true}
       href={`/u/${reposter.handle}` as Route}
       className="text-gray hover:text-success relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5"
     >
       <Repeat2 className="h-3 w-3" />
       <span>{reposter.handle === currentHandle ? 'You' : reposter.displayName} reposted</span>
-    </HoverPrefetchLink>
+    </Link>
   );
 }

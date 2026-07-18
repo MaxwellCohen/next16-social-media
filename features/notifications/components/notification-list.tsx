@@ -1,7 +1,7 @@
 import { Heart, MessageCircle, Repeat2, UserPlus } from 'lucide-react';
+import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
-import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getNotifications } from '@/features/notifications/notifications-queries';
@@ -72,7 +72,8 @@ async function NotificationRow({ notification }: { notification: Notification })
     : (`/u/${notification.actorHandle}` as Route);
 
   return (
-    <HoverPrefetchLink
+    <Link
+      prefetch={true}
       href={href}
       className={`border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-start gap-3 border-b px-4 py-4 transition-colors sm:px-5 ${notification.read ? '' : 'flash-in'}`}
     >
@@ -88,7 +89,7 @@ async function NotificationRow({ notification }: { notification: Notification })
           <RelativeTime date={notification.createdAt} />
         </span>
       </div>
-    </HoverPrefetchLink>
+    </Link>
   );
 }
 
