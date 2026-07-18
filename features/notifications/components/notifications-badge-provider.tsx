@@ -4,14 +4,20 @@ import { createContext, useContext, useState } from 'react';
 
 type NotificationsBadgeContextType = {
   seen: boolean;
-  setSeen: (seen: boolean) => void;
+  markRead: () => void;
 };
 
 const NotificationsBadgeContext = createContext<NotificationsBadgeContextType | null>(null);
 
 export function NotificationsBadgeProvider({ children }: { children: React.ReactNode }) {
   const [seen, setSeen] = useState(false);
-  return <NotificationsBadgeContext.Provider value={{ seen, setSeen }}>{children}</NotificationsBadgeContext.Provider>;
+
+  function markRead() {
+    setSeen(true);
+    void fetch('/api/notifications/read', { keepalive: true, method: 'POST' }).catch(() => {});
+  }
+
+  return <NotificationsBadgeContext.Provider value={{ markRead, seen }}>{children}</NotificationsBadgeContext.Provider>;
 }
 
 export function useNotificationsBadge() {

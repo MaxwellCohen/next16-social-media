@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
+import { use, useEffect } from 'react';
 import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
 
-export function MarkNotificationsRead() {
-  const { setSeen } = useNotificationsBadge();
+export function MarkNotificationsRead({ countPromise }: { countPromise: Promise<number> }) {
+  const count = use(countPromise);
+  const { markRead } = useNotificationsBadge();
   useEffect(() => {
-    setSeen(true);
-    void fetch('/api/notifications/read', { keepalive: true, method: 'POST' }).catch(() => {});
-  }, [setSeen]);
+    if (count > 0) {
+      markRead();
+    }
+  }, [count, markRead]);
   return null;
 }
