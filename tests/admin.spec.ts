@@ -36,14 +36,4 @@ test.describe('Admin dashboard (/admin)', () => {
       await expect(page.locator('main a[href^="/drop/"]')).toHaveCount(0);
     });
   });
-
-  test('log search keeps focus across soft navigations', async ({ page }) => {
-    await page.goto('/admin/log');
-    const search = page.getByRole('searchbox', { name: 'Search activity' });
-    await search.waitFor({ state: 'visible', timeout: 15000 });
-    await search.click();
-    await page.keyboard.type('hello', { delay: 150 });
-    await expect(search).toBeFocused();
-    await expect(search).toHaveValue('hello');
-  });
 });

@@ -2,10 +2,10 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Suspense, useId, useRef, useTransition } from 'react';
+import { useId, useRef, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 import { SeedFromSearchParam } from '@/components/scripts/seed-from-search-param';
-import { Chips, ChipsSkeleton } from '@/components/ui/chips';
+import { Chips } from '@/components/ui/chips';
 import { Spinner } from '@/components/ui/spinner';
 import { ActivityRow, ActivityRowSkeleton } from '@/features/admin/components/activity-feed';
 import { Tile } from '@/features/admin/components/tile';
@@ -32,20 +32,6 @@ function parseKind(value: string | undefined | null): Filter {
 
 export function ActivityLogFilters() {
   return <Chips basePath={BASE} param="kind" defaultValue="all" options={FILTER_OPTIONS} label="Activity filters" />;
-}
-
-export function ActivityLogShell({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Suspense fallback={<ChipsSkeleton count={5} />}>
-          <ActivityLogFilters />
-        </Suspense>
-        <ActivityLogSearch />
-      </div>
-      {children}
-    </>
-  );
 }
 
 export function ActivityLogSearch() {
