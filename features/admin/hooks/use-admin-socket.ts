@@ -88,7 +88,7 @@ export function useAdminSocket() {
       };
     }
 
-    connect();
+    if (window.location.pathname.startsWith('/admin')) connect();
 
     return () => {
       closed = true;

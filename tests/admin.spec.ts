@@ -1,8 +1,10 @@
+import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 // The admin dashboard is a client-provider + WebSocket admin surface (its own layout, outside the (app)
-// group), so it's exercised functionally rather than with the static-shell/runtime-prefetch instant()
-// split used for the streaming feed pages.
+// group), so it's mostly exercised functionally rather than with the static-shell/runtime-prefetch instant()
+// split used for the streaming feed pages. The one instant() case pins the search input into the static
+// shell: it must render before any streaming/socket data (the log search wraps the results Suspense).
 test.describe('Admin dashboard (/admin)', () => {
   test('board loads with sub-nav and live presence', async ({ page }) => {
     await page.goto('/admin');
@@ -24,5 +26,24 @@ test.describe('Admin dashboard (/admin)', () => {
     await row.waitFor({ state: 'visible', timeout: 15000 });
     await row.click();
     await expect(page).toHaveURL(/\/drop\//);
+  });
+
+  test('log search input is in the static shell before streaming', async ({ page }) => {
+    await page.goto('/admin');
+    await instant(page, async () => {
+      await page.goto('/admin/log');
+      await expect(page.getByRole('searchbox', { name: 'Search activity' })).toBeVisible();
+      await expect(page.locator('main a[href^="/drop/"]')).toHaveCount(0);
+    });
+  });
+
+  test('log search keeps focus across soft navigations', async ({ page }) => {
+    await page.goto('/admin/log');
+    const search = page.getByRole('searchbox', { name: 'Search activity' });
+    await search.waitFor({ state: 'visible', timeout: 15000 });
+    await search.click();
+    await page.keyboard.type('hello', { delay: 150 });
+    await expect(search).toBeFocused();
+    await expect(search).toHaveValue('hello');
   });
 });
