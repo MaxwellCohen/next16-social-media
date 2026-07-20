@@ -1,8 +1,21 @@
+import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Search page (/search)', () => {
-  // Typing drives a router.replace per keystroke and the results stream from the server; the input lives
-  // in a client shell above the results Suspense, so it must keep focus and capture every character.
+  // Static shell (goto): the search input is prerendered into the shell; query results stream behind Suspense.
+  // (No runtime-prefetch reveal case here — unlike the feed pages, no link carries a `?q=`, and the empty
+  //  state is static, so there's no runtime-prefetched result set to assert.)
+  test('static shell — search present, results absent', async ({ page }) => {
+    await page.goto('/');
+
+    await instant(page, async () => {
+      await page.goto('/search?q=the');
+      await expect(page.getByRole('searchbox', { name: 'Search drops' })).toBeVisible();
+      await expect(page.locator('main article')).toHaveCount(0);
+    });
+  });
+
+  // The input lives in a client shell above the results Suspense, so it keeps focus while results stream.
   test('search keeps focus while results stream from the server', async ({ page }) => {
     await page.goto('/search');
     const search = page.getByRole('searchbox', { name: 'Search drops' });

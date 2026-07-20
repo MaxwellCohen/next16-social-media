@@ -1,30 +1,24 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useId, useRef, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { SeedFromSearchParam } from '@/components/scripts/seed-from-search-param';
 import { Section } from '@/components/ui/section';
 import { Spinner } from '@/components/ui/spinner';
+import { useSyncInputToSearchParam } from '@/hooks/use-sync-input-to-search-param';
 import type { Route } from 'next';
 
 const inputClass = 'bg-card dark:bg-card-dark placeholder-gray w-full rounded-lg py-2.5 pr-3 pl-9 text-sm outline-none';
 
 export function SearchShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputId = useId();
   const [isPending, startTransition] = useTransition();
 
-  function onSearch(value: string) {
-    const params = new URLSearchParams(searchParams);
-    if (value) params.set('q', value);
-    else params.delete('q');
-    const qs = params.toString();
-    startTransition(() => {
-      router.replace((qs ? `${pathname}?${qs}` : pathname) as Route, { scroll: false });
-    });
-  }
+  useSyncInputToSearchParam(inputRef, 'q');
 
   return (
     <Boundary label="SearchShell">
@@ -36,18 +30,26 @@ export function SearchShell({ children }: { children: React.ReactNode }) {
             <Search className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           )}
           <input
+            ref={inputRef}
+            id={inputId}
             type="search"
             name="q"
-            defaultValue={searchParams.get('q') ?? ''}
             aria-label="Search drops"
             placeholder="Search drops…"
-            onChange={event => onSearch(event.target.value)}
+            suppressHydrationWarning
+            onChange={event => {
+              const value = event.target.value;
+              startTransition(() => {
+                router.replace((value ? `/search?q=${encodeURIComponent(value)}` : '/search') as Route, { scroll: false });
+              });
+            }}
             className={inputClass}
           />
+          <SeedFromSearchParam targetId={inputId} param="q" />
         </div>
       </Section>
       <div
-        className="transition-opacity duration-200 ease-out data-[pending]:opacity-60"
+        className="transition-opacity duration-200 ease-out data-pending:opacity-60"
         data-pending={isPending ? '' : undefined}
       >
         {children}

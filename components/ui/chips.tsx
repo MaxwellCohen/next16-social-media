@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useOptimistic, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,8 @@ const chipClass = (active: boolean) =>
 export function Chips({ basePath, param, options, defaultValue, label = 'Filters' }: Props) {
   const searchParams = useSearchParams();
   const active = searchParams.get(param) ?? defaultValue ?? options[0]?.value ?? '';
+  const [optimisticActive, setOptimisticActive] = useOptimistic(active);
+  const [, startTransition] = useTransition();
 
   const hrefFor = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,8 +48,14 @@ export function Chips({ basePath, param, options, defaultValue, label = 'Filters
             key={option.value}
             href={hrefFor(option.value)}
             scroll={false}
-            aria-current={active === option.value ? 'true' : undefined}
-            className={chipClass(active === option.value)}
+            onNavigate={() => {
+              if (option.value === optimisticActive) return;
+              startTransition(() => {
+                setOptimisticActive(option.value);
+              });
+            }}
+            aria-current={optimisticActive === option.value ? 'true' : undefined}
+            className={chipClass(optimisticActive === option.value)}
           >
             {option.label}
           </Link>
