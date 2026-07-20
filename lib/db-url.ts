@@ -4,9 +4,13 @@
 // so the warning goes away and behavior is locked in.
 //
 // Neon / Supabase / Vercel Postgres ship trusted certs, so `verify-full` is
-// the right default. Self-signed setups should use `?uselibpqcompat=true`.
+// the right default. Exception: an explicit `sslmode=disable` is left as-is so
+// a local or CI Postgres without TLS (the service container in e2e.yml) can
+// connect; remote URLs never set `disable`, so they still get `verify-full`.
 export function normalizeDatabaseUrl(url: string): string {
   const u = new URL(url);
-  u.searchParams.set('sslmode', 'verify-full');
+  if (u.searchParams.get('sslmode') !== 'disable') {
+    u.searchParams.set('sslmode', 'verify-full');
+  }
   return u.toString();
 }

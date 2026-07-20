@@ -35,9 +35,7 @@ export function Sidebar() {
           <DropMark size={28} className="text-black dark:text-white" />
           <span className="hidden lg:inline">drop</span>
         </Link>
-        {/* Admin dashboard is a WebSocket feature — needs a long-lived server, so it's disabled on Vercel.
-            Re-add `LayoutDashboard` to the lucide-react import above to restore.
-        <Link
+        {/* <Link
           href={'/admin' as Route}
           aria-label="Admin dashboard"
           className="text-gray p-1.5 transition-colors hover:text-black dark:hover:text-white"
