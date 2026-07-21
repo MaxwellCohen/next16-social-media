@@ -5,7 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { DemoToolbar } from '@/components/demo/demo-toolbar';
-import { BoundaryProvider } from '@/components/internal/boundary-provider';
+import { BoundaryProvider } from '@/components/internal/boundary';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { NavLinkScript } from '@/components/scripts/nav-link-script';
 import { ThemeProvider } from '@/components/theme/theme-provider';

@@ -1,6 +1,4 @@
 import { Suspense } from 'react';
-import { isPrefetchEnabled } from '@/components/demo/demo-actions';
-import { PrefetchProvider } from '@/components/demo/prefetch-provider';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { Sidebar } from '@/components/sidebar';
 import { Crossfade } from '@/components/ui/crossfade';
@@ -11,35 +9,33 @@ import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/fe
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <PrefetchProvider value={isPrefetchEnabled()}>
-      <NotificationsBadgeProvider>
-        <AppGrid>
-          <Sidebar />
-          <MainColumn>{children}</MainColumn>
-          <RightSidebar>
-            <TrendingTagsShell>
-              <ErrorBoundary title="Tags unavailable" compact>
-                <Suspense fallback={<TrendingTagsListSkeleton />}>
-                  <Crossfade>
-                    <TrendingTagsList />
-                  </Crossfade>
-                </Suspense>
-              </ErrorBoundary>
-            </TrendingTagsShell>
-            <WhoToFollowShell>
-              <ErrorBoundary title="No suggestions" compact>
-                <Suspense fallback={<WhoToFollowListSkeleton />}>
-                  <Crossfade>
-                    <WhoToFollowList />
-                  </Crossfade>
-                </Suspense>
-              </ErrorBoundary>
-            </WhoToFollowShell>
-          </RightSidebar>
-        </AppGrid>
-        <MobileTabBar />
-      </NotificationsBadgeProvider>
-    </PrefetchProvider>
+    <NotificationsBadgeProvider>
+      <AppGrid>
+        <Sidebar />
+        <MainColumn>{children}</MainColumn>
+        <RightSidebar>
+          <TrendingTagsShell>
+            <ErrorBoundary title="Tags unavailable" compact>
+              <Suspense fallback={<TrendingTagsListSkeleton />}>
+                <Crossfade>
+                  <TrendingTagsList />
+                </Crossfade>
+              </Suspense>
+            </ErrorBoundary>
+          </TrendingTagsShell>
+          <WhoToFollowShell>
+            <ErrorBoundary title="No suggestions" compact>
+              <Suspense fallback={<WhoToFollowListSkeleton />}>
+                <Crossfade>
+                  <WhoToFollowList />
+                </Crossfade>
+              </Suspense>
+            </ErrorBoundary>
+          </WhoToFollowShell>
+        </RightSidebar>
+      </AppGrid>
+      <MobileTabBar />
+    </NotificationsBadgeProvider>
   );
 }
 
