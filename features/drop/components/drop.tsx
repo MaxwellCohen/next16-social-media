@@ -6,7 +6,6 @@ import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
-import { TagPill } from '@/features/tag/components/tag-pill';
 import { UserAvatar } from '@/features/user/components/user-avatar';
 import { getCurrentUserHandle, getUserByHandle, getUserDropInteractions } from '@/features/user/user-queries';
 import type { Drop as DropT } from '@/types/drop';
@@ -53,13 +52,6 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
           {drop.embeddedCode && !compact ? (
             <div className="relative z-20">
               <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
-            </div>
-          ) : null}
-          {drop.tags.length > 0 ? (
-            <div className="relative z-20 flex w-fit flex-wrap gap-1.5">
-              {drop.tags.map(t => (
-                <TagPill key={t} tag={t} />
-              ))}
             </div>
           ) : null}
           <div className="relative z-20 w-fit">
