@@ -1,27 +1,20 @@
 # Next 16 Social Media "Drop"
 
-A dev-flavored social network built with Next.js 16, React 19, Tailwind CSS v4, Prisma 7 on Neon Postgres, and Shiki for server-side syntax highlighting.
+Drop is a dev-flavored social network that demonstrates [instant navigations](https://preview.nextjs.org/docs/app/guides/instant-navigation) in the [Next.js 16 preview](https://nextjs.org/blog/next-16-3-instant-navigations). It is built on the App Router with React 19, Tailwind CSS v4, and Prisma 7 on Neon Postgres, and it highlights code snippets on the server with Shiki.
 
-The architecture follows the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKILL.md) skill and the [Component Architecture for React Server Components](https://aurorascharff.no/posts/component-architecture-for-react-server-components/) blog post.
+Every architectural decision follows the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKILL.md) skill and the [Component Architecture for React Server Components](https://aurorascharff.no/posts/component-architecture-for-react-server-components/) blog post.
 
-## Architecture
+## Features
 
-- **Feature-sliced structure**: `drop/`, `user/`, `tag/` each own queries, actions, and components
-- **Components own their data**: `<Feed>`, `<DropDetail>`, `<TrendingTagsList>` fetch on the server. Move them between pages freely
-- **Pages compose, they don't fetch**: each page is a synchronous blueprint of async components wrapped in Suspense
-- **Client boundaries as leaf nodes**: `'use client'` pushed deep. Server content flows into client components as children
+- **[Cache Components](https://preview.nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)** cache each query with `'use cache'`, name the data with `cacheTag`, and tune its lifetime with `cacheLife`. Server Functions invalidate both the server and browser caches with `updateTag`, and per-user reads use `'use cache: private'`.
+- **[Partial Prefetching](https://preview.nextjs.org/docs/app/guides/adopting-partial-prefetching)** prefetches the shared App Shell of every link that enters the viewport. Pages opt into prefetching their per-request data by exporting `prefetch = 'allow-runtime'`.
+- **Hover-intent prefetching** defers the runtime prefetch of low-intent links, such as the trending tags, until the pointer or focus reaches them, so that a page full of links does not wake a server for each one on render.
+- **Active navigation links** read the current path inside a Suspense boundary so that the top of the tree stays prerenderable on dynamic routes, and an inline script sets `aria-current` before paint to avoid a hydration flash. This pattern is explained in [Building an Active NavLink Component in Next.js](https://aurorascharff.no/posts/building-an-active-navlink-component-in-nextjs/).
+- **View Transitions** animate the tab underline as a shared element, transition individual rows as the lists change, and cross-fade content as it is revealed from Suspense.
 
-## Caching and Navigation
+## Getting started
 
-- **Cache Components**: `'use cache'` per query, not per page. A feed caches for seconds, trending tags for minutes, user-specific data with `'use cache: private'`. `cacheTag` names data, `updateTag` invalidates both server and browser cache
-- **Partial Prefetching**: the 16.3 default that prepares the reusable App Shell of each link in viewport so navigations commit instantly. Pages opt into per-request prefetching with `export const prefetch = 'allow-runtime'`, and `<Link>` components pass `prefetch={true}` to also prefetch link-specific data behind params, searchParams, or `'use cache: private'`
-- **Hover-intent prefetching**: [`HoverPrefetchLink`](components/ui/hover-prefetch-link.tsx) keeps `prefetch={null}` until `onMouseEnter`/`onFocus` flips it to `true`, so long lists (e.g. [`TrendingTagsList`](features/tag/components/trending-tags.tsx)) don't wake N servers on render but still warm before the click
-- **Active links under Cache Components**: [`NavLink`](components/ui/nav-link.tsx) wraps its `usePathname()` read in `<Suspense>` so top-of-tree nav stays prerenderable on dynamic routes, with a layout-stable inactive fallback; the segment-aware variant is [`nav-link-segments.tsx`](components/ui/nav-link-segments.tsx), and a pre-paint inline script ([`nav-link-script.tsx`](components/scripts/nav-link-script.tsx)) sets `aria-current` during HTML parse to avoid a hydration flash. See [Building an Active NavLink Component in Next.js](https://aurorascharff.no/posts/building-an-active-navlink-component-in-nextjs/)
-- **View Transitions**: shared-element tab underline that slides between tabs ([`Tabs`](components/ui/tabs.tsx)), per-row list transitions, and `<Crossfade>` on Suspense reveals
-
-<!-- WIP: WebSockets / live admin dashboard — hidden until the WebSocket Route Handlers RFC lands. -->
-
-## Getting Started
+Drop runs on Postgres, so set `DATABASE_URL` in `.env.local` and then run the following commands.
 
 ```bash
 pnpm install
@@ -30,38 +23,8 @@ pnpm run prisma.seed
 pnpm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser. You can browse the data with `pnpm run prisma.studio`, or wipe and re-seed the database with `pnpm run prisma.reset`.
 
-## Project Structure
+## Testing
 
-```
-app/                    Pages and layouts
-components/ui/          Visual primitives
-features/
-  drop/                 Queries, actions, and components for drops
-  user/                 Queries, actions, and components for users
-  tag/                  Queries and components for tags
-  search/               Components for search
-types/                  Shared types
-lib/                    Prisma client, utilities
-tests/                  Playwright E2E tests
-```
-
-## E2E Tests
-
-Uses `@next/playwright` with the `instant()` API to assert loading states:
-
-```bash
-pnpm test:e2e
-```
-
-## Database
-
-Uses Prisma with PostgreSQL (Neon).
-
-```bash
-pnpm run prisma.push     # Push schema to DB
-pnpm run prisma.seed     # Seed with sample data
-pnpm run prisma.studio   # Open Prisma Studio
-pnpm run prisma.reset    # Reset and re-seed
-```
+The end-to-end tests use [`@next/playwright`](https://nextjs.org/docs/app/guides/testing/playwright) and its `instant()` API to assert that loading states appear and that navigations stay instant. Run them with `pnpm test:e2e`.
