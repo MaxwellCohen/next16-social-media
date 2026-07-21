@@ -101,10 +101,10 @@
 
 @keyframes flash-in {
   0% {
-    background-color: color-mix(in oklab, var(--color-blue-500) 18%, transparent);
+    background-color: rgb(from var(--color-blue-500) r g b / 0.18);
   }
   100% {
-    background-color: transparent;
+    background-color: rgb(from var(--color-blue-500) r g b / 0);
   }
 }
 
