@@ -44,26 +44,6 @@ export async function NotificationList() {
   );
 }
 
-export function NotificationListSkeleton() {
-  return (
-    <ul aria-hidden>
-      {Array.from({ length: 4 }).map((_, i) => (
-        <li
-          key={i}
-          className="border-divider/70 dark:border-divider-dark/70 flex items-start gap-3 border-b px-4 py-4 sm:px-5"
-        >
-          <Skeleton className="h-5 w-5 rounded" />
-          <UserAvatarSkeleton size="md" />
-          <div className="flex flex-1 flex-col gap-1">
-            <Skeleton className="h-5 w-48 rounded" />
-            <Skeleton className="h-4 w-20 rounded" />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 async function NotificationRow({ notification }: { notification: Notification }) {
   const actor = await getUserByHandle(notification.actorHandle);
   const Icon = ICONS[notification.kind];
@@ -103,4 +83,24 @@ function describe(kind: NotificationKind): string {
     case 'reply':
       return 'replied to your drop';
   }
+}
+
+export function NotificationListSkeleton() {
+  return (
+    <ul aria-hidden>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <li
+          key={i}
+          className="border-divider/70 dark:border-divider-dark/70 flex items-start gap-3 border-b px-4 py-4 sm:px-5"
+        >
+          <Skeleton className="h-5 w-5 rounded" />
+          <UserAvatarSkeleton size="md" />
+          <div className="flex flex-1 flex-col gap-1">
+            <Skeleton className="h-5 w-48 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
 }

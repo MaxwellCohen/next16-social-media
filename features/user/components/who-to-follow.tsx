@@ -35,14 +35,6 @@ export async function WhoToFollowList() {
   );
 }
 
-export function WhoToFollowListSkeleton() {
-  return (
-    <div className="px-4 py-4 sm:px-5">
-      <Skeleton className="h-8 w-8 rounded-full" />
-    </div>
-  );
-}
-
 export function WhoToFollowShell({ children }: { children: React.ReactNode }) {
   return (
     <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
@@ -51,5 +43,13 @@ export function WhoToFollowShell({ children }: { children: React.ReactNode }) {
       </header>
       {children}
     </section>
+  );
+}
+
+export function WhoToFollowListSkeleton() {
+  return (
+    <div className="px-4 py-4 sm:px-5">
+      <Skeleton className="h-8 w-8 rounded-full" />
+    </div>
   );
 }

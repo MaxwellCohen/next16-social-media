@@ -71,16 +71,6 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
   );
 }
 
-function DropSkeleton() {
-  return (
-    <div className="border-divider/70 dark:border-divider-dark/70 min-h-[120px] border-b px-4 py-4 sm:px-5">
-      <div className="flex gap-3">
-        <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
-      </div>
-    </div>
-  );
-}
-
 export function DropList({
   drops,
   compact,
@@ -95,18 +85,6 @@ export function DropList({
       {drops.map((drop, i) => (
         <li key={`${drop.id}-${i}`}>
           <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-export function DropListSkeleton({ count = 5 }: { count?: number }) {
-  return (
-    <ul aria-hidden>
-      {Array.from({ length: count }).map((_, i) => (
-        <li key={i}>
-          <DropSkeleton />
         </li>
       ))}
     </ul>
@@ -143,5 +121,27 @@ async function Reposter({ handle }: { handle: string }) {
       <Repeat2 className="h-3 w-3" />
       <span>{reposter.handle === currentHandle ? 'You' : reposter.displayName} reposted</span>
     </PrefetchLink>
+  );
+}
+
+function DropSkeleton() {
+  return (
+    <div className="border-divider/70 dark:border-divider-dark/70 min-h-[120px] border-b px-4 py-4 sm:px-5">
+      <div className="flex gap-3">
+        <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+export function DropListSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <ul aria-hidden>
+      {Array.from({ length: count }).map((_, i) => (
+        <li key={i}>
+          <DropSkeleton />
+        </li>
+      ))}
+    </ul>
   );
 }

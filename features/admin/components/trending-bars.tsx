@@ -8,14 +8,6 @@ import { useAdmin } from '@/features/admin/providers/admin-provider';
 import { formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 
-function TrendingRowSkeleton() {
-  return (
-    <li className="min-h-12 px-4 py-2">
-      <Skeleton className="h-3.5 w-20 rounded" />
-    </li>
-  );
-}
-
 export function TrendingBars() {
   const { snapshot } = useAdmin();
   const max = Math.max(1, ...(snapshot?.trending.map(tag => tag.count) ?? []));
@@ -56,5 +48,13 @@ export function TrendingBars() {
         )}
       </Tile>
     </Boundary>
+  );
+}
+
+function TrendingRowSkeleton() {
+  return (
+    <li className="min-h-12 px-4 py-2">
+      <Skeleton className="h-3.5 w-20 rounded" />
+    </li>
   );
 }

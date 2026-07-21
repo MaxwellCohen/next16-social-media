@@ -26,6 +26,17 @@ export async function TrendingTagsList() {
   );
 }
 
+export function TrendingTagsShell({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
+      <header className="px-4 pt-4 pb-3">
+        <h3 className="text-base font-bold tracking-tight">Trending now</h3>
+      </header>
+      {children}
+    </section>
+  );
+}
+
 export function TrendingTagsListSkeleton() {
   return (
     <ul className="pb-2">
@@ -35,16 +46,5 @@ export function TrendingTagsListSkeleton() {
         </li>
       ))}
     </ul>
-  );
-}
-
-export function TrendingTagsShell({ children }: { children: React.ReactNode }) {
-  return (
-    <section className="border-divider bg-card/40 dark:border-divider-dark dark:bg-card-dark/40 rounded-xl border">
-      <header className="px-4 pt-4 pb-3">
-        <h3 className="text-base font-bold tracking-tight">Trending now</h3>
-      </header>
-      {children}
-    </section>
   );
 }

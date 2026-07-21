@@ -11,14 +11,6 @@ const H = 160;
 const PAD = 10;
 const RANGES = [15, 30, 60];
 
-function ChartSkeleton() {
-  return (
-    <div className="px-4 pb-4" aria-hidden>
-      <div className="bg-card dark:bg-card-dark animate-pending aspect-15/4 w-full rounded-lg" />
-    </div>
-  );
-}
-
 function RangeChips({ range, onChange }: { range: number; onChange: (value: number) => void }) {
   return (
     <div className="flex gap-1">
@@ -140,5 +132,13 @@ export function DropsChart() {
         </div>
       </Tile>
     </Boundary>
+  );
+}
+
+function ChartSkeleton() {
+  return (
+    <div className="px-4 pb-4" aria-hidden>
+      <div className="bg-card dark:bg-card-dark animate-pending aspect-15/4 w-full rounded-lg" />
+    </div>
   );
 }

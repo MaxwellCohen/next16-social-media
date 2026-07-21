@@ -8,15 +8,6 @@ import { useAdmin } from '@/features/admin/providers/admin-provider';
 import { formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 
-function TopDropRowSkeleton() {
-  return (
-    <li className="flex min-h-10 items-center gap-3 px-4 py-2.5">
-      <Skeleton className="h-3.5 w-4 shrink-0 rounded" />
-      <Skeleton className="h-3.5 w-40 max-w-full flex-1 rounded" />
-    </li>
-  );
-}
-
 export function TopDrops() {
   const { snapshot } = useAdmin();
 
@@ -52,5 +43,14 @@ export function TopDrops() {
         )}
       </Tile>
     </Boundary>
+  );
+}
+
+function TopDropRowSkeleton() {
+  return (
+    <li className="flex min-h-10 items-center gap-3 px-4 py-2.5">
+      <Skeleton className="h-3.5 w-4 shrink-0 rounded" />
+      <Skeleton className="h-3.5 w-40 max-w-full flex-1 rounded" />
+    </li>
   );
 }

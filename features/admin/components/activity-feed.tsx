@@ -39,19 +39,6 @@ export function ActivityRow({ item, flash }: { item: ActivityItem; flash?: boole
   );
 }
 
-export function ActivityRowSkeleton() {
-  return (
-    <li className="flex min-h-14 items-start gap-2.5 px-4 py-2.5">
-      <Skeleton className="mt-0.5 h-4 w-4 shrink-0 rounded-full" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <Skeleton className="h-3.5 w-24 rounded" />
-        <Skeleton className="h-3 w-40 rounded" />
-      </div>
-      <Skeleton className="mt-1 h-3 w-6 shrink-0 rounded" />
-    </li>
-  );
-}
-
 export function ActivityFeed({ limit }: { limit?: number }) {
   const { snapshot, flashIds } = useAdmin();
   const items = snapshot ? (limit ? snapshot.recentActivity.slice(0, limit) : snapshot.recentActivity) : [];
@@ -76,5 +63,18 @@ export function ActivityFeed({ limit }: { limit?: number }) {
         )}
       </Tile>
     </Boundary>
+  );
+}
+
+export function ActivityRowSkeleton() {
+  return (
+    <li className="flex min-h-14 items-start gap-2.5 px-4 py-2.5">
+      <Skeleton className="mt-0.5 h-4 w-4 shrink-0 rounded-full" />
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <Skeleton className="h-3.5 w-24 rounded" />
+        <Skeleton className="h-3 w-40 rounded" />
+      </div>
+      <Skeleton className="mt-1 h-3 w-6 shrink-0 rounded" />
+    </li>
   );
 }
