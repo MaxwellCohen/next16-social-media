@@ -6,6 +6,8 @@
 
 A dev-flavored social network that demonstrates [Instant Navigations](https://preview.nextjs.org/docs/app/guides/instant-navigation) in the [Next.js 16 preview](https://nextjs.org/blog/next-16-3-instant-navigations).
 
+[**Live demo →**](https://next16-social-media.vercel.app/)
+
 </div>
 
 ---
