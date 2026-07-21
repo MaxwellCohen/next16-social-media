@@ -19,19 +19,17 @@ export async function WhoToFollowList() {
     );
   }
   return (
-    <ul className="pb-2">
+    <div className="flex flex-col pb-2">
       {users.map(user => (
         <ViewTransition key={user.handle}>
-          <li>
-            <UserRow
-              handle={user.handle}
-              displayName={user.displayName}
-              action={<FollowButton targetHandle={user.handle} following={false} />}
-            />
-          </li>
+          <UserRow
+            handle={user.handle}
+            displayName={user.displayName}
+            action={<FollowButton targetHandle={user.handle} following={false} />}
+          />
         </ViewTransition>
       ))}
-    </ul>
+    </div>
   );
 }
 
