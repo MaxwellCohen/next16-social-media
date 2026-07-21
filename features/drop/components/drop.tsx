@@ -54,7 +54,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
               <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
             </div>
           ) : null}
-          <div className="relative z-20">
+          <div className="relative z-20 w-fit">
             <DropActions
               dropId={drop.id}
               parentId={drop.parentId}
