@@ -38,7 +38,6 @@ export async function getUserByHandle(handle: string) {
 async function getUserByHandleCached(handle: string, slow: boolean) {
   'use cache';
   cacheTag('users', `user-${handle}`);
-  cacheLife('days');
 
   await delay(500, slow);
   const user = await prisma.user.findUnique({ where: { handle } });
@@ -118,7 +117,6 @@ export async function getUserDropInteractions() {
 async function getUserDropInteractionsForHandle(handle: string, slow: boolean) {
   'use cache';
   cacheTag(`drop-interactions:${handle}`);
-  cacheLife('days');
 
   await delay(300, slow);
   const [likes, reposts, bookmarks] = await Promise.all([
