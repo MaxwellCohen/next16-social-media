@@ -5,6 +5,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useOptimistic, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
 import { switchUser } from '@/features/user/user-actions';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,7 @@ type Props = {
 
 export function UserSwitcher({ currentHandle, users }: Props) {
   const router = useRouter();
+  const { reset } = useNotificationsBadge();
   const [isPending, startTransition] = useTransition();
   const [optimisticHandle, setOptimisticHandle] = useOptimistic(currentHandle);
   const selected = users.find(u => u.handle === optimisticHandle) ?? users[0];
@@ -27,6 +29,7 @@ export function UserSwitcher({ currentHandle, users }: Props) {
     if (handle === optimisticHandle) return;
     startTransition(async () => {
       setOptimisticHandle(handle);
+      reset();
       await switchUser(handle);
       router.refresh();
     });
