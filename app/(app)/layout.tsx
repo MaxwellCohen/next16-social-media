@@ -57,7 +57,7 @@ function MainColumn({ children }: { children: React.ReactNode }) {
 
 function RightSidebar({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex">
+    <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex xl:pt-20">
       {children}
     </aside>
   );
