@@ -1,9 +1,9 @@
 'use client';
 
 import { Heart, MessageCircle, MessageSquare, Repeat2 } from 'lucide-react';
-import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tile } from '@/features/admin/components/tile';
 import { useAdmin } from '@/features/admin/providers/admin-provider';
@@ -23,7 +23,7 @@ export function ActivityRow({ item, flash }: { item: ActivityItem; flash?: boole
   return (
     <ViewTransition>
       <li className={cn(flash && 'flash-in')}>
-        <Link
+        <PrefetchLink
           href={`/drop/${item.id}` as Route}
           className="flex items-start gap-2.5 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
         >
@@ -33,7 +33,7 @@ export function ActivityRow({ item, flash }: { item: ActivityItem; flash?: boole
             {item.preview && <p className="text-gray truncate text-xs">{item.preview}</p>}
           </div>
           <time className="text-gray shrink-0 font-mono text-xs">{timeAgo(new Date(item.at))}</time>
-        </Link>
+        </PrefetchLink>
       </li>
     </ViewTransition>
   );

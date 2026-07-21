@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { TabsSkeleton } from '@/components/ui/tabs';
 import { Presence } from '@/features/admin/components/presence';
 import { SubNav } from '@/features/admin/components/sub-nav';
@@ -15,21 +15,21 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
       <AdminProvider>
         <header className="border-divider/70 dark:border-divider-dark/70 sticky top-0 z-30 flex items-center justify-between gap-3 border-b bg-white/70 px-4 py-3 backdrop-blur-md backdrop-saturate-150 sm:px-6 dark:bg-black/70">
           <div className="flex items-center gap-2.5">
-            <Link
+            <PrefetchLink
               href="/"
               aria-label="Drop home"
               className="inline-flex items-center gap-2 text-xl font-bold tracking-tight text-black dark:text-white"
             >
               <DropMark size={24} className="text-black dark:text-white" />
               <span>drop</span>
-            </Link>
+            </PrefetchLink>
             <span className="text-gray">/</span>
-            <Link
+            <PrefetchLink
               href={'/admin' as Route}
               className="text-sm font-semibold tracking-tight text-black dark:text-white"
             >
               Admin dashboard
-            </Link>
+            </PrefetchLink>
           </div>
           <div className="flex items-center gap-3">
             <Presence />

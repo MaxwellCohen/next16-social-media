@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tile } from '@/features/admin/components/tile';
 import { useAdmin } from '@/features/admin/providers/admin-provider';
@@ -35,7 +35,7 @@ export function TopDrops() {
           <ol className="pb-2">
             {snapshot.topDrops.map((drop, index) => (
               <li key={drop.id}>
-                <Link
+                <PrefetchLink
                   href={`/drop/${drop.id}` as Route}
                   className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white dark:hover:bg-black"
                 >
@@ -45,7 +45,7 @@ export function TopDrops() {
                     <span className="text-black dark:text-white">{drop.preview}</span>
                   </span>
                   <span className="text-gray shrink-0 font-mono text-xs">{formatCount(drop.score)}</span>
-                </Link>
+                </PrefetchLink>
               </li>
             ))}
           </ol>

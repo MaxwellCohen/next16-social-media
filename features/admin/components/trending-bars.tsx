@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tile } from '@/features/admin/components/tile';
 import { useAdmin } from '@/features/admin/providers/admin-provider';
@@ -35,7 +35,7 @@ export function TrendingBars() {
           <ul className="pb-2">
             {snapshot.trending.map(tag => (
               <li key={tag.name}>
-                <Link
+                <PrefetchLink
                   href={`/tag/${tag.name}` as Route}
                   className="block px-4 py-2 transition-colors hover:bg-white dark:hover:bg-black"
                 >
@@ -49,7 +49,7 @@ export function TrendingBars() {
                       style={{ width: `${(tag.count / max) * 100}%` }}
                     />
                   </div>
-                </Link>
+                </PrefetchLink>
               </li>
             ))}
           </ul>

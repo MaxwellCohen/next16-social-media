@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useOptimistic, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
@@ -44,7 +44,7 @@ export function Chips({ basePath, param, options, defaultValue, label = 'Filters
     <Boundary label="Chips">
       <div role="group" aria-label={label} className="flex flex-wrap gap-1.5">
         {options.map(option => (
-          <Link
+          <PrefetchLink
             key={option.value}
             href={hrefFor(option.value)}
             scroll={false}
@@ -58,7 +58,7 @@ export function Chips({ basePath, param, options, defaultValue, label = 'Filters
             className={chipClass(optimisticActive === option.value)}
           >
             {option.label}
-          </Link>
+          </PrefetchLink>
         ))}
       </div>
     </Boundary>
