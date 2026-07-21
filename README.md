@@ -12,8 +12,6 @@ A dev-flavored social network that demonstrates [Instant Navigations](https://pr
 
 ---
 
-Drop is built on the App Router with React 19, Tailwind CSS v4, and Prisma 7 on Neon Postgres, and it highlights code snippets on the server with Shiki. The architecture follows the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKILL.md) skill and the [Component Architecture for React Server Components](https://aurorascharff.no/posts/component-architecture-for-react-server-components/) blog post.
-
 ## Features
 
 - **[Cache Components](https://preview.nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)** cache each query with `'use cache'`, name the data with `cacheTag`, and set its lifetime with `cacheLife`. Server Functions call `updateTag` to invalidate the server and browser caches, and per-user reads use [`'use cache: private'`](https://preview.nextjs.org/docs/app/api-reference/directives/use-cache-private).
@@ -49,7 +47,20 @@ The schema is otherwise identical, so the rest of the app behaves the same as pr
 
 ## Testing
 
-The end-to-end tests use [`@next/playwright`](https://nextjs.org/docs/app/guides/testing/playwright) with the [`instant()`](https://preview.nextjs.org/docs/app/api-reference/file-conventions/route-segment-config/instant) API to assert that loading states appear and that navigations stay instant. Run them with `pnpm test:e2e`.
+The end-to-end tests use [`@next/playwright`](https://nextjs.org/docs/app/guides/testing/playwright) with the [`instant()`](https://preview.nextjs.org/docs/app/api-reference/file-conventions/route-segment-config/instant) API to assert that loading states appear and that navigations stay instant.
+
+```bash
+pnpm test:e2e
+```
+
+## Stack
+
+- **[Next.js 16](https://nextjs.org/)**: App Router, Cache Components, Server Functions
+- **[React 19](https://react.dev/)** with React Compiler: Suspense, View Transitions, `useOptimistic`
+- **[TypeScript](https://www.typescriptlang.org/)** and **[Tailwind CSS v4](https://tailwindcss.com/)**
+- **[Prisma 7](https://www.prisma.io/)** on PostgreSQL (Neon)
+- **[Ariakit](https://ariakit.org/)** for accessible dialogs and popovers
+- **[Shiki](https://shiki.style/)** for server-side syntax highlighting
 
 ## License
 
