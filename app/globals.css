@@ -137,6 +137,7 @@
 ::view-transition-group(sidebar),
 ::view-transition-group(modal),
 ::view-transition-group(modal-backdrop),
+::view-transition-group(account-menu),
 ::view-transition-group(demo-toolbar) {
   animation: none;
   z-index: 100;
@@ -153,6 +154,8 @@
 ::view-transition-new(modal),
 ::view-transition-old(modal-backdrop),
 ::view-transition-new(modal-backdrop),
+::view-transition-old(account-menu),
+::view-transition-new(account-menu),
 ::view-transition-old(demo-toolbar),
 ::view-transition-new(demo-toolbar) {
   animation: none;
