@@ -10,13 +10,18 @@ import { toDrop, type Drop } from '@/types/drop';
 
 const FEED_PAGE_SIZE = 10;
 
-type FeedPage = { drops: Drop[]; hasMore: boolean };
+export type FeedItem =
+  | { kind: 'drop'; drop: Drop; pinnedAt: number }
+  | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 
-export async function getFeed(page: number = 1): Promise<FeedPage> {
+type FeedPage = { drops: Drop[]; hasMore: boolean };
+type FollowingFeedPage = { items: FeedItem[]; hasMore: boolean };
+
+export async function getFeed(page: number = 1): Promise<FollowingFeedPage> {
   return getFeedForHandle(await getCurrentUserHandle(), page, await isSlowEnabled());
 }
 
-async function getFeedForHandle(handle: string, page: number, slow: boolean): Promise<FeedPage> {
+async function getFeedForHandle(handle: string, page: number, slow: boolean): Promise<FollowingFeedPage> {
   'use cache';
   cacheTag('feed', `feed:${handle}`);
   await delay(800, slow);
@@ -25,20 +30,43 @@ async function getFeedForHandle(handle: string, page: number, slow: boolean): Pr
     where: { followerHandle: handle },
   });
   const followedHandles = [handle, ...following.map(f => f.targetHandle)];
-  const rows = await prisma.drop.findMany({
-    orderBy: { createdAt: 'desc' },
-    skip: (page - 1) * FEED_PAGE_SIZE,
-    take: FEED_PAGE_SIZE + 1,
-    where: {
-      authorHandle: { in: followedHandles },
-      parentId: null,
-    },
-  });
-  const hasMore = rows.length > FEED_PAGE_SIZE;
-  const items = hasMore ? rows.slice(0, FEED_PAGE_SIZE) : rows;
+  const take = page * FEED_PAGE_SIZE + 1;
+  const [authored, reposts] = await Promise.all([
+    prisma.drop.findMany({
+      orderBy: { createdAt: 'desc' },
+      take,
+      where: { authorHandle: { in: followedHandles }, parentId: null },
+    }),
+    prisma.repost.findMany({
+      include: { drop: true },
+      orderBy: { createdAt: 'desc' },
+      take,
+      where: { drop: { parentId: null }, userHandle: { in: followedHandles } },
+    }),
+  ]);
+
+  const merged: FeedItem[] = [
+    ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
+    ...reposts.map(r => ({
+      drop: toDrop(r.drop),
+      kind: 'repost' as const,
+      pinnedAt: r.createdAt.getTime(),
+      repostedBy: r.userHandle,
+    })),
+  ];
+
+  const byId = new Map<string, FeedItem>();
+  for (const item of merged.sort((a, b) => b.pinnedAt - a.pinnedAt)) {
+    if (!byId.has(item.drop.id)) byId.set(item.drop.id, item);
+  }
+  const sorted = [...byId.values()].sort((a, b) => b.pinnedAt - a.pinnedAt);
+
+  const start = (page - 1) * FEED_PAGE_SIZE;
+  const slice = sorted.slice(start, start + FEED_PAGE_SIZE + 1);
+  const hasMore = slice.length > FEED_PAGE_SIZE;
   return {
-    drops: items.map(toDrop),
     hasMore,
+    items: hasMore ? slice.slice(0, FEED_PAGE_SIZE) : slice,
   };
 }
 
@@ -108,15 +136,11 @@ async function getRepliesCached(dropId: string, slow: boolean) {
   return [...authorReplies, ...otherReplies].map(toDrop);
 }
 
-type ProfileFeedItem =
-  | { kind: 'drop'; drop: Drop; pinnedAt: number }
-  | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
-
-export async function getDropsByAuthor(handle: string): Promise<ProfileFeedItem[]> {
+export async function getDropsByAuthor(handle: string): Promise<FeedItem[]> {
   return getDropsByAuthorCached(handle, await isSlowEnabled());
 }
 
-async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<ProfileFeedItem[]> {
+async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<FeedItem[]> {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);
   await delay(400, slow);
@@ -130,7 +154,7 @@ async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<Pr
     }),
   ]);
 
-  const items: ProfileFeedItem[] = [
+  const items: FeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
     ...reposts.map(r => ({
       drop: toDrop(r.drop),

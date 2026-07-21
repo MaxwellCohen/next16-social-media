@@ -7,8 +7,8 @@ import { getDiscoverFeed, getFeed } from '@/features/drop/drop-queries';
 import type { Route } from 'next';
 
 export async function Feed({ page = 1 }: { page?: number }) {
-  const { drops } = await getFeed(1);
-  if (drops.length === 0) {
+  const { items } = await getFeed(1);
+  if (items.length === 0) {
     return (
       <EmptyState
         title="Your following feed is quiet"
@@ -36,12 +36,12 @@ export async function Feed({ page = 1 }: { page?: number }) {
 }
 
 async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
-  const { drops, hasMore } = await getFeed(page);
+  const { items, hasMore } = await getFeed(page);
   return (
     <>
-      {drops.map(drop => (
-        <li key={drop.id}>
-          <Drop drop={drop} />
+      {items.map(item => (
+        <li key={item.drop.id}>
+          <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
         </li>
       ))}
       {isLast && hasMore ? (
