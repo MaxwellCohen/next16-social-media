@@ -85,6 +85,15 @@ async function getDropCached(id: string, slow: boolean) {
   return toDrop(row);
 }
 
+export async function getDropAuthorHandle(id: string) {
+  'use cache';
+  cacheTag(`drop-author-${id}`);
+
+  const row = await prisma.drop.findUnique({ select: { authorHandle: true }, where: { id } });
+  if (!row) notFound();
+  return row.authorHandle;
+}
+
 export async function getReplies(dropId: string) {
   return getRepliesCached(dropId, await isSlowEnabled());
 }
