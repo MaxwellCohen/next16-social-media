@@ -1,6 +1,5 @@
-import Link from 'next/link';
-
 import { CodeBlock } from '@/components/ui/code-block';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
@@ -45,20 +44,19 @@ async function DropAuthor({ handle }: { handle: string }) {
   const author = await getUserByHandle(handle);
   return (
     <header className="flex items-center gap-3">
-      <Link prefetch={true} href={`/u/${author.handle}`} className="shrink-0">
+      <PrefetchLink href={`/u/${author.handle}`} className="shrink-0">
         <UserAvatar handle={author.handle} size="lg" />
-      </Link>
+      </PrefetchLink>
       <div className="flex min-w-0 flex-col">
-        <Link
-          prefetch={true}
+        <PrefetchLink
           href={`/u/${author.handle}`}
           className="font-semibold tracking-tight text-black hover:underline dark:text-white"
         >
           {author.displayName}
-        </Link>
-        <Link prefetch={true} href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
+        </PrefetchLink>
+        <PrefetchLink href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
           @{author.handle}
-        </Link>
+        </PrefetchLink>
       </div>
     </header>
   );

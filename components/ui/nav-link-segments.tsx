@@ -1,10 +1,11 @@
 'use client';
 
-import Link, { useLinkStatus } from 'next/link';
+import { useLinkStatus } from 'next/link';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import { Suspense } from 'react';
-import { usePrefetchDefault } from '@/components/demo/use-prefetch-default';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
+import type Link from 'next/link';
 
 type RenderProps = { isActive: boolean; isPending: boolean };
 type Renderable<T> = T | ((props: RenderProps) => T);
@@ -45,10 +46,8 @@ function NavLinkShell<T extends string>({
   isActive,
   ...rest
 }: Props<T> & { isActive: boolean }) {
-  const prefetch = usePrefetchDefault();
   return (
-    <Link
-      prefetch={prefetch}
+    <PrefetchLink
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive, isPending: false })}
@@ -57,7 +56,7 @@ function NavLinkShell<T extends string>({
       {...rest}
     >
       <PendingIndicator isActive={isActive}>{children}</PendingIndicator>
-    </Link>
+    </PrefetchLink>
   );
 }
 

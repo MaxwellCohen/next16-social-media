@@ -16,27 +16,27 @@ type Props = {
 export function DemoGuideDialog({ store, prefetch, delays, offline, boundaries }: Props) {
   const toggles = [
     {
+      Icon: boundaries ? Eye : EyeOff,
       name: 'Boundaries',
       on: boundaries,
-      Icon: boundaries ? Eye : EyeOff,
       text: 'Outlines the Client Components. Everything else is server-rendered and ships no JS.',
     },
     {
+      Icon: prefetch ? Zap : ZapOff,
       name: 'Prefetch',
       on: prefetch,
-      Icon: prefetch ? Zap : ZapOff,
       text: 'Prefetches the route’s cached content (never dynamic data) so it’s ready on arrival. Off, only the App Shell is prefetched, so the click is still instant but content streams in.',
     },
     {
+      Icon: delays ? Timer : TimerOff,
       name: 'Delays',
       on: delays,
-      Icon: delays ? Timer : TimerOff,
       text: 'Adds artificial latency to the real database queries, to prove navigation stays instant on a slow backend.',
     },
     {
+      Icon: offline ? WifiOff : Wifi,
       name: 'Online',
       on: !offline,
-      Icon: offline ? WifiOff : Wifi,
       text: 'Go offline and pages still open to their App Shell, with prefetched data ready. Recovers when you reconnect.',
     },
   ];

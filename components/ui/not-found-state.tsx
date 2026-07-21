@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { DropMark } from '@/components/ui/drop-mark';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
 
 type Props = {
@@ -16,9 +16,9 @@ export function NotFoundState({ title, body, backHref, backLabel }: Props) {
       <h2 className="text-lg font-bold tracking-tight uppercase">{title}</h2>
       <p className="text-gray text-sm">{body}</p>
       {backHref ? (
-        <Link prefetch={true} href={backHref as Route} className="text-accent text-sm hover:underline">
+        <PrefetchLink href={backHref as Route} className="text-accent text-sm hover:underline">
           {backLabel ?? 'Back to the feed'}
-        </Link>
+        </PrefetchLink>
       ) : null}
     </div>
   );

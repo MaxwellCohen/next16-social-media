@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useOptimistic, useTransition, ViewTransition } from 'react';
-import { usePrefetchDefault } from '@/components/demo/use-prefetch-default';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { Route } from 'next';
@@ -20,7 +19,6 @@ type Props<T extends string> = {
 export function Tabs<T extends string>({ tabs, active, label = 'Sections', indicatorName = 'tab-indicator' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
   const [isPending, startTransition] = useTransition();
-  const prefetch = usePrefetchDefault();
 
   return (
     <Boundary label="Tabs">
@@ -33,8 +31,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections', indic
           const isActive = optimisticActive === t.value;
           const isCommitted = active === t.value;
           return (
-            <Link
-              prefetch={prefetch}
+            <PrefetchLink
               scroll={false}
               key={t.value}
               href={t.href}
@@ -62,7 +59,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections', indic
                   <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
                 </ViewTransition>
               ) : null}
-            </Link>
+            </PrefetchLink>
           );
         })}
       </nav>

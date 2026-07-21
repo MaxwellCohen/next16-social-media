@@ -1,5 +1,4 @@
 import { Bell, Bookmark, Home, Search, User } from 'lucide-react';
-import Link from 'next/link';
 import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
@@ -7,6 +6,7 @@ import ErrorBoundary from '@/components/ui/error-boundary';
 import { GitHubIcon } from '@/components/ui/github-icon';
 import { NavLinkSkeleton } from '@/components/ui/nav-link';
 import { NavLinkSegments as NavLink } from '@/components/ui/nav-link-segments';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NewDropModal } from '@/features/drop/components/composer-modal';
 import { NotificationsBadge } from '@/features/notifications/components/notifications-badge';
@@ -26,15 +26,14 @@ export function Sidebar() {
       className="peer group/sidebar sticky top-0 hidden h-dvh flex-col items-center gap-4 overflow-y-auto overscroll-y-contain px-2 py-5 sm:flex lg:items-stretch lg:px-6"
     >
       <div className="flex items-center justify-between gap-1 px-2 pb-2">
-        <Link
-          prefetch={true}
+        <PrefetchLink
           href="/"
           className="inline-flex items-center gap-2 text-2xl font-bold tracking-tight text-black dark:text-white"
           aria-label="Drop home"
         >
           <DropMark size={28} className="text-black dark:text-white" />
           <span className="hidden lg:inline">drop</span>
-        </Link>
+        </PrefetchLink>
         {/* <Link
           href={'/admin' as Route}
           aria-label="Admin dashboard"

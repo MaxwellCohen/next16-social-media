@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { ViewTransition } from 'react';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserRow } from '@/features/user/components/user-row';
@@ -11,9 +11,9 @@ export async function WhoToFollowList() {
     return (
       <p className="text-gray px-4 pb-4 text-xs">
         You&apos;re following everyone we can think of.{' '}
-        <Link prefetch={true} href="/tag" className="text-accent hover:underline">
+        <PrefetchLink href="/tag" className="text-accent hover:underline">
           Browse tags
-        </Link>{' '}
+        </PrefetchLink>{' '}
         to find more people.
       </p>
     );
