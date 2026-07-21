@@ -3,6 +3,7 @@
 import Link, { useLinkStatus } from 'next/link';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import { Suspense } from 'react';
+import { usePrefetchDefault } from '@/components/demo/use-prefetch-default';
 import type { Route } from 'next';
 
 type RenderProps = { isActive: boolean; isPending: boolean };
@@ -44,9 +45,10 @@ function NavLinkShell<T extends string>({
   isActive,
   ...rest
 }: Props<T> & { isActive: boolean }) {
+  const prefetch = usePrefetchDefault();
   return (
     <Link
-      prefetch={true}
+      prefetch={prefetch}
       href={href as Route}
       aria-current={isActive ? 'page' : undefined}
       className={resolve(className, { isActive, isPending: false })}

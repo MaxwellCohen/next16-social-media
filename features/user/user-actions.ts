@@ -3,6 +3,7 @@
 import { revalidateTag, updateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { verifyAuth } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
@@ -18,7 +19,7 @@ export async function switchUser(handle: string) {
 }
 
 export async function toggleFollow(targetHandle: string) {
-  await delay(100);
+  await delay(100, await isSlowEnabled());
   const target = handleSchema.parse(targetHandle);
   const me = await verifyAuth();
   if (target === me) {

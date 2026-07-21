@@ -2,6 +2,7 @@ import 'server-only';
 
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
+import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
@@ -12,15 +13,15 @@ const FEED_PAGE_SIZE = 10;
 type FeedPage = { drops: Drop[]; hasMore: boolean };
 
 export async function getFeed(page: number = 1): Promise<FeedPage> {
-  return getFeedForHandle(await getCurrentUserHandle(), page);
+  return getFeedForHandle(await getCurrentUserHandle(), page, await isSlowEnabled());
 }
 
-async function getFeedForHandle(handle: string, page: number): Promise<FeedPage> {
+async function getFeedForHandle(handle: string, page: number, slow: boolean): Promise<FeedPage> {
   'use cache';
   cacheTag('feed', `feed:${handle}`);
   cacheLife('days');
 
-  await delay(800);
+  await delay(800, slow);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
@@ -44,15 +45,15 @@ async function getFeedForHandle(handle: string, page: number): Promise<FeedPage>
 }
 
 export async function getDiscoverFeed(page: number = 1): Promise<FeedPage> {
-  return getDiscoverFeedForHandle(await getCurrentUserHandle(), page);
+  return getDiscoverFeedForHandle(await getCurrentUserHandle(), page, await isSlowEnabled());
 }
 
-async function getDiscoverFeedForHandle(handle: string, page: number): Promise<FeedPage> {
+async function getDiscoverFeedForHandle(handle: string, page: number, slow: boolean): Promise<FeedPage> {
   'use cache';
   cacheTag('feed', `discover:${handle}`);
   cacheLife('days');
 
-  await delay(800);
+  await delay(800, slow);
   const following = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
@@ -76,22 +77,30 @@ async function getDiscoverFeedForHandle(handle: string, page: number): Promise<F
 }
 
 export async function getDrop(id: string) {
+  return getDropCached(id, await isSlowEnabled());
+}
+
+async function getDropCached(id: string, slow: boolean) {
   'use cache';
   cacheTag('drops', `drop-${id}`);
   cacheLife('days');
 
-  await delay(600);
+  await delay(600, slow);
   const row = await prisma.drop.findUnique({ where: { id } });
   if (!row) notFound();
   return toDrop(row);
 }
 
 export async function getReplies(dropId: string) {
+  return getRepliesCached(dropId, await isSlowEnabled());
+}
+
+async function getRepliesCached(dropId: string, slow: boolean) {
   'use cache';
   cacheTag(`replies-${dropId}`);
   cacheLife('days');
 
-  await delay(1800);
+  await delay(1800, slow);
   const parent = await prisma.drop.findUnique({
     select: { authorHandle: true },
     where: { id: dropId },
@@ -112,11 +121,15 @@ type ProfileFeedItem =
   | { kind: 'repost'; drop: Drop; repostedBy: string; pinnedAt: number };
 
 export async function getDropsByAuthor(handle: string): Promise<ProfileFeedItem[]> {
+  return getDropsByAuthorCached(handle, await isSlowEnabled());
+}
+
+async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<ProfileFeedItem[]> {
   'use cache';
   cacheTag('drops', `user-drops-${handle}`);
   cacheLife('days');
 
-  await delay(400);
+  await delay(400, slow);
   const [authored, reposts] = await Promise.all([
     prisma.drop.findMany({
       where: { authorHandle: handle, parentId: null },
@@ -140,11 +153,15 @@ export async function getDropsByAuthor(handle: string): Promise<ProfileFeedItem[
 }
 
 export async function getRepliesByAuthor(handle: string) {
+  return getRepliesByAuthorCached(handle, await isSlowEnabled());
+}
+
+async function getRepliesByAuthorCached(handle: string, slow: boolean) {
   'use cache';
   cacheTag('drops', `user-replies-${handle}`);
   cacheLife('days');
 
-  await delay(400);
+  await delay(400, slow);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     where: { authorHandle: handle, parentId: { not: null } },
@@ -153,11 +170,15 @@ export async function getRepliesByAuthor(handle: string) {
 }
 
 export async function getDropsByTag(tag: string) {
+  return getDropsByTagCached(tag, await isSlowEnabled());
+}
+
+async function getDropsByTagCached(tag: string, slow: boolean) {
   'use cache';
   cacheTag('drops', `tag-${tag}`);
   cacheLife('days');
 
-  await delay(400);
+  await delay(400, slow);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     where: { parentId: null, tags: { contains: tag } },
@@ -166,15 +187,15 @@ export async function getDropsByTag(tag: string) {
 }
 
 export async function getBookmarkedDrops() {
-  return getBookmarkedDropsForHandle(await getCurrentUserHandle());
+  return getBookmarkedDropsForHandle(await getCurrentUserHandle(), await isSlowEnabled());
 }
 
-async function getBookmarkedDropsForHandle(handle: string) {
+async function getBookmarkedDropsForHandle(handle: string, slow: boolean) {
   'use cache';
   cacheTag(`bookmarks:${handle}`);
   cacheLife('days');
 
-  await delay(400);
+  await delay(400, slow);
   const rows = await prisma.bookmark.findMany({
     include: { drop: true },
     orderBy: { createdAt: 'desc' },
@@ -184,11 +205,15 @@ async function getBookmarkedDropsForHandle(handle: string) {
 }
 
 export async function searchDrops(query: string) {
+  return searchDropsCached(query, await isSlowEnabled());
+}
+
+async function searchDropsCached(query: string, slow: boolean) {
   'use cache';
   cacheTag('drops', `search-${query}`);
   cacheLife('hours');
 
-  await delay(300);
+  await delay(300, slow);
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     where: {

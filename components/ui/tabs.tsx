@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useOptimistic, useTransition, ViewTransition } from 'react';
+import { usePrefetchDefault } from '@/components/demo/use-prefetch-default';
 import { Boundary } from '@/components/internal/boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ type Props<T extends string> = {
 export function Tabs<T extends string>({ tabs, active, label = 'Sections', indicatorName = 'tab-indicator' }: Props<T>) {
   const [optimisticActive, setOptimisticActive] = useOptimistic(active);
   const [isPending, startTransition] = useTransition();
+  const prefetch = usePrefetchDefault();
 
   return (
     <Boundary label="Tabs">
@@ -32,7 +34,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections', indic
           const isCommitted = active === t.value;
           return (
             <Link
-              prefetch={true}
+              prefetch={prefetch}
               scroll={false}
               key={t.value}
               href={t.href}

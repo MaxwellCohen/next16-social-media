@@ -1,21 +1,22 @@
 import 'server-only';
 
 import { cacheLife, cacheTag } from 'next/cache';
+import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import type { Notification, NotificationKind } from '@/types/notification';
 
 export async function getNotifications(): Promise<Notification[]> {
-  return getNotificationsForHandle(await getCurrentUserHandle());
+  return getNotificationsForHandle(await getCurrentUserHandle(), await isSlowEnabled());
 }
 
-async function getNotificationsForHandle(handle: string): Promise<Notification[]> {
+async function getNotificationsForHandle(handle: string, slow: boolean): Promise<Notification[]> {
   'use cache';
   cacheTag(`notifications:${handle}`);
   cacheLife('minutes');
 
-  await delay(600);
+  await delay(600, slow);
 
   const rows = await prisma.notification.findMany({
     orderBy: { createdAt: 'desc' },

@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+export function delay(ms: number, enabled = true) {
+  return enabled ? new Promise(resolve => setTimeout(resolve, ms)) : Promise.resolve();
 }
 
 export function timeAgo(date: Date): string {

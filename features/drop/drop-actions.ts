@@ -2,6 +2,7 @@
 
 import { revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
+import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { verifyAuth } from '@/features/user/user-queries';
 import { publishActivity } from '@/lib/admin-bus';
 import { prisma } from '@/lib/db';
@@ -35,7 +36,7 @@ const postDropSchema = z.object({
 });
 
 export async function postDrop(formData: FormData) {
-  await delay(300);
+  await delay(300, await isSlowEnabled());
 
   const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {
@@ -66,7 +67,7 @@ export async function postDrop(formData: FormData) {
 }
 
 export async function postReply(parentId: string, formData: FormData) {
-  await delay(600);
+  await delay(600, await isSlowEnabled());
 
   const parsed = postDropSchema.safeParse({ body: formData.get('body') });
   if (!parsed.success) {
@@ -117,7 +118,7 @@ export async function postReply(parentId: string, formData: FormData) {
 const idSchema = z.string().min(1).max(30);
 
 export async function toggleLike(dropId: string) {
-  await delay(300);
+  await delay(300, await isSlowEnabled());
   const id = idSchema.parse(dropId);
   const me = await verifyAuth();
   const existing = await prisma.like.findUnique({ where: { userHandle_dropId: { dropId: id, userHandle: me } } });
@@ -146,7 +147,7 @@ export async function toggleLike(dropId: string) {
 }
 
 export async function toggleRepost(dropId: string) {
-  await delay(300);
+  await delay(300, await isSlowEnabled());
   const id = idSchema.parse(dropId);
   const me = await verifyAuth();
   const existing = await prisma.repost.findUnique({ where: { userHandle_dropId: { dropId: id, userHandle: me } } });
@@ -177,7 +178,7 @@ export async function toggleRepost(dropId: string) {
 }
 
 export async function toggleBookmark(dropId: string) {
-  await delay(250);
+  await delay(250, await isSlowEnabled());
   const id = idSchema.parse(dropId);
   const me = await verifyAuth();
   const existing = await prisma.bookmark.findUnique({ where: { userHandle_dropId: { dropId: id, userHandle: me } } });
