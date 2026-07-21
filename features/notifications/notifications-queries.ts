@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheTag } from 'next/cache';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
@@ -14,7 +14,6 @@ export async function getNotifications(): Promise<Notification[]> {
 async function getNotificationsForHandle(handle: string, slow: boolean): Promise<Notification[]> {
   'use cache';
   cacheTag(`notifications:${handle}`);
-  cacheLife('minutes');
 
   await delay(600, slow);
 
@@ -42,7 +41,6 @@ export async function getUnreadNotificationCount(): Promise<number> {
 async function getUnreadNotificationCountForHandle(handle: string): Promise<number> {
   'use cache';
   cacheTag(`notifications:${handle}`);
-  cacheLife('minutes');
 
   return prisma.notification.count({
     where: { readAt: null, recipientHandle: handle },
