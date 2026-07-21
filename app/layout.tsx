@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <DemoToolbar />
               </Suspense>
             </div>
-            <Toaster theme="system" position="bottom-right" style={{ viewTransitionName: 'toaster' }} />
+            <Toaster theme="system" position="bottom-right" toastOptions={{ style: { viewTransitionName: 'none' } }} />
             <NavLinkScript />
           </BoundaryProvider>
         </ThemeProvider>

@@ -143,8 +143,7 @@
 ::view-transition-group(modal),
 ::view-transition-group(modal-backdrop),
 ::view-transition-group(account-menu),
-::view-transition-group(demo-toolbar),
-::view-transition-group(toaster) {
+::view-transition-group(demo-toolbar) {
   animation: none;
   z-index: 100;
 }
