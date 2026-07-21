@@ -17,7 +17,7 @@ export const prefetch = 'allow-runtime';
 export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
-      <PageHeader title="Search" />
+      <PageHeader back title="Search" />
       <SearchShell>
         <ErrorBoundary title="Search is taking a breather">
           <Suspense fallback={<DropListSkeleton count={3} />}>

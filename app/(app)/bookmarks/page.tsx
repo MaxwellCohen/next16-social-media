@@ -17,7 +17,7 @@ export const prefetch = 'allow-runtime';
 export default function BookmarksPage() {
   return (
     <div>
-      <PageHeader title="Bookmarks" />
+      <PageHeader back title="Bookmarks" />
       <Suspense fallback={<DropListSkeleton count={3} />}>
         <Crossfade>
           <BookmarksFeed />

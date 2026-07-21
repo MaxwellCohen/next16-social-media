@@ -18,7 +18,7 @@ export const prefetch = 'allow-runtime';
 export default function NotificationsPage() {
   return (
     <div>
-      <PageHeader title="Activity">
+      <PageHeader back title="Activity">
         <RefreshButton label="Refresh activity" />
       </PageHeader>
       <Suspense fallback={null}>

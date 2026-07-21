@@ -31,7 +31,7 @@ export const prefetch = 'allow-runtime';
 export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return (
     <div className="group/tabs">
-      <PageHeader title="Profile" />
+      <PageHeader back title="Profile" />
       <Suspense fallback={<ProfileHeaderSkeleton />}>
         <Crossfade>
           {params.then(({ handle }) => (

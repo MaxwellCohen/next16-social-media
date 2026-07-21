@@ -15,7 +15,7 @@ export const prefetch = 'allow-runtime';
 export default function TagsPage() {
   return (
     <div>
-      <PageHeader title="Trending Tags" />
+      <PageHeader back title="Trending Tags" />
       <Suspense fallback={<TagsListSkeleton />}>
         <Crossfade>
           <TagsList />

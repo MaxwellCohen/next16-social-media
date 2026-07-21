@@ -1,3 +1,4 @@
+import { ViewTransition } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { DropList } from '@/features/drop/components/drop';
 import { searchDrops } from '@/features/drop/drop-queries';
@@ -17,7 +18,9 @@ export async function SearchResults({ query }: { query: string }) {
         <div>
           <h2 className="text-gray px-4 pt-5 pb-2 text-xs font-semibold tracking-wide sm:px-5">People</h2>
           {users.map(u => (
-            <UserRow key={u.handle} handle={u.handle} displayName={u.displayName} />
+            <ViewTransition key={u.handle} name={`search-user-${u.handle}`} share="morph" default="none">
+              <UserRow handle={u.handle} displayName={u.displayName} />
+            </ViewTransition>
           ))}
         </div>
       )}
@@ -26,7 +29,7 @@ export async function SearchResults({ query }: { query: string }) {
           {users.length > 0 && (
             <h2 className="text-gray px-4 pt-4 pb-2 text-xs font-semibold tracking-wide sm:px-5">Drops</h2>
           )}
-          <DropList drops={drops} />
+          <DropList drops={drops} animateItems />
         </div>
       )}
     </>
