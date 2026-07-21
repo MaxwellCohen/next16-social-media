@@ -864,10 +864,11 @@ async function main() {
 
   console.log('Inserting drops...');
   for (const d of [...DROPS, ...REPLIES]) {
+    const hashtags = d.tags.map(t => `#${t}`).join(' ');
     await prisma.drop.create({
       data: {
         authorHandle: d.authorHandle,
-        body: d.body,
+        body: hashtags ? `${d.body} ${hashtags}` : d.body,
         createdAt: d.createdAt,
         embeddedCode: d.embeddedCode?.code,
         embeddedLang: d.embeddedCode?.lang,
