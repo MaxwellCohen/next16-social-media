@@ -1,50 +1,14 @@
-import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropActions } from '@/features/drop/components/drop-actions';
 import { DropBody } from '@/features/drop/components/drop-body';
-import { getDrop, getDropAuthorHandle } from '@/features/drop/drop-queries';
+import { getDrop } from '@/features/drop/drop-queries';
 import { UserAvatar } from '@/features/user/components/user-avatar';
 import { getUserByHandle, getUserDropInteractions } from '@/features/user/user-queries';
 
-export function DropDetail({ id }: { id: string }) {
-  return (
-    <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
-      <Suspense fallback={<DropAuthorSkeleton />}>
-        <DropAuthor id={id} />
-      </Suspense>
-      <Suspense fallback={<DropDetailBodySkeleton />}>
-        <DropDetailBody id={id} />
-      </Suspense>
-    </article>
-  );
-}
-
-async function DropAuthor({ id }: { id: string }) {
-  const author = await getUserByHandle(await getDropAuthorHandle(id));
-  return (
-    <header className="flex items-center gap-3">
-      <PrefetchLink href={`/u/${author.handle}`} className="shrink-0">
-        <UserAvatar handle={author.handle} size="lg" />
-      </PrefetchLink>
-      <div className="flex min-w-0 flex-col">
-        <PrefetchLink
-          href={`/u/${author.handle}`}
-          className="font-semibold tracking-tight text-black hover:underline dark:text-white"
-        >
-          {author.displayName}
-        </PrefetchLink>
-        <PrefetchLink href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
-          @{author.handle}
-        </PrefetchLink>
-      </div>
-    </header>
-  );
-}
-
-async function DropDetailBody({ id }: { id: string }) {
+export async function DropDetail({ id }: { id: string }) {
   const [drop, interactions] = await Promise.all([getDrop(id), getUserDropInteractions()]);
   const userState = {
     bookmarked: interactions.bookmarked.has(id),
@@ -53,7 +17,8 @@ async function DropDetailBody({ id }: { id: string }) {
   };
 
   return (
-    <>
+    <article className="border-divider/70 dark:border-divider-dark/70 border-b px-4 pt-4 pb-3 sm:px-5">
+      <DropAuthor handle={drop.authorHandle} />
       <div className="mt-3 flex flex-col gap-3">
         <DropBody body={drop.body} detail />
         {drop.embeddedCode ? <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} /> : null}
@@ -71,28 +36,29 @@ async function DropDetailBody({ id }: { id: string }) {
           userState={userState}
         />
       </div>
-    </>
+    </article>
   );
 }
 
-function DropAuthorSkeleton() {
+async function DropAuthor({ handle }: { handle: string }) {
+  const author = await getUserByHandle(handle);
   return (
     <header className="flex items-center gap-3">
-      <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <Skeleton className="h-4 w-28 rounded" />
-        <Skeleton className="h-3 w-20 rounded" />
+      <PrefetchLink href={`/u/${author.handle}`} className="shrink-0">
+        <UserAvatar handle={author.handle} size="lg" />
+      </PrefetchLink>
+      <div className="flex min-w-0 flex-col">
+        <PrefetchLink
+          href={`/u/${author.handle}`}
+          className="font-semibold tracking-tight text-black hover:underline dark:text-white"
+        >
+          {author.displayName}
+        </PrefetchLink>
+        <PrefetchLink href={`/u/${author.handle}`} className="text-gray font-mono text-[12px]">
+          @{author.handle}
+        </PrefetchLink>
       </div>
     </header>
-  );
-}
-
-function DropDetailBodySkeleton() {
-  return (
-    <div className="mt-3 flex flex-col gap-2">
-      <Skeleton className="h-4 w-full rounded" />
-      <Skeleton className="h-4 w-3/4 rounded" />
-    </div>
   );
 }
 
