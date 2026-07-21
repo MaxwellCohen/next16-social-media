@@ -166,8 +166,7 @@
   animation: none;
 }
 
-/* Shiki — dual-theme output (github-light + github-dark) using CSS variables.
-   The defaultColor is "light"; in dark mode we swap to the --shiki-dark-* vars. */
+/* Shiki dual-theme: light by default, dark mode swaps to the --shiki-dark-* vars */
 .shiki-block pre,
 .shiki-block code {
   background: transparent !important;
@@ -178,7 +177,4 @@
 .dark .shiki-block .shiki span {
   color: var(--shiki-dark) !important;
   background-color: transparent !important;
-  /* Optional: font-style/weight could also be swapped if needed */
 }
-
-/* ── Client Boundary Visualizer ── */
