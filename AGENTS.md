@@ -19,7 +19,7 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 - `pnpm dev`/`pnpm start` run a custom server (`server.ts`, via `tsx`) embedding Next + a `ws` WebSocketServer for the Mission Control dashboard. `pnpm dev:next` runs stock `next dev`. See `app/api/mission-control/route.md` for the migration to the WebSocket Route Handlers RFC.
 - Domain type "drop" is the app's term for a post/tweet
 - Queries use `delay()` calls for demo visibility of loading states
-- All pages export `unstable_prefetch = 'force-runtime'`
+- All pages export `prefetch = 'allow-runtime'`
 - Demo toggles (boundary visualizer) in `components/demo/`
 - User switching via cookie (`drop-user`), `switchUser` action calls `updateTag('current-user')`
 - React Compiler enabled — do not use `useCallback` / `useMemo`.

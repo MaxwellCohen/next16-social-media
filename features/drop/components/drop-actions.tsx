@@ -73,7 +73,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
         )}
         <IconButton
           label="Repost"
-          icon={<Repeat2 className="h-4 w-4" />}
+          icon={<Repeat2 className={cn('h-4 w-4', optimistic.reposted && 'fill-current')} />}
           active={optimistic.reposted}
           activeColor="text-success"
           hoverColor="hover:bg-success/10 hover:text-success"
