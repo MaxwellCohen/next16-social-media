@@ -42,12 +42,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <BoundaryProvider>
             <OfflineIndicator />
             {children}
-            <div className="demo-toggles fixed right-4 bottom-4 z-50 hidden items-end gap-2 sm:flex lg:right-6 lg:bottom-6">
+            <div className="demo-toggles fixed top-4 right-4 z-50 hidden items-start gap-2 sm:flex lg:top-6 lg:right-6">
               <Suspense fallback={null}>
                 <DemoToolbar />
               </Suspense>
             </div>
-            <Toaster theme="system" position="bottom-right" />
+            <Toaster theme="system" position="bottom-right" style={{ viewTransitionName: 'toaster' }} />
             <NavLinkScript />
           </BoundaryProvider>
         </ThemeProvider>
