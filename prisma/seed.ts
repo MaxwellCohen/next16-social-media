@@ -126,7 +126,7 @@ const DROPS: SeedDrop[] = [
     likes: 1_240,
     replies: 88,
     reposts: 60,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'wren',
@@ -136,7 +136,7 @@ const DROPS: SeedDrop[] = [
     likes: 1_640,
     replies: 64,
     reposts: 180,
-    tags: ['side-project'],
+    tags: ['sideproject'],
   },
   {
     authorHandle: 'quill',
@@ -186,7 +186,7 @@ const DROPS: SeedDrop[] = [
     likes: 720,
     replies: 30,
     reposts: 32,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'echo',
@@ -206,7 +206,7 @@ const DROPS: SeedDrop[] = [
     likes: 612,
     replies: 28,
     reposts: 48,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'aurora',
@@ -236,7 +236,7 @@ const DROPS: SeedDrop[] = [
     likes: 1_320,
     replies: 47,
     reposts: 180,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'echo',
@@ -380,7 +380,7 @@ const DROPS: SeedDrop[] = [
     likes: 840,
     replies: 0,
     reposts: 64,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'vex',
@@ -394,7 +394,7 @@ const DROPS: SeedDrop[] = [
     likes: 1_240,
     replies: 0,
     reposts: 180,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'quill',
@@ -408,7 +408,7 @@ const DROPS: SeedDrop[] = [
     likes: 720,
     replies: 0,
     reposts: 48,
-    tags: ['open-source', 'design'],
+    tags: ['opensource', 'design'],
   },
   {
     authorHandle: 'cinder',
@@ -422,7 +422,7 @@ const DROPS: SeedDrop[] = [
     likes: 1_410,
     replies: 0,
     reposts: 220,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
   {
     authorHandle: 'aurora',
@@ -436,7 +436,7 @@ const DROPS: SeedDrop[] = [
     likes: 2_140,
     replies: 0,
     reposts: 410,
-    tags: ['open-source', 'nextjs'],
+    tags: ['opensource', 'nextjs'],
   },
   {
     authorHandle: 'onyx',
@@ -450,7 +450,7 @@ const DROPS: SeedDrop[] = [
     likes: 540,
     replies: 0,
     reposts: 38,
-    tags: ['open-source'],
+    tags: ['opensource'],
   },
 ];
 
