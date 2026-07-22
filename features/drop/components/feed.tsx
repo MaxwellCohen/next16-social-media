@@ -40,7 +40,7 @@ async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
   return (
     <>
       {items.map(item => (
-        <li key={item.drop.id}>
+        <li key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}>
           <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
         </li>
       ))}

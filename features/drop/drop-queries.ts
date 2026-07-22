@@ -45,23 +45,15 @@ async function getFeedForHandle(handle: string, page: number, slow: boolean): Pr
     }),
   ]);
 
-  const merged: FeedItem[] = [
+  const sorted: FeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
-    ...reposts
-      .filter(r => r.userHandle !== r.drop.authorHandle)
-      .map(r => ({
-        drop: toDrop(r.drop),
-        kind: 'repost' as const,
-        pinnedAt: r.createdAt.getTime(),
-        repostedBy: r.userHandle,
-      })),
-  ];
-
-  const byId = new Map<string, FeedItem>();
-  for (const item of merged.sort((a, b) => b.pinnedAt - a.pinnedAt)) {
-    if (!byId.has(item.drop.id)) byId.set(item.drop.id, item);
-  }
-  const sorted = [...byId.values()].sort((a, b) => b.pinnedAt - a.pinnedAt);
+    ...reposts.map(r => ({
+      drop: toDrop(r.drop),
+      kind: 'repost' as const,
+      pinnedAt: r.createdAt.getTime(),
+      repostedBy: r.userHandle,
+    })),
+  ].sort((a, b) => b.pinnedAt - a.pinnedAt);
 
   const start = (page - 1) * FEED_PAGE_SIZE;
   const slice = sorted.slice(start, start + FEED_PAGE_SIZE + 1);
