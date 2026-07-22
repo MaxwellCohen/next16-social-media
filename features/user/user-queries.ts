@@ -50,23 +50,22 @@ export async function getWhoToFollow() {
 }
 
 async function getWhoToFollowForHandle(handle: string, slow: boolean) {
+  'use cache';
+  cacheTag(`who-to-follow:${handle}`);
+
   await delay(700, slow);
   const followed = await prisma.follow.findMany({
     select: { targetHandle: true },
     where: { followerHandle: handle },
   });
-  const candidates = await prisma.user.findMany({
+  return prisma.user.findMany({
+    take: 3,
     where: {
       handle: {
         notIn: [handle, ...followed.map(f => f.targetHandle)],
       },
     },
   });
-  for (let i = candidates.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-  }
-  return candidates.slice(0, 3);
 }
 
 export async function isFollowing(targetHandle: string) {
