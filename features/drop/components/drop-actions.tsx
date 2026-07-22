@@ -104,9 +104,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
           onClick={() => {
             toggle('bookmarked', () => toggleBookmark(dropId));
           }}
-        >
-          <span className="hidden sm:inline">{optimistic.bookmarked ? 'Saved' : 'Save'}</span>
-        </IconButton>
+        />
       </div>
     </Boundary>
   );
