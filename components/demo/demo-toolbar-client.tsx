@@ -123,8 +123,8 @@ export function DemoToolbarClient({
         onClick={toggleMode}
         active={mode === 'on'}
         aria-pressed={mode === 'on'}
-        aria-label={mode === 'on' ? 'Boundaries on' : 'Boundaries off'}
-        label="Boundaries"
+        aria-label={mode === 'on' ? 'Client outlines on' : 'Client outlines off'}
+        label="Client"
         icon={mode === 'on' ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
       />
       <Divider />
@@ -188,7 +188,7 @@ function DemoGuideDialog({
   const toggles = [
     {
       Icon: boundaries ? Eye : EyeOff,
-      name: 'Boundaries',
+      name: 'Client',
       on: boundaries,
       text: 'Outlines the Client Components. Everything else is server-rendered and ships no JS.',
     },
