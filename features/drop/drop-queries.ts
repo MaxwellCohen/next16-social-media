@@ -47,12 +47,14 @@ async function getFeedForHandle(handle: string, page: number, slow: boolean): Pr
 
   const merged: FeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
-    ...reposts.map(r => ({
-      drop: toDrop(r.drop),
-      kind: 'repost' as const,
-      pinnedAt: r.createdAt.getTime(),
-      repostedBy: r.userHandle,
-    })),
+    ...reposts
+      .filter(r => r.userHandle !== r.drop.authorHandle)
+      .map(r => ({
+        drop: toDrop(r.drop),
+        kind: 'repost' as const,
+        pinnedAt: r.createdAt.getTime(),
+        repostedBy: r.userHandle,
+      })),
   ];
 
   const byId = new Map<string, FeedItem>();
