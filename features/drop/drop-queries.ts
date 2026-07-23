@@ -47,12 +47,16 @@ async function getFeedForHandle(handle: string, page: number, slow: boolean): Pr
 
   const sorted: FeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
-    ...reposts.map(r => ({
-      drop: toDrop(r.drop),
-      kind: 'repost' as const,
-      pinnedAt: r.createdAt.getTime(),
-      repostedBy: r.userHandle,
-    })),
+    // Skip self-reposts: "X reposted X's own drop" is redundant with the drop itself, so it never earns
+    // a separate entry. Reposts of other people's drops still show.
+    ...reposts
+      .filter(r => r.userHandle !== r.drop.authorHandle)
+      .map(r => ({
+        drop: toDrop(r.drop),
+        kind: 'repost' as const,
+        pinnedAt: r.createdAt.getTime(),
+        repostedBy: r.userHandle,
+      })),
   ].sort((a, b) => b.pinnedAt - a.pinnedAt);
 
   const start = (page - 1) * FEED_PAGE_SIZE;

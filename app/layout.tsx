@@ -3,7 +3,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
-import { Toaster } from 'sonner';
 import { DemoToolbar } from '@/components/demo/demo-toolbar';
 import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
@@ -11,6 +10,7 @@ import { OfflineIndicator } from '@/components/offline-indicator';
 import { NavLinkScript } from '@/components/scripts/nav-link-script';
 import { Sidebar } from '@/components/sidebar';
 import { ThemeProvider } from '@/components/theme/theme-provider';
+import { Toaster } from '@/components/toaster';
 import { Crossfade } from '@/components/ui/crossfade';
 import ErrorBoundary from '@/components/ui/error-boundary';
 import { NotificationsBadgeProvider } from '@/features/notifications/components/notifications-badge-provider';
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <DemoToolbar />
               </Suspense>
             </div>
-            <Toaster theme="system" position="bottom-right" toastOptions={{ style: { viewTransitionName: 'none' } }} />
+            <Toaster />
             <NavLinkScript />
           </BoundaryProvider>
         </ThemeProvider>

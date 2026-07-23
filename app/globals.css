@@ -139,7 +139,6 @@
 
 /* Exclude persistent elements from view transition animations */
 ::view-transition-group(mobile-nav),
-::view-transition-group(sidebar),
 ::view-transition-group(modal),
 ::view-transition-group(modal-backdrop),
 ::view-transition-group(account-menu),
@@ -148,11 +147,12 @@
   z-index: 100;
 }
 
-::view-transition-old(sidebar) {
-  display: none;
+/* The `toaster` name lives on the always-mounted wrapper in components/theme/toaster.tsx */
+::view-transition-group(toaster) {
+  animation: none;
+  z-index: 200;
 }
 
-::view-transition-new(sidebar),
 ::view-transition-old(mobile-nav),
 ::view-transition-new(mobile-nav),
 ::view-transition-old(modal),
@@ -162,7 +162,9 @@
 ::view-transition-old(account-menu),
 ::view-transition-new(account-menu),
 ::view-transition-old(demo-toolbar),
-::view-transition-new(demo-toolbar) {
+::view-transition-new(demo-toolbar),
+::view-transition-old(toaster),
+::view-transition-new(toaster) {
   animation: none;
 }
 
