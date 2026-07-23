@@ -154,12 +154,15 @@ async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<Fe
 
   const items: FeedItem[] = [
     ...authored.map(d => ({ drop: toDrop(d), kind: 'drop' as const, pinnedAt: d.createdAt.getTime() })),
-    ...reposts.map(r => ({
-      drop: toDrop(r.drop),
-      kind: 'repost' as const,
-      pinnedAt: r.createdAt.getTime(),
-      repostedBy: handle,
-    })),
+    // Skip self-reposts (reposting your own drop) — the drop already appears as an authored entry.
+    ...reposts
+      .filter(r => r.drop.authorHandle !== handle)
+      .map(r => ({
+        drop: toDrop(r.drop),
+        kind: 'repost' as const,
+        pinnedAt: r.createdAt.getTime(),
+        repostedBy: handle,
+      })),
   ];
   return items.sort((a, b) => b.pinnedAt - a.pinnedAt);
 }
