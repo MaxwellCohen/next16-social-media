@@ -58,5 +58,17 @@
     "tsx": "^4.22.2",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "@babel/core": "^7.29.6",
+      "@hono/node-server": "^2.0.5",
+      "brace-expansion@1": "^1.1.16",
+      "brace-expansion@>=2": "^5.0.7",
+      "esbuild": "^0.28.1",
+      "fast-uri": "^3.1.4",
+      "hono": "^4.12.27",
+      "js-yaml": "^4.3.0"
+    }
+  }
 }
