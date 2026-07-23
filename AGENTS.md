@@ -2,7 +2,9 @@
 
 # This is NOT the Next.js you know
 
-This version has breaking changes. APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
 
@@ -10,13 +12,13 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 
 ## Repo conventions
 
-- Next.js 16.3 canary, `cacheComponents: true`, React Compiler enabled
+- Next.js 16.3 canary, `cacheComponents: true`
 - Prisma 7 on Neon Postgres via `@prisma/adapter-pg`
 - Tailwind CSS v4 with `group/` and `peer` selectors
 - Ariakit for Dialog/Popover
 - Shiki for server-side syntax highlighting
-- Feature folders: `features/drop/`, `features/user/`, `features/tag/`, `features/search/`, `features/mission-control/`
-- `pnpm dev`/`pnpm start` run a custom server (`server.ts`, via `tsx`) embedding Next + a `ws` WebSocketServer for the Mission Control dashboard. `pnpm dev:next` runs stock `next dev`. See `app/api/mission-control/route.md` for the migration to the WebSocket Route Handlers RFC.
+- Feature folders: `features/drop/`, `features/user/`, `features/tag/`, `features/search/`, `features/notifications/`
+- `pnpm dev` / `pnpm start` run stock `next dev` / `next start`
 - Domain type "drop" is the app's term for a post/tweet
 - Queries use `delay()` calls for demo visibility of loading states
 - All pages export `prefetch = 'allow-runtime'`
@@ -59,8 +61,4 @@ Wrap Suspense content in `<Crossfade>` (`<ViewTransition enter="auto" default="n
 
 ### Ariakit exclusion
 
-Ariakit Dialog/Popover render portaled content. Add `viewTransitionName: 'none'` to their style to prevent them from animating during navigation transitions. (The architecture skill's `ux-patterns.md` covers this for floating UI in general; Ariakit is the specific library used here.)
-
-## Errors
-
-Use `catchError` from `next/error` for error boundaries. It handles `notFound()`, `redirect()`, and server data re-fetching correctly via `retry()`.
+Ariakit Dialog/Popover are the portaled/floating UI here — apply the `viewTransitionName: 'none'` treatment from the skill's `ux-patterns.md`.

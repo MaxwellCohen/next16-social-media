@@ -4,7 +4,6 @@ import { revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { verifyAuth } from '@/features/user/user-queries';
-import { publishActivity } from '@/lib/admin-bus';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 
@@ -62,7 +61,6 @@ export async function postDrop(formData: FormData) {
   updateTag(`user-drops-${me}`);
   updateTag('trending');
   for (const tag of tags) updateTag(`tag-${tag}`);
-  publishActivity({ actorHandle: me, dropId: drop.id, kind: 'drop', preview: parsed.data.body.slice(0, 80) });
   return { drop, ok: true as const };
 }
 
@@ -111,7 +109,6 @@ export async function postReply(parentId: string, formData: FormData) {
   updateTag(`drop-${parentId}`);
   updateTag(`replies-${parentId}`);
   updateTag(`user-replies-${me}`);
-  publishActivity({ actorHandle: me, dropId: reply.id, kind: 'reply', preview: parsed.data.body.slice(0, 80) });
   return { ok: true as const, reply };
 }
 
@@ -139,7 +136,6 @@ export async function toggleLike(dropId: string) {
       });
       revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
-    publishActivity({ actorHandle: me, dropId: id, kind: 'like' });
   }
   updateTag(`drop-${id}`);
   updateTag(`drop-interactions:${me}`);
@@ -168,7 +164,6 @@ export async function toggleRepost(dropId: string) {
       });
       revalidateTag(`notifications:${drop.authorHandle}`, 'max');
     }
-    publishActivity({ actorHandle: me, dropId: id, kind: 'repost' });
   }
   updateTag(`drop-${id}`);
   updateTag(`drop-interactions:${me}`);

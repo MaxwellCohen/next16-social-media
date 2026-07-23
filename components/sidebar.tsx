@@ -34,13 +34,6 @@ export function Sidebar() {
           <DropMark size={28} className="text-black dark:text-white" />
           <span className="hidden lg:inline">drop</span>
         </PrefetchLink>
-        {/* <Link
-          href={'/admin' as Route}
-          aria-label="Admin dashboard"
-          className="text-gray p-1.5 transition-colors hover:text-black dark:hover:text-white"
-        >
-          <LayoutDashboard className="h-5 w-5" />
-        </Link> */}
       </div>
       <div className="hidden lg:block">
         <ErrorBoundary title="Your profile is offline" compact>
