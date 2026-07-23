@@ -21,7 +21,7 @@ export async function WhoToFollowList() {
   return (
     <div className="flex flex-col pb-2">
       {users.map(user => (
-        <ViewTransition key={user.handle} name={`who-to-follow-${user.handle}`} share="morph">
+        <ViewTransition key={user.handle}>
           <UserRow
             handle={user.handle}
             displayName={user.displayName}
