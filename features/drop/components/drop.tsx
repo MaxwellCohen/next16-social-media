@@ -85,15 +85,14 @@ export function DropList({
 }) {
   return (
     <ul>
-      {drops.map((drop, i) => {
-        const key = `${drop.id}-${i}`;
+      {drops.map(drop => {
         const content = <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />;
         return animateItems ? (
-          <ViewTransition key={key}>
+          <ViewTransition key={drop.id}>
             <li>{content}</li>
           </ViewTransition>
         ) : (
-          <li key={key}>{content}</li>
+          <li key={drop.id}>{content}</li>
         );
       })}
     </ul>
