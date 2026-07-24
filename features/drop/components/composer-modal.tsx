@@ -7,8 +7,9 @@ import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
-import { DropPreview } from '@/features/drop/components/drop-preview';
+import { DropPreview, type Preview } from '@/features/drop/components/drop-preview';
 import { postDrop } from '@/features/drop/drop-actions';
+import { renderDropPreview } from '@/features/drop/drop-preview-action';
 import { useTextareaFormat } from '@/hooks/use-textarea-format';
 import { cn } from '@/lib/utils';
 
@@ -35,7 +36,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<'write' | 'preview'>('write');
-  const [previewBody, setPreviewBody] = useState('');
+  const [preview, setPreview] = useState<Preview | null>(null);
   const [previewMinHeight, setPreviewMinHeight] = useState(0);
 
   useEffect(() => {
@@ -49,9 +50,18 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
 
   function showPreview() {
     const el = textareaRef.current;
+    const body = el?.value.trim() ?? '';
     setPreviewMinHeight(el?.offsetHeight ?? 0);
-    setPreviewBody(el?.value ?? '');
+    if (!body) {
+      setPreview(null);
+    } else if (preview?.body !== body) {
+      setPreview({ body, node: renderDropPreview(body) });
+    }
     setMode('preview');
+  }
+
+  function showWrite() {
+    setMode('write');
   }
 
   const { insertAtCaret, insertSnippet, wrapSelection } = useTextareaFormat(textareaRef);
@@ -79,7 +89,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
                 <Eye className="h-5 w-5" />
               </ToolbarButton>
             ) : (
-              <ToolbarButton label="Edit" onClick={() => setMode('write')}>
+              <ToolbarButton label="Edit" onClick={showWrite}>
                 <PenLine className="h-5 w-5" />
               </ToolbarButton>
             )
@@ -110,11 +120,12 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
                   mode === 'preview' && 'hidden',
                 )}
               />
-              {mode === 'preview' ? (
-                <div className="min-h-40 flex-1 pt-1.5" style={{ minHeight: previewMinHeight || undefined }}>
-                  <DropPreview body={previewBody} />
-                </div>
-              ) : null}
+              <div
+                className={cn('min-h-40 flex-1 pt-1.5', mode === 'write' && 'hidden')}
+                style={{ minHeight: previewMinHeight || undefined }}
+              >
+                <DropPreview preview={preview} />
+              </div>
             </div>
             {state.error ? (
               <p role="alert" className="text-danger px-5 pb-2 text-xs">
