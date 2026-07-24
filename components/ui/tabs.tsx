@@ -51,7 +51,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections', indic
             >
               <span
                 aria-hidden
-                className="group-hover/tab:bg-card dark:group-hover/tab:bg-card-dark absolute inset-x-6 top-2 bottom-0 rounded-t-lg transition-colors"
+                className="absolute inset-x-6 top-2 bottom-0 rounded-t-lg transition-colors group-hover/tab:bg-black/5 dark:group-hover/tab:bg-white/5"
               />
               <span className="relative">{t.label}</span>
               {isCommitted ? (
