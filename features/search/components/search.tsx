@@ -1,6 +1,6 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { Search as SearchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
@@ -12,7 +12,7 @@ import type { Route } from 'next';
 
 const inputClass = 'bg-card dark:bg-card-dark placeholder-gray w-full rounded-lg py-2.5 pr-3 pl-9 text-sm outline-none';
 
-export function SearchShell({ children }: { children: React.ReactNode }) {
+export function Search({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
@@ -21,13 +21,13 @@ export function SearchShell({ children }: { children: React.ReactNode }) {
   useSyncInputToSearchParam(inputRef, 'q');
 
   return (
-    <Boundary label="SearchShell">
+    <Boundary label="Search">
       <Section className="px-4 py-3 sm:px-5">
         <div className="relative">
           {isPending ? (
             <Spinner className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 opacity-40" />
           ) : (
-            <Search className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <SearchIcon className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           )}
           <input
             ref={inputRef}

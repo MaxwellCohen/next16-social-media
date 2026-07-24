@@ -5,7 +5,7 @@ import ErrorBoundary from '@/components/ui/error-boundary';
 import { PageHeader } from '@/components/ui/page-header';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { SearchResults } from '@/features/search/components/search-results';
-import { SearchShell } from '@/features/search/components/search-shell';
+import { Search } from '@/features/search/components/search';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
   return (
     <div>
       <PageHeader back title="Search" />
-      <SearchShell>
+      <Search>
         <ErrorBoundary title="Search is taking a breather">
           <Suspense fallback={<DropListSkeleton count={3} />}>
             <Crossfade>
@@ -30,7 +30,7 @@ export default function SearchPage({ searchParams }: PageProps<'/search'>) {
             </Crossfade>
           </Suspense>
         </ErrorBoundary>
-      </SearchShell>
+      </Search>
     </div>
   );
 }
