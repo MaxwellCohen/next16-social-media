@@ -1,7 +1,7 @@
 'use client';
 
 import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ export function QuickDropForm({ avatar }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<'write' | 'preview'>('write');
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [, startTransition] = useTransition();
   const { insertAtCaret, insertSnippet, wrapSelection } = useTextareaFormat(textareaRef);
 
   async function submitAction(formData: FormData) {
@@ -30,8 +31,10 @@ export function QuickDropForm({ avatar }: Props) {
       return;
     }
     toast.success('Dropped!');
-    setMode('write');
-    setPreview(null);
+    startTransition(() => {
+      setMode('write');
+      setPreview(null);
+    });
   }
 
   function showPreview() {
