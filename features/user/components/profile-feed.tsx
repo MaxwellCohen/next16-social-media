@@ -1,4 +1,3 @@
-import { ViewTransition } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Drop, DropList } from '@/features/drop/components/drop';
 import { getDropsByAuthor, getRepliesByAuthor } from '@/features/drop/drop-queries';
@@ -12,7 +11,7 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: Profil
       return <EmptyState title="No replies yet" body="When they reply to a drop, it'll show up here." />;
     }
 
-    return <DropList drops={replies} animateItems />;
+    return <DropList drops={replies} />;
   }
 
   const items = await getDropsByAuthor(handle);
@@ -23,13 +22,9 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: Profil
   return (
     <ul>
       {items.map(item => (
-        <ViewTransition
-          key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}
-        >
-          <li>
-            <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
-          </li>
-        </ViewTransition>
+        <li key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}>
+          <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
+        </li>
       ))}
     </ul>
   );

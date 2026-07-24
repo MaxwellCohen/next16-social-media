@@ -1,5 +1,5 @@
 import { Repeat2 } from 'lucide-react';
-import { Suspense, ViewTransition } from 'react';
+import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
 import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
@@ -87,13 +87,7 @@ export function DropList({
     <ul>
       {drops.map(drop => {
         const content = <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />;
-        return animateItems ? (
-          <ViewTransition key={drop.id}>
-            <li>{content}</li>
-          </ViewTransition>
-        ) : (
-          <li key={drop.id}>{content}</li>
-        );
+        return <li key={drop.id}>{content}</li>;
       })}
     </ul>
   );
