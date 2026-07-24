@@ -1,8 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, use } from 'react';
 import { highlightCode } from '@/features/drop/drop-actions';
 import { splitCode, tokenizeText, type Token } from '@/features/drop/drop-format';
+
+const codeClass =
+  'border-divider bg-card dark:border-divider-dark dark:bg-card-dark overflow-x-auto rounded-sm border p-3 font-mono text-xs leading-relaxed';
 
 export function DropPreview({ body }: { body: string }) {
   const trimmed = body.trim();
@@ -14,7 +17,11 @@ export function DropPreview({ body }: { body: string }) {
     <div className="flex flex-col gap-2">
       {segments.map((segment, i) => {
         if (segment.type === 'code') {
-          return <PreviewCodeBlock key={`${i}-${segment.code}`} code={segment.code} lang={segment.lang} />;
+          return (
+            <Suspense key={`${i}-${segment.code}`} fallback={<pre className={codeClass}>{segment.code}</pre>}>
+              <PreviewCodeBlock code={segment.code} lang={segment.lang} />
+            </Suspense>
+          );
         }
         return (
           <p key={i} className="text-[15px] leading-snug text-black dark:text-white">
@@ -26,26 +33,21 @@ export function DropPreview({ body }: { body: string }) {
   );
 }
 
-const codeClass =
-  'border-divider bg-card dark:border-divider-dark dark:bg-card-dark overflow-x-auto rounded-sm border p-3 font-mono text-xs leading-relaxed';
+const highlightCache = new Map<string, Promise<string>>();
+
+function getHighlighted(code: string, lang: string) {
+  const key = `${lang}:${code}`;
+  let promise = highlightCache.get(key);
+  if (!promise) {
+    promise = highlightCode(code, lang);
+    highlightCache.set(key, promise);
+  }
+  return promise;
+}
 
 function PreviewCodeBlock({ code, lang }: { code: string; lang: string }) {
-  const [html, setHtml] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    highlightCode(code, lang).then(result => {
-      if (active) setHtml(result);
-    });
-    return () => {
-      active = false;
-    };
-  }, [code, lang]);
-
-  if (html) {
-    return <div className={`shiki-block ${codeClass}`} dangerouslySetInnerHTML={{ __html: html }} />;
-  }
-  return <pre className={codeClass}>{code}</pre>;
+  const html = use(getHighlighted(code, lang));
+  return <div className={`shiki-block ${codeClass}`} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function renderText(text: string) {
