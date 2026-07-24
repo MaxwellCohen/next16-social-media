@@ -34,6 +34,18 @@ const postDropSchema = z.object({
     .transform(s => s.replace(/\r\n/g, '\n')),
 });
 
+function validateBody(raw: FormDataEntryValue | null) {
+  const parsed = postDropSchema.safeParse({ body: raw });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message, ok: false as const };
+  }
+  const flagged = moderate(parsed.data.body);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
+  }
+  return { body: parsed.data.body, ok: true as const };
+}
+
 export async function postDrop(formData: FormData) {
   await delay(300, await isSlowEnabled());
 
@@ -62,6 +74,63 @@ export async function postDrop(formData: FormData) {
   updateTag('trending');
   for (const tag of tags) updateTag(`tag-${tag}`);
   return { drop, ok: true as const };
+}
+
+export async function postThread(formData: FormData) {
+  await delay(300, await isSlowEnabled());
+
+  const bodies: string[] = [];
+  for (const raw of formData.getAll('body')) {
+    if (typeof raw === 'string' && raw.trim() === '') continue;
+    const result = validateBody(raw);
+    if (!result.ok) {
+      return { error: result.error, ok: false as const };
+    }
+    bodies.push(result.body);
+  }
+  if (bodies.length === 0) {
+    return { error: 'Say something', ok: false as const };
+  }
+
+  const me = await verifyAuth();
+  const allTags = new Set<string>();
+  const tagsFor = (body: string) => {
+    const tags = extractTags(body);
+    for (const tag of tags) allTags.add(tag);
+    return tags.join(',');
+  };
+
+  const first = await prisma.drop.create({
+    data: { authorHandle: me, body: bodies[0], createdAt: new Date(), tags: tagsFor(bodies[0]) },
+  });
+
+  const rest = bodies.slice(1);
+  if (rest.length > 0) {
+    const base = Date.now();
+    await prisma.$transaction([
+      ...rest.map((body, i) =>
+        prisma.drop.create({
+          data: {
+            authorHandle: me,
+            body,
+            createdAt: new Date(base + (i + 1) * 1000),
+            parentId: first.id,
+            tags: tagsFor(body),
+          },
+        }),
+      ),
+      prisma.drop.update({ data: { replyCount: { increment: rest.length } }, where: { id: first.id } }),
+    ]);
+    updateTag(`drop-${first.id}`);
+    updateTag(`replies-${first.id}`);
+    updateTag(`user-replies-${me}`);
+  }
+
+  updateTag('feed');
+  updateTag(`user-drops-${me}`);
+  updateTag('trending');
+  for (const tag of allTags) updateTag(`tag-${tag}`);
+  return { drop: first, ok: true as const };
 }
 
 export async function postReply(parentId: string, formData: FormData) {
