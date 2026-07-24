@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CodeBlock } from '@/components/ui/code-block';
+import { splitCode, tokenizeText, type Token } from '@/features/drop/drop-format';
 import type { Route } from 'next';
 
 type Props = {
@@ -38,70 +39,43 @@ export function DropBody({ body, compact = false, detail = false }: Props) {
   );
 }
 
-type Segment = { type: 'text'; text: string } | { type: 'code'; lang: string; code: string };
-
-const FENCE = /```(\w*)\n([\s\S]*?)\n?```/g;
-
-function splitCode(body: string): Segment[] {
-  const segments: Segment[] = [];
-  let lastIndex = 0;
-  for (const match of body.matchAll(FENCE)) {
-    const start = match.index ?? 0;
-    if (start > lastIndex) {
-      const text = body.slice(lastIndex, start).trim();
-      if (text) segments.push({ text, type: 'text' });
-    }
-    segments.push({ code: match[2], lang: match[1] || 'bash', type: 'code' });
-    lastIndex = start + match[0].length;
+function renderToken(token: Token, key: string) {
+  switch (token.type) {
+    case 'bold':
+      return (
+        <strong key={key} className="font-semibold">
+          {token.text}
+        </strong>
+      );
+    case 'italic':
+      return <em key={key}>{token.text}</em>;
+    case 'tag':
+      return (
+        <Link key={key} href={`/tag/${token.tag}` as Route} className="text-accent relative z-20 hover:underline">
+          #{token.tag}
+        </Link>
+      );
+    case 'url':
+      return (
+        <a
+          key={key}
+          href={token.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent relative z-20 break-all hover:underline"
+        >
+          {token.url.replace(/^https?:\/\//, '')}
+        </a>
+      );
+    default:
+      return <span key={key}>{token.text}</span>;
   }
-  if (lastIndex < body.length) {
-    const text = body.slice(lastIndex).trim();
-    if (text) segments.push({ text, type: 'text' });
-  }
-  if (segments.length === 0) {
-    segments.push({ text: body, type: 'text' });
-  }
-  return segments;
 }
 
-const URL_RE = /(https?:\/\/[^\s<]+)/g;
-const TAG_RE = /(#\w+)/g;
-const TOKEN_RE = new RegExp(`${URL_RE.source}|${TAG_RE.source}`, 'g');
-
 function renderText(text: string) {
-  const lines = text.split('\n');
-  return lines.flatMap((line, lineIdx) => {
-    const parts = line
-      .split(TOKEN_RE)
-      .filter(Boolean)
-      .map((part, i) => {
-        if (part.startsWith('#')) {
-          const tag = part.slice(1);
-          return (
-            <Link
-              key={`${lineIdx}-${i}`}
-              href={`/tag/${tag}` as Route}
-              className="text-accent relative z-20 hover:underline"
-            >
-              {part}
-            </Link>
-          );
-        }
-        if (part.match(/^https?:\/\//)) {
-          return (
-            <a
-              key={`${lineIdx}-${i}`}
-              href={part}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent relative z-20 break-all hover:underline"
-            >
-              {part.replace(/^https?:\/\//, '')}
-            </a>
-          );
-        }
-        return <span key={`${lineIdx}-${i}`}>{part}</span>;
-      });
+  const lines = tokenizeText(text);
+  return lines.flatMap((tokens, lineIdx) => {
+    const parts = tokens.map((token, i) => renderToken(token, `${lineIdx}-${i}`));
     if (lineIdx < lines.length - 1) {
       parts.push(<br key={`br-${lineIdx}`} />);
     }

@@ -1,13 +1,16 @@
 'use client';
 
 import * as Ariakit from '@ariakit/react';
-import { Plus } from 'lucide-react';
-import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { Bold, Code2, Eye, Hash, Italic, PenLine, Plus } from 'lucide-react';
+import { useActionState, useEffect, useRef, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { DropPreview } from '@/features/drop/components/drop-preview';
 import { postDrop } from '@/features/drop/drop-actions';
+import { useTextareaFormat } from '@/hooks/use-textarea-format';
+import { cn } from '@/lib/utils';
 
 type Props = {
   avatar: ReactNode;
@@ -31,37 +34,56 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   }, INITIAL);
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [mode, setMode] = useState<'write' | 'preview'>('write');
+  const [previewBody, setPreviewBody] = useState('');
 
   useEffect(() => {
     if (state.submittedAt > 0) dialog.hide();
   }, [state.submittedAt, dialog]);
 
+  function openComposer() {
+    setMode('write');
+    dialog.show();
+  }
+
+  function showPreview() {
+    setPreviewBody(textareaRef.current?.value ?? '');
+    setMode('preview');
+  }
+
+  const { insertAtCaret, insertSnippet, wrapSelection } = useTextareaFormat(textareaRef);
+
   return (
     <Boundary label="NewDropModal">
       <>
         {onOpenTrigger ? (
-          <button
-            type="button"
-            onClick={() => {
-              dialog.show();
-            }}
-          >
+          <button type="button" onClick={openComposer}>
             {onOpenTrigger}
           </button>
         ) : (
-          <Button
-            className="w-full py-3"
-            onClick={() => {
-              dialog.show();
-            }}
-          >
+          <Button className="w-full py-3" onClick={openComposer}>
             <Plus className="h-5 w-5" />
             <span className="hidden lg:inline">New drop</span>
           </Button>
         )}
-        <Modal store={dialog} title="New drop" initialFocus={textareaRef}>
+        <Modal
+          store={dialog}
+          title="New drop"
+          initialFocus={textareaRef}
+          headerContent={
+            mode === 'write' ? (
+              <ToolbarButton label="Preview" onClick={showPreview}>
+                <Eye className="h-5 w-5" />
+              </ToolbarButton>
+            ) : (
+              <ToolbarButton label="Edit" onClick={() => setMode('write')}>
+                <PenLine className="h-5 w-5" />
+              </ToolbarButton>
+            )
+          }
+        >
           <form ref={formRef} action={formAction} className="flex min-h-0 flex-col overflow-hidden">
-            <div className="flex flex-1 items-start gap-3 overflow-y-auto px-5 pt-4 pb-3">
+            <div className="flex flex-1 items-start gap-3 overflow-y-auto px-5 pt-5 pb-4">
               {avatar}
               <Ariakit.VisuallyHidden>
                 <label htmlFor="new-drop-body">Drop body</label>
@@ -70,31 +92,73 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
                 id="new-drop-body"
                 name="body"
                 ref={textareaRef}
-                rows={6}
+                rows={5}
                 required
                 maxLength={1000}
-                placeholder={'What did you build today?\n\nWrap code in ```ts ... ``` to embed a snippet.'}
+                placeholder="What did you build today?"
                 onKeyDown={e => {
                   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                     e.preventDefault();
                     formRef.current?.requestSubmit();
                   }
                 }}
-                className="placeholder-gray flex-1 resize-none border-0 bg-transparent pt-2 text-base focus:ring-0 focus:outline-none"
+                className={cn(
+                  'placeholder-gray field-sizing-content min-h-40 flex-1 resize-none border-0 bg-transparent pt-1.5 text-lg leading-relaxed focus:ring-0 focus:outline-none',
+                  mode === 'preview' && 'hidden',
+                )}
               />
+              {mode === 'preview' ? (
+                <div className="min-h-40 flex-1 pt-1.5">
+                  <DropPreview body={previewBody} />
+                </div>
+              ) : null}
             </div>
             {state.error ? (
               <p role="alert" className="text-danger px-5 pb-2 text-xs">
                 {state.error}
               </p>
             ) : null}
-            <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-end gap-2 border-t px-5 py-3">
-              <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
-              <Button type="submit">Drop it</Button>
+            <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between gap-2 border-t px-4 py-3 sm:px-5">
+              <div className="flex items-center gap-0.5">
+                {mode === 'write' ? (
+                  <>
+                    <ToolbarButton label="Bold" onClick={() => wrapSelection('**')}>
+                      <Bold className="h-5 w-5" />
+                    </ToolbarButton>
+                    <ToolbarButton label="Italic" onClick={() => wrapSelection('*')}>
+                      <Italic className="h-5 w-5" />
+                    </ToolbarButton>
+                    <ToolbarButton label="Add code snippet" onClick={insertSnippet}>
+                      <Code2 className="h-5 w-5" />
+                    </ToolbarButton>
+                    <ToolbarButton label="Add hashtag" onClick={() => insertAtCaret('#')}>
+                      <Hash className="h-5 w-5" />
+                    </ToolbarButton>
+                  </>
+                ) : null}
+              </div>
+              <div className="flex items-center gap-2">
+                <Ariakit.DialogDismiss render={<Button variant="secondary">Cancel</Button>} />
+                <Button type="submit">Drop it</Button>
+              </div>
             </footer>
           </form>
         </Modal>
       </>
     </Boundary>
+  );
+}
+
+function ToolbarButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      className="text-accent hover:bg-accent/10 flex h-9 w-9 items-center justify-center rounded-full transition-colors"
+    >
+      {children}
+    </button>
   );
 }

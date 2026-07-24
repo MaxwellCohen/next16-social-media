@@ -110,7 +110,7 @@ const USERS: SeedUser[] = [
 const DROPS: SeedDrop[] = [
   {
     authorHandle: 'aurora',
-    body: 'Just shipped a tiny site that turns my conference talk outlines into a public reading list. drop.aurora.dev — eight years of notes, finally somewhere other than my Notes app.',
+    body: 'Just shipped **a tiny site** that turns my scattered bookmarks into a public reading list. drop.aurora.dev — *eight years of notes*, finally somewhere other than my Notes app.',
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
     likes: 940,
@@ -120,7 +120,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "Open-sourced the dashboard kit we've been iterating on for a year. Six components, zero dependencies you don't already have. Use it, fork it, send me what you build.",
+    body: "Open-sourced the **dashboard kit** we've been iterating on for a year. Six components, zero dependencies you don't already have. *Use it, fork it, send me what you build.*",
     createdAt: new Date(now - 18 * minute),
     id: 'd2',
     likes: 1_240,
@@ -150,13 +150,13 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Released Drop today — the demo I'll be using at React Summit next week. It's a small social network built from scratch over two weeks. Everything in this feed is real.",
+    body: 'Released **Drop** today — the demo I built to really learn Next.js 16. A small social network from scratch over two weeks: cache components, server actions, view transitions. *Everything in this feed is real.*',
     createdAt: new Date(now - 2 * hour),
     id: 'd5',
     likes: 1_980,
     replies: 110,
     reposts: 320,
-    tags: ['shipping', 'reactsummit'],
+    tags: ['shipping', 'nextjs'],
   },
   {
     authorHandle: 'onyx',
@@ -170,7 +170,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Preview of a thing I've been writing: a one-page guide to the patterns I keep reaching for in Next.js 16. Out next month, but the rough cut is up if you want to read along.",
+    body: "Preview of a thing I've been writing: a **one-page guide** to the patterns I keep reaching for in Next.js 16. The one I open with:\n\n```ts\nexport const prefetch = 'allow-runtime';\n```\n\nOut next month, but the rough cut is up if you want to read along.",
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,
@@ -190,7 +190,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Today's small ship an RSS feed for my talks. I keep forgetting which conferences I said yes to. Now I just subscribe to myself.",
+    body: "Today's small ship an RSS feed for my blog. I keep forgetting which drafts I promised people. Now I just subscribe to myself.",
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
     likes: 1_180,
@@ -230,7 +230,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Open-sourced the talk-prep template I use for every keynote. Markdown, a slide outline, a section for what I'm afraid to forget. Use it, fork it, give a great talk.",
+    body: 'Open-sourced the **project starter** I use for every new app. Sensible defaults, a folder structure I trust, a section for what I always forget to set up. *Use it, fork it, ship faster.*',
     createdAt: new Date(now - 16 * hour),
     id: 'd13',
     likes: 1_320,
@@ -260,13 +260,13 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Counting down to React Summit. I'll be on stage Thursday with the demo I've been quietly building in public. If you spot me, say hi — coffee is on me.",
+    body: "Six months of building this in public and it finally clicked today. The demo I've been quietly iterating on is live. If you've been following along, thank you — this one's for you.",
     createdAt: new Date(now - 1 * day - 6 * hour),
     id: 'd16',
     likes: 3_810,
     replies: 320,
     reposts: 1_120,
-    tags: ['reactsummit'],
+    tags: ['shipping'],
   },
   {
     authorHandle: 'aurora',
@@ -310,7 +310,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Drafting in public for the first time. The conference badge generator I have been threatening to build for two summers is finally a real URL. v0.1, but it's a URL.",
+    body: "Drafting in public for the first time. The changelog generator I have been threatening to build for two summers is finally a real URL. v0.1, but it's a URL.",
     createdAt: new Date(now - 3 * hour - 30 * minute),
     id: 'd21',
     likes: 360,
@@ -384,10 +384,10 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'Releasing `create-talk-deck` — the CLI I built for prepping my React Summit keynote. Markdown slides, hot reload, one command to deploy.',
+    body: 'Releasing `create-next-kit` — the CLI I built for spinning up Next.js 16 apps with caching, server actions, and a folder structure already wired. One command to deploy.',
     createdAt: new Date(now - 25 * minute),
     embeddedCode: {
-      code: 'npx create-talk-deck my-talk\ncd my-talk\nnpm run dev',
+      code: 'npx create-next-kit my-app\ncd my-app\npnpm dev',
       lang: 'bash',
     },
     id: 'd28',
@@ -534,29 +534,29 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'Counting the days. The async React talk track is the one I keep clearing my calendar for.',
+    body: 'Been following since v0.1. The async React patterns you keep showing are the ones I keep stealing.',
     createdAt: new Date(now - 1 * day),
     id: 'r8',
     likes: 88,
     parentId: 'd16',
     replies: 0,
     reposts: 4,
-    tags: ['reactsummit'],
+    tags: [],
   },
   {
     authorHandle: 'aurora',
-    body: "Backstage tickets are flying — say hi if you spot the pink hoodie. The 16.3 demo is the one I'll be running live, redesign and all.",
+    body: 'Building the rest in public too — the 16.3 rewrite is next, redesign and all. Follow along if you want the messy version.',
     createdAt: new Date(now - 22 * hour),
     id: 'r9',
     likes: 140,
     parentId: 'd16',
     replies: 0,
     reposts: 12,
-    tags: ['reactsummit'],
+    tags: [],
   },
   {
     authorHandle: 'wren',
-    body: "Subscribed. The 'subscribe to yourself' thing is a public-talks RSS too, right? That's the kind of utility I want.",
+    body: "Subscribed. The 'subscribe to yourself' thing is a public-posts RSS too, right? That's the kind of utility I want.",
     createdAt: new Date(now - 6 * hour),
     id: 'r10',
     likes: 64,
@@ -567,7 +567,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Yes, same idea — the talks are the source, the RSS is just so I stop forgetting them. Now it's a `'use cache'` route I can subscribe to.",
+    body: "Yes, same idea — the posts are the source, the RSS is just so I stop forgetting them. Now it's a `'use cache'` route I can subscribe to.",
     createdAt: new Date(now - 5 * hour),
     id: 'r11',
     likes: 188,
@@ -644,7 +644,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Replicating Drop tonight just to have something to point my team at The shipping-to-talk pipeline is what I want to start doing.',
+    body: 'Replicating Drop tonight just to have something to point my team at The ship-small-and-share-it habit is what I want us to start doing.',
     createdAt: new Date(now - 18 * hour),
     id: 'r18',
     likes: 280,
@@ -655,7 +655,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "If you build with it, send me what you make — happy to feature stuff on stage if it's wild enough. The whole point of the 16.3 redesign was making this kind of project a weekend.",
+    body: 'If you build with it, send me what you make — happy to repost the wild ones here. The whole point of the 16.3 redesign was making this kind of project a weekend.',
     createdAt: new Date(now - 17 * hour),
     id: 'r19',
     likes: 188,

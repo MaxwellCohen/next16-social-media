@@ -28,7 +28,10 @@ export async function getCurrentUser() {
   'use cache: private';
   cacheTag('current-user');
 
-  return getUserByHandle(await getCurrentUserHandle());
+  const handle = await getCurrentUserHandle();
+  const user = await prisma.user.findUnique({ where: { handle } });
+  if (user) return user;
+  return prisma.user.findUnique({ where: { handle: DEFAULT_HANDLE } });
 }
 
 export async function getUserByHandle(handle: string) {

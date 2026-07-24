@@ -110,6 +110,7 @@ function SidebarFooter() {
 
 async function SidebarProfilePill() {
   const [user, allUsers] = await Promise.all([getCurrentUser(), getAllUsers()]);
+  if (!user) return null;
 
   return <UserSwitcher currentHandle={user.handle} users={allUsers} />;
 }

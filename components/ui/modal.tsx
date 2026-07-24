@@ -8,10 +8,11 @@ type Props = {
   store: Ariakit.DialogStore;
   title: string;
   initialFocus?: React.RefObject<HTMLElement | null>;
+  headerContent?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export function Modal({ store, title, initialFocus, children }: Props) {
+export function Modal({ store, title, initialFocus, headerContent, children }: Props) {
   return (
     <Boundary label="Modal">
       <Ariakit.Dialog
@@ -22,7 +23,7 @@ export function Modal({ store, title, initialFocus, children }: Props) {
             style={{ viewTransitionName: 'modal-backdrop' }}
           />
         }
-        className="border-divider dark:border-divider-dark fixed top-16 left-1/2 z-50 flex max-h-[calc(100dvh-5rem)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 flex-col rounded-2xl border bg-white shadow-2xl outline-none dark:bg-black"
+        className="border-divider dark:border-divider-dark fixed top-16 left-1/2 z-50 flex max-h-[calc(100dvh-5rem)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 flex-col rounded-2xl border bg-white shadow-2xl outline-none dark:bg-black"
         style={{ viewTransitionName: 'modal' }}
         unmountOnHide
         hideOnInteractOutside={false}
@@ -38,6 +39,7 @@ export function Modal({ store, title, initialFocus, children }: Props) {
           <Ariakit.VisuallyHidden>
             <Ariakit.DialogHeading>{title}</Ariakit.DialogHeading>
           </Ariakit.VisuallyHidden>
+          {headerContent}
         </header>
         {children}
       </Ariakit.Dialog>
