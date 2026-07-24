@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { verifyAuth } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
+import { highlight } from '@/lib/syntax';
 import { delay } from '@/lib/utils';
 
 const HASHTAG_PATTERN = /#(\w+)/g;
@@ -17,6 +18,10 @@ function extractTags(body: string): string[] {
     tags.add(match[1].toLowerCase());
   }
   return Array.from(tags);
+}
+
+export async function highlightCode(code: string, lang: string) {
+  return highlight(code, lang);
 }
 
 const BANNED_WORDS = ['fuck', 'shit', 'asshole', 'bitch', 'bastard', 'dick', 'cunt', 'slut'];

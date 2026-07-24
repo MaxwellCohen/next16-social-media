@@ -36,6 +36,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [mode, setMode] = useState<'write' | 'preview'>('write');
   const [previewBody, setPreviewBody] = useState('');
+  const [previewMinHeight, setPreviewMinHeight] = useState(0);
 
   useEffect(() => {
     if (state.submittedAt > 0) dialog.hide();
@@ -47,7 +48,9 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   }
 
   function showPreview() {
-    setPreviewBody(textareaRef.current?.value ?? '');
+    const el = textareaRef.current;
+    setPreviewMinHeight(el?.offsetHeight ?? 0);
+    setPreviewBody(el?.value ?? '');
     setMode('preview');
   }
 
@@ -108,7 +111,7 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
                 )}
               />
               {mode === 'preview' ? (
-                <div className="min-h-40 flex-1 pt-1.5">
+                <div className="min-h-40 flex-1 pt-1.5" style={{ minHeight: previewMinHeight || undefined }}>
                   <DropPreview body={previewBody} />
                 </div>
               ) : null}
