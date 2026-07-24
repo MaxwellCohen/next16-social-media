@@ -1,5 +1,5 @@
 import { EmptyState } from '@/components/ui/empty-state';
-import { DropList } from '@/features/drop/components/drop';
+import { Drop, DropList } from '@/features/drop/components/drop';
 import { getDropsByAuthor, getRepliesByAuthor } from '@/features/drop/drop-queries';
 
 import type { ProfileTab } from '@/features/user/components/profile-tabs';
@@ -20,12 +20,12 @@ export async function ProfileFeed({ handle, tab }: { handle: string; tab: Profil
   }
 
   return (
-    <DropList
-      drops={items.map(i => i.drop)}
-      repostedBy={drop => {
-        const item = items.find(i => i.drop.id === drop.id);
-        return item?.kind === 'repost' ? item.repostedBy : undefined;
-      }}
-    />
+    <ul>
+      {items.map(item => (
+        <li key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}>
+          <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
+        </li>
+      ))}
+    </ul>
   );
 }
