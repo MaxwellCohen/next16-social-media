@@ -110,7 +110,7 @@ const USERS: SeedUser[] = [
 const DROPS: SeedDrop[] = [
   {
     authorHandle: 'aurora',
-    body: 'Just shipped **a tiny site** that turns my scattered bookmarks into a public reading list. drop.aurora.dev — *eight years of notes*, finally somewhere other than my Notes app.',
+    body: "Added formatting to the Drop composer. You can write **bold**, *italic*, and code blocks now, and there's a Preview toggle so you can check a drop before posting. The preview renders on the server with the same component the feed uses, so it matches exactly. Try it and tell me what breaks.",
     createdAt: new Date(now - 8 * minute),
     id: 'd1',
     likes: 940,
@@ -120,7 +120,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "Open-sourced the **dashboard kit** we've been iterating on for a year. Six components, zero dependencies you don't already have. *Use it, fork it, send me what you build.*",
+    body: "Open-sourced the internal dashboard kit we've been using at work. Six components, no dependencies you don't already have. The docs are rough but it's all there. *Use it, break it, and tell me what's missing.*",
     createdAt: new Date(now - 18 * minute),
     id: 'd2',
     likes: 1_240,
@@ -130,7 +130,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "A weekend project I never planned to share: a focus timer that rewards me with a song from my favorites at the end of each block. It's been on my desktop for six months. Public link in bio.",
+    body: "A weekend thing I never meant to share: a focus timer that plays one song from my library when a block ends. It's lived on my desktop for months. Link in bio if you want it.",
     createdAt: new Date(now - 45 * minute),
     id: 'd3',
     likes: 1_640,
@@ -140,7 +140,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'Just launched the redesign of my portfolio Three years overdue, finally honest about what I actually do. Less hero copy, more screenshots of the work.',
+    body: "Shipped the portfolio redesign I'd been avoiding for three years. Less hero copy, more screenshots of the actual work. Turns out that's all anyone wanted to see.",
     createdAt: new Date(now - 1 * hour),
     id: 'd4',
     likes: 540,
@@ -150,7 +150,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Released **Drop** today — the demo I built to really learn Next.js 16. A small social network from scratch over two weeks: cache components, server actions, view transitions. *Everything in this feed is real.*',
+    body: "Drop is the little social app I've been building to learn the Next.js 16 preview. Cache components, server actions, streaming, and view transitions, all in one place. The data is seeded, but every interaction is real. Poke around and tell me what feels off.",
     createdAt: new Date(now - 2 * hour),
     id: 'd5',
     likes: 1_980,
@@ -160,7 +160,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Shipped a Slack bot for our team that finds the oldest open PR every Monday and just posts it No reminders, no escalation. The PR usually gets reviewed by Tuesday.',
+    body: 'Shipped a Slack bot that posts our oldest open PR every Monday morning. No reminders and no escalation, just the number staring back at us. It usually gets reviewed by lunch.',
     createdAt: new Date(now - 3 * hour),
     id: 'd6',
     likes: 2_140,
@@ -170,17 +170,17 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Preview of a thing I've been writing: a **one-page guide** to the patterns I keep reaching for in Next.js 16. The one I open with:\n\n```ts\nexport const prefetch = 'allow-runtime';\n```\n\nOut next month, but the rough cut is up if you want to read along.",
+    body: "Spent the day on how navigation feels. Every page in Drop opts into runtime prefetch, so opening a drop or a profile is instant:\n\n```ts\nexport const prefetch = 'allow-runtime';\n```\n\nBy the time you click, the next screen is already warm.",
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,
     replies: 64,
     reposts: 220,
-    tags: ['writing'],
+    tags: ['nextjs'],
   },
   {
     authorHandle: 'wren',
-    body: "Finally pushed v1.0 of the design tokens library we've been using internally. 200 stars overnight Did not see that coming on a Tuesday.",
+    body: 'Pushed v1.0 of the design tokens library we use internally. 200 stars overnight, which I did not expect on a Tuesday. Thanks to whoever shared it.',
     createdAt: new Date(now - 5 * hour),
     id: 'd8',
     likes: 720,
@@ -190,7 +190,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Today's small ship an RSS feed for my blog. I keep forgetting which drafts I promised people. Now I just subscribe to myself.",
+    body: "Small ship today: an RSS feed for my own blog, because I kept forgetting which drafts I promised people. Now I subscribe to myself. Works better than any todo app I've tried.",
     createdAt: new Date(now - 7 * hour),
     id: 'd9',
     likes: 1_180,
@@ -200,7 +200,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Released a CLI that scaffolds the project structure I've been arguing for in PR reviews for three years. If you've reviewed a PR from me, the answer is yes, this is the structure.",
+    body: "Released a CLI that scaffolds the project structure I've argued for in every PR review for three years. If you've reviewed my code, then yes, this is that structure, now in one command.",
     createdAt: new Date(now - 9 * hour),
     id: 'd10',
     likes: 612,
@@ -210,7 +210,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Launched a tiny landing page generator for my workshops. Pick a template, drop in the dates, deploy. Eight clicks instead of an afternoon. Felt nice.',
+    body: 'The activity tab is live in Drop. Likes, reposts, replies, and follows all land there, with an unread badge that clears when you open it. The count is a per-user cached read, so it updates the moment you act without refetching the page.',
     createdAt: new Date(now - 11 * hour),
     id: 'd11',
     likes: 1_810,
@@ -220,7 +220,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Just shipped a side-by-side comparison view to our app Two engineers asked for it independently within a week, which I've learned is the actual signal.",
+    body: 'Shipped a side-by-side comparison view this week. Two engineers asked for it independently within a few days, which is the only product signal I fully trust.',
     createdAt: new Date(now - 13 * hour),
     id: 'd12',
     likes: 880,
@@ -230,7 +230,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'Open-sourced the **project starter** I use for every new app. Sensible defaults, a folder structure I trust, a section for what I always forget to set up. *Use it, fork it, ship faster.*',
+    body: 'Open-sourced the **project starter** I reach for on every new app. Sensible defaults, a folder layout I trust, and a checklist of the things I always forget to set up. *Fork it and make it yours.*',
     createdAt: new Date(now - 16 * hour),
     id: 'd13',
     likes: 1_320,
@@ -240,7 +240,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "We launched. After eighteen months. The interview pipeline tool nobody on our team enjoyed building is live, and the recruiters love it. Sometimes that's the win.",
+    body: 'We launched. Eighteen months on an interview pipeline tool that nobody enjoyed building, and the recruiters love it. Sometimes the boring internal tool is the win.',
     createdAt: new Date(now - 19 * hour),
     id: 'd14',
     likes: 1_020,
@@ -250,7 +250,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Pushed a long-overdue rewrite of my blog tonight. Same posts, much faster, finally on the latest framework I've been writing about. Felt good to ship something small.",
+    body: 'Added view transitions across Drop. The feed tabs slide their underline, opening a drop crossfades, and lists reveal instead of jumping in. Most of it is a single `<ViewTransition>` wrapper plus a little CSS.',
     createdAt: new Date(now - 22 * hour),
     id: 'd15',
     likes: 2_410,
@@ -260,7 +260,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Six months of building this in public and it finally clicked today. The demo I've been quietly iterating on is live. If you've been following along, thank you — this one's for you.",
+    body: "Six months of building this in public and it finally clicked today. The thing I've been quietly iterating on is live. If you've been following along, thank you. This one is for everyone who replied to the ugly early versions.",
     createdAt: new Date(now - 1 * day - 6 * hour),
     id: 'd16',
     likes: 3_810,
@@ -270,7 +270,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Two-year retro: every project I shipped in public got me something the private ones didn't. Sometimes a job, sometimes a friend, sometimes just the next idea. Worth the awkward first post every time.",
+    body: 'Two weeks of building Drop in public. The parts I expected to be hard, caching and streaming, mostly fell out of the framework. The parts I underestimated, loading states and focus and mobile, took the most time. I would do it again.',
     createdAt: new Date(now - 2 * day),
     id: 'd17',
     likes: 1_120,
@@ -280,7 +280,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "Spent the weekend vibe-coding a little tool that compares my Spotify history against my partner's. Just shipped it for the two of us. Tiny audience, big smile.",
+    body: "Vibe-coded a little tool this weekend that compares my listening history with my partner's. Shipped it for exactly the two of us. Tiny audience, big grin.",
     createdAt: new Date(now - 36 * minute),
     id: 'd18',
     likes: 612,
@@ -290,7 +290,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: 'Released a 90-line app that turns my voice memos into to-do items. It will never get a landing page. I use it every morning.',
+    body: 'Released a 90-line app that turns my voice memos into todo items. It will never get a landing page. I use it every single morning.',
     createdAt: new Date(now - 90 * minute),
     id: 'd19',
     likes: 480,
@@ -300,7 +300,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "The thing nobody tells you about shipping small: the smaller it is, the more honest it feels. The app I'm proudest of this year is 240 lines and three people use it.",
+    body: 'Shipping small feels more honest the smaller it gets. The app I am proudest of this year is 240 lines and three people use it.',
     createdAt: new Date(now - 2 * hour - 20 * minute),
     id: 'd20',
     likes: 2_140,
@@ -310,7 +310,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Drafting in public for the first time. The changelog generator I have been threatening to build for two summers is finally a real URL. v0.1, but it's a URL.",
+    body: 'Drafting in public for the first time. The changelog generator I have been threatening to build for two summers is finally a real URL. v0.1, but it is a URL.',
     createdAt: new Date(now - 3 * hour - 30 * minute),
     id: 'd21',
     likes: 360,
@@ -320,7 +320,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "Built a thing this afternoon that emails me a single sentence every Sunday: what did you make this week? It's the only newsletter I subscribe to where I'm both writer and reader.",
+    body: 'Built a thing this afternoon that emails me one sentence every Sunday: what did you make this week? It is the only newsletter where I am both the writer and the only reader.',
     createdAt: new Date(now - 5 * hour),
     id: 'd22',
     likes: 720,
@@ -330,7 +330,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Vibe-coded a tiny CRM for the dog walker my building hired. Took an evening, costs $0/mo, replaces a spreadsheet that was making her stop walking Shipping doesn't need a roadmap.",
+    body: 'Vibe-coded a tiny CRM for the dog walker in my building. An evening of work, costs nothing to run, and it replaced a spreadsheet that was making her miserable. Software does not need a roadmap to help one real person.',
     createdAt: new Date(now - 7 * hour),
     id: 'd23',
     likes: 880,
@@ -340,7 +340,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Made a one-pager that explains my partner's job to my mom. It's the most read thing I'll ship this year. Sometimes the audience is small on purpose.",
+    body: "Made a one-pager that explains my partner's job to my mom. It is the most-read thing I will publish this year, and the audience is small on purpose.",
     createdAt: new Date(now - 10 * hour),
     id: 'd24',
     likes: 540,
@@ -350,7 +350,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "Released the Sunday-night reading list I've been keeping in Notes for a year. The whole point is it doesn't grow on a schedule. I drop a link when I find one I trust.",
+    body: 'Published the Sunday reading list I have kept in Notes for a year. The point is that it does not grow on a schedule. I add a link when I find one worth trusting.',
     createdAt: new Date(now - 14 * hour),
     id: 'd25',
     likes: 410,
@@ -360,7 +360,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Encouragement nobody asked for: ship the thing that has one user It teaches you more than the thing with the polished pitch deck.',
+    body: 'Reposts work in Drop now, including reposting your own drops. A repost shows up in the feed as its own entry, with a reposted label and its own timestamp. There is no dedupe. The timeline just shows what actually happened.',
     createdAt: new Date(now - 28 * hour),
     id: 'd26',
     likes: 1_640,
@@ -370,7 +370,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'Just published `@vex/use-presence` — a tiny hook for the WebSocket presence pattern I keep rewriting on every project. One hook, no provider, no context. Install and go.',
+    body: 'Published `@vex/use-presence`, a tiny hook for the WebSocket presence pattern I keep rewriting on every project. One hook, and no provider or context to wire up.',
     createdAt: new Date(now - 12 * minute),
     embeddedCode: {
       code: "const peers = usePresence('room-id')\nreturn <ul>{peers.map(p => <li key={p.id}>{p.name}</li>)}</ul>",
@@ -384,7 +384,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'Releasing `create-next-kit` — the CLI I built for spinning up Next.js 16 apps with caching, server actions, and a folder structure already wired. One command to deploy.',
+    body: 'Releasing `create-next-kit`, the CLI I built for spinning up Next.js 16 apps with caching, server actions, and a folder structure already wired. One command to a deployable app.',
     createdAt: new Date(now - 25 * minute),
     embeddedCode: {
       code: 'npx create-next-kit my-app\ncd my-app\npnpm dev',
@@ -398,7 +398,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'Open-sourced `tokens-doctor` — a CLI that finds unused design tokens in your codebase. Cleaned up 40% of ours on the first run.',
+    body: 'Open-sourced `tokens-doctor`, a CLI that finds unused design tokens in your codebase. Cleaned up 40% of ours on the first run.',
     createdAt: new Date(now - 6 * hour),
     embeddedCode: {
       code: 'npx tokens-doctor scan ./src\nnpx tokens-doctor prune --interactive',
@@ -412,7 +412,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: 'v2 of `react-cmd` is out. Same command palette, half the bundle, full keyboard support. Drop it into any app — works without a provider.',
+    body: 'v2 of `react-cmd` is out. Same command palette, half the bundle, full keyboard support. It drops into any app and works without a provider.',
     createdAt: new Date(now - 1 * hour - 30 * minute),
     embeddedCode: {
       code: "<Cmd>\n  <Cmd.Input placeholder='Search…' />\n  <Cmd.List items={results} />\n</Cmd>",
@@ -426,10 +426,10 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Published `next-cache-recipes` — a tiny repo of cache pattern examples for Next.js 16. Per-route, per-user, mutation invalidation, all in one place.',
+    body: "The following feed in Drop is cached per user and invalidated on write. It comes down to one `'use cache'` function with a tag:",
     createdAt: new Date(now - 12 * hour),
     embeddedCode: {
-      code: "async function getDrops(handle) {\n  'use cache'\n  cacheTag(`feed-${handle}`)\n  return db.drops.byHandle(handle)\n}",
+      code: "async function getFeed(handle) {\n  'use cache'\n  cacheTag(`feed-${handle}`)\n  return db.drops.forFollowing(handle)\n}",
       lang: 'ts',
     },
     id: 'd31',
@@ -440,7 +440,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "Built a tiny CLI for our team that scaffolds a new server action with the tags wired up automatically Saved everyone the 'wait, which tag do I invalidate' question.",
+    body: "Built a tiny CLI for our team that scaffolds a new server action with its cache tags already wired. It saves everyone the 'wait, which tag do I invalidate' moment.",
     createdAt: new Date(now - 16 * hour),
     embeddedCode: {
       code: 'npx @onyx/action new toggleBookmark --tag bookmarks',
@@ -457,7 +457,7 @@ const DROPS: SeedDrop[] = [
 const REPLIES: SeedDrop[] = [
   {
     authorHandle: 'onyx',
-    body: 'Just spent ten minutes on it — the search is fast and the notes feel like notes, not blog posts. Bookmarked.',
+    body: 'Spent five minutes in the new composer. The preview matching the feed exactly is the detail that sells it. Posting this from it.',
     createdAt: new Date(now - 12 * minute),
     id: 'r1',
     likes: 142,
@@ -468,7 +468,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "With 16.3 you can finally lean into per-component caching for stuff like this — turned my Notes import into a `'use cache'` function and the rest fell out.",
+    body: 'The server-rendered preview is the part I would have skipped and then regretted. Nicely done.',
     createdAt: new Date(now - 8 * minute),
     id: 'r2',
     likes: 88,
@@ -479,7 +479,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Cloning this tonight I have a Notes folder named 'someday' that has wanted to be a site for years.",
+    body: 'Bold and code blocks in a social composer, finally. I have wanted this for a while.',
     createdAt: new Date(now - 4 * minute),
     id: 'r3',
     likes: 64,
@@ -490,7 +490,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Forking this immediately We've been about to build this kit internally for six months.",
+    body: 'Forking this tonight. We have been about to build this kit internally for six months.',
     createdAt: new Date(now - 90 * minute),
     id: 'r4',
     likes: 220,
@@ -501,7 +501,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: "Thank you for putting a license on it. You'd be amazed how often that gets forgotten.",
+    body: 'Thank you for putting a license on it. You would be surprised how often that gets forgotten.',
     createdAt: new Date(now - 80 * minute),
     id: 'r5',
     likes: 96,
@@ -512,7 +512,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'A 200-star Tuesday is the dream Congrats on the v1.0 — the docs feel really cared for.',
+    body: 'A 200-star Tuesday is the dream. Congrats, the docs feel genuinely cared for.',
     createdAt: new Date(now - 4 * hour),
     id: 'r6',
     likes: 312,
@@ -523,7 +523,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: 'Eight clicks is the dream. Ours takes a Google Doc, a Figma file, and a person who knows the right Slack channel.',
+    body: 'The optimistic badge clear is a nice touch. Ours still makes people refresh to see it.',
     createdAt: new Date(now - 10 * hour),
     id: 'r7',
     likes: 140,
@@ -534,7 +534,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'Been following since v0.1. The async React patterns you keep showing are the ones I keep stealing.',
+    body: 'Been here since the first ugly screenshot. Worth the wait.',
     createdAt: new Date(now - 1 * day),
     id: 'r8',
     likes: 88,
@@ -545,7 +545,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Building the rest in public too — the 16.3 rewrite is next, redesign and all. Follow along if you want the messy version.',
+    body: 'Love this. Public building is the only deadline that actually works on me.',
     createdAt: new Date(now - 22 * hour),
     id: 'r9',
     likes: 140,
@@ -556,7 +556,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "Subscribed. The 'subscribe to yourself' thing is a public-posts RSS too, right? That's the kind of utility I want.",
+    body: 'Subscribed. Subscribing to your own output is a real pattern, not a joke.',
     createdAt: new Date(now - 6 * hour),
     id: 'r10',
     likes: 64,
@@ -567,7 +567,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Yes, same idea — the posts are the source, the RSS is just so I stop forgetting them. Now it's a `'use cache'` route I can subscribe to.",
+    body: 'Subscribing to your own writing is underrated. I do the same with my changelog.',
     createdAt: new Date(now - 5 * hour),
     id: 'r11',
     likes: 188,
@@ -578,7 +578,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: 'Less hero copy, more screenshots. This is the redesign brief I want to send to every team.',
+    body: 'Less hero copy, more screenshots. This is the brief I want to send every team.',
     createdAt: new Date(now - 2 * hour),
     id: 'r12',
     likes: 96,
@@ -589,7 +589,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "Saved this one. The 'three years overdue' part lands — that's the entire 16.3 redesign in one sentence.",
+    body: 'Saved. The three-years-overdue part is every portfolio I have ever had.',
     createdAt: new Date(now - 100 * minute),
     id: 'r13',
     likes: 220,
@@ -600,29 +600,29 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'Going to read this with my morning coffee. Real ones publish the rough cut.',
+    body: 'Runtime prefetch on every route is the kind of thing you only notice when it is missing.',
     createdAt: new Date(now - 9 * hour),
     id: 'r14',
     likes: 132,
     parentId: 'd7',
     replies: 0,
     reposts: 7,
-    tags: ['writing'],
+    tags: [],
   },
   {
     authorHandle: 'aurora',
-    body: "Feedback welcome on the rough cut — the parts I'm least sure about are the ones I most want to fix before the print run. The 16.3 chapter is the one that keeps moving.",
+    body: 'Follow-up: the drop detail is runtime-prefetched, and the profile links only prefetch on hover so we do not prefetch the whole feed at once.',
     createdAt: new Date(now - 8 * hour),
     id: 'r15',
     likes: 264,
     parentId: 'd7',
     replies: 0,
     reposts: 21,
-    tags: ['writing'],
+    tags: [],
   },
   {
     authorHandle: 'vex',
-    body: "Two independent asks is the signal, yeah. We just shipped one of those too — the third would've been someone yelling at us.",
+    body: 'Two independent asks is the signal. The third is usually someone yelling.',
     createdAt: new Date(now - 14 * hour),
     id: 'r16',
     likes: 312,
@@ -633,7 +633,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "The 'two engineers ask independently' rule is the closest thing to a real signal in product work. Most of the 16.3 redesign came from that exact signal repeated three times.",
+    body: 'The two-engineers-ask-independently rule is the closest thing to a real signal in product work. Most of Drop started exactly that way.',
     createdAt: new Date(now - 13 * hour),
     id: 'r17',
     likes: 410,
@@ -644,7 +644,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: 'Replicating Drop tonight just to have something to point my team at The ship-small-and-share-it habit is what I want us to start doing.',
+    body: 'Cloning Drop this weekend to have something to point my team at. The ship-small habit is what I want us to build.',
     createdAt: new Date(now - 18 * hour),
     id: 'r18',
     likes: 280,
@@ -655,7 +655,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'If you build with it, send me what you make — happy to repost the wild ones here. The whole point of the 16.3 redesign was making this kind of project a weekend.',
+    body: 'If you keep building this in public, I will keep stealing the patterns. The streaming parts especially.',
     createdAt: new Date(now - 17 * hour),
     id: 'r19',
     likes: 188,
@@ -666,7 +666,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: 'The PR bot is genius and shameful. We need this Will steal.',
+    body: 'The PR bot is genius and a little bit shameful. We need it. Stealing.',
     createdAt: new Date(now - 26 * hour),
     id: 'r20',
     likes: 220,
@@ -677,7 +677,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Steal it, please. The only feature is 'oldest open PR' and that's the whole point. Now it's running on 16.3 in 40 lines.",
+    body: 'Stealing this for our repo. The oldest-open-PR nudge is such a good idea.',
     createdAt: new Date(now - 25 * hour),
     id: 'r21',
     likes: 196,
@@ -688,7 +688,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'echo',
-    body: 'Have been waiting for the CLI version of your file-structure rant. It will live in my dotfiles.',
+    body: 'Been waiting for the CLI version of your file-structure rant. This is going in my dotfiles.',
     createdAt: new Date(now - 30 * hour),
     id: 'r22',
     likes: 88,
@@ -699,7 +699,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: "Honestly should have been a CLI four years ago. The 16.3 templates it scaffolds are the ones we've been quietly converging on across every project.",
+    body: 'Should have been a CLI four years ago. The structure it scaffolds is the one we have all been converging on anyway.',
     createdAt: new Date(now - 29 * hour),
     id: 'r23',
     likes: 142,
@@ -710,7 +710,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: 'Eight clicks beats an afternoon every time. With 16.3 the announce flow is a server action + a tagged cache — feels almost embarrassing how short it got.',
+    body: 'One thing I like here: the badge clears the moment you open the tab, then confirms on the server.',
     createdAt: new Date(now - 40 * minute),
     id: 'r24',
     likes: 96,
@@ -721,7 +721,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "If you're using this template for a workshop too, send me a link — happy to cross-link. The 16.3 prefetch hints make these landing pages feel instant on a click.",
+    body: 'If the count ever looks stale, that is the private cache waiting on a revalidate. Working on making it instant.',
     createdAt: new Date(now - 30 * minute),
     id: 'r25',
     likes: 132,
@@ -732,7 +732,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "The two-user app is undefeated. Mine this year was a chore-rotation thing for my partner and me. 16.3's private cache made the per-user state of it disappear.",
+    body: 'The two-user app is undefeated. Mine was a chore rotation for me and my partner.',
     createdAt: new Date(now - 28 * minute),
     id: 'r26',
     likes: 220,
@@ -743,7 +743,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'cinder',
-    body: "Selfishly shipping is so underrated. The bar moves from 'will users love it' to 'do I love it'.",
+    body: 'Shipping selfishly is underrated. The bar moves from will they love it to do I.',
     createdAt: new Date(now - 1 * hour),
     id: 'r27',
     likes: 142,
@@ -754,7 +754,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'vex',
-    body: "240 lines, three users, one of which is your mom. That's the dream rollout.",
+    body: 'Three users who actually use the thing beats a launch nobody remembers.',
     createdAt: new Date(now - 90 * minute),
     id: 'r28',
     likes: 96,
@@ -765,7 +765,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'quill',
-    body: "Honestly the friction of shipping a real URL is the whole exercise. Once it's at a URL it counts. The 16.3 deploy story makes the URL step easier than the badge.",
+    body: 'The friction of shipping a real URL is the whole exercise. Once it is at a URL, it counts.',
     createdAt: new Date(now - 2 * hour),
     id: 'r29',
     likes: 188,
@@ -776,7 +776,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'wren',
-    body: "I'd subscribe to a newsletter where the only rule is 'one sentence about what you made'.",
+    body: 'I would subscribe to a newsletter whose only rule is one sentence about what you made.',
     createdAt: new Date(now - 4 * hour),
     id: 'r30',
     likes: 88,
@@ -787,7 +787,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Replacing a spreadsheet is one of the most useful things software can do for a real person. Now imagine doing it in an evening on the 16.3 stack — that's the redesign in practice.",
+    body: 'Replacing a spreadsheet for one real person is some of the most satisfying software there is.',
     createdAt: new Date(now - 6 * hour),
     id: 'r31',
     likes: 240,
@@ -798,7 +798,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'halo',
-    body: 'Audience-of-one apps are a vibe. Mine is a tiny pantry tracker that nags me about my chickpeas.',
+    body: 'Audience-of-one docs are a genre. Mine is a page explaining my job to my dad.',
     createdAt: new Date(now - 9 * hour),
     id: 'r32',
     likes: 132,
@@ -809,7 +809,7 @@ const REPLIES: SeedDrop[] = [
   },
   {
     authorHandle: 'onyx',
-    body: "Slow-grow lists are the best lists. The pressure to publish weekly is what kills good reading. The 16.3 ISR-ish 'cache for hours' is the perfect shape for a list like this.",
+    body: 'Slow-grow lists are the best lists. Weekly-publish pressure is what kills good reading.',
     createdAt: new Date(now - 13 * hour),
     id: 'r33',
     likes: 156,

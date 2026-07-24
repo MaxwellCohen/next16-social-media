@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
+import { RefreshButton } from '@/components/ui/refresh-button';
 import { TabsSkeleton } from '@/components/ui/tabs';
 import { DropComposer } from '@/features/drop/components/composer';
 import { DropListSkeleton } from '@/features/drop/components/drop';
@@ -21,6 +22,10 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
   return (
     <div className="group/tabs">
       <div className="sticky top-0 z-30 bg-white/70 backdrop-blur-md backdrop-saturate-150 dark:bg-black/70">
+        <div className="flex items-center px-4 py-4 sm:px-5">
+          <h1 className="text-lg font-bold tracking-tight">Home</h1>
+          <RefreshButton label="Refresh feed" />
+        </div>
         <Suspense fallback={<TabsSkeleton />}>
           <FeedTabs />
         </Suspense>
