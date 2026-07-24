@@ -14,7 +14,7 @@ export async function BookmarksFeed() {
     <ul>
       {drops.map(drop => (
         <ViewTransition key={drop.id} default="none" enter="auto" exit="auto">
-          <li className="transition-opacity has-data-pending:opacity-30">
+          <li className="transition-opacity has-data-removing:opacity-50">
             <Drop drop={drop} />
           </li>
         </ViewTransition>

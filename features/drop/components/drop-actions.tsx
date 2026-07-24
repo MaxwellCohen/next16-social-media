@@ -36,7 +36,7 @@ function reduce(state: OptimisticState, toggle: Toggle): OptimisticState {
 
 export function DropActions({ dropId, parentId, replies, reposts, likes, userState, compact }: Props) {
   const [optimistic, addOptimistic] = useOptimistic({ ...userState, likesDelta: 0, repostsDelta: 0 }, reduce);
-  const [bookmarkPending, setBookmarkPending] = useOptimistic(false);
+  const [bookmarkRemoving, setBookmarkRemoving] = useOptimistic(false);
   const [, startTransition] = useTransition();
 
   function toggle(field: Toggle, action: () => Promise<unknown>) {
@@ -49,7 +49,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
 
     startTransition(async () => {
       addOptimistic(field);
-      if (field === 'bookmarked') setBookmarkPending(true);
+      if (field === 'bookmarked' && !willActivate) setBookmarkRemoving(true);
       try {
         await action();
         if (field !== 'liked') {
@@ -103,7 +103,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
           active={optimistic.bookmarked}
           activeColor="text-accent"
           hoverColor="hover:bg-accent/10 hover:text-accent"
-          pending={bookmarkPending}
+          removing={bookmarkRemoving}
           onClick={() => {
             toggle('bookmarked', () => toggleBookmark(dropId));
           }}

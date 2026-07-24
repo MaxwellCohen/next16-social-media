@@ -10,11 +10,11 @@ type Props = {
   activeColor?: string;
   hoverColor?: string;
   onClick?: () => void;
-  pending?: boolean;
+  removing?: boolean;
   children?: React.ReactNode;
 };
 
-export function IconButton({ label, icon, href, active, activeColor, hoverColor, onClick, pending, children }: Props) {
+export function IconButton({ label, icon, href, active, activeColor, hoverColor, onClick, removing, children }: Props) {
   const className = cn(
     'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
     active && activeColor,
@@ -42,7 +42,7 @@ export function IconButton({ label, icon, href, active, activeColor, hoverColor,
       type="button"
       aria-label={label}
       aria-pressed={active}
-      data-pending={pending || undefined}
+      data-removing={removing || undefined}
       onClick={
         onClick
           ? e => {
