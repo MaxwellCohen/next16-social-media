@@ -49,22 +49,17 @@ function validateBody(raw: FormDataEntryValue | null) {
 export async function postDrop(formData: FormData) {
   await delay(300, await isSlowEnabled());
 
-  const parsed = postDropSchema.safeParse({ body: formData.get('body') });
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message, ok: false as const };
-  }
-
-  const flagged = moderate(parsed.data.body);
-  if (flagged) {
-    return { error: flagged, ok: false as const };
+  const validated = validateBody(formData.get('body'));
+  if (!validated.ok) {
+    return { error: validated.error, ok: false as const };
   }
 
   const me = await verifyAuth();
-  const tags = extractTags(parsed.data.body);
+  const tags = extractTags(validated.body);
   const drop = await prisma.drop.create({
     data: {
       authorHandle: me,
-      body: parsed.data.body,
+      body: validated.body,
       createdAt: new Date(),
       tags: tags.join(','),
     },
@@ -136,26 +131,21 @@ export async function postThread(formData: FormData) {
 export async function postReply(parentId: string, formData: FormData) {
   await delay(600, await isSlowEnabled());
 
-  const parsed = postDropSchema.safeParse({ body: formData.get('body') });
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message, ok: false as const };
-  }
-
-  const flagged = moderate(parsed.data.body);
-  if (flagged) {
-    return { error: flagged, ok: false as const };
+  const validated = validateBody(formData.get('body'));
+  if (!validated.ok) {
+    return { error: validated.error, ok: false as const };
   }
 
   const parent = await prisma.drop.findUnique({ where: { id: parentId } });
   if (!parent) return { error: 'Drop not found', ok: false as const };
 
   const me = await verifyAuth();
-  const tags = extractTags(parsed.data.body);
+  const tags = extractTags(validated.body);
   const [reply] = await prisma.$transaction([
     prisma.drop.create({
       data: {
         authorHandle: me,
-        body: parsed.data.body,
+        body: validated.body,
         createdAt: new Date(),
         parentId,
         tags: tags.join(','),
@@ -167,7 +157,7 @@ export async function postReply(parentId: string, formData: FormData) {
     await prisma.notification.create({
       data: {
         actorHandle: me,
-        body: parsed.data.body,
+        body: validated.body,
         dropId: parentId,
         kind: 'reply',
         recipientHandle: parent.authorHandle,

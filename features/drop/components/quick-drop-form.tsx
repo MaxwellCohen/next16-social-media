@@ -1,12 +1,12 @@
 'use client';
 
 import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
-import { useRef, useState, useTransition } from 'react';
+import { Suspense, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
-import { DropPreview, type Preview } from '@/features/drop/components/drop-preview';
+import { DropPreview, PreviewSkeleton, type Preview } from '@/features/drop/components/drop-preview';
 import { postDrop } from '@/features/drop/drop-actions';
 import { renderDropPreview } from '@/features/drop/drop-preview-action';
 import { useTextareaFormat } from '@/hooks/use-textarea-format';
@@ -77,7 +77,9 @@ export function QuickDropForm({ avatar }: Props) {
                 aria-hidden={mode === 'write'}
                 className={cn('col-start-1 row-start-1 pt-1.5 pr-9', mode === 'write' && 'invisible')}
               >
-                <DropPreview preview={preview} />
+                <Suspense key={preview?.body} fallback={<PreviewSkeleton />}>
+                  <DropPreview preview={preview} />
+                </Suspense>
               </div>
               <div className="absolute top-1 right-0">
                 {mode === 'write' ? (
