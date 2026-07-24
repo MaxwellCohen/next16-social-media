@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, ViewTransition } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadMore } from '@/components/ui/load-more';
@@ -40,9 +40,13 @@ async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
   return (
     <>
       {items.map(item => (
-        <li key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}>
-          <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
-        </li>
+        <ViewTransition
+          key={item.kind === 'repost' ? `repost:${item.repostedBy}:${item.drop.id}` : `drop:${item.drop.id}`}
+        >
+          <li>
+            <Drop drop={item.drop} repostedBy={item.kind === 'repost' ? item.repostedBy : undefined} />
+          </li>
+        </ViewTransition>
       ))}
       {isLast && hasMore ? (
         <li className="flex justify-center p-6">
@@ -84,9 +88,11 @@ async function DiscoverFeedPage({ page, isLast }: { page: number; isLast: boolea
   return (
     <>
       {drops.map(drop => (
-        <li key={drop.id}>
-          <Drop drop={drop} />
-        </li>
+        <ViewTransition key={drop.id}>
+          <li>
+            <Drop drop={drop} />
+          </li>
+        </ViewTransition>
       ))}
       {isLast && hasMore ? (
         <li className="flex justify-center p-6">
