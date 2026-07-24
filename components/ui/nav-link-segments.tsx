@@ -3,6 +3,7 @@
 import { useLinkStatus } from 'next/link';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import { Suspense } from 'react';
+import { Boundary } from '@/components/internal/boundary';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
 import type Link from 'next/link';
@@ -27,9 +28,11 @@ function resolve<T>(value: Renderable<T> | undefined, props: RenderProps): T | u
 
 export function NavLinkSegments<T extends string>(props: Props<T>) {
   return (
-    <Suspense fallback={<NavLinkShell {...props} isActive={false} />}>
-      <NavLinkInner {...props} />
-    </Suspense>
+    <Boundary label="NavLink">
+      <Suspense fallback={<NavLinkShell {...props} isActive={false} />}>
+        <NavLinkInner {...props} />
+      </Suspense>
+    </Boundary>
   );
 }
 

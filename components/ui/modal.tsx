@@ -14,7 +14,7 @@ type Props = {
 
 export function Modal({ store, title, initialFocus, headerContent, children }: Props) {
   return (
-    <Boundary label="Modal">
+    <Boundary label="Modal" asChild>
       <Ariakit.Dialog
         store={store}
         backdrop={

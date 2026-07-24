@@ -3,6 +3,7 @@
 import { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Suspense } from 'react';
+import { Boundary } from '@/components/internal/boundary';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
 import type Link from 'next/link';
@@ -35,9 +36,11 @@ function resolve<T>(value: Renderable<T> | undefined, props: RenderProps): T | u
 // dynamic routes; the fallback renders the link inactive so layout is stable.
 export function NavLink<T extends string>(props: Props<T>) {
   return (
-    <Suspense fallback={<NavLinkShell {...props} isActive={false} />}>
-      <NavLinkInner {...props} />
-    </Suspense>
+    <Boundary label="NavLink">
+      <Suspense fallback={<NavLinkShell {...props} isActive={false} />}>
+        <NavLinkInner {...props} />
+      </Suspense>
+    </Boundary>
   );
 }
 
