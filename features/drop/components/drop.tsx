@@ -76,19 +76,18 @@ export function DropList({
   drops,
   compact,
   repostedBy,
-  animateItems = false,
 }: {
   drops: DropT[];
   compact?: boolean;
   repostedBy?: (drop: DropT) => string | undefined;
-  animateItems?: boolean;
 }) {
   return (
     <ul>
-      {drops.map(drop => {
-        const content = <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />;
-        return <li key={drop.id}>{content}</li>;
-      })}
+      {drops.map((drop, i) => (
+        <li key={`${drop.id}-${i}`}>
+          <Drop drop={drop} compact={compact} repostedBy={repostedBy?.(drop)} />
+        </li>
+      ))}
     </ul>
   );
 }

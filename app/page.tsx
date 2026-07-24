@@ -21,10 +21,7 @@ function parsePage(value: string | string[] | undefined): number {
 export default function HomePage({ searchParams }: PageProps<'/'>) {
   return (
     <div className="group/tabs">
-      <div
-        className="sticky top-0 z-30 bg-white/70 backdrop-blur-md backdrop-saturate-150 dark:bg-black/70"
-        style={{ viewTransitionName: 'feed-header' }}
-      >
+      <div className="sticky top-0 z-30 bg-white/70 backdrop-blur-md backdrop-saturate-150 dark:bg-black/70">
         <div className="flex items-center px-4 py-4 sm:px-5">
           <h1 className="text-lg font-bold tracking-tight">Home</h1>
           <RefreshButton label="Refresh feed" />

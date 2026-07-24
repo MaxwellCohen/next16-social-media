@@ -10,7 +10,7 @@ export async function Replies({ id }: { id: string }) {
   }
   return (
     <div>
-      <DropList drops={replies} compact animateItems />
+      <DropList drops={replies} compact />
     </div>
   );
 }

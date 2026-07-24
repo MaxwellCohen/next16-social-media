@@ -8,5 +8,5 @@ export async function TagFeed({ tag }: { tag: string }) {
     return <EmptyState title="No drops with this tag yet" body="Be the first to use it." />;
   }
 
-  return <DropList drops={drops} animateItems />;
+  return <DropList drops={drops} />;
 }
