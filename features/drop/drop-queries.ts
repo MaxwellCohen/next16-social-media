@@ -123,9 +123,10 @@ async function getRepliesCached(dropId: string, slow: boolean) {
     orderBy: { createdAt: 'desc' },
     where: { parentId: dropId },
   });
-  // Twitter-style: pin the original author's replies first, then newest-first for everyone else.
+  // Twitter-style: pin the original author's replies first in thread order (oldest-first), then
+  // newest-first for everyone else.
   const authorHandle = parent?.authorHandle;
-  const authorReplies = authorHandle ? rows.filter(r => r.authorHandle === authorHandle) : [];
+  const authorReplies = authorHandle ? rows.filter(r => r.authorHandle === authorHandle).reverse() : [];
   const otherReplies = authorHandle ? rows.filter(r => r.authorHandle !== authorHandle) : rows;
   return [...authorReplies, ...otherReplies].map(toDrop);
 }
