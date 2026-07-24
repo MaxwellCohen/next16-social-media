@@ -1,10 +1,16 @@
 'use client';
 
-import { useRef } from 'react';
+import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
+import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
+import { DropPreview, type Preview } from '@/features/drop/components/drop-preview';
 import { postDrop } from '@/features/drop/drop-actions';
+import { renderDropPreview } from '@/features/drop/drop-preview-action';
+import { useTextareaFormat } from '@/hooks/use-textarea-format';
+import { cn } from '@/lib/utils';
 
 type Props = {
   avatar: React.ReactNode;
@@ -12,36 +18,98 @@ type Props = {
 
 export function QuickDropForm({ avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [mode, setMode] = useState<'write' | 'preview'>('write');
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const { insertAtCaret, insertSnippet, wrapSelection } = useTextareaFormat(textareaRef);
 
   async function submitAction(formData: FormData) {
     const result = await postDrop(formData);
     if (!result.ok) {
       toast.error(result.error);
-    } else {
-      toast.success('Dropped!');
+      return;
     }
+    toast.success('Dropped!');
+    setMode('write');
+    setPreview(null);
+  }
+
+  function showPreview() {
+    const body = textareaRef.current?.value.trim() ?? '';
+    if (!body) {
+      setPreview(null);
+    } else if (preview?.body !== body) {
+      setPreview({ body, node: renderDropPreview(body) });
+    }
+    setMode('preview');
   }
 
   return (
     <Boundary label="QuickDropForm">
-      <section className="border-divider/70 dark:border-divider-dark/70 bg-card/30 dark:bg-card-dark/30 hidden border-b p-4 pb-6 sm:block sm:p-5 sm:pb-7">
+      <section className="border-divider/70 dark:border-divider-dark/70 hidden border-b px-4 py-3 sm:block sm:px-5">
         <form ref={formRef} action={submitAction} className="flex items-start gap-3">
           {avatar}
-          <textarea
-            name="body"
-            required
-            maxLength={1000}
-            rows={2}
-            placeholder="What did you build today?"
-            onKeyDown={e => {
-              if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                e.preventDefault();
-                formRef.current?.requestSubmit();
-              }
-            }}
-            className="placeholder-gray field-sizing-content flex-1 resize-none border-0 bg-transparent text-sm focus:ring-0 focus:outline-none"
-          />
-          <Button type="submit">Drop it</Button>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="relative grid min-h-20">
+              <textarea
+                name="body"
+                ref={textareaRef}
+                required
+                maxLength={1000}
+                rows={3}
+                aria-label="Drop body"
+                placeholder="What did you build today?"
+                onKeyDown={e => {
+                  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    formRef.current?.requestSubmit();
+                  }
+                }}
+                className={cn(
+                  'placeholder-gray field-sizing-content col-start-1 row-start-1 min-h-20 w-full resize-none border-0 bg-transparent pt-1.5 pr-9 text-base leading-relaxed focus:ring-0 focus:outline-none',
+                  mode === 'preview' && 'invisible',
+                )}
+              />
+              <div
+                aria-hidden={mode === 'write'}
+                className={cn('col-start-1 row-start-1 pt-1.5 pr-9', mode === 'write' && 'invisible')}
+              >
+                <DropPreview preview={preview} />
+              </div>
+              <div className="absolute top-1 right-0">
+                {mode === 'write' ? (
+                  <ToolbarButton size="sm" label="Preview" onClick={showPreview}>
+                    <Eye className="h-4 w-4" />
+                  </ToolbarButton>
+                ) : (
+                  <ToolbarButton size="sm" label="Edit" onClick={() => setMode('write')}>
+                    <PenLine className="h-4 w-4" />
+                  </ToolbarButton>
+                )}
+              </div>
+            </div>
+            <footer className="mt-1 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-0.5">
+                {mode === 'write' ? (
+                  <>
+                    <ToolbarButton size="sm" label="Bold" onClick={() => wrapSelection('**')}>
+                      <Bold className="h-4 w-4" />
+                    </ToolbarButton>
+                    <ToolbarButton size="sm" label="Italic" onClick={() => wrapSelection('*')}>
+                      <Italic className="h-4 w-4" />
+                    </ToolbarButton>
+                    <ToolbarButton size="sm" label="Add code snippet" onClick={insertSnippet}>
+                      <Code2 className="h-4 w-4" />
+                    </ToolbarButton>
+                    <ToolbarButton size="sm" label="Add hashtag" onClick={() => insertAtCaret('#')}>
+                      <Hash className="h-4 w-4" />
+                    </ToolbarButton>
+                  </>
+                ) : null}
+              </div>
+              <Button type="submit">Drop it</Button>
+            </footer>
+          </div>
         </form>
       </section>
     </Boundary>

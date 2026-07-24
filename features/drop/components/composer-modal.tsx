@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
 import { DropPreview, type Preview } from '@/features/drop/components/drop-preview';
 import { postDrop } from '@/features/drop/drop-actions';
 import { renderDropPreview } from '@/features/drop/drop-preview-action';
@@ -163,16 +164,3 @@ export function NewDropModal({ avatar, onOpenTrigger }: Props) {
   );
 }
 
-function ToolbarButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={onClick}
-      className="text-accent hover:bg-accent/10 flex h-9 w-9 items-center justify-center rounded-full transition-colors"
-    >
-      {children}
-    </button>
-  );
-}
