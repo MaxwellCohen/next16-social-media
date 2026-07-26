@@ -6,7 +6,7 @@ import { useId, useRef, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 import { SeedFromSearchParam } from '@/components/scripts/seed-from-search-param';
 import { Section } from '@/components/ui/section';
-import { Spinner } from '@/components/ui/spinner';
+
 import { useSyncInputToSearchParam } from '@/hooks/use-sync-input-to-search-param';
 import type { Route } from 'next';
 
@@ -24,11 +24,7 @@ export function Search({ children }: { children: React.ReactNode }) {
     <Boundary label="Search">
       <Section className="px-4 py-3 sm:px-5">
         <div className="relative">
-          {isPending ? (
-            <Spinner className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 opacity-40" />
-          ) : (
-            <SearchIcon className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          )}
+          <SearchIcon className="text-gray pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             ref={inputRef}
             id={inputId}
@@ -40,7 +36,9 @@ export function Search({ children }: { children: React.ReactNode }) {
             onChange={event => {
               const value = event.target.value;
               startTransition(() => {
-                router.replace((value ? `/search?q=${encodeURIComponent(value)}` : '/search') as Route, { scroll: false });
+                router.replace((value ? `/search?q=${encodeURIComponent(value)}` : '/search') as Route, {
+                  scroll: false,
+                });
               });
             }}
             className={inputClass}
