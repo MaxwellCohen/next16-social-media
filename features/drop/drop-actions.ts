@@ -3,6 +3,7 @@
 import { revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
+import { moderateWithAI } from '@/features/drop/drop-spam-filter';
 import { verifyAuth } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
@@ -53,6 +54,10 @@ export async function postDrop(formData: FormData) {
   if (!validated.ok) {
     return { error: validated.error, ok: false as const };
   }
+  const flagged = await moderateWithAI(validated.body);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
+  }
 
   const me = await verifyAuth();
   const tags = extractTags(validated.body);
@@ -85,6 +90,10 @@ export async function postThread(formData: FormData) {
   }
   if (bodies.length === 0) {
     return { error: 'Say something', ok: false as const };
+  }
+  const flagged = (await Promise.all(bodies.map(moderateWithAI))).find(Boolean);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
   }
 
   const me = await verifyAuth();
@@ -134,6 +143,10 @@ export async function postReply(parentId: string, formData: FormData) {
   const validated = validateBody(formData.get('body'));
   if (!validated.ok) {
     return { error: validated.error, ok: false as const };
+  }
+  const flagged = await moderateWithAI(validated.body);
+  if (flagged) {
+    return { error: flagged, ok: false as const };
   }
 
   const parent = await prisma.drop.findUnique({ where: { id: parentId } });
