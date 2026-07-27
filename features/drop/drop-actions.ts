@@ -24,7 +24,7 @@ const BANNED_WORDS = ['fuck', 'shit', 'asshole', 'bitch', 'bastard', 'dick', 'cu
 
 function moderate(body: string): string | null {
   const hit = BANNED_WORDS.find(word => new RegExp(`\\b${word}\\b`, 'i').test(body));
-  return hit ? 'Keep it friendly — that post looks a little too spicy to publish.' : null;
+  return hit ? 'Keep it friendly. That post looks a little too spicy to publish.' : null;
 }
 
 const postDropSchema = z.object({
