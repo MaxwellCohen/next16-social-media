@@ -9,6 +9,7 @@ import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
 
 const FEED_PAGE_SIZE = 10;
+export const MAX_FEED_PAGE = 20;
 
 export type FeedItem =
   | { kind: 'drop'; drop: Drop; pinnedAt: number }

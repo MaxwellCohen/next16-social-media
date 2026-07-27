@@ -6,6 +6,7 @@ import { DropComposer } from '@/features/drop/components/composer';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { Feed, DiscoverFeed } from '@/features/drop/components/feed';
 import { FeedTabs } from '@/features/drop/components/feed-tabs';
+import { MAX_FEED_PAGE } from '@/features/drop/drop-queries';
 
 export const prefetch = 'allow-runtime';
 
@@ -15,7 +16,8 @@ function parseTab(value: string | string[] | undefined): 'following' | 'discover
 
 function parsePage(value: string | string[] | undefined): number {
   const n = Number(value);
-  return n > 0 && Number.isInteger(n) ? n : 1;
+  const page = n > 0 && Number.isInteger(n) ? n : 1;
+  return Math.min(page, MAX_FEED_PAGE);
 }
 
 export default function HomePage({ searchParams }: PageProps<'/'>) {
