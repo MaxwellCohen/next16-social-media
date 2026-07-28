@@ -8,8 +8,6 @@ import { Feed, DiscoverFeed } from '@/features/drop/components/feed';
 import { FeedTabs } from '@/features/drop/components/feed-tabs';
 import { MAX_FEED_PAGE } from '@/features/drop/drop-queries';
 
-export const prefetch = 'allow-runtime';
-
 function parseTab(value: string | string[] | undefined): 'following' | 'discover' {
   return value === 'discover' ? 'discover' : 'following';
 }

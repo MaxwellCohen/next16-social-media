@@ -12,8 +12,6 @@ export const metadata: Metadata = {
   title: 'Activity',
 };
 
-export const prefetch = 'allow-runtime';
-
 export default function NotificationsPage() {
   return (
     <div>

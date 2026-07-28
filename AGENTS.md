@@ -21,7 +21,7 @@ Follow the [Next.js App Architecture](.agents/skills/nextjs-app-architecture/SKI
 - `pnpm dev` / `pnpm start` run stock `next dev` / `next start`
 - Domain type "drop" is the app's term for a post/tweet
 - Queries use `delay()` calls for demo visibility of loading states
-- All pages export `prefetch = 'allow-runtime'`
+- Runtime prefetching is opted into per link with `<Link prefetch={true}>`; `partialPrefetching` is enabled app-wide in `next.config.ts`
 - Demo toggles (boundary visualizer) in `components/demo/`
 - User switching via cookie (`drop-user`), `switchUser` action calls `updateTag('current-user')`
 - React Compiler enabled — do not use `useCallback` / `useMemo`.

@@ -12,8 +12,6 @@ export const metadata: Metadata = {
   title: 'Bookmarks',
 };
 
-export const prefetch = 'allow-runtime';
-
 export default function BookmarksPage() {
   return (
     <div>

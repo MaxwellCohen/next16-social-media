@@ -26,8 +26,6 @@ export async function generateMetadata({ params }: PageProps<'/u/[handle]'>): Pr
   };
 }
 
-export const prefetch = 'allow-runtime';
-
 export default function ProfilePage({ params, searchParams }: PageProps<'/u/[handle]'>) {
   return (
     <div className="group/tabs">

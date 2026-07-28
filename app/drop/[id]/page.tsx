@@ -26,8 +26,6 @@ export async function generateMetadata({ params }: PageProps<'/drop/[id]'>): Pro
   };
 }
 
-export const prefetch = 'allow-runtime';
-
 export default function DropPage({ params }: PageProps<'/drop/[id]'>) {
   return (
     <div>
