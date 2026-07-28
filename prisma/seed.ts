@@ -170,7 +170,7 @@ const DROPS: SeedDrop[] = [
   },
   {
     authorHandle: 'aurora',
-    body: "Spent the day on how navigation feels. Every page in Drop opts into runtime prefetch, so opening a drop or a profile is instant:\n\n```ts\nexport const prefetch = 'allow-runtime';\n```\n\nBy the time you click, the next screen is already warm.",
+    body: "Spent the day on how navigation feels. High-value links in Drop opt into runtime prefetch, so opening a drop or a profile is instant:\n\n```tsx\n<Link href={href} prefetch={true} />\n```\n\nBy the time you click, the next screen is already warm.",
     createdAt: new Date(now - 4 * hour),
     id: 'd7',
     likes: 1_540,

@@ -12,7 +12,7 @@ test.describe('Home page (/)', () => {
     });
   });
 
-  // Runtime prefetch (client nav): allow-runtime resolves searchParams, so the feed is present under instant().
+  // Runtime prefetch (client nav): prefetch={true} resolves searchParams, so the feed is present under instant().
   test('runtime prefetch — feed revealed', async ({ page }) => {
     await page.goto('/bookmarks');
     const link = page.locator('aside a[aria-label="Home"]').first();

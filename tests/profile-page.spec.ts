@@ -13,7 +13,7 @@ test.describe('Profile page (/u/[handle])', () => {
     });
   });
 
-  // Runtime prefetch (client nav): allow-runtime resolves params, so the profile feed is present under instant().
+  // Runtime prefetch (client nav): prefetch={true} resolves params, so the profile feed is present under instant().
   test('runtime prefetch — profile feed revealed', async ({ page }) => {
     await page.goto('/');
     const link = page.locator('aside a[aria-label="Profile"]').first();
