@@ -33,7 +33,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
         className="absolute inset-0 z-10"
       />
       {repostedBy ? (
-        <Suspense fallback={null}>
+        <Suspense fallback={<ReposterSkeleton />}>
           <Reposter handle={repostedBy} />
         </Suspense>
       ) : null}
@@ -122,6 +122,15 @@ async function Reposter({ handle }: { handle: string }) {
       <Repeat2 className="h-3 w-3" />
       <span>{reposter.handle === currentHandle ? 'You' : reposter.displayName} reposted</span>
     </HoverPrefetchLink>
+  );
+}
+
+function ReposterSkeleton() {
+  return (
+    <div className="relative z-20 flex w-fit items-center gap-2 px-4 pt-3 text-xs sm:px-5" aria-hidden>
+      <Repeat2 className="text-gray h-3 w-3" />
+      <Skeleton className="h-3 w-20 rounded" />
+    </div>
   );
 }
 

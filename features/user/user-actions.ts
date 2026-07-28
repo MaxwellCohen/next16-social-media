@@ -12,19 +12,29 @@ const handleSchema = z.string().min(1).max(30).regex(/^\w+$/);
 const SESSION_COOKIE = 'drop-user';
 
 export async function switchUser(handle: string) {
-  const target = handleSchema.parse(handle);
+  const parsed = handleSchema.safeParse(handle);
+  if (!parsed.success) return { error: 'User not found', ok: false as const };
+
+  const target = parsed.data;
   const store = await cookies();
   store.set(SESSION_COOKIE, target, { path: '/', sameSite: 'lax' });
   updateTag('current-user');
+  return { ok: true as const };
 }
 
 export async function toggleFollow(targetHandle: string) {
   await delay(100, await isSlowEnabled());
-  const target = handleSchema.parse(targetHandle);
+  const parsed = handleSchema.safeParse(targetHandle);
+  if (!parsed.success) return { error: 'User not found', ok: false as const };
+
+  const target = parsed.data;
   const me = await verifyAuth();
   if (target === me) {
-    return { ok: false as const };
+    return { error: "You can't follow yourself", ok: false as const };
   }
+  const user = await prisma.user.findUnique({ select: { handle: true }, where: { handle: target } });
+  if (!user) return { error: 'User not found', ok: false as const };
+
   const existing = await prisma.follow.findUnique({
     where: { followerHandle_targetHandle: { followerHandle: me, targetHandle: target } },
   });

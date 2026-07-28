@@ -6,7 +6,7 @@ import { DropComposer } from '@/features/drop/components/composer';
 import { DropListSkeleton } from '@/features/drop/components/drop';
 import { Feed, DiscoverFeed } from '@/features/drop/components/feed';
 import { FeedTabs } from '@/features/drop/components/feed-tabs';
-import { MAX_FEED_PAGE } from '@/features/drop/drop-queries';
+import { MAX_FEED_PAGE } from '@/features/drop/drop-constants';
 
 function parseTab(value: string | string[] | undefined): 'following' | 'discover' {
   return value === 'discover' ? 'discover' : 'following';

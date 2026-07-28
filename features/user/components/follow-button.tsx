@@ -21,7 +21,8 @@ export function FollowButton({ targetHandle, following: initialFollowing }: Prop
     startTransition(async () => {
       setOptimistic(!following);
       try {
-        await toggleFollow(targetHandle);
+        const result = await toggleFollow(targetHandle);
+        if (!result.ok) toast.error(result.error);
       } catch {
         toast.error('Something went wrong. Try again.');
       }

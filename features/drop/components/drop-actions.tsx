@@ -22,6 +22,7 @@ type Props = {
 
 type OptimisticState = DropUserState & { repostsDelta: number; likesDelta: number };
 type Toggle = 'liked' | 'reposted' | 'bookmarked';
+type ToggleResult = { ok: true } | { ok: false; error: string };
 
 function reduce(state: OptimisticState, toggle: Toggle): OptimisticState {
   switch (toggle) {
@@ -39,7 +40,7 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
   const [bookmarkRemoving, setBookmarkRemoving] = useOptimistic(false);
   const [, startTransition] = useTransition();
 
-  function toggle(field: Toggle, action: () => Promise<unknown>) {
+  function toggle(field: Toggle, action: () => Promise<ToggleResult>) {
     const messages: Record<Toggle, [string, string]> = {
       bookmarked: ['Added to bookmarks', 'Removed from bookmarks'],
       liked: ['Liked', 'Unliked'],
@@ -51,7 +52,11 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
       addOptimistic(field);
       if (field === 'bookmarked' && !willActivate) setBookmarkRemoving(true);
       try {
-        await action();
+        const result = await action();
+        if (!result.ok) {
+          toast.error(result.error);
+          return;
+        }
         if (field !== 'liked') {
           toast.success(willActivate ? messages[field][0] : messages[field][1]);
         }

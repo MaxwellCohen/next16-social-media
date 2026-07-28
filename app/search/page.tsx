@@ -4,8 +4,8 @@ import { EmptyState } from '@/components/ui/empty-state';
 import ErrorBoundary from '@/components/ui/error-boundary';
 import { PageHeader } from '@/components/ui/page-header';
 import { DropListSkeleton } from '@/features/drop/components/drop';
-import { SearchResults } from '@/features/search/components/search-results';
 import { Search } from '@/features/search/components/search';
+import { SearchResults } from '@/features/search/components/search-results';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

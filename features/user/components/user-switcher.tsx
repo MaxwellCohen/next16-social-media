@@ -4,6 +4,7 @@ import * as Ariakit from '@ariakit/react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useOptimistic, useTransition } from 'react';
+import { toast } from 'sonner';
 import { useSWRConfig } from 'swr';
 import { Boundary } from '@/components/internal/boundary';
 import { switchUser } from '@/features/user/user-actions';
@@ -30,7 +31,11 @@ export function UserSwitcher({ currentHandle, users }: Props) {
     if (handle === optimisticHandle) return;
     startTransition(async () => {
       setOptimisticHandle(handle);
-      await switchUser(handle);
+      const result = await switchUser(handle);
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
       router.refresh();
       void mutate(UNREAD_KEY);
     });

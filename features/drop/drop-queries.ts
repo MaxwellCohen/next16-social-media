@@ -3,13 +3,11 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
+import { FEED_PAGE_SIZE } from '@/features/drop/drop-constants';
 import { getCurrentUserHandle } from '@/features/user/user-queries';
 import { prisma } from '@/lib/db';
 import { delay } from '@/lib/utils';
 import { toDrop, type Drop } from '@/types/drop';
-
-const FEED_PAGE_SIZE = 10;
-export const MAX_FEED_PAGE = 20;
 
 export type FeedItem =
   | { kind: 'drop'; drop: Drop; pinnedAt: number }

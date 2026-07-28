@@ -5,7 +5,8 @@ import { LoadMore } from '@/components/ui/load-more';
 import { Paginator } from '@/components/ui/paginator';
 import { Drop, DropListSkeleton } from '@/features/drop/components/drop';
 import { renderDiscoverPage } from '@/features/drop/discover-page-action';
-import { getFeed, MAX_FEED_PAGE } from '@/features/drop/drop-queries';
+import { MAX_FEED_PAGE } from '@/features/drop/drop-constants';
+import { getFeed } from '@/features/drop/drop-queries';
 import type { Route } from 'next';
 
 /*
