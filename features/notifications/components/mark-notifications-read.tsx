@@ -1,15 +1,17 @@
 'use client';
 
-import { use, useEffect } from 'react';
-import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
+import { useEffect } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
+import { fetcher, UNREAD_KEY } from '@/lib/swr';
 
-export function MarkNotificationsRead({ countPromise }: { countPromise: Promise<number> }) {
-  const count = use(countPromise);
-  const { markRead } = useNotificationsBadge();
+export function MarkNotificationsRead() {
+  const { data: count = 0 } = useSWR<number>(UNREAD_KEY, fetcher);
+  const { mutate } = useSWRConfig();
   useEffect(() => {
     if (count > 0) {
-      markRead();
+      void mutate(UNREAD_KEY, 0, { revalidate: false });
+      void fetch('/api/notifications/read', { keepalive: true, method: 'POST' }).catch(() => {});
     }
-  }, [count, markRead]);
+  }, [count, mutate]);
   return null;
 }

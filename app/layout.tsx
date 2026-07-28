@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
+import { SWRConfig, preload } from 'swr';
 import { DemoToolbar } from '@/components/demo/demo-toolbar';
 import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
@@ -13,9 +14,10 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Toaster } from '@/components/toaster';
 import { Crossfade } from '@/components/ui/crossfade';
 import ErrorBoundary from '@/components/ui/error-boundary';
-import { NotificationsBadgeProvider } from '@/features/notifications/components/notifications-badge-provider';
+import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
 import { TrendingTagsList, TrendingTagsListSkeleton, TrendingTagsShell } from '@/features/tag/components/trending-tags';
 import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/features/user/components/who-to-follow';
+import { UNREAD_KEY } from '@/lib/swr';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
@@ -42,13 +44,14 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const unread = preload(UNREAD_KEY, () => getUnreadNotificationCount());
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="flex min-h-[100dvh] flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider>
           <BoundaryProvider>
             <OfflineIndicator />
-            <NotificationsBadgeProvider>
+            <SWRConfig value={{ cacheData: unread }}>
               <AppGrid>
                 <Sidebar />
                 <MainColumn>{children}</MainColumn>
@@ -74,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </RightSidebar>
               </AppGrid>
               <MobileTabBar />
-            </NotificationsBadgeProvider>
+            </SWRConfig>
             <div className="demo-toggles fixed top-4 right-4 z-50 hidden items-start gap-2 sm:flex lg:top-6 lg:right-6">
               <Suspense fallback={null}>
                 <DemoToolbar />

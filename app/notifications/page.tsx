@@ -3,7 +3,6 @@ import { PageHeader } from '@/components/ui/page-header';
 import { RefreshButton } from '@/components/ui/refresh-button';
 import { MarkNotificationsRead } from '@/features/notifications/components/mark-notifications-read';
 import { NotificationList, NotificationListSkeleton } from '@/features/notifications/components/notification-list';
-import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -21,9 +20,7 @@ export default function NotificationsPage() {
       <PageHeader back title="Activity">
         <RefreshButton label="Refresh activity" />
       </PageHeader>
-      <Suspense fallback={null}>
-        <MarkNotificationsRead countPromise={getUnreadNotificationCount()} />
-      </Suspense>
+      <MarkNotificationsRead />
       <Suspense fallback={<NotificationListSkeleton />}>
         <NotificationList />
       </Suspense>

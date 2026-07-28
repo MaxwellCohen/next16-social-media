@@ -1,12 +1,14 @@
 'use client';
 
-import { use } from 'react';
-import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
+import useSWR from 'swr';
+import { fetcher, UNREAD_KEY } from '@/lib/swr';
 
-export function NotificationsBadge({ countPromise }: { countPromise: Promise<number> }) {
-  const count = use(countPromise);
-  const { seen } = useNotificationsBadge();
-  if (seen || count === 0) {
+export function NotificationsBadge() {
+  const { data: count = 0 } = useSWR<number>(UNREAD_KEY, fetcher, {
+    refreshInterval: 15_000,
+    revalidateOnFocus: true,
+  });
+  if (count === 0) {
     return null;
   }
   return (

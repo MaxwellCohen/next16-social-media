@@ -4,9 +4,10 @@ import * as Ariakit from '@ariakit/react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useOptimistic, useTransition } from 'react';
+import { useSWRConfig } from 'swr';
 import { Boundary } from '@/components/internal/boundary';
-import { useNotificationsBadge } from '@/features/notifications/components/notifications-badge-provider';
 import { switchUser } from '@/features/user/user-actions';
+import { UNREAD_KEY } from '@/lib/swr';
 import { cn } from '@/lib/utils';
 
 type User = { handle: string; displayName: string; avatarColor: string };
@@ -18,7 +19,7 @@ type Props = {
 
 export function UserSwitcher({ currentHandle, users }: Props) {
   const router = useRouter();
-  const { reset } = useNotificationsBadge();
+  const { mutate } = useSWRConfig();
   const [isPending, startTransition] = useTransition();
   const [optimisticHandle, setOptimisticHandle] = useOptimistic(currentHandle);
   const selected = users.find(u => u.handle === optimisticHandle) ?? users[0];
@@ -29,9 +30,9 @@ export function UserSwitcher({ currentHandle, users }: Props) {
     if (handle === optimisticHandle) return;
     startTransition(async () => {
       setOptimisticHandle(handle);
-      reset();
       await switchUser(handle);
       router.refresh();
+      void mutate(UNREAD_KEY);
     });
   }
 
