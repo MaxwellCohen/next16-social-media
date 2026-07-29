@@ -107,13 +107,7 @@ async function getDropCached(id: string, slow: boolean) {
 }
 
 export async function getReplies(dropId: string) {
-  return getRepliesCached(dropId, await isSlowEnabled());
-}
-
-async function getRepliesCached(dropId: string, slow: boolean) {
-  'use cache';
-  cacheTag(`replies-${dropId}`);
-  await delay(1800, slow);
+  await delay(1800, await isSlowEnabled());
   const parent = await prisma.drop.findUnique({
     select: { authorHandle: true },
     where: { id: dropId },
@@ -161,13 +155,7 @@ async function getDropsByAuthorCached(handle: string, slow: boolean): Promise<Fe
 }
 
 export async function getRepliesByAuthor(handle: string) {
-  return getRepliesByAuthorCached(handle, await isSlowEnabled());
-}
-
-async function getRepliesByAuthorCached(handle: string, slow: boolean) {
-  'use cache';
-  cacheTag('drops', `user-replies-${handle}`);
-  await delay(400, slow);
+  await delay(400, await isSlowEnabled());
   const rows = await prisma.drop.findMany({
     orderBy: { createdAt: 'desc' },
     where: { authorHandle: handle, parentId: { not: null } },
@@ -201,7 +189,7 @@ async function getBookmarkedDropsForHandle(handle: string, slow: boolean) {
   const rows = await prisma.bookmark.findMany({
     include: { drop: true },
     orderBy: { createdAt: 'desc' },
-    where: { drop: { parentId: null }, userHandle: handle },
+    where: { userHandle: handle },
   });
   return rows.map(r => toDrop(r.drop));
 }

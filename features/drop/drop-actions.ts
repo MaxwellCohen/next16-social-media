@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidateTag, updateTag } from 'next/cache';
+import { refresh, revalidateTag, updateTag } from 'next/cache';
 import { z } from 'zod';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
 import { moderateWithAI } from '@/features/drop/drop-spam-filter';
@@ -126,8 +126,7 @@ export async function postThread(formData: FormData) {
       prisma.drop.update({ data: { replyCount: { increment: rest.length } }, where: { id: first.id } }),
     ]);
     updateTag(`drop-${first.id}`);
-    updateTag(`replies-${first.id}`);
-    updateTag(`user-replies-${me}`);
+    refresh();
   }
 
   updateTag('feed');
@@ -183,8 +182,7 @@ export async function postReply(parentId: string, formData: FormData) {
     revalidateTag(`notifications:${parent.authorHandle}`, 'max');
   }
   updateTag(`drop-${id}`);
-  updateTag(`replies-${id}`);
-  updateTag(`user-replies-${me}`);
+  refresh();
   return { ok: true as const, reply };
 }
 
