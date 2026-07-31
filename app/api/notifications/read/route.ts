@@ -10,7 +10,7 @@ export async function POST() {
     where: { readAt: null, recipientHandle: me },
   });
   if (result.count > 0) {
-    revalidateTag(`notifications:${me}`, 'max');
+    revalidateTag(`notifications:${me}`, { expire: 0 });
   }
   return new NextResponse(null, { status: 204 });
 }
