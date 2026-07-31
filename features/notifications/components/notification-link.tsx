@@ -10,9 +10,20 @@ type Props = React.ComponentProps<typeof PrefetchLink> & {
   unread: boolean;
 };
 
-export function NotificationLink({ className, unread, ...props }: Props) {
+export function NotificationLink({ className, onAnimationEnd, unread, ...props }: Props) {
   const { data: unreadCount = 0 } = useSWR<number>(UNREAD_KEY, fetcher);
-  const [flash] = useState(unread && unreadCount > 0);
+  const [flash, setFlash] = useState(unread && unreadCount > 0);
 
-  return <PrefetchLink {...props} className={cn(className, flash && 'flash-in')} />;
+  return (
+    <PrefetchLink
+      {...props}
+      className={cn(className, flash && 'flash-in')}
+      onAnimationEnd={event => {
+        onAnimationEnd?.(event);
+        if (event.animationName === 'flash-in') {
+          setFlash(false);
+        }
+      }}
+    />
+  );
 }
