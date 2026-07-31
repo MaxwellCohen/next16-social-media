@@ -5,10 +5,12 @@ import { prisma } from '@/lib/db';
 
 export async function POST() {
   const me = await verifyAuth();
-  await prisma.notification.updateMany({
+  const result = await prisma.notification.updateMany({
     data: { readAt: new Date() },
     where: { readAt: null, recipientHandle: me },
   });
-  revalidateTag(`notifications:${me}`, 'max');
+  if (result.count > 0) {
+    revalidateTag(`notifications:${me}`, 'max');
+  }
   return new NextResponse(null, { status: 204 });
 }
