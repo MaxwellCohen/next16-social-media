@@ -1,9 +1,9 @@
 import { Heart, MessageCircle, Repeat2, UserPlus } from 'lucide-react';
 import { ViewTransition } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
-import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
+import { NotificationLink } from '@/features/notifications/components/notification-link';
 import { getNotifications } from '@/features/notifications/notifications-queries';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { getUserByHandle } from '@/features/user/user-queries';
@@ -52,9 +52,10 @@ async function NotificationRow({ notification }: { notification: Notification })
     : (`/u/${notification.actorHandle}` as Route);
 
   return (
-    <PrefetchLink
+    <NotificationLink
       href={href}
-      className={`border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-start gap-3 border-b px-4 py-4 transition-colors sm:px-5 ${notification.read ? '' : 'flash-in'}`}
+      className="border-divider/70 dark:border-divider-dark/70 hover:bg-card dark:hover:bg-card-dark flex items-start gap-3 border-b px-4 py-4 transition-colors sm:px-5"
+      unread={!notification.read}
     >
       <Icon className={`mt-1 h-5 w-5 shrink-0 ${COLORS[notification.kind]}`} aria-hidden />
       <UserAvatar handle={notification.actorHandle} size="md" />
@@ -68,7 +69,7 @@ async function NotificationRow({ notification }: { notification: Notification })
           <RelativeTime date={notification.createdAt} />
         </span>
       </div>
-    </PrefetchLink>
+    </NotificationLink>
   );
 }
 
