@@ -2,10 +2,10 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Search page (/search)', () => {
-  // Static shell (goto): the search input is prerendered into the shell; query results stream behind Suspense.
+  // Initial page load (MPA): the search input is prerendered; query results stream behind Suspense.
   // (No runtime-prefetch reveal case here — unlike the feed pages, no link carries a `?q=`, and the empty
   //  state is static, so there's no runtime-prefetched result set to assert.)
-  test('static shell — search present, results absent', async ({ page }) => {
+  test('initial page load (MPA) — search present, results absent', async ({ page }) => {
     await page.goto('/');
 
     await instant(page, async () => {

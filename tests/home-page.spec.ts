@@ -2,8 +2,8 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page (/)', () => {
-  // Static shell (goto): the feed streams behind Suspense, so drops are absent under instant().
-  test('static shell — feed absent', async ({ page }) => {
+  // Initial page load (MPA): the feed streams behind Suspense, so drops are absent under instant().
+  test('initial page load (MPA) — feed absent', async ({ page }) => {
     await page.goto('/bookmarks');
 
     await instant(page, async () => {
@@ -12,14 +12,15 @@ test.describe('Home page (/)', () => {
     });
   });
 
-  // Runtime prefetch (client nav): prefetch={true} resolves searchParams, so the feed is present under instant().
-  test('runtime prefetch — feed revealed', async ({ page }) => {
+  // Client navigation (SPA): prefetch={true} resolves searchParams, so the feed is present under instant().
+  test('client navigation (SPA) — runtime-prefetched feed revealed', async ({ page }) => {
     await page.goto('/bookmarks');
     const link = page.locator('aside a[aria-label="Home"]').first();
     await link.waitFor({ state: 'visible', timeout: 15000 });
 
     await instant(page, async () => {
       await link.click();
+      await page.waitForURL(url => url.pathname === '/');
       await expect(page.locator('main article').first()).toBeVisible();
     });
   });

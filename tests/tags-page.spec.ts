@@ -2,9 +2,8 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Tags page (/tag)', () => {
-  // The header is static, so it's in the shell. The tag list reads the slow-mode cookie, so it's
-  // dynamic — absent under instant() and streamed in after, like the cookie-gated feeds.
-  test('static shell — header present, tag list streams in', async ({ page }) => {
+  // Initial page load (MPA): the header is prerendered, while the cookie-gated tag list streams in.
+  test('initial page load (MPA) — header present, tag list streams in', async ({ page }) => {
     await page.goto('/');
 
     await instant(page, async () => {
