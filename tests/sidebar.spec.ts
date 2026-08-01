@@ -2,9 +2,7 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Sidebar', () => {
-  // Initial page load (MPA): nav links are baked into the prerendered UI and present under instant().
-  // Trending tags read the slow-mode cookie, so they're dynamic and stream in after, like the feeds.
-  test('initial page load (MPA) — nav links present, trending streams in', async ({ page }) => {
+  test('initial page load shows nav links while trending content streams', async ({ page }) => {
     await page.goto('/');
 
     await instant(page, async () => {

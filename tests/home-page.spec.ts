@@ -2,8 +2,7 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page (/)', () => {
-  // Initial page load (MPA): the feed streams behind Suspense, so drops are absent under instant().
-  test('initial page load (MPA) — feed absent', async ({ page }) => {
+  test('initial page load shows the shell without the feed', async ({ page }) => {
     await page.goto('/bookmarks');
 
     await instant(page, async () => {
@@ -12,8 +11,7 @@ test.describe('Home page (/)', () => {
     });
   });
 
-  // Client navigation (SPA): prefetch={true} resolves searchParams, so the feed is present under instant().
-  test('client navigation (SPA) — runtime-prefetched feed revealed', async ({ page }) => {
+  test('client navigation shows the runtime-prefetched feed', async ({ page }) => {
     await page.goto('/bookmarks');
     const link = page.locator('aside a[aria-label="Home"]').first();
     await link.waitFor({ state: 'visible', timeout: 15000 });

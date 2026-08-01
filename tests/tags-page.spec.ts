@@ -2,8 +2,7 @@ import { instant } from '@next/playwright';
 import { test, expect } from '@playwright/test';
 
 test.describe('Tags page (/tag)', () => {
-  // Initial page load (MPA): the header is prerendered, while the cookie-gated tag list streams in.
-  test('initial page load (MPA) — header present, tag list streams in', async ({ page }) => {
+  test('initial page load shows the header while the tag list streams', async ({ page }) => {
     await page.goto('/');
 
     await instant(page, async () => {
