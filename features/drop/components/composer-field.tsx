@@ -26,6 +26,7 @@ export function ComposerField({ avatar, placeholder, autoFocus, onRemove, onFocu
         <textarea
           name="body"
           ref={ref}
+          data-autofocus={autoFocus ? true : undefined}
           maxLength={1000}
           rows={3}
           aria-label="Drop body"
