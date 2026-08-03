@@ -23,13 +23,13 @@ export function Modal({ store, title, initialFocus, headerContent, children }: P
             style={{ viewTransitionName: 'modal-backdrop' }}
           />
         }
-        className="border-divider dark:border-divider-dark fixed top-16 left-1/2 z-50 flex max-h-[calc(100dvh-5rem)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 flex-col rounded-2xl border bg-white shadow-2xl outline-none dark:bg-black"
+        className="dark:border-divider-dark border-divider fixed inset-0 z-50 flex h-dvh max-h-dvh w-full flex-col bg-white outline-none sm:inset-auto sm:top-16 sm:left-1/2 sm:h-auto sm:max-h-[calc(100dvh-5rem)] sm:w-[calc(100%-2rem)] sm:max-w-xl sm:-translate-x-1/2 sm:rounded-2xl sm:border sm:shadow-2xl dark:bg-black"
         style={{ viewTransitionName: 'modal' }}
         unmountOnHide
         hideOnInteractOutside={false}
         initialFocus={initialFocus}
       >
-        <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3">
+        <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-3">
           <Ariakit.DialogDismiss
             aria-label="Close"
             className="text-gray -ml-1.5 rounded-full p-1 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-white"
