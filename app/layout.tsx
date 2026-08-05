@@ -15,8 +15,8 @@ import { Toaster } from '@/components/toaster';
 import { Crossfade } from '@/components/ui/crossfade';
 import ErrorBoundary from '@/components/ui/error-boundary';
 import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
-import { TrendingTagsList, TrendingTagsListSkeleton, TrendingTagsShell } from '@/features/tag/components/trending-tags';
-import { WhoToFollowList, WhoToFollowListSkeleton, WhoToFollowShell } from '@/features/user/components/who-to-follow';
+import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/trending-tags';
+import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/who-to-follow';
 import { UNREAD_KEY } from '@/lib/swr';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -56,24 +56,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Sidebar />
                 <MainColumn>{children}</MainColumn>
                 <RightSidebar>
-                  <TrendingTagsShell>
-                    <ErrorBoundary title="Tags unavailable" compact>
-                      <Suspense fallback={<TrendingTagsListSkeleton />}>
-                        <Crossfade>
-                          <TrendingTagsList />
-                        </Crossfade>
-                      </Suspense>
-                    </ErrorBoundary>
-                  </TrendingTagsShell>
-                  <WhoToFollowShell>
-                    <ErrorBoundary title="No suggestions" compact>
-                      <Suspense fallback={<WhoToFollowListSkeleton />}>
-                        <Crossfade>
-                          <WhoToFollowList />
-                        </Crossfade>
-                      </Suspense>
-                    </ErrorBoundary>
-                  </WhoToFollowShell>
+                  <ErrorBoundary title="Tags unavailable" compact>
+                    <Suspense fallback={<TrendingTagsSkeleton />}>
+                      <Crossfade>
+                        <TrendingTags />
+                        <ErrorBoundary title="No suggestions" compact>
+                          <Suspense fallback={<WhoToFollowSkeleton />}>
+                            <Crossfade>
+                              <WhoToFollow />
+                            </Crossfade>
+                          </Suspense>
+                        </ErrorBoundary>
+                      </Crossfade>
+                    </Suspense>
+                  </ErrorBoundary>
                 </RightSidebar>
               </AppGrid>
               <MobileTabBar />
