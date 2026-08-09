@@ -4,7 +4,7 @@
 
 # Next 16 Social Media "Drop"
 
-A dev-flavored social network that demonstrates [Instant Navigations](https://preview.nextjs.org/docs/app/guides/instant-navigation) in the [Next.js 16 preview](https://nextjs.org/blog/next-16-3-instant-navigations).
+A dev-flavored social network that demonstrates [Instant Navigations](https://nextjs.org/docs/app/guides/instant-navigation) in [Next.js 16.3](https://nextjs.org/blog/next-16-3-instant-navigations).
 
 [**Live demo →**](https://next16-social-media.vercel.app/)
 
@@ -16,10 +16,10 @@ The architecture follows the [Next.js App Architecture](https://github.com/auror
 
 ## Features
 
-- **[Cache Components](https://preview.nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)** cache each query with `'use cache'`, name the data with `cacheTag`, and set its lifetime with `cacheLife`, so repeated reads come from the cache until a tag is invalidated. Per-user reads use [`'use cache: private'`](https://preview.nextjs.org/docs/app/api-reference/directives/use-cache-private).
-- **[Partial Prefetching](https://preview.nextjs.org/docs/app/guides/adopting-partial-prefetching)** prefetches the shared App Shell of links as they enter the viewport, so navigation commits instantly and the data streams in behind it.
-- **[Runtime prefetching](https://preview.nextjs.org/docs/app/guides/runtime-prefetching)** lets a link prefetch a route's per-request data with `<Link prefetch={true}>`, which resolves `searchParams` and dynamic `params` ahead of the click.
-- **[Hover-triggered prefetch](https://preview.nextjs.org/docs/app/guides/prefetching#hover-triggered-prefetch)** defers a link's runtime prefetch until the pointer or focus reaches it, so a long list of tags does not prefetch every destination on render.
+- **[Cache Components](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)** cache each query with `'use cache'`, name the data with `cacheTag`, and set its lifetime with `cacheLife`, so repeated reads come from the cache until a tag is invalidated. Per-user reads use [`'use cache: private'`](https://nextjs.org/docs/app/api-reference/directives/use-cache-private).
+- **[Partial Prefetching](https://nextjs.org/docs/app/guides/adopting-partial-prefetching)** prefetches the shared App Shell of links as they enter the viewport, so navigation commits instantly and the data streams in behind it.
+- **[Runtime prefetching](https://nextjs.org/docs/app/guides/runtime-prefetching)** lets a link prefetch a route's per-request data with `<Link prefetch={true}>`, which resolves `searchParams` and dynamic `params` ahead of the click.
+- **[Hover-triggered prefetch](https://nextjs.org/docs/app/guides/prefetching#hover-triggered-prefetch)** defers a link's runtime prefetch until the pointer or focus reaches it, so a long list of tags does not prefetch every destination on render.
 - **[Server Functions](https://nextjs.org/docs/app/getting-started/mutating-data)** run mutations such as posting a drop or following someone on the server, and invalidate only the tags they change with [`updateTag`](https://nextjs.org/docs/app/api-reference/functions/updateTag), which re-prefetches the affected routes so they stay instant and reflect the change.
 - **[React Compiler](https://react.dev/learn/react-compiler)** memoizes components and hooks automatically, so the code needs no manual `useMemo` or `useCallback`.
 - **[View Transitions](https://nextjs.org/docs/app/guides/view-transitions)** animate the tab underline as a shared element, transition rows as the lists change, and cross-fade content as it streams in from Suspense.
@@ -51,7 +51,7 @@ The schema is otherwise identical, so the rest of the app behaves the same as pr
 
 ## Testing
 
-The end-to-end tests use [`@next/playwright`](https://nextjs.org/docs/app/guides/testing/playwright) with the [`instant()`](https://preview.nextjs.org/docs/app/api-reference/file-conventions/route-segment-config/instant) API to assert that loading states appear and that navigations stay instant.
+The end-to-end tests use [`@next/playwright`](https://nextjs.org/docs/app/guides/testing/playwright) with the [`instant()`](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config/instant) API to assert that loading states appear and that navigations stay instant.
 
 ```bash
 pnpm test:e2e
