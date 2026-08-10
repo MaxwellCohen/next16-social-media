@@ -30,6 +30,15 @@ export function Sidebar() {
           <DropMark size={28} className="text-black dark:text-white" />
           <span className="hidden lg:inline">drop</span>
         </PrefetchLink>
+        <a
+          href="https://github.com/aurorascharff/next16-social-media"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray hidden rounded-full p-1.5 transition-colors hover:text-black lg:inline-flex dark:hover:text-white"
+          aria-label="View source on GitHub"
+        >
+          <GitHubIcon className="size-4" />
+        </a>
       </div>
       <div className="hidden lg:block">
         <ErrorBoundary title="Your profile is offline" compact>
@@ -90,17 +99,8 @@ export function Sidebar() {
 
 function SidebarFooter() {
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="px-2">
       <ThemeToggle variant="inline" />
-      <a
-        href="https://github.com/aurorascharff/next16-social-media"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray rounded-full p-1.5 transition-colors hover:text-black dark:hover:text-white"
-        aria-label="View source on GitHub"
-      >
-        <GitHubIcon className="h-5 w-5" />
-      </a>
     </div>
   );
 }
