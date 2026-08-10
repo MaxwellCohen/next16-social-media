@@ -7,12 +7,13 @@ type Props = {
   body: string;
   compact?: boolean;
   detail?: boolean;
+  truncate?: boolean;
 };
 
-export function DropBody({ body, compact = false, detail = false }: Props) {
+export function DropBody({ body, compact = false, detail = false, truncate = false }: Props) {
   const segments = splitCode(body);
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex min-w-0 flex-col gap-2">
       {segments.map((segment, i) => {
         if (segment.type === 'code') {
           if (compact) return null;
@@ -27,8 +28,8 @@ export function DropBody({ body, compact = false, detail = false }: Props) {
             key={i}
             className={
               detail
-                ? 'text-[17px] leading-relaxed text-black dark:text-white'
-                : 'text-[15px] leading-snug text-black dark:text-white'
+                ? 'wrap-anywhere text-[17px] leading-relaxed text-black dark:text-white'
+                : `wrap-anywhere text-[15px] leading-snug text-black dark:text-white ${truncate ? 'line-clamp-5' : ''}`
             }
           >
             {renderText(segment.text)}

@@ -20,6 +20,8 @@ type Props = {
 
 export async function Drop({ drop, compact = false, repostedBy }: Props) {
   const interactions = await getUserDropInteractions();
+  const href = `/drop/${drop.parentId ?? drop.id}` as Route;
+  const isLong = drop.body.length > 280;
   const userState = {
     bookmarked: interactions.bookmarked.has(drop.id),
     liked: interactions.liked.has(drop.id),
@@ -28,7 +30,7 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
   return (
     <article className="group/drop border-divider/70 dark:border-divider-dark/70 hover:bg-card/40 dark:hover:bg-card-dark/40 relative border-b transition-colors">
       <PrefetchLink
-        href={`/drop/${drop.parentId ?? drop.id}` as Route}
+        href={href}
         aria-label="Open drop"
         className="absolute inset-0 z-10"
       />
@@ -49,7 +51,12 @@ export async function Drop({ drop, compact = false, repostedBy }: Props) {
               <RelativeTime date={drop.createdAt} />
             </span>
           </header>
-          <DropBody body={drop.body} compact={compact} />
+          <DropBody body={drop.body} compact={compact} truncate={isLong} />
+          {isLong ? (
+            <PrefetchLink href={href} className="text-accent relative z-20 w-fit text-sm hover:underline">
+              Show more
+            </PrefetchLink>
+          ) : null}
           {drop.embeddedCode && !compact ? (
             <div className="relative z-20">
               <CodeBlock lang={drop.embeddedCode.lang} code={drop.embeddedCode.code} />
