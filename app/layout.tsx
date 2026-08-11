@@ -22,6 +22,10 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const viewport: Viewport = {
+  themeColor: [
+    { color: '#ffffff', media: '(prefers-color-scheme: light)' },
+    { color: '#000000', media: '(prefers-color-scheme: dark)' },
+  ],
   viewportFit: 'cover',
 };
 
@@ -92,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 function AppGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
+    <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] sm:grid-cols-[4.5rem_minmax(0,1fr)] lg:grid-cols-[17.5rem_minmax(0,1fr)] xl:grid-cols-[17.5rem_minmax(0,38rem)_20rem]">
       {children}
     </div>
   );
