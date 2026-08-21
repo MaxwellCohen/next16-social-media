@@ -10,7 +10,7 @@ export async function ProfileHeader({ handle }: { handle: string }) {
   return (
     <header className="border-divider/70 dark:border-divider-dark/70 border-b">
       <div
-        className={cn('h-32 w-full bg-gradient-to-br opacity-30 sm:h-40 dark:opacity-40', user.avatarColor)}
+        className={cn('h-32 w-full bg-linear-to-br opacity-30 sm:h-40 dark:opacity-40', user.avatarColor)}
         aria-hidden
       />
       <div className="px-5 pb-4">

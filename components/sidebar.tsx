@@ -1,5 +1,6 @@
 import { Bell, Bookmark, Home, Search, User } from 'lucide-react';
 import { Suspense } from 'react';
+import { getThemePreference } from '@/components/theme/theme-queries';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { DropMark } from '@/components/ui/drop-mark';
 import ErrorBoundary from '@/components/ui/error-boundary';
@@ -8,9 +9,9 @@ import { NavLinkSkeleton } from '@/components/ui/nav-link';
 import { NavLinkSegments as NavLink } from '@/components/ui/nav-link-segments';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
-import { NewDropModal } from '@/features/drop/components/composer-modal';
+import { NewDropSidebarButton } from '@/features/drop/components/composer';
 import { NotificationsBadge } from '@/features/notifications/components/notifications-badge';
-import { CurrentUserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
+import { UserAvatarSkeleton } from '@/features/user/components/user-avatar';
 import { UserSwitcher } from '@/features/user/components/user-switcher';
 import { getAllUsers, getCurrentUser, getCurrentUserHandle } from '@/features/user/user-queries';
 import type { Route } from 'next';
@@ -63,7 +64,9 @@ export function Sidebar() {
         <NavLink href="/notifications" aria-label="Activity" className={sidebarLinkClass}>
           <Bell className="h-5 w-5" />
           <span className="hidden lg:inline">Activity</span>
-          <NotificationsBadge />
+          <Suspense fallback={null}>
+            <NotificationsBadge />
+          </Suspense>
         </NavLink>
         <Suspense
           fallback={
@@ -81,26 +84,23 @@ export function Sidebar() {
           ))}
         </Suspense>
         <div className="hidden pt-2 lg:block">
-          <NewDropModal
-            avatar={
-              <Suspense fallback={<UserAvatarSkeleton size="md" />}>
-                <CurrentUserAvatar />
-              </Suspense>
-            }
-          />
+          <NewDropSidebarButton />
         </div>
       </nav>
       <div className="hidden lg:block">
-        <SidebarFooter />
+        <Suspense fallback={null}>
+          <SidebarFooter />
+        </Suspense>
       </div>
     </aside>
   );
 }
 
-function SidebarFooter() {
+async function SidebarFooter() {
+  const theme = await getThemePreference();
   return (
     <div className="px-2">
-      <ThemeToggle variant="inline" />
+      <ThemeToggle variant="inline" theme={theme} />
     </div>
   );
 }

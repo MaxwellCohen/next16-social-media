@@ -10,10 +10,12 @@ import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { NavLinkScript } from '@/components/scripts/nav-link-script';
 import { Sidebar } from '@/components/sidebar';
-import { ThemeProvider } from '@/components/theme/theme-provider';
+import { getThemePreference, themeHtmlClass } from '@/components/theme/theme-queries';
+import { ThemeScript } from '@/components/theme/theme-script';
 import { Toaster } from '@/components/toaster';
 import { Crossfade } from '@/components/ui/crossfade';
 import ErrorBoundary from '@/components/ui/error-boundary';
+import { NewDropDialogHost } from '@/features/drop/components/composer';
 import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
 import { TrendingTags, TrendingTagsSkeleton } from '@/features/tag/components/trending-tags';
 import { WhoToFollow, WhoToFollowSkeleton } from '@/features/user/components/who-to-follow';
@@ -47,46 +49,53 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const unread = preload(UNREAD_KEY, () => getUnreadNotificationCount());
+  const theme = await getThemePreference();
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="flex min-h-[100dvh] flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
-        <ThemeProvider>
-          <BoundaryProvider>
-            <OfflineIndicator />
-            <SWRConfig value={{ cacheData: unread }}>
-              <AppGrid>
-                <Sidebar />
-                <MainColumn>{children}</MainColumn>
-                <RightSidebar>
-                  <ErrorBoundary title="Tags unavailable" compact>
-                    <Suspense fallback={<TrendingTagsSkeleton />}>
-                      <Crossfade>
-                        <TrendingTags />
-                        <ErrorBoundary title="No suggestions" compact>
-                          <Suspense fallback={<WhoToFollowSkeleton />}>
-                            <Crossfade>
-                              <WhoToFollow />
-                            </Crossfade>
-                          </Suspense>
-                        </ErrorBoundary>
-                      </Crossfade>
-                    </Suspense>
-                  </ErrorBoundary>
-                </RightSidebar>
-              </AppGrid>
-              <MobileTabBar />
-            </SWRConfig>
-            <div className="demo-toggles fixed top-4 right-4 z-50 hidden items-start gap-2 sm:flex lg:top-6 lg:right-6">
-              <Suspense fallback={null}>
-                <DemoToolbar />
-              </Suspense>
-            </div>
-            <Toaster />
-            <NavLinkScript />
-          </BoundaryProvider>
-        </ThemeProvider>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} ${themeHtmlClass(theme)}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <ThemeScript theme={theme} />
+      </head>
+      <body className="flex min-h-dvh flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
+        <BoundaryProvider>
+          <OfflineIndicator />
+          <SWRConfig value={{ cacheData: unread }}>
+            <AppGrid>
+              <Sidebar />
+              <MainColumn>{children}</MainColumn>
+              <RightSidebar>
+                <ErrorBoundary title="Tags unavailable" compact>
+                  <Suspense fallback={<TrendingTagsSkeleton />}>
+                    <Crossfade>
+                      <TrendingTags />
+                      <ErrorBoundary title="No suggestions" compact>
+                        <Suspense fallback={<WhoToFollowSkeleton />}>
+                          <Crossfade>
+                            <WhoToFollow />
+                          </Crossfade>
+                        </Suspense>
+                      </ErrorBoundary>
+                    </Crossfade>
+                  </Suspense>
+                </ErrorBoundary>
+              </RightSidebar>
+            </AppGrid>
+            <MobileTabBar />
+          </SWRConfig>
+          <div className="demo-toggles fixed top-4 right-4 z-50 hidden items-start gap-2 sm:flex lg:top-6 lg:right-6">
+            <Suspense fallback={null}>
+              <DemoToolbar />
+            </Suspense>
+          </div>
+          <Toaster />
+          <NavLinkScript />
+          <NewDropDialogHost />
+        </BoundaryProvider>
         <Analytics />
         <SpeedInsights />
       </body>

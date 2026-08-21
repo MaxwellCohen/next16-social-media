@@ -22,7 +22,7 @@ export async function UserAvatar({ handle, size = 'md', className }: Props) {
     <div
       aria-hidden
       className={cn(
-        'flex items-center justify-center rounded-full bg-gradient-to-br font-semibold text-white uppercase shadow-sm',
+        'flex items-center justify-center rounded-full bg-linear-to-br font-semibold text-white uppercase shadow-sm',
         user.avatarColor,
         sizes[size],
         className,

@@ -1,29 +1,33 @@
 'use client';
 
-import { useActionState, useRef, type ReactNode } from 'react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
-import { postReply } from '@/features/drop/drop-actions';
+import { postReply, type ComposerState } from '@/features/drop/drop-actions';
 
 type Props = {
   dropId: string;
   avatar: ReactNode;
 };
 
-const INITIAL = { error: null as string | null };
+const INITIAL: ComposerState = { error: null, status: 'idle' };
 
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(async (_: typeof INITIAL, formData: FormData) => {
-    const result = await postReply(dropId, formData);
-    if (!result.ok) {
-      toast.error(result.error);
-    } else {
-      toast.success('Replied!');
+  const [state, formAction] = useActionState(postReply.bind(null, dropId), INITIAL);
+
+  useEffect(() => {
+    if (state.status === 'error' && state.error) {
+      toast.error(state.error);
+      return;
     }
-    return { error: result.ok ? null : result.error };
-  }, INITIAL);
+    if (state.status === 'success') {
+      toast.success('Replied!');
+      const body = formRef.current?.elements.namedItem('body');
+      if (body instanceof HTMLTextAreaElement) body.value = '';
+    }
+  }, [state]);
 
   return (
     <Boundary label="ReplyForm">

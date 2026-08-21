@@ -7,6 +7,7 @@ import { Boundary } from '@/components/internal/boundary';
 import { IconButton } from '@/components/ui/icon-button';
 import { toggleBookmark, toggleLike, toggleRepost } from '@/features/drop/drop-actions';
 import type { DropUserState } from '@/features/user/user-queries';
+import { formAction } from '@/lib/form-action';
 import { cn, formatCount } from '@/lib/utils';
 import type { Route } from 'next';
 
@@ -78,41 +79,53 @@ export function DropActions({ dropId, parentId, replies, reposts, likes, userSta
             <span>{formatCount(replies)}</span>
           </IconButton>
         )}
-        <IconButton
-          label="Repost"
-          icon={<Repeat2 className={cn('h-4 w-4', optimistic.reposted && 'fill-current')} />}
-          active={optimistic.reposted}
-          activeColor="text-success"
-          hoverColor="hover:bg-success/10 hover:text-success"
-          onClick={() => {
-            toggle('reposted', () => toggleRepost(dropId));
-          }}
-        >
-          <span>{formatCount(reposts + optimistic.repostsDelta)}</span>
-        </IconButton>
-        <IconButton
-          label="Like"
-          icon={<Heart className={cn('h-4 w-4', optimistic.liked && 'fill-current')} />}
-          active={optimistic.liked}
-          activeColor="text-danger"
-          hoverColor="hover:bg-danger/10 hover:text-danger"
-          onClick={() => {
-            toggle('liked', () => toggleLike(dropId));
-          }}
-        >
-          <span>{formatCount(likes + optimistic.likesDelta)}</span>
-        </IconButton>
-        <IconButton
-          label={optimistic.bookmarked ? 'Saved' : 'Save for later'}
-          icon={<Bookmark className={cn('h-4 w-4', optimistic.bookmarked && 'fill-current')} />}
-          active={optimistic.bookmarked}
-          activeColor="text-accent"
-          hoverColor="hover:bg-accent/10 hover:text-accent"
-          removing={bookmarkRemoving}
-          onClick={() => {
-            toggle('bookmarked', () => toggleBookmark(dropId));
-          }}
-        />
+        <form action={formAction(toggleRepost, dropId)}>
+          <IconButton
+            type="submit"
+            label="Repost"
+            icon={<Repeat2 className={cn('h-4 w-4', optimistic.reposted && 'fill-current')} />}
+            active={optimistic.reposted}
+            activeColor="text-success"
+            hoverColor="hover:bg-success/10 hover:text-success"
+            onClick={e => {
+              e.preventDefault();
+              toggle('reposted', () => toggleRepost(dropId));
+            }}
+          >
+            <span>{formatCount(reposts + optimistic.repostsDelta)}</span>
+          </IconButton>
+        </form>
+        <form action={formAction(toggleLike, dropId)}>
+          <IconButton
+            type="submit"
+            label="Like"
+            icon={<Heart className={cn('h-4 w-4', optimistic.liked && 'fill-current')} />}
+            active={optimistic.liked}
+            activeColor="text-danger"
+            hoverColor="hover:bg-danger/10 hover:text-danger"
+            onClick={e => {
+              e.preventDefault();
+              toggle('liked', () => toggleLike(dropId));
+            }}
+          >
+            <span>{formatCount(likes + optimistic.likesDelta)}</span>
+          </IconButton>
+        </form>
+        <form action={formAction(toggleBookmark, dropId)}>
+          <IconButton
+            type="submit"
+            label={optimistic.bookmarked ? 'Saved' : 'Save for later'}
+            icon={<Bookmark className={cn('h-4 w-4', optimistic.bookmarked && 'fill-current')} />}
+            active={optimistic.bookmarked}
+            activeColor="text-accent"
+            hoverColor="hover:bg-accent/10 hover:text-accent"
+            removing={bookmarkRemoving}
+            onClick={e => {
+              e.preventDefault();
+              toggle('bookmarked', () => toggleBookmark(dropId));
+            }}
+          />
+        </form>
       </div>
     </Boundary>
   );

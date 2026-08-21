@@ -1,27 +1,13 @@
-'use client';
-
 import { Monitor, Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { useSyncExternalStore } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { setTheme } from '@/components/theme/theme-actions';
+import type { ThemePreference } from '@/components/theme/theme-constants';
+import { formAction } from '@/lib/form-action';
 import { cn } from '@/lib/utils';
 
-type Props = { variant?: 'pill' | 'inline' };
+type Props = { variant?: 'pill' | 'inline'; theme?: ThemePreference };
 
-const subscribe = () => () => {};
-function useIsMounted() {
-  return useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-}
-
-export function ThemeToggle({ variant = 'pill' }: Props) {
-  const { theme, setTheme } = useTheme();
-  const mounted = useIsMounted();
-  const active = mounted ? theme : undefined;
-
+export function ThemeToggle({ variant = 'pill', theme = 'system' }: Props) {
   const wrapperClass =
     variant === 'inline'
       ? 'inline-flex items-center gap-0.5'
@@ -30,45 +16,46 @@ export function ThemeToggle({ variant = 'pill' }: Props) {
   return (
     <Boundary label="ThemeToggle">
       <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass}>
-        <ToggleButton active={active === 'light'} label="Light mode" onClick={() => setTheme('light')}>
+        <ThemeButton active={theme === 'light'} label="Light mode" theme="light">
           <Sun className="size-4" />
-        </ToggleButton>
-        <ToggleButton active={active === 'dark'} label="Dark mode" onClick={() => setTheme('dark')}>
+        </ThemeButton>
+        <ThemeButton active={theme === 'dark'} label="Dark mode" theme="dark">
           <Moon className="size-4" />
-        </ToggleButton>
-        <ToggleButton active={active === 'system'} label="System theme" onClick={() => setTheme('system')}>
+        </ThemeButton>
+        <ThemeButton active={theme === 'system'} label="System theme" theme="system">
           <Monitor className="size-4" />
-        </ToggleButton>
+        </ThemeButton>
       </div>
     </Boundary>
   );
 }
 
-function ToggleButton({
+function ThemeButton({
   active,
   label,
-  onClick,
+  theme,
   children,
 }: {
   active: boolean;
   label: string;
-  onClick: () => void;
+  theme: ThemePreference;
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={active}
-      className={cn(
-        'rounded-full p-1.5 transition-colors',
-        active
-          ? 'bg-black text-white shadow-sm dark:bg-white dark:text-black'
-          : 'text-gray hover:text-black dark:hover:text-white',
-      )}
-    >
-      {children}
-    </button>
+    <form action={formAction(setTheme, theme)}>
+      <button
+        type="submit"
+        aria-label={label}
+        aria-pressed={active}
+        className={cn(
+          'rounded-full p-1.5 transition-colors',
+          active
+            ? 'bg-black text-white shadow-sm dark:bg-white dark:text-black'
+            : 'text-gray hover:text-black dark:hover:text-white',
+        )}
+      >
+        {children}
+      </button>
+    </form>
   );
 }

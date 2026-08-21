@@ -1,28 +1,27 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
+import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
 
 export function LoadMore({ href }: { href: Route }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   return (
     <Boundary label="LoadMore">
-      <button
-        type="button"
-        disabled={isPending}
-        onClick={() => {
-          startTransition(() => {
-            router.push(href, { scroll: false });
-          });
+      <PrefetchLink
+        href={href}
+        scroll={false}
+        onNavigate={() => {
+          startTransition(() => {});
         }}
-        className="border-divider dark:border-divider-dark rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:bg-black/5 disabled:opacity-50 dark:hover:bg-white/5"
+        aria-busy={isPending || undefined}
+        className="border-divider dark:border-divider-dark rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:bg-black/5 data-pending:opacity-50 dark:hover:bg-white/5"
+        data-pending={isPending ? '' : undefined}
       >
         {isPending ? 'Loading…' : 'Load more'}
-      </button>
+      </PrefetchLink>
     </Boundary>
   );
 }

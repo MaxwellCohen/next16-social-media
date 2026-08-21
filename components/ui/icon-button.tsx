@@ -9,12 +9,24 @@ type Props = {
   active?: boolean;
   activeColor?: string;
   hoverColor?: string;
-  onClick?: () => void;
+  type?: 'button' | 'submit';
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   removing?: boolean;
   children?: React.ReactNode;
 };
 
-export function IconButton({ label, icon, href, active, activeColor, hoverColor, onClick, removing, children }: Props) {
+export function IconButton({
+  label,
+  icon,
+  href,
+  active,
+  activeColor,
+  hoverColor,
+  type = 'button',
+  onClick,
+  removing,
+  children,
+}: Props) {
   const className = cn(
     'inline-flex items-center gap-1 rounded-full px-2 py-1.5 font-mono text-xs transition-colors',
     active && activeColor,
@@ -39,18 +51,19 @@ export function IconButton({ label, icon, href, active, activeColor, hoverColor,
 
   return (
     <button
-      type="button"
+      type={type}
       aria-label={label}
       aria-pressed={active}
       data-removing={removing || undefined}
       onClick={
         onClick
           ? e => {
-              e.preventDefault();
               e.stopPropagation();
-              onClick();
+              onClick(e);
             }
-          : undefined
+          : e => {
+              e.stopPropagation();
+            }
       }
       className={className}
     >

@@ -46,16 +46,20 @@ function validateBody(raw: FormDataEntryValue | null) {
   return { body: parsed.data.body, ok: true as const };
 }
 
-export async function postDrop(formData: FormData) {
+export type ComposerState = { error: string | null; status: 'idle' | 'error' | 'success' };
+
+const COMPOSER_SUCCESS: ComposerState = { error: null, status: 'success' };
+
+export async function postDrop(_prev: ComposerState, formData: FormData): Promise<ComposerState> {
   await delay(300, await isSlowEnabled());
 
   const validated = validateBody(formData.get('body'));
   if (!validated.ok) {
-    return { error: validated.error, ok: false as const };
+    return { error: validated.error, status: 'error' };
   }
   const me = await verifyAuth();
   const tags = extractTags(validated.body);
-  const drop = await prisma.drop.create({
+  await prisma.drop.create({
     data: {
       authorHandle: me,
       body: validated.body,
@@ -67,10 +71,11 @@ export async function postDrop(formData: FormData) {
   updateTag(`user-drops-${me}`);
   updateTag('trending');
   for (const tag of tags) updateTag(`tag-${tag}`);
-  return { drop, ok: true as const };
+  refresh();
+  return COMPOSER_SUCCESS;
 }
 
-export async function postThread(formData: FormData) {
+export async function postThread(_prev: ComposerState, formData: FormData): Promise<ComposerState> {
   await delay(300, await isSlowEnabled());
 
   const bodies: string[] = [];
@@ -78,12 +83,12 @@ export async function postThread(formData: FormData) {
     if (typeof raw === 'string' && raw.trim() === '') continue;
     const result = validateBody(raw);
     if (!result.ok) {
-      return { error: result.error, ok: false as const };
+      return { error: result.error, status: 'error' };
     }
     bodies.push(result.body);
   }
   if (bodies.length === 0) {
-    return { error: 'Say something', ok: false as const };
+    return { error: 'Say something', status: 'error' };
   }
   const me = await verifyAuth();
   const allTags = new Set<string>();
@@ -115,33 +120,37 @@ export async function postThread(formData: FormData) {
       prisma.drop.update({ data: { replyCount: { increment: rest.length } }, where: { id: first.id } }),
     ]);
     updateTag(`drop-${first.id}`);
-    refresh();
   }
 
   updateTag('feed');
   updateTag(`user-drops-${me}`);
   updateTag('trending');
   for (const tag of allTags) updateTag(`tag-${tag}`);
-  return { drop: first, ok: true as const };
+  refresh();
+  return COMPOSER_SUCCESS;
 }
 
-export async function postReply(parentId: string, formData: FormData) {
+export async function postReply(
+  parentId: string,
+  _prev: ComposerState,
+  formData: FormData,
+): Promise<ComposerState> {
   await delay(600, await isSlowEnabled());
   const parsed = parseDropId(parentId);
-  if (!parsed.ok) return parsed;
+  if (!parsed.ok) return { error: parsed.error, status: 'error' };
 
   const id = parsed.id;
 
   const validated = validateBody(formData.get('body'));
   if (!validated.ok) {
-    return { error: validated.error, ok: false as const };
+    return { error: validated.error, status: 'error' };
   }
   const parent = await prisma.drop.findUnique({ where: { id } });
-  if (!parent) return { error: 'Drop not found', ok: false as const };
+  if (!parent) return { error: 'Drop not found', status: 'error' };
 
   const me = await verifyAuth();
   const tags = extractTags(validated.body);
-  const [reply] = await prisma.$transaction([
+  await prisma.$transaction([
     prisma.drop.create({
       data: {
         authorHandle: me,
@@ -167,7 +176,7 @@ export async function postReply(parentId: string, formData: FormData) {
   }
   updateTag(`drop-${id}`);
   refresh();
-  return { ok: true as const, reply };
+  return COMPOSER_SUCCESS;
 }
 
 const idSchema = z.string().min(1).max(30);

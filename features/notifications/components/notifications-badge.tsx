@@ -1,16 +1,8 @@
-'use client';
+import { getUnreadNotificationCount } from '@/features/notifications/notifications-queries';
 
-import useSWR from 'swr';
-import { fetcher, UNREAD_KEY } from '@/lib/swr';
-
-export function NotificationsBadge() {
-  const { data: count = 0 } = useSWR<number>(UNREAD_KEY, fetcher, {
-    refreshInterval: 15_000,
-    revalidateOnFocus: true,
-  });
-  if (count === 0) {
-    return null;
-  }
+export async function NotificationsBadge() {
+  const count = await getUnreadNotificationCount();
+  if (count === 0) return null;
   return (
     <span
       aria-label={`${count} unread notifications`}

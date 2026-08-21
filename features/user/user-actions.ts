@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidateTag, updateTag } from 'next/cache';
+import { refresh, revalidateTag, updateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { isSlowEnabled } from '@/components/demo/demo-slow';
@@ -19,6 +19,7 @@ export async function switchUser(handle: string) {
   const store = await cookies();
   store.set(SESSION_COOKIE, target, { path: '/', sameSite: 'lax' });
   updateTag('current-user');
+  refresh();
   return { ok: true as const };
 }
 

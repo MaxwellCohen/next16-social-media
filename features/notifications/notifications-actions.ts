@@ -1,0 +1,16 @@
+'use server';
+
+import { revalidateTag } from 'next/cache';
+import { verifyAuth } from '@/features/user/user-queries';
+import { prisma } from '@/lib/db';
+
+export async function markNotificationsRead() {
+  const me = await verifyAuth();
+  const result = await prisma.notification.updateMany({
+    data: { readAt: new Date() },
+    where: { readAt: null, recipientHandle: me },
+  });
+  if (result.count > 0) {
+    revalidateTag(`notifications:${me}`, { expire: 0 });
+  }
+}

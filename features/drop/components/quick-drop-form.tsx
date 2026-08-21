@@ -1,13 +1,14 @@
 'use client';
 
 import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
-import { Suspense, useRef, useState, useTransition } from 'react';
+import { Suspense, useActionState, useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
 import { DropPreview, PreviewSkeleton, type Preview } from '@/features/drop/components/drop-preview';
-import { postDrop } from '@/features/drop/drop-actions';
+import { postDrop, type ComposerState } from '@/features/drop/drop-actions';
 import { renderDropPreview } from '@/features/drop/drop-preview-action';
 import { useTextareaFormat } from '@/hooks/use-textarea-format';
 import { cn } from '@/lib/utils';
@@ -16,26 +17,31 @@ type Props = {
   avatar: React.ReactNode;
 };
 
+const INITIAL: ComposerState = { error: null, status: 'idle' };
+
 export function QuickDropForm({ avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [state, formAction] = useActionState(postDrop, INITIAL);
   const [mode, setMode] = useState<'write' | 'preview'>('write');
   const [preview, setPreview] = useState<Preview | null>(null);
   const [, startTransition] = useTransition();
   const { insertAtCaret, insertSnippet, wrapSelection } = useTextareaFormat(textareaRef);
 
-  async function submitAction(formData: FormData) {
-    const result = await postDrop(formData);
-    if (!result.ok) {
-      toast.error(result.error);
+  useEffect(() => {
+    if (state.status === 'error' && state.error) {
+      toast.error(state.error);
       return;
     }
-    toast.success('Dropped!');
-    startTransition(() => {
-      setMode('write');
-      setPreview(null);
-    });
-  }
+    if (state.status === 'success') {
+      toast.success('Dropped!');
+      startTransition(() => {
+        setMode('write');
+        setPreview(null);
+      });
+      if (textareaRef.current) textareaRef.current.value = '';
+    }
+  }, [state, startTransition]);
 
   function showPreview() {
     const body = textareaRef.current?.value.trim() ?? '';
@@ -50,7 +56,7 @@ export function QuickDropForm({ avatar }: Props) {
   return (
     <Boundary label="QuickDropForm">
       <section className="border-divider/70 dark:border-divider-dark/70 hidden border-b px-4 py-3 sm:block sm:px-5">
-        <form ref={formRef} action={submitAction} className="flex items-start gap-3">
+        <form ref={formRef} action={formAction} className="flex items-start gap-3">
           {avatar}
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="relative grid min-h-20">
@@ -93,6 +99,11 @@ export function QuickDropForm({ avatar }: Props) {
                 )}
               </div>
             </div>
+            {state.error ? (
+              <p role="alert" className="text-danger mt-1 text-xs">
+                {state.error}
+              </p>
+            ) : null}
             <footer className="mt-1 flex items-center justify-between gap-2">
               <div className="flex items-center gap-0.5">
                 {mode === 'write' ? (
@@ -118,5 +129,24 @@ export function QuickDropForm({ avatar }: Props) {
         </form>
       </section>
     </Boundary>
+  );
+}
+
+export function QuickDropFormSkeleton() {
+  return (
+    <section
+      aria-hidden
+      className="border-divider/70 dark:border-divider-dark/70 hidden border-b px-4 py-3 sm:block sm:px-5"
+    >
+      <div className="flex items-start gap-3">
+        <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="min-h-20" />
+          <footer className="mt-1 flex items-center justify-end">
+            <Skeleton className="h-9 w-20 rounded-full" />
+          </footer>
+        </div>
+      </div>
+    </section>
   );
 }

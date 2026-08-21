@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { fetcher, UNREAD_KEY } from '@/lib/swr';
 
+/** JS enhancement: auto-mark read on visit. Baseline is the page form. */
 export function MarkNotificationsRead() {
   const { data: count = 0 } = useSWR<number>(UNREAD_KEY, fetcher);
   const { mutate } = useSWRConfig();

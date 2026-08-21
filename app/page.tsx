@@ -37,7 +37,7 @@ export default function HomePage({ searchParams }: PageProps<'/'>) {
             {searchParams.then(sp => {
               const tab = parseTab(sp.tab);
               const page = parsePage(sp.page);
-              return tab === 'discover' ? <DiscoverFeed /> : <Feed page={page} />;
+              return tab === 'discover' ? <DiscoverFeed page={page} /> : <Feed page={page} />;
             })}
           </Crossfade>
         </Suspense>

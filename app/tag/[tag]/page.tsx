@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps<'/tag/[tag]'>): Pro
 export default function TagPage({ params }: PageProps<'/tag/[tag]'>) {
   return (
     <div>
-      <PageHeader back title="Tag" />
+      <PageHeader back backHref="/tag" title="Tag" />
       <Suspense fallback={<TagHeaderSkeleton />}>
         <Crossfade>
           {params.then(({ tag }) => (

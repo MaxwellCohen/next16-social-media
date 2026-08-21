@@ -1,8 +1,7 @@
 'use client';
 
-import * as Ariakit from '@ariakit/react';
 import { CircleHelp, Eye, EyeOff, Timer, TimerOff, Wifi, WifiOff, Zap, ZapOff } from 'lucide-react';
-import { type ButtonHTMLAttributes, type ReactNode, useEffect, useOptimistic, useState } from 'react';
+import { type ButtonHTMLAttributes, type ReactNode, useEffect, useId, useOptimistic, useState } from 'react';
 import { togglePrefetch, toggleSlow } from '@/components/demo/demo-actions';
 import { Boundary, useBoundaryMode } from '@/components/internal/boundary';
 import { Spinner } from '@/components/ui/spinner';
@@ -101,7 +100,7 @@ export function DemoToolbarClient({
 }) {
   const { mode, toggleMode } = useBoundaryMode();
   const [offline, setOffline] = useState(false);
-  const guide = Ariakit.useDialogStore();
+  const guideId = useId();
 
   useEffect(() => () => setSimulatedOffline(false), []);
 
@@ -155,15 +154,17 @@ export function DemoToolbarClient({
         icon={offline ? <WifiOff className="size-3.5" /> : <Wifi className="size-3.5" />}
       />
       <Divider />
-      <Ariakit.DialogDisclosure
-        store={guide}
+      <button
+        type="button"
+        command="show-modal"
+        commandFor={guideId}
         aria-label="How this demo works"
         className="text-gray focus-visible:bg-accent/10 dark:focus-visible:bg-accent/20 flex items-center px-3 py-1.5 transition-colors hover:text-black focus-visible:outline-none dark:hover:text-white"
       >
         <CircleHelp className="size-3.5" />
-      </Ariakit.DialogDisclosure>
+      </button>
       <DemoGuideDialog
-        store={guide}
+        id={guideId}
         prefetch={prefetchEnabled}
         delays={slowEnabled}
         offline={offline}
@@ -174,13 +175,13 @@ export function DemoToolbarClient({
 }
 
 function DemoGuideDialog({
-  store,
+  id,
   prefetch,
   delays,
   offline,
   boundaries,
 }: {
-  store: Ariakit.DialogStore;
+  id: string;
   prefetch: boolean;
   delays: boolean;
   offline: boolean;
@@ -215,19 +216,18 @@ function DemoGuideDialog({
 
   return (
     <Boundary label="DemoGuide" asChild>
-      <Ariakit.Dialog
-        store={store}
-        backdrop={<div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />}
-        className="border-divider dark:border-divider-dark fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border bg-white p-6 shadow-2xl outline-none dark:bg-black"
-        unmountOnHide
+      <dialog
+        id={id}
+        aria-labelledby={`${id}-title`}
+        className="border-divider dark:border-divider-dark fixed top-1/2 left-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border bg-white p-6 text-black shadow-2xl outline-none dark:bg-black dark:text-white"
       >
-        <Ariakit.DialogHeading className="text-xl font-bold text-black dark:text-white">
+        <h2 id={`${id}-title`} className="text-xl font-bold text-black dark:text-white">
           How this demo works
-        </Ariakit.DialogHeading>
-        <Ariakit.DialogDescription className="text-gray mt-2 text-sm leading-relaxed">
+        </h2>
+        <p className="text-gray mt-2 text-sm leading-relaxed">
           A Next.js 16.3 social network showing instant navigations. The App Shell is prefetched, so navigating never
           blocks. These toggles simulate different backends, networks, and costs.
-        </Ariakit.DialogDescription>
+        </p>
 
         <div className="mt-6 flex flex-col gap-4">
           {toggles.map(t => (
@@ -250,11 +250,16 @@ function DemoGuideDialog({
           >
             Read the guide
           </a>
-          <Ariakit.DialogDismiss className="border-divider hover:bg-card dark:border-divider-dark dark:hover:bg-card-dark inline-flex items-center justify-center rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition-colors dark:bg-black dark:text-white">
+          <button
+            type="button"
+            command="close"
+            commandFor={id}
+            className="border-divider hover:bg-card dark:border-divider-dark dark:hover:bg-card-dark inline-flex items-center justify-center rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition-colors dark:bg-black dark:text-white"
+          >
             Close
-          </Ariakit.DialogDismiss>
+          </button>
         </div>
-      </Ariakit.Dialog>
+      </dialog>
     </Boundary>
   );
 }
