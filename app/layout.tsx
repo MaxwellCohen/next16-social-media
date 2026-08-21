@@ -52,6 +52,11 @@ export const metadata: Metadata = {
 
 export const instant = false;
 
+// `'unsafe-inline'` does not cover `<script type="speculationrules">`.
+const SCRIPT_SRC_CSP = `script-src 'self' 'unsafe-inline' 'inline-speculation-rules' https://va.vercel-scripts.com${
+  process.env.NODE_ENV === 'development' ? " 'unsafe-eval' blob:" : ''
+}`;
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const unread = preload(UNREAD_KEY, () => getUnreadNotificationCount());
   const theme = await getThemePreference();
@@ -62,6 +67,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
+        <meta httpEquiv="Content-Security-Policy" content={SCRIPT_SRC_CSP} />
         <ThemeScript theme={theme} />
         <SpeculationRules />
       </head>
