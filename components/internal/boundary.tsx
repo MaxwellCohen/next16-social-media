@@ -76,5 +76,5 @@ export function Boundary({ children, label, asChild }: Props) {
     return <>{children}</>;
   }
 
-  return <div data-component={name}>{children}</div>;
+  return <div data-component={name} suppressHydrationWarning>{children}</div>;
 }

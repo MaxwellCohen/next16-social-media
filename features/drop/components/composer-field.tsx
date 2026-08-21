@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { ClientOnly } from '@/components/ui/client-only';
 import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
 
 type Props = {
@@ -42,9 +43,11 @@ export function ComposerField({ avatar, placeholder, autoFocus, onRemove, onFocu
         />
         {onRemove ? (
           <div className="absolute top-0 right-0">
-            <ToolbarButton size="sm" label="Remove drop" onClick={onRemove}>
-              <X className="h-4 w-4" />
-            </ToolbarButton>
+            <ClientOnly>
+              <ToolbarButton size="sm" label="Remove drop" onClick={onRemove}>
+                <X className="h-4 w-4" />
+              </ToolbarButton>
+            </ClientOnly>
           </div>
         ) : null}
       </div>

@@ -46,6 +46,7 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant js (@media (scripting: enabled));
 
 @layer base {
   body {

@@ -1,19 +1,28 @@
-import { cn } from '@/lib/utils';
+import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { ClientOnly } from '@/components/ui/client-only';
+import { cn } from '@/lib/utils';
 
-type Props = {
+type Size = 'sm' | 'md';
+
+type ToolbarButtonProps = {
   label: string;
   onClick: () => void;
   children: ReactNode;
-  size?: 'sm' | 'md';
+  size?: Size;
 };
 
-const sizes: Record<'sm' | 'md', string> = {
+const sizes: Record<Size, string> = {
   md: 'h-9 w-9',
   sm: 'h-7 w-7',
 };
 
-export function ToolbarButton({ label, onClick, children, size = 'md' }: Props) {
+const icons: Record<Size, string> = {
+  md: 'h-5 w-5',
+  sm: 'h-4 w-4',
+};
+
+export function ToolbarButton({ label, onClick, children, size = 'md' }: ToolbarButtonProps) {
   return (
     <button
       type="button"
@@ -27,5 +36,56 @@ export function ToolbarButton({ label, onClick, children, size = 'md' }: Props) 
     >
       {children}
     </button>
+  );
+}
+
+type FormatProps = {
+  size?: Size;
+  insertAtCaret: (text: string) => void;
+  insertSnippet: () => void;
+  wrapSelection: (marker: string) => void;
+};
+
+export function ComposerFormatActions({ size = 'md', insertAtCaret, insertSnippet, wrapSelection }: FormatProps) {
+  const icon = icons[size];
+  return (
+    <ClientOnly>
+      <ToolbarButton size={size} label="Bold" onClick={() => wrapSelection('**')}>
+        <Bold className={icon} />
+      </ToolbarButton>
+      <ToolbarButton size={size} label="Italic" onClick={() => wrapSelection('*')}>
+        <Italic className={icon} />
+      </ToolbarButton>
+      <ToolbarButton size={size} label="Add code snippet" onClick={insertSnippet}>
+        <Code2 className={icon} />
+      </ToolbarButton>
+      <ToolbarButton size={size} label="Add hashtag" onClick={() => insertAtCaret('#')}>
+        <Hash className={icon} />
+      </ToolbarButton>
+    </ClientOnly>
+  );
+}
+
+type PreviewProps = {
+  size?: Size;
+  mode: 'write' | 'preview';
+  onPreview: () => void;
+  onEdit: () => void;
+};
+
+export function ComposerPreviewToggle({ size = 'md', mode, onPreview, onEdit }: PreviewProps) {
+  const icon = icons[size];
+  return (
+    <ClientOnly>
+      {mode === 'write' ? (
+        <ToolbarButton size={size} label="Preview" onClick={onPreview}>
+          <Eye className={icon} />
+        </ToolbarButton>
+      ) : (
+        <ToolbarButton size={size} label="Edit" onClick={onEdit}>
+          <PenLine className={icon} />
+        </ToolbarButton>
+      )}
+    </ClientOnly>
   );
 }

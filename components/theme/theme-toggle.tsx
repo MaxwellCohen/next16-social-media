@@ -15,7 +15,7 @@ export function ThemeToggle({ variant = 'pill', theme = 'system' }: Props) {
 
   return (
     <Boundary label="ThemeToggle">
-      <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass}>
+      <div style={{ viewTransitionName: 'theme-toggle' }} className={wrapperClass} suppressHydrationWarning>
         <ThemeButton active={theme === 'light'} label="Light mode" theme="light">
           <Sun className="size-4" />
         </ThemeButton>

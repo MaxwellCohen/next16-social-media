@@ -1,12 +1,13 @@
 'use client';
 
-import { Bold, Code2, Eye, Hash, Italic, PenLine, Plus, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Suspense, useActionState, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
+import { ClientOnly } from '@/components/ui/client-only';
 import { ComposerField } from '@/features/drop/components/composer-field';
-import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
+import { ComposerFormatActions, ComposerPreviewToggle } from '@/features/drop/components/composer-toolbar';
 import { PreviewSkeleton, ThreadPreview } from '@/features/drop/components/drop-preview';
 import { postThread, type ComposerState } from '@/features/drop/drop-actions';
 import { renderThreadPreview } from '@/features/drop/drop-preview-action';
@@ -76,33 +77,25 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
   return (
     <Boundary label="NewDropDialog">
       <dialog
-          ref={dialogRef}
-          id={id}
-          className="dark:border-divider-dark border-divider m-0 h-dvh max-h-dvh w-full max-w-none bg-white p-0 text-black open:fixed open:inset-0 open:z-50 open:flex open:flex-col sm:open:inset-auto sm:open:top-16 sm:open:left-1/2 sm:open:h-auto sm:open:max-h-[calc(100dvh-5rem)] sm:open:w-[calc(100%-2rem)] sm:open:max-w-xl sm:open:-translate-x-1/2 sm:open:rounded-2xl sm:open:border sm:open:shadow-2xl dark:bg-black dark:text-white"
-          style={{ viewTransitionName: 'modal' }}
-        >
-          <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-3">
-            <button
-              type="button"
-              command="close"
-              commandFor={id}
-              aria-label="Close"
-              className="text-gray -ml-1.5 rounded-full p-1 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <h2 className="sr-only">New drop</h2>
-            {mode === 'write' ? (
-              <ToolbarButton label="Preview" onClick={showPreview}>
-                <Eye className="h-5 w-5" />
-              </ToolbarButton>
-            ) : (
-              <ToolbarButton label="Edit" onClick={() => setMode('write')}>
-                <PenLine className="h-5 w-5" />
-              </ToolbarButton>
-            )}
-          </header>
-          <Suspense >
+        ref={dialogRef}
+        id={id}
+        className="dark:border-divider-dark border-divider m-0 h-dvh max-h-dvh w-full max-w-none bg-white p-0 text-black open:fixed open:inset-0 open:z-50 open:flex open:flex-col sm:open:inset-auto sm:open:top-16 sm:open:left-1/2 sm:open:h-auto sm:open:max-h-[calc(100dvh-5rem)] sm:open:w-[calc(100%-2rem)] sm:open:max-w-xl sm:open:-translate-x-1/2 sm:open:rounded-2xl sm:open:border sm:open:shadow-2xl dark:bg-black dark:text-white"
+        style={{ viewTransitionName: 'modal' }}
+      >
+        <header className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between border-b px-5 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-3">
+          <button
+            type="button"
+            command="close"
+            commandFor={id}
+            aria-label="Close"
+            className="text-gray -ml-1.5 rounded-full p-1 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          <h2 className="sr-only">New drop</h2>
+          <ComposerPreviewToggle mode={mode} onPreview={showPreview} onEdit={() => setMode('write')} />
+        </header>
+        <Suspense>
           <form ref={formRef} action={formAction} className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="flex flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-5 pt-5 pb-4">
               <div ref={writeRef} className={cn(mode === 'preview' && 'hidden')}>
@@ -121,7 +114,7 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
                     </div>
                   ))}
                 </div>
-                <details className="mt-3 [@media(scripting:enabled)]:hidden">
+                <details className="js:hidden mt-3">
                   <summary className="text-accent hover:bg-accent/10 flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-full py-1.5 pr-3 pl-2 text-sm font-medium transition-colors [&::-webkit-details-marker]:hidden">
                     <Plus className="h-4 w-4" />
                     Add another drop
@@ -135,14 +128,16 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
                     </div>
                   </div>
                 </details>
-                <button
-                  type="button"
-                  onClick={addSegment}
-                  className="text-accent hover:bg-accent/10 mt-3 hidden w-fit items-center gap-1.5 rounded-full py-1.5 pr-3 pl-2 text-sm font-medium transition-colors [@media(scripting:enabled)]:flex"
-                >
-                  <Plus className="h-4 w-4" />
-                  Add another drop
-                </button>
+                <ClientOnly>
+                  <button
+                    type="button"
+                    onClick={addSegment}
+                    className="text-accent hover:bg-accent/10 mt-3 flex w-fit items-center gap-1.5 rounded-full py-1.5 pr-3 pl-2 text-sm font-medium transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add another drop
+                  </button>
+                </ClientOnly>
               </div>
               {mode === 'preview' && preview ? (
                 <div className="flex flex-col" style={{ minHeight: writeHeight || undefined }}>
@@ -160,20 +155,11 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
             <footer className="border-divider/70 dark:border-divider-dark/70 flex items-center justify-between gap-2 border-t px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-3">
               <div className="flex items-center gap-0.5">
                 {mode === 'write' ? (
-                  <>
-                    <ToolbarButton label="Bold" onClick={() => wrapSelection('**')}>
-                      <Bold className="h-5 w-5" />
-                    </ToolbarButton>
-                    <ToolbarButton label="Italic" onClick={() => wrapSelection('*')}>
-                      <Italic className="h-5 w-5" />
-                    </ToolbarButton>
-                    <ToolbarButton label="Add code snippet" onClick={insertSnippet}>
-                      <Code2 className="h-5 w-5" />
-                    </ToolbarButton>
-                    <ToolbarButton label="Add hashtag" onClick={() => insertAtCaret('#')}>
-                      <Hash className="h-5 w-5" />
-                    </ToolbarButton>
-                  </>
+                  <ComposerFormatActions
+                    insertAtCaret={insertAtCaret}
+                    insertSnippet={insertSnippet}
+                    wrapSelection={wrapSelection}
+                  />
                 ) : null}
               </div>
               <div className="flex shrink-0 items-center gap-2">
@@ -184,7 +170,7 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
               </div>
             </footer>
           </form>
-          </Suspense>
+        </Suspense>
       </dialog>
     </Boundary>
   );

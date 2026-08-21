@@ -1,12 +1,11 @@
 'use client';
 
-import { Bold, Code2, Eye, Hash, Italic, PenLine } from 'lucide-react';
 import { Suspense, useActionState, useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Boundary } from '@/components/internal/boundary';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ToolbarButton } from '@/features/drop/components/composer-toolbar';
+import { ComposerFormatActions, ComposerPreviewToggle } from '@/features/drop/components/composer-toolbar';
 import { DropPreview, PreviewSkeleton, type Preview } from '@/features/drop/components/drop-preview';
 import { postDrop, type ComposerState } from '@/features/drop/drop-actions';
 import { renderDropPreview } from '@/features/drop/drop-preview-action';
@@ -75,7 +74,7 @@ export function QuickDropForm({ avatar }: Props) {
                   }
                 }}
                 className={cn(
-                  'placeholder-gray field-sizing-content col-start-1 row-start-1 min-h-20 w-full resize-none border-0 bg-transparent pt-1.5 pr-9 text-base leading-relaxed focus:ring-0 focus:outline-none',
+                  'placeholder-gray col-start-1 row-start-1 field-sizing-content min-h-20 w-full resize-none border-0 bg-transparent pt-1.5 pr-9 text-base leading-relaxed focus:ring-0 focus:outline-none',
                   mode === 'preview' && 'invisible',
                 )}
               />
@@ -88,15 +87,7 @@ export function QuickDropForm({ avatar }: Props) {
                 </Suspense>
               </div>
               <div className="absolute top-1 right-0">
-                {mode === 'write' ? (
-                  <ToolbarButton size="sm" label="Preview" onClick={showPreview}>
-                    <Eye className="h-4 w-4" />
-                  </ToolbarButton>
-                ) : (
-                  <ToolbarButton size="sm" label="Edit" onClick={() => setMode('write')}>
-                    <PenLine className="h-4 w-4" />
-                  </ToolbarButton>
-                )}
+                <ComposerPreviewToggle size="sm" mode={mode} onPreview={showPreview} onEdit={() => setMode('write')} />
               </div>
             </div>
             {state.error ? (
@@ -107,20 +98,12 @@ export function QuickDropForm({ avatar }: Props) {
             <footer className="mt-1 flex items-center justify-between gap-2">
               <div className="flex items-center gap-0.5">
                 {mode === 'write' ? (
-                  <>
-                    <ToolbarButton size="sm" label="Bold" onClick={() => wrapSelection('**')}>
-                      <Bold className="h-4 w-4" />
-                    </ToolbarButton>
-                    <ToolbarButton size="sm" label="Italic" onClick={() => wrapSelection('*')}>
-                      <Italic className="h-4 w-4" />
-                    </ToolbarButton>
-                    <ToolbarButton size="sm" label="Add code snippet" onClick={insertSnippet}>
-                      <Code2 className="h-4 w-4" />
-                    </ToolbarButton>
-                    <ToolbarButton size="sm" label="Add hashtag" onClick={() => insertAtCaret('#')}>
-                      <Hash className="h-4 w-4" />
-                    </ToolbarButton>
-                  </>
+                  <ComposerFormatActions
+                    size="sm"
+                    insertAtCaret={insertAtCaret}
+                    insertSnippet={insertSnippet}
+                    wrapSelection={wrapSelection}
+                  />
                 ) : null}
               </div>
               <Button type="submit">Drop it</Button>

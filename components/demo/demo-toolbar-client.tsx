@@ -6,7 +6,7 @@ import { togglePrefetch, toggleSlow } from '@/components/demo/demo-actions';
 import { Boundary, useBoundaryMode } from '@/components/internal/boundary';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-
+import { ClientOnly } from '@/components/ui/client-only';
 let originalFetch: typeof fetch | null = null;
 
 function setSimulatedOffline(offline: boolean) {
@@ -111,66 +111,68 @@ export function DemoToolbarClient({
   }
 
   return (
-    <div
-      style={{ viewTransitionName: 'demo-toolbar' }}
-      className={cn(
-        'flex items-center overflow-hidden rounded-full border text-xs font-medium shadow-sm backdrop-blur-md transition-colors',
-        'border-divider dark:border-divider-dark bg-white/80 dark:bg-black/80',
-      )}
-    >
-      <ToggleButton
-        type="button"
-        onClick={toggleMode}
-        active={mode === 'on'}
-        aria-pressed={mode === 'on'}
-        aria-label={mode === 'on' ? 'Client outlines on' : 'Client outlines off'}
-        label="Client"
-        icon={mode === 'on' ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
-      />
-      <Divider />
-      <CookieToggle
-        enabled={prefetchEnabled}
-        onToggle={togglePrefetch}
-        label="Prefetch"
-        onIcon={<Zap className="size-3.5" />}
-        offIcon={<ZapOff className="size-3.5" />}
-      />
-      <Divider />
-      <CookieToggle
-        enabled={slowEnabled}
-        onToggle={toggleSlow}
-        label="Delays"
-        onIcon={<Timer className="size-3.5" />}
-        offIcon={<TimerOff className="size-3.5" />}
-      />
-      <Divider />
-      <ToggleButton
-        type="button"
-        onClick={toggleOffline}
-        active={!offline}
-        aria-pressed={offline}
-        aria-label={offline ? 'Simulating offline' : 'Online'}
-        label="Online"
-        icon={offline ? <WifiOff className="size-3.5" /> : <Wifi className="size-3.5" />}
-      />
-      <Divider />
-      <button
-        type="button"
-        command="show-modal"
-        commandFor={guideId}
-        aria-label="How this demo works"
-        className="text-gray focus-visible:bg-accent/10 dark:focus-visible:bg-accent/20 flex items-center px-3 py-1.5 transition-colors hover:text-black focus-visible:outline-none dark:hover:text-white"
+    <ClientOnly>
+      <div
+        style={{ viewTransitionName: 'demo-toolbar' }}
+        className={cn(
+          'flex items-center overflow-hidden rounded-full border text-xs font-medium shadow-sm backdrop-blur-md transition-colors',
+          'border-divider dark:border-divider-dark bg-white/80 dark:bg-black/80',
+        )}
       >
-        <CircleHelp className="size-3.5" />
-      </button>
-      <DemoGuideDialog
-        id={guideId}
-        prefetch={prefetchEnabled}
-        delays={slowEnabled}
-        offline={offline}
-        boundaries={mode === 'on'}
-      />
-    </div>
+        <ToggleButton
+          type="button"
+          onClick={toggleMode}
+          active={mode === 'on'}
+          aria-pressed={mode === 'on'}
+          aria-label={mode === 'on' ? 'Client outlines on' : 'Client outlines off'}
+          label="Client"
+          icon={mode === 'on' ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+        />
+        <Divider />
+        <CookieToggle
+          enabled={prefetchEnabled}
+          onToggle={togglePrefetch}
+          label="Prefetch"
+          onIcon={<Zap className="size-3.5" />}
+          offIcon={<ZapOff className="size-3.5" />}
+        />
+        <Divider />
+        <CookieToggle
+          enabled={slowEnabled}
+          onToggle={toggleSlow}
+          label="Delays"
+          onIcon={<Timer className="size-3.5" />}
+          offIcon={<TimerOff className="size-3.5" />}
+        />
+        <Divider />
+        <ToggleButton
+          type="button"
+          onClick={toggleOffline}
+          active={!offline}
+          aria-pressed={offline}
+          aria-label={offline ? 'Simulating offline' : 'Online'}
+          label="Online"
+          icon={offline ? <WifiOff className="size-3.5" /> : <Wifi className="size-3.5" />}
+        />
+        <Divider />
+        <button
+          type="button"
+          command="show-modal"
+          commandFor={guideId}
+          aria-label="How this demo works"
+          className="text-gray focus-visible:bg-accent/10 dark:focus-visible:bg-accent/20 flex items-center px-3 py-1.5 transition-colors hover:text-black focus-visible:outline-none dark:hover:text-white"
+        >
+          <CircleHelp className="size-3.5" />
+        </button>
+        <DemoGuideDialog
+          id={guideId}
+          prefetch={prefetchEnabled}
+          delays={slowEnabled}
+          offline={offline}
+          boundaries={mode === 'on'}
+        />
+      </div>
+    </ClientOnly>
   );
 }
 
