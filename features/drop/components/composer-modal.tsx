@@ -23,6 +23,22 @@ type Props = {
 
 const INITIAL: ComposerState = { error: null, status: 'idle' };
 
+/** Nested disclosure so each no-JS click adds one field and keeps the add control at the bottom. */
+function NoJsExtraDrop({ avatar, children }: { avatar: ReactNode; children?: ReactNode }) {
+  return (
+    <details className="group">
+      <summary className="text-accent hover:bg-accent/10 mt-3 flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-full py-1.5 pr-3 pl-2 text-sm font-medium transition-colors group-open:hidden [&::-webkit-details-marker]:hidden">
+        <Plus className="h-4 w-4" />
+        Add another drop
+      </summary>
+      <div className="border-divider/70 dark:border-divider-dark/70 border-t py-4">
+        <ComposerField avatar={avatar} placeholder="Add to your thread…" />
+      </div>
+      {children}
+    </details>
+  );
+}
+
 export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
   const reactId = useId();
   const id = dialogId;
@@ -114,20 +130,11 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
                     </div>
                   ))}
                 </div>
-                <details className="js:hidden mt-3">
-                  <summary className="text-accent hover:bg-accent/10 flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-full py-1.5 pr-3 pl-2 text-sm font-medium transition-colors [&::-webkit-details-marker]:hidden">
-                    <Plus className="h-4 w-4" />
-                    Add another drop
-                  </summary>
-                  <div className="divide-divider/70 dark:divide-divider-dark/70 mt-2 flex flex-col divide-y">
-                    <div className="py-4">
-                      <ComposerField avatar={avatar} placeholder="Add to your thread…" />
-                    </div>
-                    <div className="py-4">
-                      <ComposerField avatar={avatar} placeholder="Add to your thread…" />
-                    </div>
-                  </div>
-                </details>
+                <div className="js:hidden">
+                  <NoJsExtraDrop avatar={avatar}>
+                    <NoJsExtraDrop avatar={avatar} />
+                  </NoJsExtraDrop>
+                </div>
                 <ClientOnly>
                   <button
                     type="button"
