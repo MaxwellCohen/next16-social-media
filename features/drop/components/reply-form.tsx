@@ -15,7 +15,7 @@ const INITIAL: ComposerState = { error: null, status: 'idle' };
 
 export function ReplyComposerForm({ dropId, avatar }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(postReply.bind(null, dropId), INITIAL);
+  const [state, formAction] = useActionState(postReply, INITIAL);
 
   useEffect(() => {
     if (state.status === 'error' && state.error) {
@@ -32,6 +32,7 @@ export function ReplyComposerForm({ dropId, avatar }: Props) {
   return (
     <Boundary label="ReplyForm">
       <form ref={formRef} action={formAction} className="flex flex-col gap-3">
+        <input type="hidden" name="parentId" value={dropId} />
         <div className="flex items-start gap-3">
           {avatar}
           <textarea

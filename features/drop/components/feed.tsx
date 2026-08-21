@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 import { Crossfade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
-import { LoadMore } from '@/components/ui/load-more';
+import { LoadMore, PageAnchor } from '@/components/ui/load-more';
 import { Drop, DropListSkeleton } from '@/features/drop/components/drop';
 import { MAX_FEED_PAGE } from '@/features/drop/drop-constants';
 import { getDiscoverFeed, getFeed } from '@/features/drop/drop-queries';
@@ -9,8 +9,14 @@ import type { Route } from 'next';
 
 /*
   Both feeds put the page number in the URL. The URL is shareable and survives a
-  reload. Each Load more re-renders pages 1 through N on the server.
+  reload. Each Load more re-renders pages 1 through N on the server, and links to
+  #page-N so the browser lands at the new page instead of the top of the feed.
 */
+
+function pageHref(nextPage: number, tab?: 'discover') {
+  const query = tab === 'discover' ? `?tab=discover&page=${nextPage}` : `?page=${nextPage}`;
+  return `/${query}#page-${nextPage}` as Route;
+}
 
 export async function Feed({ page = 1 }: { page?: number }) {
   const { items } = await getFeed(1);
@@ -27,14 +33,19 @@ export async function Feed({ page = 1 }: { page?: number }) {
       {Array.from({ length: page }).map((_, i) => {
         const p = i + 1;
         const isLast = p === page;
-        return p === 1 ? (
-          <FeedPage key={p} page={p} isLast={isLast} />
-        ) : (
-          <Suspense key={p} fallback={<DropListSkeleton count={3} />}>
-            <Crossfade>
+        return (
+          <Fragment key={p}>
+            {p > 1 ? <PageAnchor page={p} /> : null}
+            {p === 1 ? (
               <FeedPage page={p} isLast={isLast} />
-            </Crossfade>
-          </Suspense>
+            ) : (
+              <Suspense fallback={<DropListSkeleton count={3} />}>
+                <Crossfade>
+                  <FeedPage page={p} isLast={isLast} />
+                </Crossfade>
+              </Suspense>
+            )}
+          </Fragment>
         );
       })}
     </ul>
@@ -52,7 +63,7 @@ async function FeedPage({ page, isLast }: { page: number; isLast: boolean }) {
       ))}
       {isLast && hasMore && page < MAX_FEED_PAGE ? (
         <li className="flex justify-center p-6">
-          <LoadMore href={`/?page=${page + 1}` as Route} />
+          <LoadMore href={pageHref(page + 1)} />
         </li>
       ) : null}
     </>
@@ -71,14 +82,19 @@ export async function DiscoverFeed({ page = 1 }: { page?: number }) {
       {Array.from({ length: page }).map((_, i) => {
         const p = i + 1;
         const isLast = p === page;
-        return p === 1 ? (
-          <DiscoverPage key={p} page={p} isLast={isLast} />
-        ) : (
-          <Suspense key={p} fallback={<DropListSkeleton count={3} />}>
-            <Crossfade>
+        return (
+          <Fragment key={p}>
+            {p > 1 ? <PageAnchor page={p} /> : null}
+            {p === 1 ? (
               <DiscoverPage page={p} isLast={isLast} />
-            </Crossfade>
-          </Suspense>
+            ) : (
+              <Suspense fallback={<DropListSkeleton count={3} />}>
+                <Crossfade>
+                  <DiscoverPage page={p} isLast={isLast} />
+                </Crossfade>
+              </Suspense>
+            )}
+          </Fragment>
         );
       })}
     </ul>
@@ -96,7 +112,7 @@ async function DiscoverPage({ page, isLast }: { page: number; isLast: boolean })
       ))}
       {isLast && hasMore && page < MAX_FEED_PAGE ? (
         <li className="flex justify-center p-6">
-          <LoadMore href={`/?tab=discover&page=${page + 1}` as Route} />
+          <LoadMore href={pageHref(page + 1, 'discover')} />
         </li>
       ) : null}
     </>

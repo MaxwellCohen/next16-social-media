@@ -131,12 +131,11 @@ export async function postThread(_prev: ComposerState, formData: FormData): Prom
 }
 
 export async function postReply(
-  parentId: string,
   _prev: ComposerState,
   formData: FormData,
 ): Promise<ComposerState> {
   await delay(600, await isSlowEnabled());
-  const parsed = parseDropId(parentId);
+  const parsed = parseDropId(String(formData.get('parentId') ?? ''));
   if (!parsed.ok) return { error: parsed.error, status: 'error' };
 
   const id = parsed.id;

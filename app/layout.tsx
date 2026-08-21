@@ -9,6 +9,7 @@ import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { NavLinkScript } from '@/components/scripts/nav-link-script';
+import { SpeculationRules } from '@/components/scripts/speculation-rules';
 import { Sidebar } from '@/components/sidebar';
 import { getThemePreference, themeHtmlClass } from '@/components/theme/theme-queries';
 import { ThemeScript } from '@/components/theme/theme-script';
@@ -49,6 +50,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const instant = false;
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const unread = preload(UNREAD_KEY, () => getUnreadNotificationCount());
   const theme = await getThemePreference();
@@ -60,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <head>
         <ThemeScript theme={theme} />
+        <SpeculationRules />
       </head>
       <body className="flex min-h-dvh flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
         <BoundaryProvider>

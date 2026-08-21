@@ -102,6 +102,7 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
               </ToolbarButton>
             )}
           </header>
+          <Suspense >
           <form ref={formRef} action={formAction} className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="flex flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-5 pt-5 pb-4">
               <div ref={writeRef} className={cn(mode === 'preview' && 'hidden')}>
@@ -183,6 +184,7 @@ export function NewDropDialog({ avatar, dialogId = 'new-drop' }: Props) {
               </div>
             </footer>
           </form>
+          </Suspense>
       </dialog>
     </Boundary>
   );

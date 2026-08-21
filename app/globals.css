@@ -138,6 +138,30 @@
   animation: flash-in 1.2s ease-out;
 }
 
+:root {
+  --duration-exit: 150ms;
+  --duration-enter: 210ms;
+  --duration-move: 400ms;
+}
+
+@keyframes fade {
+  from {
+    filter: blur(3px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+::view-transition-old(.fade-out) {
+  animation: var(--duration-exit) ease-in fade reverse;
+}
+::view-transition-new(.fade-in) {
+  animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
+}
+
 ::view-transition-group(.tab-underline) {
   animation-duration: 220ms;
   animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
@@ -264,4 +288,8 @@
 html.boundary-mode :is([data-component], [data-sonner-toast]) {
   outline: 2px solid #4f6ef7;
   outline-offset: -2px;
+}
+
+@view-transition {
+  navigation: auto;
 }

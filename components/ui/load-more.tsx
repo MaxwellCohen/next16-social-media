@@ -1,9 +1,21 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useLayoutEffect, useRef, useTransition } from 'react';
 import { Boundary } from '@/components/internal/boundary';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import type { Route } from 'next';
+
+export function PageAnchor({ page }: { page: number }) {
+  const id = `page-${page}`;
+  const ref = useRef<HTMLLIElement>(null);
+
+  useLayoutEffect(() => {
+    if (window.location.hash !== `#${id}`) return;
+    ref.current?.scrollIntoView();
+  }, [id]);
+
+  return <li ref={ref} id={id} className="h-px scroll-mt-32 p-0" aria-hidden />;
+}
 
 export function LoadMore({ href }: { href: Route }) {
   const [isPending, startTransition] = useTransition();
@@ -12,7 +24,6 @@ export function LoadMore({ href }: { href: Route }) {
     <Boundary label="LoadMore">
       <PrefetchLink
         href={href}
-        scroll={false}
         onNavigate={() => {
           startTransition(() => {});
         }}
