@@ -10,7 +10,6 @@ import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
 import { NavLinkScript } from '@/components/scripts/nav-link-script';
-import { SpeculationRules } from '@/components/scripts/speculation-rules';
 import { Sidebar } from '@/components/sidebar';
 import { getThemePreference, themeHtmlClass } from '@/components/theme/theme-queries';
 import { ThemeScript } from '@/components/theme/theme-script';
@@ -53,8 +52,7 @@ export const metadata: Metadata = {
 
 export const instant = false;
 
-// `'unsafe-inline'` does not cover `<script type="speculationrules">`.
-const SCRIPT_SRC_CSP = `script-src 'self' 'unsafe-inline' 'inline-speculation-rules' https://va.vercel-scripts.com${
+const SCRIPT_SRC_CSP = `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com${
   process.env.NODE_ENV === 'development' ? " 'unsafe-eval' blob:" : ''
 }`;
 
@@ -73,12 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <head>
         <meta httpEquiv="Content-Security-Policy" content={scriptSrcCsp} />
-        {scriptsEnabled ? (
-          <>
-            <ThemeScript theme={theme} />
-            <SpeculationRules />
-          </>
-        ) : null}
+        {scriptsEnabled ? <ThemeScript theme={theme} /> : null}
       </head>
       <body className="flex min-h-dvh flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
         <BoundaryProvider>

@@ -1,0 +1,31 @@
+{
+  "tag": "drop",
+  "prefetch": [
+    {
+      "source": "document",
+      "eagerness": "eager",
+      "where": {
+        "and": [
+          { "href_matches": "/*", "relative_to": "document" },
+          { "not": { "href_matches": "/api/*", "relative_to": "document" } },
+          { "not": { "selector_matches": ".no-prerender" } },
+          { "not": { "selector_matches": "[rel~=nofollow]" } }
+        ]
+      }
+    }
+  ],
+  "prerender": [
+    {
+      "source": "document",
+      "eagerness": "moderate",
+      "where": {
+        "and": [
+          { "href_matches": "/*", "relative_to": "document" },
+          { "not": { "href_matches": "/api/*", "relative_to": "document" } },
+          { "not": { "selector_matches": ".no-prerender" } },
+          { "not": { "selector_matches": "[rel~=nofollow]" } }
+        ]
+      }
+    }
+  ]
+}

@@ -7,6 +7,17 @@ const nextConfig: NextConfig = {
     useOffline: true,
     viewTransition: true,
   },
+  headers: async () => [
+    {
+      headers: [
+        {
+          key: 'Content-Type',
+          value: 'application/speculationrules+json',
+        },
+      ],
+      source: '/speculationrules.json',
+    },
+  ],
   partialPrefetching: true,
   reactCompiler: true,
   typedRoutes: true,
