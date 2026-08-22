@@ -79,7 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SWRConfig value={{ cacheData: unread }}>
             <AppGrid>
               <Sidebar />
-              <MainColumn>{children}</MainColumn>
+              <MainColumn scriptsEnabled={scriptsEnabled}>{children}</MainColumn>
               <RightSidebar>
                 <ErrorBoundary title="Tags unavailable" compact>
                   <Suspense fallback={<TrendingTagsSkeleton />}>
@@ -127,9 +127,18 @@ function AppGrid({ children }: { children: React.ReactNode }) {
   );
 }
 
-function MainColumn({ children }: { children: React.ReactNode }) {
+function MainColumn({
+  children,
+  scriptsEnabled,
+}: {
+  children: React.ReactNode;
+  scriptsEnabled: boolean;
+}) {
   return (
-    <main className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity peer-has-data-pending:opacity-50 sm:border-x">
+    <main
+      style={scriptsEnabled ? undefined : { viewTransitionName: 'main-column' }}
+      className="sm:border-divider/70 dark:sm:border-divider-dark/70 min-w-0 transition-opacity peer-has-data-pending:opacity-50 sm:border-x"
+    >
       {children}
     </main>
   );
@@ -137,7 +146,10 @@ function MainColumn({ children }: { children: React.ReactNode }) {
 
 function RightSidebar({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex xl:pt-20">
+    <aside
+      style={{ viewTransitionName: 'right-sidebar' }}
+      className="sticky top-0 hidden h-dvh flex-col gap-4 overflow-y-auto overscroll-y-contain px-4 py-5 xl:flex xl:pt-20"
+    >
       {children}
     </aside>
   );

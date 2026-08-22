@@ -190,8 +190,8 @@
 
 /* Scripts on: no root cross-fade — `new(root)` stays live so unnamed regions
    (sidebar, chrome) keep hover/active styles; content animates via React
-   ViewTransition groups. Scripts off: restore root fade for CSS cross-document
-   transitions on hard navigations (`@view-transition { navigation: auto }`). */
+   ViewTransition groups. Scripts off: chrome stays put; main column
+   cross-fades for CSS cross-document navigations (`@view-transition`). */
 html:not(.no-scripts)::view-transition-old(root) {
   display: none;
 }
@@ -199,14 +199,36 @@ html:not(.no-scripts)::view-transition-new(root) {
   animation: none;
 }
 
-html.no-scripts::view-transition-old(root) {
-  animation: var(--duration-exit) ease-in fade reverse;
+/* Opacity-only — blur on a full column reads muddy and is expensive. */
+@keyframes no-scripts-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
+
+html.no-scripts::view-transition-old(root),
 html.no-scripts::view-transition-new(root) {
-  animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
+  animation: none;
+}
+
+/* Overlapping crossfade (plus-lighter) — no exit→enter gap like SPA fade recipes. */
+html.no-scripts::view-transition-old(main-column) {
+  animation: 180ms ease-out both no-scripts-fade reverse;
+}
+html.no-scripts::view-transition-new(main-column) {
+  animation: 220ms ease-in both no-scripts-fade;
+  mix-blend-mode: plus-lighter;
+}
+html.no-scripts::view-transition-image-pair(main-column) {
+  isolation: isolate;
 }
 
 /* Exclude persistent elements from view transition animations */
+::view-transition-group(sidebar),
+::view-transition-group(right-sidebar),
 ::view-transition-group(mobile-nav),
 ::view-transition-group(modal),
 ::view-transition-group(modal-backdrop),
@@ -223,6 +245,10 @@ html.no-scripts::view-transition-new(root) {
   z-index: 200;
 }
 
+::view-transition-old(sidebar),
+::view-transition-new(sidebar),
+::view-transition-old(right-sidebar),
+::view-transition-new(right-sidebar),
 ::view-transition-old(mobile-nav),
 ::view-transition-new(mobile-nav),
 ::view-transition-old(modal),
