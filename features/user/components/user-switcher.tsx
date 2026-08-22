@@ -102,7 +102,7 @@ export function UserSwitcher({ currentHandle, users }: Props) {
                     {u.displayName.charAt(0)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">{u.displayName}</div>
+                    <div className="truncate text-sm font-medium text-black dark:text-white">{u.displayName}</div>
                     <div className="text-gray truncate font-mono text-[11px]">@{u.handle}</div>
                   </div>
                   {u.handle === optimisticHandle && <Check className="text-accent h-4 w-4 shrink-0" />}

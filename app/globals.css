@@ -59,7 +59,7 @@
   }
 
   body {
-    @apply selection:bg-accent bg-white font-sans text-black antialiased selection:text-white dark:bg-black dark:text-white;
+    @apply selection:bg-accent font-sans text-black antialiased selection:text-white dark:text-white;
   }
 
   h1 {
@@ -76,7 +76,7 @@
 
   input,
   textarea {
-    @apply border-divider placeholder-gray focus:border-accent focus:ring-accent/30 dark:border-divider-dark w-full rounded-md border bg-white px-3 py-2 text-sm text-black transition-colors focus:ring-2 focus:outline-none dark:bg-black dark:text-white;
+    @apply border-divider placeholder-gray focus:border-accent focus:ring-accent/30 dark:border-divider-dark w-full rounded-md border px-3 py-2 text-sm text-black transition-colors focus:ring-2 focus:outline-none dark:text-white;
   }
 
   label {
@@ -212,15 +212,6 @@
   isolation: auto;
 }
 
-/* Opacity-only — blur on a full column reads muddy and is expensive. */
-@keyframes no-scripts-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 html.no-scripts::view-transition {
   background-color: #fff;
@@ -232,7 +223,7 @@ html.no-scripts.dark::view-transition {
 /* Overlapping crossfade — matching durations so alphas sum ≈ 1 under plus-lighter. */
 html.no-scripts::view-transition-old(main-column),
 html.no-scripts::view-transition-new(main-column) {
-  animation: 200ms ease both no-scripts-fade;
+  animation: 200ms ease both fade;
   mix-blend-mode: plus-lighter;
 }
 html.no-scripts::view-transition-old(main-column) {
@@ -344,6 +335,3 @@ html.boundary-mode :is([data-component], [data-sonner-toast]) {
   outline-offset: -2px;
 }
 
-@view-transition {
-  navigation: auto;
-}
