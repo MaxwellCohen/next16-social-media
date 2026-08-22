@@ -49,6 +49,15 @@
 @custom-variant js (@media (scripting: enabled));
 
 @layer base {
+  /* Paint before CSS settles so MPA handoffs never flash the UA white canvas. */
+  html {
+    background-color: #fff;
+  }
+
+  html.dark {
+    background-color: #000;
+  }
+
   body {
     @apply selection:bg-accent bg-white font-sans text-black antialiased selection:text-white dark:bg-black dark:text-white;
   }
@@ -188,15 +197,19 @@
   pointer-events: none;
 }
 
-/* Scripts on: no root cross-fade — `new(root)` stays live so unnamed regions
-   (sidebar, chrome) keep hover/active styles; content animates via React
-   ViewTransition groups. Scripts off: chrome stays put; main column
-   cross-fades for CSS cross-document navigations (`@view-transition`). */
-html:not(.no-scripts)::view-transition-old(root) {
+/* Never fade `root`. Scripts on: `new(root)` stays live so unnamed chrome keeps
+   hover/active styles. Scripts off: named chrome punches holes in root — fading
+   it (or stacking old+new with UA plus-lighter) flashes the white canvas.
+   Content animates via React ViewTransition groups or `main-column` below. */
+::view-transition-old(root) {
   display: none;
 }
-html:not(.no-scripts)::view-transition-new(root) {
+::view-transition-new(root) {
   animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-image-pair(root) {
+  isolation: auto;
 }
 
 /* Opacity-only — blur on a full column reads muddy and is expensive. */
@@ -209,21 +222,28 @@ html:not(.no-scripts)::view-transition-new(root) {
   }
 }
 
-html.no-scripts::view-transition-old(root),
-html.no-scripts::view-transition-new(root) {
-  animation: none;
+html.no-scripts::view-transition {
+  background-color: #fff;
+}
+html.no-scripts.dark::view-transition {
+  background-color: #000;
 }
 
-/* Overlapping crossfade (plus-lighter) — no exit→enter gap like SPA fade recipes. */
-html.no-scripts::view-transition-old(main-column) {
-  animation: 180ms ease-out both no-scripts-fade reverse;
-}
+/* Overlapping crossfade — matching durations so alphas sum ≈ 1 under plus-lighter. */
+html.no-scripts::view-transition-old(main-column),
 html.no-scripts::view-transition-new(main-column) {
-  animation: 220ms ease-in both no-scripts-fade;
+  animation: 200ms ease both no-scripts-fade;
   mix-blend-mode: plus-lighter;
+}
+html.no-scripts::view-transition-old(main-column) {
+  animation-direction: reverse;
 }
 html.no-scripts::view-transition-image-pair(main-column) {
   isolation: isolate;
+}
+html.no-scripts::view-transition-group(main-column) {
+  animation-duration: 200ms;
+  animation-timing-function: ease;
 }
 
 /* Exclude persistent elements from view transition animations */
