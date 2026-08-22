@@ -188,15 +188,22 @@
   pointer-events: none;
 }
 
-/* No root cross-fade: `new(root)` is a live capture, so unnamed regions
-   (sidebar, chrome) keep rendering hover/active styles during transitions
-   instead of freezing behind a stale snapshot. Content still animates via
-   its classed ViewTransition groups. */
-::view-transition-old(root) {
+/* Scripts on: no root cross-fade — `new(root)` stays live so unnamed regions
+   (sidebar, chrome) keep hover/active styles; content animates via React
+   ViewTransition groups. Scripts off: restore root fade for CSS cross-document
+   transitions on hard navigations (`@view-transition { navigation: auto }`). */
+html:not(.no-scripts)::view-transition-old(root) {
   display: none;
 }
-::view-transition-new(root) {
+html:not(.no-scripts)::view-transition-new(root) {
   animation: none;
+}
+
+html.no-scripts::view-transition-old(root) {
+  animation: var(--duration-exit) ease-in fade reverse;
+}
+html.no-scripts::view-transition-new(root) {
+  animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
 }
 
 /* Exclude persistent elements from view transition animations */

@@ -226,7 +226,7 @@ function DemoGuideDialog({
       Icon: scripts ? Code2 : Ban,
       name: 'Scripts',
       on: scripts,
-      text: 'Off, Content-Security-Policy blocks Next.js/React and app scripts (script-src none). SSR HTML and form actions still work. Use “Scripts off — turn back on” for a full reload that clears the cookie (CSP is locked per document until then).',
+      text: 'Off, Content-Security-Policy blocks Next.js/React and app scripts (script-src none). SSR HTML and form actions still work; link navigations use CSS cross-document view transitions. Use “Scripts off — turn back on” for a full reload that clears the cookie (CSP is locked per document until then).',
     },
     {
       Icon: prefetch ? Zap : ZapOff,

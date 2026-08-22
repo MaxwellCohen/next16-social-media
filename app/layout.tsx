@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} ${themeHtmlClass(theme)}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${themeHtmlClass(theme)}${scriptsEnabled ? '' : ' no-scripts'}`}
       suppressHydrationWarning
     >
       <head>

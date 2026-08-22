@@ -6,6 +6,7 @@ export function EnableScriptsForm() {
     <form
       action="/api/demo/scripts"
       method="post"
+      style={{ viewTransitionName: 'demo-toolbar' }}
       className="border-divider dark:border-divider-dark flex items-center overflow-hidden rounded-full border bg-white/80 text-xs font-medium shadow-sm backdrop-blur-md dark:bg-black/80"
     >
       <input type="hidden" name="enable" value="1" />
