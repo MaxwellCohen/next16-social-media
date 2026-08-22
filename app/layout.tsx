@@ -4,6 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense } from 'react';
 import { SWRConfig, preload } from 'swr';
+import { isScriptsEnabled } from '@/components/demo/demo-queries';
 import { DemoToolbar } from '@/components/demo/demo-toolbar';
 import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
@@ -57,9 +58,13 @@ const SCRIPT_SRC_CSP = `script-src 'self' 'unsafe-inline' 'inline-speculation-ru
   process.env.NODE_ENV === 'development' ? " 'unsafe-eval' blob:" : ''
 }`;
 
+const SCRIPT_SRC_CSP_OFF = "script-src 'none'";
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const unread = preload(UNREAD_KEY, () => getUnreadNotificationCount());
-  const theme = await getThemePreference();
+  const [theme, scriptsEnabled] = await Promise.all([getThemePreference(), isScriptsEnabled()]);
+  const scriptSrcCsp = scriptsEnabled ? SCRIPT_SRC_CSP : SCRIPT_SRC_CSP_OFF;
+
   return (
     <html
       lang="en"
@@ -67,9 +72,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
-        <meta httpEquiv="Content-Security-Policy" content={SCRIPT_SRC_CSP} />
-        <ThemeScript theme={theme} />
-        <SpeculationRules />
+        <meta httpEquiv="Content-Security-Policy" content={scriptSrcCsp} />
+        {scriptsEnabled ? (
+          <>
+            <ThemeScript theme={theme} />
+            <SpeculationRules />
+          </>
+        ) : null}
       </head>
       <body className="flex min-h-dvh flex-col bg-white text-black antialiased dark:bg-black dark:text-white">
         <BoundaryProvider>
@@ -103,11 +112,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </Suspense>
           </div>
           <Toaster />
-          <NavLinkScript />
+          {scriptsEnabled ? <NavLinkScript /> : null}
           <NewDropDialogHost />
         </BoundaryProvider>
-        <Analytics />
-        <SpeedInsights />
+        {scriptsEnabled ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

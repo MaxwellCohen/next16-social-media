@@ -1,12 +1,25 @@
 'use client';
 
-import { CircleHelp, Eye, EyeOff, Timer, TimerOff, Wifi, WifiOff, Zap, ZapOff } from 'lucide-react';
+import {
+  Ban,
+  CircleHelp,
+  Code2,
+  Eye,
+  EyeOff,
+  Timer,
+  TimerOff,
+  Wifi,
+  WifiOff,
+  Zap,
+  ZapOff,
+} from 'lucide-react';
 import { type ButtonHTMLAttributes, type ReactNode, useEffect, useId, useOptimistic, useState } from 'react';
-import { togglePrefetch, toggleSlow } from '@/components/demo/demo-actions';
+import { togglePrefetch, toggleScripts, toggleSlow } from '@/components/demo/demo-actions';
 import { Boundary, useBoundaryMode } from '@/components/internal/boundary';
+import { ClientOnly } from '@/components/ui/client-only';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-import { ClientOnly } from '@/components/ui/client-only';
+
 let originalFetch: typeof fetch | null = null;
 
 function setSimulatedOffline(offline: boolean) {
@@ -94,9 +107,11 @@ function CookieToggle({
 export function DemoToolbarClient({
   prefetchEnabled,
   slowEnabled,
+  scriptsEnabled,
 }: {
   prefetchEnabled: boolean;
   slowEnabled: boolean;
+  scriptsEnabled: boolean;
 }) {
   const { mode, toggleMode } = useBoundaryMode();
   const [offline, setOffline] = useState(false);
@@ -127,6 +142,14 @@ export function DemoToolbarClient({
           aria-label={mode === 'on' ? 'Client outlines on' : 'Client outlines off'}
           label="Client"
           icon={mode === 'on' ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+        />
+        <Divider />
+        <CookieToggle
+          enabled={scriptsEnabled}
+          onToggle={toggleScripts}
+          label="Scripts"
+          onIcon={<Code2 className="size-3.5" />}
+          offIcon={<Ban className="size-3.5" />}
         />
         <Divider />
         <CookieToggle
@@ -168,6 +191,7 @@ export function DemoToolbarClient({
           id={guideId}
           prefetch={prefetchEnabled}
           delays={slowEnabled}
+          scripts={scriptsEnabled}
           offline={offline}
           boundaries={mode === 'on'}
         />
@@ -180,12 +204,14 @@ function DemoGuideDialog({
   id,
   prefetch,
   delays,
+  scripts,
   offline,
   boundaries,
 }: {
   id: string;
   prefetch: boolean;
   delays: boolean;
+  scripts: boolean;
   offline: boolean;
   boundaries: boolean;
 }) {
@@ -195,6 +221,12 @@ function DemoGuideDialog({
       name: 'Client',
       on: boundaries,
       text: 'Outlines the Client Components. Everything else is server-rendered and ships no JS.',
+    },
+    {
+      Icon: scripts ? Code2 : Ban,
+      name: 'Scripts',
+      on: scripts,
+      text: 'Off, Content-Security-Policy blocks Next.js/React and app scripts (script-src none). SSR HTML and form actions still work. Use “Scripts off — turn back on” for a full reload that clears the cookie (CSP is locked per document until then).',
     },
     {
       Icon: prefetch ? Zap : ZapOff,
