@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
     inlineCss: true,
     useOffline: true,
-    viewTransition: true,
   },
   headers: async () => [
     {
