@@ -26,10 +26,10 @@ importers:
         version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(better-sqlite3@12.10.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)(typescript@5.9.3))(typescript@5.9.3)
       '@vercel/analytics':
         specifier: ^2.0.1
-        version: 2.0.1(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+        version: 2.0.1(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       '@vercel/speed-insights':
         specifier: ^2.0.0
-        version: 2.0.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+        version: 2.0.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -38,13 +38,13 @@ importers:
         version: 17.4.2
       geist:
         specifier: ^1.7.0
-        version: 1.7.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))
+        version: 1.7.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))
       lucide-react:
         specifier: ^1.8.0
         version: 1.16.0(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       next:
-        specifier: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284
-        version: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+        specifier: https://pkg.pr.new/MaxwellCohen/next.js/next@4
+        version: https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       pg:
         specifier: ^8.21.0
         version: 8.21.0
@@ -2403,8 +2403,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284:
-    resolution: {integrity: sha512-clit4wRCVxxH++zYTj8flgkk+QVTthW0kI6imPFNU2HbNuU75DhcJk9hDi31uj9qMKEoBHn/hPQewSQyJLA1Zw==, tarball: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284}
+  next@https://pkg.pr.new/MaxwellCohen/next.js/next@4:
+    resolution: {integrity: sha512-oviffnq72ScTWoFP/1UOzS2TSeZyJVp6gluMSCoWjdMZPkGHc8IwUNZjJD0ePvMCVY8GNo762VsyHPEZMEWvog==, tarball: https://pkg.pr.new/MaxwellCohen/next.js/next@4}
     version: 16.4.0-canary.2
     engines: {node: '>=20.9.0'}
     hasBin: true
@@ -4129,14 +4129,14 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vercel/analytics@2.0.1(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)':
+  '@vercel/analytics@2.0.1(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)':
     optionalDependencies:
-      next: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+      next: https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       react: https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react
 
-  '@vercel/speed-insights@2.0.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)':
+  '@vercel/speed-insights@2.0.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)':
     optionalDependencies:
-      next: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+      next: https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
       react: https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react
 
   acorn-jsx@5.3.2(acorn@7.4.1):
@@ -4960,9 +4960,9 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  geist@1.7.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)):
+  geist@1.7.0(next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)):
     dependencies:
-      next: https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
+      next: https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react)
 
   generate-function@2.3.1:
     dependencies:
@@ -5445,7 +5445,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@https://pkg.pr.new/MaxwellCohen/next.js/next@3c6e284(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react):
+  next@https://pkg.pr.new/MaxwellCohen/next.js/next@4(@babel/core@7.29.7)(@playwright/test@1.60.0)(@types/node@20.19.41)(babel-plugin-react-compiler@1.0.0)(react-dom@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react-dom(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react))(react@https://pkg.csb.dev/MaxwellCohen/react/commit/d0148100/react):
     dependencies:
       '@next/env': 16.4.0-canary.2
       '@swc/helpers': 0.5.23
