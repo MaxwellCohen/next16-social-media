@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import { SWRConfig, preload } from 'swr';
 import { isScriptsEnabled } from '@/components/demo/demo-queries';
 import { DemoToolbar } from '@/components/demo/demo-toolbar';
+import { EnableScriptsForm } from '@/components/demo/enable-scripts-form';
 import { BoundaryProvider } from '@/components/internal/boundary';
 import { MobileTabBar } from '@/components/mobile-nav';
 import { OfflineIndicator } from '@/components/offline-indicator';
@@ -100,9 +101,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <MobileTabBar />
           </SWRConfig>
           <div className="demo-toggles fixed top-4 right-4 z-50 hidden items-start gap-2 sm:flex lg:top-6 lg:right-6">
-            <Suspense fallback={null}>
               <DemoToolbar />
-            </Suspense>
           </div>
           <Toaster />
           {scriptsEnabled ? <NavLinkScript /> : null}
