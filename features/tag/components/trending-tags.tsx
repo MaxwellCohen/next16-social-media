@@ -1,3 +1,4 @@
+import { ExitFade } from '@/components/ui/crossfade';
 import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTrendingTags } from '@/features/tag/tag-queries';
@@ -36,16 +37,18 @@ export async function TrendingTags() {
 
 export function TrendingTagsSkeleton() {
   return (
-    <div className="px-4 py-4">
-      <Skeleton className="mb-3 h-4 w-24 rounded" />
-      <ul>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <li key={i} className="flex items-center justify-between py-2">
-            <Skeleton className="h-3.5 w-20 rounded" />
-            <Skeleton className="h-3 w-6 rounded" />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ExitFade>
+      <div className="px-4 py-4">
+        <Skeleton className="mb-3 h-4 w-24 rounded" />
+        <ul>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <li key={i} className="flex items-center justify-between py-2">
+              <Skeleton className="h-3.5 w-20 rounded" />
+              <Skeleton className="h-3 w-6 rounded" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </ExitFade>
   );
 }

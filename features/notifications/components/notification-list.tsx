@@ -1,5 +1,6 @@
 import { Heart, MessageCircle, Repeat2, UserPlus } from 'lucide-react';
 import { ViewTransition } from 'react';
+import { Crossfade, ExitFade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
@@ -32,15 +33,17 @@ export async function NotificationList() {
     );
   }
   return (
-    <ul>
-      {notifications.map(n => (
-        <ViewTransition key={n.id}>
-          <li>
-            <NotificationRow notification={n} />
-          </li>
-        </ViewTransition>
-      ))}
-    </ul>
+    <Crossfade>
+      <ul>
+        {notifications.map(n => (
+          <ViewTransition key={n.id} enter="fade-in" exit="fade-out" default="none">
+            <li>
+              <NotificationRow notification={n} />
+            </li>
+          </ViewTransition>
+        ))}
+      </ul>
+    </Crossfade>
   );
 }
 
@@ -87,20 +90,22 @@ function describe(kind: NotificationKind): string {
 
 export function NotificationListSkeleton() {
   return (
-    <ul aria-hidden>
-      {Array.from({ length: 4 }).map((_, i) => (
-        <li
-          key={i}
-          className="border-divider/70 dark:border-divider-dark/70 flex items-start gap-3 border-b px-4 py-4 sm:px-5"
-        >
-          <Skeleton className="h-5 w-5 rounded" />
-          <UserAvatarSkeleton size="md" />
-          <div className="flex flex-1 flex-col gap-1">
-            <Skeleton className="h-5 w-48 rounded" />
-            <Skeleton className="h-4 w-20 rounded" />
-          </div>
-        </li>
-      ))}
-    </ul>
+    <ExitFade>
+      <ul aria-hidden>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <li
+            key={i}
+            className="border-divider/70 dark:border-divider-dark/70 flex items-start gap-3 border-b px-4 py-4 sm:px-5"
+          >
+            <Skeleton className="h-5 w-5 rounded" />
+            <UserAvatarSkeleton size="md" />
+            <div className="flex flex-1 flex-col gap-1">
+              <Skeleton className="h-5 w-48 rounded" />
+              <Skeleton className="h-4 w-20 rounded" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </ExitFade>
   );
 }

@@ -1,4 +1,5 @@
 import { CodeBlock } from '@/components/ui/code-block';
+import { ExitFade } from '@/components/ui/crossfade';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -64,14 +65,16 @@ async function DropAuthor({ handle }: { handle: string }) {
 
 export function DropDetailSkeleton() {
   return (
-    <article className="border-divider/70 dark:border-divider-dark/70 min-h-51 border-b px-4 pt-4 pb-6 sm:px-5">
-      <header className="flex items-center gap-3">
-        <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
-        <div className="flex min-w-0 flex-col gap-1.5">
-          <Skeleton className="h-4 w-28 rounded" />
-          <Skeleton className="h-3 w-20 rounded" />
-        </div>
-      </header>
-    </article>
+    <ExitFade>
+      <article className="border-divider/70 dark:border-divider-dark/70 min-h-51 border-b px-4 pt-4 pb-6 sm:px-5">
+        <header className="flex items-center gap-3">
+          <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <Skeleton className="h-4 w-28 rounded" />
+            <Skeleton className="h-3 w-20 rounded" />
+          </div>
+        </header>
+      </article>
+    </ExitFade>
   );
 }

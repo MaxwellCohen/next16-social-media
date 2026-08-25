@@ -13,7 +13,7 @@ export async function BookmarksFeed() {
   return (
     <ul>
       {drops.map(drop => (
-        <ViewTransition key={drop.id}>
+        <ViewTransition key={drop.id} enter="fade-in" exit="fade-out" default="none">
           <li className="transition-opacity has-data-removing:opacity-50">
             <Drop drop={drop} />
           </li>

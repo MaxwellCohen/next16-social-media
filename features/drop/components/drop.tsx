@@ -1,6 +1,7 @@
 import { Repeat2 } from 'lucide-react';
 import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/code-block';
+import { ExitFade } from '@/components/ui/crossfade';
 import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { RelativeTime } from '@/components/ui/relative-time';
@@ -153,12 +154,14 @@ function DropSkeleton() {
 
 export function DropListSkeleton({ count = 5 }: { count?: number }) {
   return (
-    <ul aria-hidden>
-      {Array.from({ length: count }).map((_, i) => (
-        <li key={i}>
-          <DropSkeleton />
-        </li>
-      ))}
-    </ul>
+    <ExitFade>
+      <ul aria-hidden>
+        {Array.from({ length: count }).map((_, i) => (
+          <li key={i}>
+            <DropSkeleton />
+          </li>
+        ))}
+      </ul>
+    </ExitFade>
   );
 }

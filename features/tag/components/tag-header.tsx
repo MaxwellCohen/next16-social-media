@@ -1,3 +1,4 @@
+import { ExitFade } from '@/components/ui/crossfade';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getDropsByTag } from '@/features/drop/drop-queries';
 
@@ -13,9 +14,11 @@ export async function TagHeader({ tag }: { tag: string }) {
 
 export function TagHeaderSkeleton() {
   return (
-    <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
-      <Skeleton className="h-5 w-28 rounded" />
-      <Skeleton className="mt-1 h-3 w-16 rounded" />
-    </div>
+    <ExitFade>
+      <div className="border-divider/70 dark:border-divider-dark/70 border-b px-4 py-4 sm:px-5">
+        <Skeleton className="h-5 w-28 rounded" />
+        <Skeleton className="mt-1 h-3 w-16 rounded" />
+      </div>
+    </ExitFade>
   );
 }

@@ -55,7 +55,7 @@ export function Tabs<T extends string>({ tabs, active, label = 'Sections', indic
               />
               <span className="relative">{t.label}</span>
               {isCommitted ? (
-                <ViewTransition name={indicatorName} share="tab-underline">
+                <ViewTransition name={indicatorName} share="tab-underline" default="none">
                   <span className="absolute inset-x-6 -bottom-px h-1 rounded-t-full bg-black dark:bg-white" aria-hidden />
                 </ViewTransition>
               ) : null}

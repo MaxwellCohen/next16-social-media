@@ -1,4 +1,5 @@
 import { Hash } from 'lucide-react';
+import { ExitFade } from '@/components/ui/crossfade';
 import { EmptyState } from '@/components/ui/empty-state';
 import { HoverPrefetchLink } from '@/components/ui/hover-prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -36,16 +37,18 @@ export async function TagsList() {
 
 export function TagsListSkeleton() {
   return (
-    <ul aria-hidden>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <li
-          key={i}
-          className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-5 sm:px-5"
-        >
-          <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
-          <Skeleton className="h-4 w-24 rounded" />
-        </li>
-      ))}
-    </ul>
+    <ExitFade>
+      <ul aria-hidden>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <li
+            key={i}
+            className="border-divider/70 dark:border-divider-dark/70 flex items-center gap-3 border-b px-4 py-5 sm:px-5"
+          >
+            <Hash className="text-gray h-5 w-5 shrink-0" aria-hidden />
+            <Skeleton className="h-4 w-24 rounded" />
+          </li>
+        ))}
+      </ul>
+    </ExitFade>
   );
 }

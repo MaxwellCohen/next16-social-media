@@ -1,4 +1,5 @@
 import { ViewTransition } from 'react';
+import { ExitFade } from '@/components/ui/crossfade';
 import { PrefetchLink } from '@/components/ui/prefetch-link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
@@ -25,7 +26,7 @@ export async function WhoToFollow() {
       ) : (
         <div className="flex flex-col pb-2">
           {users.map(user => (
-            <ViewTransition key={user.handle}>
+            <ViewTransition key={user.handle} enter="fade-in" exit="fade-out" default="none">
               <UserRow
                 handle={user.handle}
                 displayName={user.displayName}
@@ -41,20 +42,22 @@ export async function WhoToFollow() {
 
 export function WhoToFollowSkeleton() {
   return (
-    <div className="px-4 py-4">
-      <Skeleton className="mb-3 h-3.5 w-20 rounded" />
-      <div className="flex flex-col gap-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <Skeleton className="h-8 w-8 shrink-0 rounded-full" />
-            <div className="min-w-0 flex-1 space-y-1.5">
-              <Skeleton className="h-3.5 w-24 rounded" />
-              <Skeleton className="h-3 w-14 rounded" />
+    <ExitFade>
+      <div className="px-4 py-4">
+        <Skeleton className="mb-3 h-3.5 w-20 rounded" />
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Skeleton className="h-8 w-8 shrink-0 rounded-full" />
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <Skeleton className="h-3.5 w-24 rounded" />
+                <Skeleton className="h-3 w-14 rounded" />
+              </div>
+              <Skeleton className="h-6 w-12 rounded-full" />
             </div>
-            <Skeleton className="h-6 w-12 rounded-full" />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </ExitFade>
   );
 }

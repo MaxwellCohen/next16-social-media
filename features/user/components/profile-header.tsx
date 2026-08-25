@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { ExitFade } from '@/components/ui/crossfade';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/features/user/components/follow-button';
 import { UserAvatar, UserAvatarSkeleton } from '@/features/user/components/user-avatar';
@@ -53,21 +54,23 @@ async function ProfileFollowButton({ handle }: { handle: string }) {
 
 export function ProfileHeaderSkeleton() {
   return (
-    <header className="border-divider/70 dark:border-divider-dark/70 border-b">
-      <div className="bg-card dark:bg-card-dark h-32 w-full sm:h-40" aria-hidden />
-      <div className="px-5 pb-4">
-        <div className="-mt-10 flex items-start justify-between sm:-mt-12">
-          <div className="rounded-full bg-white p-1 dark:bg-black">
-            <UserAvatarSkeleton size="lg" />
+    <ExitFade>
+      <header className="border-divider/70 dark:border-divider-dark/70 border-b">
+        <div className="bg-card dark:bg-card-dark h-32 w-full sm:h-40" aria-hidden />
+        <div className="px-5 pb-4">
+          <div className="-mt-10 flex items-start justify-between sm:-mt-12">
+            <div className="rounded-full bg-white p-1 dark:bg-black">
+              <UserAvatarSkeleton size="lg" />
+            </div>
+            <div className="flex h-20 items-end sm:h-24" />
           </div>
-          <div className="flex h-20 items-end sm:h-24" />
+          <div className="mt-5 flex flex-col gap-4 pb-4.5">
+            <Skeleton className="h-6 w-28 rounded" />
+            <Skeleton className="h-3 w-48 rounded" />
+            <Skeleton className="h-3 w-32 rounded" />
+          </div>
         </div>
-        <div className="mt-5 flex flex-col gap-4 pb-4.5">
-          <Skeleton className="h-6 w-28 rounded" />
-          <Skeleton className="h-3 w-48 rounded" />
-          <Skeleton className="h-3 w-32 rounded" />
-        </div>
-      </div>
-    </header>
+      </header>
+    </ExitFade>
   );
 }
